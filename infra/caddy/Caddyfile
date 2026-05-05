@@ -1,0 +1,91 @@
+# Caddyfile — Aquerii reverse proxy
+# All HTTPS is handled automatically via Caddy's ACME integration.
+# In local dev, set DOMAIN=localhost in .env; Caddy will use its local CA.
+
+{
+    email {$CADDY_ACME_EMAIL}
+    admin off
+}
+
+# ── API ──────────────────────────────────────────────────────────────────────
+{$DOMAIN} {
+    # Super Admin panel — served by the same Laravel container on /superadmin
+    handle /superadmin* {
+        reverse_proxy api:8000 {
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+
+    # REST API
+    handle /api* {
+        reverse_proxy api:8000 {
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+
+    # Laravel Sanctum CSRF cookie + login
+    handle /sanctum* {
+        reverse_proxy api:8000 {
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+
+    # Realtime (Socket.IO) — must come before the SPA catch-all
+    handle /socket.io* {
+        reverse_proxy realtime:3000 {
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Real-IP {remote_host}
+            header_up Upgrade {http.request.header.Upgrade}
+            header_up Connection {http.request.header.Connection}
+        }
+    }
+
+    # AI service internal proxy (called by API only, but exposed here for dev health checks)
+    handle /internal/ai* {
+        # Only allow internal Docker network; block public access
+        @blocked not remote_ip 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+        respond @blocked 403
+
+        uri strip_prefix /internal/ai
+        reverse_proxy ai:8080 {
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+
+    # SPA — serve built React app from /var/www/html/public (mounted volume in prod)
+    # In dev the Vite dev server runs separately; in prod this serves the build output.
+    handle {
+        root * /srv/spa
+        try_files {path} /index.html
+        file_server
+    }
+
+    # Security headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy strict-origin-when-cross-origin
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+        -Server
+    }
+
+    log {
+        output stdout
+        format json
+        level INFO
+    }
+}
+
+# ── MinIO Console (dev only) ──────────────────────────────────────────────────
+storage.{$DOMAIN} {
+    reverse_proxy minio:9001
+}
+
+# ── Grafana (dev only — gate behind VPN/IP allowlist in prod) ─────────────────
+grafana.{$DOMAIN} {
+    reverse_proxy grafana:3000
+}

@@ -1,0 +1,9 @@
+# app/routers/health.py
+from fastapi import APIRouter
+
+router = APIRouter()
+
+
+@router.get("/health", tags=["health"])
+async def health():
+    return {"status": "ok", "service": "aquerii-ai"}
