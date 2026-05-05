@@ -2,8 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { useAuthStore } from '@/stores/authStore'
 
-import AuthLayout    from '@/components/layout/AuthLayout'
-import AppLayout     from '@/components/layout/AppLayout'
+import AuthLayout    from '@/layouts/AuthLayout'
+import AppLayout     from '@/layouts/AppLayout'
 
 import LoginPage     from '@/pages/auth/LoginPage'
 import RegisterPage  from '@/pages/auth/RegisterPage'

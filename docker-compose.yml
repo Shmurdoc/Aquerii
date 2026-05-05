@@ -6,6 +6,9 @@ services:
   caddy:
     image: caddy:2.8-alpine
     restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+      CADDY_ACME_EMAIL: ${CADDY_ACME_EMAIL:-admin@aquerii.app}
     ports:
       - "80:80"
       - "443:443"
@@ -16,6 +19,7 @@ services:
     depends_on:
       - api
       - realtime
+      - web
     networks:
       - public
       - api_net
@@ -378,6 +382,19 @@ services:
       - IPC_LOCK
     networks:
       - data_net
+
+  # ─── WEB (React SPA) ──────────────────────────────────────────
+  web:
+    build:
+      context: ./services/web
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-/api}
+        VITE_SOCKET_URL: ${VITE_SOCKET_URL:-/}
+    restart: unless-stopped
+    networks:
+      - public
+      - api_net
 
 networks:
   public:
