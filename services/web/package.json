@@ -1,0 +1,52 @@
+{
+  "name": "@aquerii/web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev":     "vite",
+    "build":   "tsc && vite build",
+    "preview": "vite preview",
+    "test":    "vitest run",
+    "lint":    "eslint src --ext .ts,.tsx"
+  },
+  "dependencies": {
+    "react":                  "^18.3.1",
+    "react-dom":              "^18.3.1",
+    "react-router-dom":       "^6.24.0",
+    "zustand":                "^4.5.4",
+    "@tanstack/react-query":  "^5.49.2",
+    "axios":                  "^1.7.2",
+    "socket.io-client":       "^4.7.5",
+    "yjs":                    "^13.6.18",
+    "y-protocols":            "^1.0.6",
+    "@blocknote/react":       "^0.14.2",
+    "@blocknote/core":        "^0.14.2",
+    "framer-motion":          "^11.3.8",
+    "react-dnd":              "^16.0.1",
+    "react-dnd-html5-backend":"^16.0.1",
+    "@hello-pangea/dnd":      "^16.6.0",
+    "date-fns":               "^3.6.0",
+    "recharts":               "^2.12.7",
+    "clsx":                   "^2.1.1",
+    "tailwind-merge":         "^2.4.0",
+    "lucide-react":           "^0.400.0",
+    "react-hook-form":        "^7.52.1",
+    "zod":                    "^3.23.8",
+    "@hookform/resolvers":    "^3.9.0",
+    "react-hot-toast":        "^2.4.1"
+  },
+  "devDependencies": {
+    "@types/react":            "^18.3.3",
+    "@types/react-dom":        "^18.3.0",
+    "@vitejs/plugin-react":    "^4.3.1",
+    "vite":                    "^5.3.4",
+    "typescript":              "^5.5.3",
+    "tailwindcss":             "^3.4.6",
+    "autoprefixer":            "^10.4.19",
+    "postcss":                 "^8.4.39",
+    "vitest":                  "^1.6.0",
+    "@testing-library/react":  "^16.0.0",
+    "eslint":                  "^9.6.0"
+  }
+}
