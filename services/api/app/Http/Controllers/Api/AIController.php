@@ -130,6 +130,76 @@ class AIController extends Controller
         ]);
     }
 
+    // POST /workspaces/{workspace}/ai/task/generate-description
+    public function generateTaskDescription(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'title'   => 'required|string|max:500',
+            'context' => 'nullable|string|max:2000',
+        ]);
+
+        $workspace = $request->attributes->get('workspace');
+
+        $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
+            ->post(config('services.ai.url') . '/ai/task/generate-description', [
+                'workspace_id' => $workspace->id,
+                'title'        => $validated['title'],
+                'context'      => $validated['context'] ?? '',
+            ]);
+
+        if (!$response->successful()) {
+            return response()->json(['error' => ['code' => 'AI_ERROR', 'message' => 'AI service error']], 502);
+        }
+
+        return response()->json($response->json());
+    }
+
+    // POST /workspaces/{workspace}/ai/document/generate
+    public function generateDocument(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'prompt' => 'required|string|max:2000',
+            'style'  => 'nullable|string|in:professional,casual,technical,creative',
+        ]);
+
+        $workspace = $request->attributes->get('workspace');
+
+        $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
+            ->post(config('services.ai.url') . '/ai/document/generate', [
+                'workspace_id' => $workspace->id,
+                'prompt'       => $validated['prompt'],
+                'style'        => $validated['style'] ?? 'professional',
+            ]);
+
+        if (!$response->successful()) {
+            return response()->json(['error' => ['code' => 'AI_ERROR', 'message' => 'AI service error']], 502);
+        }
+
+        return response()->json($response->json());
+    }
+
+    // POST /workspaces/{workspace}/ai/automation/generate
+    public function generateAutomation(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'description' => 'required|string|max:500',
+        ]);
+
+        $workspace = $request->attributes->get('workspace');
+
+        $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
+            ->post(config('services.ai.url') . '/ai/automation/generate', [
+                'workspace_id' => $workspace->id,
+                'description'  => $validated['description'],
+            ]);
+
+        if (!$response->successful()) {
+            return response()->json(['error' => ['code' => 'AI_ERROR', 'message' => 'AI service error']], 502);
+        }
+
+        return response()->json($response->json());
+    }
+
     // ─── Helpers ───────────────────────────────────────────────────────────────
 
     private function deductCredits(Workspace $workspace, int $amount): void

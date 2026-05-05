@@ -21,9 +21,15 @@ class Settings(BaseSettings):
     # PostgreSQL (for credit metering reads)
     DATABASE_URL: str = "postgresql+asyncpg://aquerii_app:secret@postgres:5432/aquerii"
 
+    # Internal service secret (used by /internal/* endpoints)
+    INTERNAL_SECRET: str = ""
+
     # ChromaDB
     CHROMA_HOST: str = "chromadb"
     CHROMA_PORT: int = 8000
+    # Aliases expected by rag/indexer.py (maps to CHROMA_*)
+    CHROMADB_HOST: str = "chromadb"
+    CHROMADB_PORT: int = 8000
 
     # OTel
     OTEL_EXPORTER_OTLP_ENDPOINT: str = "http://otel-collector:4317"

@@ -9,9 +9,9 @@
 
 # ── API ──────────────────────────────────────────────────────────────────────
 {$DOMAIN} {
-    # Super Admin panel — served by the same Laravel container on /superadmin
+    # Super Admin panel — served by the dedicated Filament 3 container
     handle /superadmin* {
-        reverse_proxy api:8000 {
+        reverse_proxy super-admin:8001 {
             header_up X-Forwarded-Proto {scheme}
             header_up X-Real-IP {remote_host}
         }

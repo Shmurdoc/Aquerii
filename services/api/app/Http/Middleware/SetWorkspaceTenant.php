@@ -32,7 +32,10 @@ class SetWorkspaceTenant
                 ], 400);
             }
 
-            DB::statement("SET app.workspace_id = ?", [$workspaceId]);
+            // Only set PostgreSQL session variable when using a pgsql connection
+            if (\Illuminate\Support\Facades\DB::getDriverName() === 'pgsql') {
+                \Illuminate\Support\Facades\DB::statement("SET app.workspace_id = ?", [$workspaceId]);
+            }
 
             $request->attributes->set('workspace_id', $workspaceId);
         }

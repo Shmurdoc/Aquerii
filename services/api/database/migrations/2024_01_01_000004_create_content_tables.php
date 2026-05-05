@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('document_folders', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('parent_id')->nullable();
             $table->string('name');
@@ -23,7 +23,7 @@ return new class extends Migration
         });
 
         Schema::create('documents', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('folder_id')->nullable();
             $table->uuid('linked_item_id')->nullable();
@@ -45,7 +45,7 @@ return new class extends Migration
 
         // CRM
         Schema::create('crm_companies', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->string('name');
             $table->string('domain')->nullable();
@@ -61,7 +61,7 @@ return new class extends Migration
         });
 
         Schema::create('crm_contacts', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('company_id')->nullable();
             $table->string('name');
@@ -80,7 +80,7 @@ return new class extends Migration
         });
 
         Schema::create('crm_pipelines', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->string('name')->default('Sales Pipeline');
             $table->boolean('is_default')->default(false);
@@ -88,7 +88,7 @@ return new class extends Migration
         });
 
         Schema::create('crm_pipeline_stages', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('pipeline_id');
             $table->string('name', 100);
@@ -101,7 +101,7 @@ return new class extends Migration
         });
 
         Schema::create('crm_deals', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('pipeline_id');
             $table->uuid('stage_id');
@@ -128,7 +128,7 @@ return new class extends Migration
 
         // Automations
         Schema::create('automations', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('board_id')->nullable();
             $table->string('name');
@@ -144,7 +144,7 @@ return new class extends Migration
         });
 
         Schema::create('automation_runs', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('automation_id');
             $table->uuid('item_id')->nullable();

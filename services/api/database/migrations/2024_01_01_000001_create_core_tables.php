@@ -13,7 +13,7 @@ return new class extends Migration
         // Migrations manage Laravel-level schema; raw DDL extensions are infra concerns.
 
         Schema::create('workspaces', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('slug', 100)->unique();
             $table->text('logo_url')->nullable();
@@ -42,7 +42,7 @@ return new class extends Migration
         });
 
         Schema::create('users', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestampTz('email_verified_at')->nullable();
@@ -59,7 +59,7 @@ return new class extends Migration
         });
 
         Schema::create('oauth_accounts', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->string('provider', 50);
             $table->string('provider_id');
@@ -72,7 +72,7 @@ return new class extends Migration
         });
 
         Schema::create('workspace_members', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('user_id');
             $table->string('role', 50)->default('member');

@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('comments', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->string('entity_type', 50);
             $table->uuid('entity_id');
@@ -24,7 +24,7 @@ return new class extends Migration
         });
 
         Schema::create('activity_log', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->string('entity_type', 50);
             $table->uuid('entity_id');
@@ -39,7 +39,7 @@ return new class extends Migration
         });
 
         Schema::create('files', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->string('entity_type', 50)->nullable();
             $table->uuid('entity_id')->nullable();
@@ -55,7 +55,7 @@ return new class extends Migration
         });
 
         Schema::create('notifications', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('user_id');
             $table->string('type', 100);
@@ -71,7 +71,7 @@ return new class extends Migration
 
         Schema::create('realtime_events', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid('event_id')->unique()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('event_id')->unique();
             $table->uuid('workspace_id');
             $table->string('room');
             $table->string('type', 100);
@@ -84,7 +84,7 @@ return new class extends Migration
         });
 
         Schema::create('billing_events', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id')->nullable();
             $table->string('processor', 20);
             $table->string('processor_event_id')->unique();
@@ -94,7 +94,7 @@ return new class extends Migration
         });
 
         Schema::create('idempotency_keys', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->string('key');
             $table->string('payload_hash', 64);

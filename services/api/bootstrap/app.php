@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\SetWorkspaceTenant;
 use App\Http\Middleware\EnforceIdempotency;
 use App\Http\Middleware\ThrottleRequests;
+use App\Http\Middleware\InternalSecret;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,14 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
         apiPrefix: 'api',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->api(prepend: [
-            SetWorkspaceTenant::class,
-        ]);
-
         $middleware->alias([
-            'idempotent'    => EnforceIdempotency::class,
-            'throttle'      => ThrottleRequests::class,
-            'workspace'     => SetWorkspaceTenant::class,
+            'idempotent'      => EnforceIdempotency::class,
+            'throttle'        => ThrottleRequests::class,
+            'workspace'       => SetWorkspaceTenant::class,
+            'internal.secret' => InternalSecret::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

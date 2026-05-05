@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\CRM\PipelineController;
 use App\Http\Controllers\Api\CRM\DealController;
 use App\Http\Controllers\Api\CRM\ContactController;
 use App\Http\Controllers\Api\CRM\CompanyController;
+use App\Http\Controllers\Api\CRM\StageController;
 
 // ── Health check (public) ─────────────────────────────────────────────────────
 Route::get('healthz', fn() => response()->json(['status' => 'ok', 'service' => 'api']));
@@ -132,10 +133,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // AI
         Route::prefix('ai')->middleware('idempotent')->group(function () {
-            Route::post('chat',          [AIController::class, 'chat']);
-            Route::post('summarize',     [AIController::class, 'summarize']);
-            Route::post('score-deal',    [AIController::class, 'scoreDeal']);
-            Route::get('credits',        [AIController::class, 'credits']);
+            Route::post('chat',                      [AIController::class, 'chat']);
+            Route::post('summarize',                 [AIController::class, 'summarize']);
+            Route::post('score-deal',                [AIController::class, 'scoreDeal']);
+            Route::get('credits',                    [AIController::class, 'credits']);
+            Route::post('task/generate-description', [AIController::class, 'generateTaskDescription']);
+            Route::post('document/generate',         [AIController::class, 'generateDocument']);
+            Route::post('automation/generate',       [AIController::class, 'generateAutomation']);
         });
     });
 });

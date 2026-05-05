@@ -13,12 +13,14 @@ use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    protected $dontReport = [];
+    protected $dontFlash = ['current_password', 'password', 'password_confirmation'];
 
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            // Send to OTel / Sentry here if configured
+        $this->renderable(function (Throwable $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return self::renderJson($e, $request);
+            }
         });
     }
 
@@ -29,50 +31,35 @@ class Handler extends ExceptionHandler
                 'error' => [
                     'code'    => 'VALIDATION_ERROR',
                     'message' => 'The given data was invalid.',
-                    'errors'  => $e->errors(),
+                    'details' => $e->errors(),
                 ],
             ], 422);
         }
 
-        if ($e instanceof ModelNotFoundException) {
-            return response()->json([
-                'error' => [
-                    'code'    => 'NOT_FOUND',
-                    'message' => 'Resource not found.',
-                ],
-            ], 404);
-        }
-
         if ($e instanceof AuthenticationException) {
             return response()->json([
-                'error' => [
-                    'code'    => 'UNAUTHENTICATED',
-                    'message' => 'Authentication required.',
-                ],
+                'error' => ['code' => 'UNAUTHENTICATED', 'message' => 'Unauthenticated.'],
             ], 401);
         }
 
-        if ($e instanceof HttpException) {
-            $body = $e->getMessage();
-            $decoded = json_decode($body, true);
-            if ($decoded && isset($decoded['error'])) {
-                return response()->json($decoded, $e->getStatusCode());
-            }
+        if ($e instanceof ModelNotFoundException) {
+            $model = class_basename($e->getModel());
             return response()->json([
-                'error' => [
-                    'code'    => 'HTTP_ERROR',
-                    'message' => $body ?: 'An error occurred.',
-                ],
+                'error' => ['code' => 'NOT_FOUND', 'message' => "{$model} not found."],
+            ], 404);
+        }
+
+        if ($e instanceof HttpException) {
+            return response()->json([
+                'error' => ['code' => 'HTTP_ERROR', 'message' => $e->getMessage() ?: 'HTTP error.'],
             ], $e->getStatusCode());
         }
 
-        $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+        $statusCode = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+        $message    = config('app.debug') ? $e->getMessage() : 'An unexpected error occurred.';
 
         return response()->json([
-            'error' => [
-                'code'    => 'INTERNAL_ERROR',
-                'message' => app()->isProduction() ? 'An internal error occurred.' : $e->getMessage(),
-            ],
-        ], $status);
+            'error' => ['code' => 'INTERNAL_ERROR', 'message' => $message],
+        ], $statusCode);
     }
 }

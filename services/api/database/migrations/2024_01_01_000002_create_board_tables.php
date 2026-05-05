@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('boards', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->string('name');
             $table->text('description')->nullable();
@@ -29,7 +29,7 @@ return new class extends Migration
         });
 
         Schema::create('board_columns', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('board_id');
             $table->string('name');
@@ -43,7 +43,7 @@ return new class extends Migration
         });
 
         Schema::create('board_groups', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('board_id');
             $table->string('name')->default('New Group');
@@ -55,7 +55,7 @@ return new class extends Migration
         });
 
         Schema::create('items', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('board_id');
             $table->uuid('group_id');
@@ -81,7 +81,7 @@ return new class extends Migration
         });
 
         Schema::create('item_assignees', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('item_id');
             $table->uuid('user_id');
@@ -92,7 +92,7 @@ return new class extends Migration
         });
 
         Schema::create('item_dependencies', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('item_id');
             $table->uuid('depends_on_id');

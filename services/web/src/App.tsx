@@ -5,8 +5,10 @@ import { useAuthStore } from '@/stores/authStore'
 import AuthLayout    from '@/layouts/AuthLayout'
 import AppLayout     from '@/layouts/AppLayout'
 
-import LoginPage     from '@/pages/auth/LoginPage'
-import RegisterPage  from '@/pages/auth/RegisterPage'
+import LoginPage          from '@/pages/auth/LoginPage'
+import RegisterPage       from '@/pages/auth/RegisterPage'
+import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage'
+import ResetPasswordPage  from '@/pages/auth/ResetPasswordPage'
 import OnboardingPage from '@/pages/onboarding/OnboardingPage'
 
 import BoardsPage    from '@/pages/boards/BoardsPage'
@@ -44,8 +46,10 @@ export default function App() {
       <Routes>
         {/* Public */}
         <Route element={<AuthLayout />}>
-          <Route path="/login"    element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login"            element={<LoginPage />} />
+          <Route path="/register"         element={<RegisterPage />} />
+          <Route path="/forgot-password"  element={<ForgotPasswordPage />} />
+          <Route path="/reset-password"   element={<ResetPasswordPage />} />
         </Route>
 
         {/* Onboarding (auth required, workspace not yet set) */}
