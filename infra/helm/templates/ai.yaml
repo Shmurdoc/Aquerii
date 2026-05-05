@@ -1,0 +1,59 @@
+{{- $registry := .Values.global.imageRegistry }}
+{{- $tag := .Values.ai.tag }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: ai
+spec:
+  replicas: {{ .Values.ai.replicas }}
+  selector:
+    matchLabels:
+      app: ai
+  template:
+    metadata:
+      labels:
+        app: ai
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: ai
+          image: {{ $registry }}/{{ .Values.ai.image }}:{{ $tag }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: 8001
+          envFrom:
+            - secretRef:
+                name: aquerii-ai-secrets
+          resources:
+            requests:
+              cpu:    {{ .Values.ai.resources.requests.cpu }}
+              memory: {{ .Values.ai.resources.requests.memory }}
+            limits:
+              cpu:    {{ .Values.ai.resources.limits.cpu }}
+              memory: {{ .Values.ai.resources.limits.memory }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            initialDelaySeconds: 10
+            periodSeconds: 15
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: ai
+  ports:
+    - port: 80
+      targetPort: 8001

@@ -1,0 +1,100 @@
+{{- $registry := .Values.global.imageRegistry }}
+{{- $tag := .Values.api.tag }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: api
+spec:
+  replicas: {{ .Values.api.replicas }}
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port:   "9000"
+        prometheus.io/path:   "/metrics"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: api
+          image: {{ $registry }}/{{ .Values.api.image }}:{{ $tag }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: 9000
+          envFrom:
+            - secretRef:
+                name: aquerii-api-secrets
+          env:
+            - name: APP_ENV
+              value: {{ .Values.api.env.APP_ENV }}
+            - name: LOG_CHANNEL
+              value: {{ .Values.api.env.LOG_CHANNEL }}
+          resources:
+            requests:
+              cpu:    {{ .Values.api.resources.requests.cpu }}
+              memory: {{ .Values.api.resources.requests.memory }}
+            limits:
+              cpu:    {{ .Values.api.resources.limits.cpu }}
+              memory: {{ .Values.api.resources.limits.memory }}
+          readinessProbe:
+            httpGet:
+              path: /api/healthz
+              port: 9000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/healthz
+              port: 9000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: api
+  ports:
+    - port: 80
+      targetPort: 9000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api
+  namespace: {{ .Values.global.namespace }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.certManager.clusterIssuer }}
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - {{ .Values.api.ingress.host }}
+      secretName: api-tls
+  rules:
+    - host: {{ .Values.api.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port:
+                  number: 80

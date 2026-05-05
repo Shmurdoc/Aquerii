@@ -1,0 +1,61 @@
+global:
+  imageRegistry: ghcr.io/shmurdoc/aquerii
+  imagePullPolicy: Always
+  namespace: aquerii
+
+api:
+  image: api
+  tag: latest
+  replicas: 2
+  resources:
+    requests: { cpu: 250m, memory: 256Mi }
+    limits:   { cpu: 1000m, memory: 512Mi }
+  env:
+    APP_ENV: production
+    LOG_CHANNEL: stderr
+  ingress:
+    host: api.aquerii.app
+
+web:
+  image: web
+  tag: latest
+  replicas: 2
+  resources:
+    requests: { cpu: 100m, memory: 64Mi }
+    limits:   { cpu: 250m, memory: 128Mi }
+  ingress:
+    host: app.aquerii.app
+
+realtime:
+  image: realtime
+  tag: latest
+  replicas: 2
+  resources:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits:   { cpu: 500m, memory: 256Mi }
+  ingress:
+    host: ws.aquerii.app
+
+ai:
+  image: ai
+  tag: latest
+  replicas: 1
+  resources:
+    requests: { cpu: 500m, memory: 512Mi }
+    limits:   { cpu: 2000m, memory: 1Gi }
+
+postgres:
+  enabled: true          # set false to use external managed DB
+  storageSize: 20Gi
+  storageClass: standard
+
+redis:
+  enabled: true
+  storageSize: 2Gi
+
+minio:
+  enabled: true
+  storageSize: 50Gi
+
+certManager:
+  clusterIssuer: letsencrypt-prod

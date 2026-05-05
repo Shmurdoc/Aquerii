@@ -1,0 +1,120 @@
+{{- if .Values.postgres.enabled }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: {{ .Values.global.namespace }}
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      securityContext:
+        runAsUser: 999
+        fsGroup:   999
+      containers:
+        - name: postgres
+          image: postgres:15.6-alpine
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: aquerii-postgres-secrets
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+            - name: init
+              mountPath: /docker-entrypoint-initdb.d
+          readinessProbe:
+            exec:
+              command: [pg_isready, -U, postgres]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: init
+          configMap:
+            name: postgres-init
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        storageClassName: {{ .Values.postgres.storageClass }}
+        resources:
+          requests:
+            storage: {{ .Values.postgres.storageSize }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: postgres
+  clusterIP: None
+  ports:
+    - port: 5432
+{{- end }}
+
+{{- if .Values.redis.enabled }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: {{ .Values.global.namespace }}
+spec:
+  serviceName: redis
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.2-alpine
+          args: [--requirepass, "$(REDIS_PASSWORD)", --appendonly, "yes"]
+          ports:
+            - containerPort: 6379
+          envFrom:
+            - secretRef:
+                name: aquerii-redis-secrets
+          volumeMounts:
+            - name: data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests:
+            storage: {{ .Values.redis.storageSize }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: redis
+  clusterIP: None
+  ports:
+    - port: 6379
+{{- end }}

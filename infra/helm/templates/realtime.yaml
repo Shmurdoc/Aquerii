@@ -1,0 +1,89 @@
+{{- $registry := .Values.global.imageRegistry }}
+{{- $tag := .Values.realtime.tag }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: realtime
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: realtime
+spec:
+  replicas: {{ .Values.realtime.replicas }}
+  selector:
+    matchLabels:
+      app: realtime
+  template:
+    metadata:
+      labels:
+        app: realtime
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: realtime
+          image: {{ $registry }}/{{ .Values.realtime.image }}:{{ $tag }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: 3001
+          envFrom:
+            - secretRef:
+                name: aquerii-realtime-secrets
+          resources:
+            requests:
+              cpu:    {{ .Values.realtime.resources.requests.cpu }}
+              memory: {{ .Values.realtime.resources.requests.memory }}
+            limits:
+              cpu:    {{ .Values.realtime.resources.limits.cpu }}
+              memory: {{ .Values.realtime.resources.limits.memory }}
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: realtime
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: realtime
+  ports:
+    - port: 80
+      targetPort: 3001
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: realtime
+  namespace: {{ .Values.global.namespace }}
+  annotations:
+    cert-manager.io/cluster-issuer:               {{ .Values.certManager.clusterIssuer }}
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - {{ .Values.realtime.ingress.host }}
+      secretName: realtime-tls
+  rules:
+    - host: {{ .Values.realtime.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: realtime
+                port:
+                  number: 80

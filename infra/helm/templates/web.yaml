@@ -1,0 +1,81 @@
+{{- $registry := .Values.global.imageRegistry }}
+{{- $tag := .Values.web.tag }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: web
+spec:
+  replicas: {{ .Values.web.replicas }}
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101    # nginx user
+      containers:
+        - name: web
+          image: {{ $registry }}/{{ .Values.web.image }}:{{ $tag }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu:    {{ .Values.web.resources.requests.cpu }}
+              memory: {{ .Values.web.resources.requests.memory }}
+            limits:
+              cpu:    {{ .Values.web.resources.limits.cpu }}
+              memory: {{ .Values.web.resources.limits.memory }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: web
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  namespace: {{ .Values.global.namespace }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.certManager.clusterIssuer }}
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - {{ .Values.web.ingress.host }}
+      secretName: web-tls
+  rules:
+    - host: {{ .Values.web.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 80
