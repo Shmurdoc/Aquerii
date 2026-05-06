@@ -76,8 +76,12 @@ return new class extends Migration
             $table->softDeletesTz();
             $table->foreign('board_id')->references('id')->on('boards')->cascadeOnDelete();
             $table->foreign('group_id')->references('id')->on('board_groups')->cascadeOnDelete();
-            $table->foreign('parent_id')->references('id')->on('items')->cascadeOnDelete();
             $table->foreign('created_by')->references('id')->on('users');
+        });
+
+        // Self-referential FK added after table creation to avoid PostgreSQL constraint issues
+        Schema::table('items', function (Blueprint $table) {
+            $table->foreign('parent_id')->references('id')->on('items')->cascadeOnDelete();
         });
 
         Schema::create('item_assignees', function (Blueprint $table) {

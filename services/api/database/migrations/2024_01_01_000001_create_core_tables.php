@@ -37,6 +37,7 @@ return new class extends Migration
             $table->integer('ai_credits_used')->default(0);
             $table->timestampTz('ai_credits_reset_at')->nullable();
             $table->jsonb('settings')->default('{}');
+            $table->uuid('owner_id')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
         });
@@ -56,6 +57,11 @@ return new class extends Migration
             $table->timestampTz('last_seen_at')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
+        });
+
+        // Add FK from workspaces.owner_id -> users.id now that users table exists
+        Schema::table('workspaces', function (Blueprint $table) {
+            $table->foreign('owner_id')->references('id')->on('users')->nullOnDelete();
         });
 
         Schema::create('oauth_accounts', function (Blueprint $table) {

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Item extends Model
 {
@@ -77,14 +78,16 @@ class Item extends Model
     public function assertVersion(int $expectedVersion): void
     {
         if ($this->version !== $expectedVersion) {
-            abort(409, json_encode([
-                'error' => [
-                    'code'    => 'CONCURRENT_EDIT',
-                    'message' => 'Item was modified by another user. Reload and retry.',
-                    'current_version'  => $this->version,
-                    'expected_version' => $expectedVersion,
-                ],
-            ]));
+            throw new HttpResponseException(
+                response()->json([
+                    'error' => [
+                        'code'             => 'CONCURRENT_EDIT',
+                        'message'          => 'Item was modified by another user. Reload and retry.',
+                        'current_version'  => $this->version,
+                        'expected_version' => $expectedVersion,
+                    ],
+                ], 409)
+            );
         }
     }
 }

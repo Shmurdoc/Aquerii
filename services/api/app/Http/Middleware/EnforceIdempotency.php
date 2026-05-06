@@ -29,6 +29,12 @@ class EnforceIdempotency
             return $next($request);
         }
 
+        // Unauthenticated requests (e.g. public auth routes) bypass idempotency.
+        $user = $request->user();
+        if (!$user) {
+            return $next($request);
+        }
+
         $idempotencyKey = $request->header('Idempotency-Key');
         if (!$idempotencyKey) {
             return response()->json([
@@ -39,15 +45,29 @@ class EnforceIdempotency
             ], 400);
         }
 
-        $user = $request->user();
-        if (!$user) {
-            return $next($request);
-        }
-
         $cacheKey    = "idempotency:{$user->id}:{$idempotencyKey}";
         $payloadHash = hash('sha256', $request->getContent());
 
         $cached = Cache::get($cacheKey);
+
+        if (!$cached) {
+            // Fall back to DB (covers test env where array cache resets between requests)
+            $dbRecord = DB::table('idempotency_keys')
+                ->where('user_id', $user->id)
+                ->where('key', $idempotencyKey)
+                ->where('expires_at', '>', now())
+                ->first();
+
+            if ($dbRecord) {
+                $cached = [
+                    'payload_hash' => $dbRecord->payload_hash,
+                    'response'     => json_decode($dbRecord->response, true) ?? [],
+                    'status_code'  => $dbRecord->status_code,
+                ];
+                // Repopulate cache
+                Cache::put($cacheKey, $cached, self::TTL);
+            }
+        }
 
         if ($cached) {
             if ($cached['payload_hash'] !== $payloadHash) {
@@ -95,6 +115,7 @@ class EnforceIdempotency
 
                 // Persist to DB for audit / cross-instance consistency
                 DB::table('idempotency_keys')->upsert([
+                    'id'           => (string) \Illuminate\Support\Str::uuid(),
                     'user_id'      => $user->id,
                     'key'          => $idempotencyKey,
                     'payload_hash' => $payloadHash,

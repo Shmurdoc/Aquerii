@@ -24,8 +24,12 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        // Always return JSON for API requests, never redirect
+        $exceptions->shouldRenderJsonWhen(function (\Illuminate\Http\Request $request, \Throwable $e) {
+            return $request->is('api/*') || $request->expectsJson();
+        });
         $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
-            if ($request->expectsJson()) {
+            if ($request->is('api/*') || $request->expectsJson()) {
                 return App\Exceptions\Handler::renderJson($e, $request);
             }
         });

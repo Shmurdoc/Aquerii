@@ -12,17 +12,17 @@ class BoardColumn extends Model
     protected $table = 'board_columns';
 
     protected $fillable = [
-        'board_id', 'workspace_id', 'name', 'field_type',
-        'options', 'is_required', 'is_system', 'position',
+        'board_id', 'workspace_id', 'name', 'type',
+        'settings', 'is_system', 'position', 'width',
     ];
 
     protected function casts(): array
     {
         return [
-            'options'     => 'array',
-            'is_required' => 'boolean',
+            'settings'    => 'array',
             'is_system'   => 'boolean',
             'position'    => 'float',
+            'width'       => 'integer',
         ];
     }
 

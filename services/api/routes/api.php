@@ -82,7 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
         });
 
         // Boards
-        Route::apiResource('boards', BoardController::class)->except(['index']);
+        Route::apiResource('boards', BoardController::class)->except(['index'])->middleware('idempotent');
         Route::get('boards',                       [BoardController::class, 'index']);
 
         Route::prefix('boards/{board}')->group(function () {

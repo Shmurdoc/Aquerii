@@ -19,6 +19,10 @@ return new class extends Migration
             $table->uuid('created_by');
             $table->timestampsTz();
             $table->foreign('created_by')->references('id')->on('users');
+        });
+
+        // Self-referential FK added after table creation
+        Schema::table('document_folders', function (Blueprint $table) {
             $table->foreign('parent_id')->references('id')->on('document_folders')->nullOnDelete();
         });
 
