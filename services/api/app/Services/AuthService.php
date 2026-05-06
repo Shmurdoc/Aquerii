@@ -41,7 +41,7 @@ class AuthService
 
             event(new Registered($user));
 
-            $token = $user->createToken('auth')->plainTextToken;
+            $token = $user->createToken('auth', ['*'], now()->addDays(30))->plainTextToken;
 
             return [$user, $workspace, $token];
         });
@@ -74,7 +74,7 @@ class AuthService
         }
 
         $user->update(['last_seen_at' => now()]);
-        $token = $user->createToken('auth')->plainTextToken;
+        $token = $user->createToken('auth', ['*'], now()->addDays(30))->plainTextToken;
 
         return [$user, $token];
     }
@@ -89,7 +89,7 @@ class AuthService
         }
         $user = $pat->tokenable;
         $pat->delete();
-        return $user->createToken('auth')->plainTextToken;
+        return $user->createToken('auth', ['*'], now()->addDays(30))->plainTextToken;
     }
 
     public function sendPasswordReset(string $email): void

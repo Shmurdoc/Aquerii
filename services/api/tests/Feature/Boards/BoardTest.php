@@ -20,7 +20,7 @@ beforeEach(function () {
 it('creates a board with default columns and group', function () {
     $response = $this->postJson("/api/workspaces/{$this->workspace->id}/boards", [
         'name' => 'My Test Board',
-    ]);
+    ], ['Idempotency-Key' => \Illuminate\Support\Str::uuid()->toString()]);
 
     $response->assertStatus(201)
              ->assertJsonPath('data.name', 'My Test Board');

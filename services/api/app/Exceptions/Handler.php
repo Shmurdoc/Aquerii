@@ -8,6 +8,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
@@ -50,8 +51,16 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof HttpException) {
+            // AuthService abort()s with a JSON string as the message — decode it
+            $raw     = $e->getMessage();
+            $decoded = $raw ? json_decode($raw, true) : null;
+
+            if (is_array($decoded) && isset($decoded['error'])) {
+                return response()->json($decoded, $e->getStatusCode());
+            }
+
             return response()->json([
-                'error' => ['code' => 'HTTP_ERROR', 'message' => $e->getMessage() ?: 'HTTP error.'],
+                'error' => ['code' => 'HTTP_ERROR', 'message' => $raw ?: Response::$statusTexts[$e->getStatusCode()] ?? 'HTTP error.'],
             ], $e->getStatusCode());
         }
 

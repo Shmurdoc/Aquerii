@@ -28,14 +28,18 @@ Route::get('healthz', fn() => response()->json(['status' => 'ok', 'service' => '
 
 // ── Public auth ───────────────────────────────────────────────────────────────
 Route::prefix('auth')->group(function () {
-    Route::post('register',                         [AuthController::class, 'register'])->middleware('idempotent');
-    Route::post('login',                            [AuthController::class, 'login']);
-    Route::post('forgot-password',                  [AuthController::class, 'forgotPassword']);
-    Route::post('reset-password',                   [AuthController::class, 'resetPassword'])->middleware('idempotent');
-    Route::post('verify-email/{id}/{hash}',         [AuthController::class, 'verifyEmail']);
-    Route::post('refresh',                          [AuthController::class, 'refresh']);
-    Route::get('oauth/{provider}',                  [OAuthController::class, 'redirect']);
-    Route::get('oauth/{provider}/callback',         [OAuthController::class, 'callback']);
+    // Throttle middleware is disabled in the testing environment to prevent
+    // rate limit state from persisting across tests via the file cache.
+    $isTest = app()->environment('testing');
+
+    Route::post('register',              [AuthController::class, 'register'])->middleware($isTest ? ['idempotent'] : ['throttle:10,1', 'idempotent']);
+    Route::post('login',                 [AuthController::class, 'login'])->middleware($isTest ? [] : ['throttle:5,1']);
+    Route::post('forgot-password',       [AuthController::class, 'forgotPassword'])->middleware($isTest ? [] : ['throttle:3,1']);
+    Route::post('reset-password',        [AuthController::class, 'resetPassword'])->middleware($isTest ? ['idempotent'] : ['throttle:5,1', 'idempotent']);
+    Route::post('verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail']);
+    Route::post('refresh',               [AuthController::class, 'refresh'])->middleware($isTest ? [] : ['throttle:10,1']);
+    Route::get('oauth/{provider}',       [OAuthController::class, 'redirect']);
+    Route::get('oauth/{provider}/callback', [OAuthController::class, 'callback']);
 });
 
 // ── Billing webhooks (raw body — bypass idempotency & auth) ──────────────────

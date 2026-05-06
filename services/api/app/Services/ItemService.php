@@ -47,7 +47,9 @@ class ItemService
             }
 
             $old = $item->getAttributes();
-            $item->fill($data)->save();
+            $item->fill($data);
+            $item->version = $item->version + 1;
+            $item->save();
 
             $this->logRealtimeEvent($item->workspace_id, "board:{$item->board_id}", 'item.updated', [
                 'item_id' => $item->id,

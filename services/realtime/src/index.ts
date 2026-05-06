@@ -7,7 +7,7 @@ import { createAdapter } from '@socket.io/redis-adapter'
 import { Redis } from 'ioredis'
 import pino from 'pino'
 
-import { verifyJWT } from './auth/jwt'
+import { verifySanctumToken } from './auth/sanctum'
 import { RoomManager } from './rooms/RoomManager'
 import { PresenceManager } from './presence/PresenceManager'
 import { YDocManager } from './ydoc/YDocManager'
@@ -55,7 +55,7 @@ async function bootstrap(): Promise<void> {
   io.adapter(createAdapter(pubClient, subClient))
 
   // ── Auth middleware ───────────────────────────────────────────────────────
-  io.use((socket, next) => {
+  io.use(async (socket, next) => {
     const token =
       (socket.handshake.auth?.token as string | undefined) ??
       (socket.handshake.headers.authorization ?? '').replace('Bearer ', '')
@@ -63,9 +63,9 @@ async function bootstrap(): Promise<void> {
     if (!token) return next(new Error('AUTH_REQUIRED'))
 
     try {
-      const payload = verifyJWT(token)
+      const payload = await verifySanctumToken(token, API_URL, redisClient)
       // Attach structured payload for new managers
-      socket.data.user = payload
+      socket.data.user = { ...payload, iat: 0, exp: 0 }
       // Also set flat fields for legacy handlers
       socket.data.userId      = payload.sub
       socket.data.workspaceId = payload.workspace_id
