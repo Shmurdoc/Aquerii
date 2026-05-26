@@ -143,7 +143,8 @@ jobs:
           sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env.testing
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env.testing
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
-          php artisan key:generate --env=testing
+          mkdir -p storage/framework/{views,cache,testing}
+          php artisan key:generate --env=testing --quiet
 
       - run: composer test -- --coverage-clover coverage.xml
 
@@ -365,6 +366,7 @@ jobs:
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
           composer install --prefer-dist --no-scripts --no-progress --quiet
+          mkdir -p storage/framework/{views,cache,testing}
           php artisan key:generate --force
           php artisan migrate --force --seed
           php artisan serve --port=8000 --env=.env &
@@ -435,6 +437,7 @@ jobs:
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
           composer install --prefer-dist --no-scripts --no-progress --quiet
+          mkdir -p storage/framework/{views,cache,testing}
           php artisan key:generate --force
           php artisan migrate --force --seed
           php artisan serve --port=8000 --env=.env &
