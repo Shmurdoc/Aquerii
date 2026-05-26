@@ -28,7 +28,9 @@ class TextSplitter(ABC):
 
     def _merge_splits(self, splits: list[str], separator: str) -> list[str]:
         sep_len = self._length_function(separator)
-        chunks, current, total = [], [], 0
+        chunks: list[str] = []
+        current: list[str] = []
+        total = 0
         for d in splits:
             d_len = self._length_function(d)
             if total + d_len + (sep_len if current else 0) > self._chunk_size:
@@ -174,10 +176,10 @@ class MarkdownHeaderTextSplitter:
     def split(self, text: str, base_metadata: dict | None = None) -> list[dict]:
         base = base_metadata or {}
         lines = text.split('\n')
-        result = []
-        current_content = []
-        header_stack = []
-        initial_meta = {}
+        result: list[dict[str, str | list[str] | dict]] = []
+        current_content: list[str] = []
+        header_stack: list[dict[str, str | int]] = []
+        initial_meta: dict[str, str] = {}
         in_code = False
         fence = ''
 
@@ -204,9 +206,10 @@ class MarkdownHeaderTextSplitter:
                             'metadata': {**initial_meta, **base}
                         })
                         current_content = []
-                    while header_stack and header_stack[-1]['level'] >= sep.count('#'):
+                    while header_stack and int(header_stack[-1]['level']) >= sep.count('#'):
                         h = header_stack.pop()
-                        initial_meta.pop(h['name'], None)
+                        name = str(h.get('name', ''))
+                        initial_meta.pop(name, None)
                     header_stack.append({
                         'level': sep.count('#'),
                         'name': name,
