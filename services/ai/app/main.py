@@ -54,8 +54,9 @@ app.add_middleware(
 # AI-service-level metering in the future, re-enable the middleware and
 # ensure configuration matches billing expectations.
 
-# Prometheus metrics on /metrics
-_instrumentator = Instrumentator().instrument(app)
+# Prometheus metrics on /metrics (disabled in test env)
+if settings.APP_ENV != "test":
+    Instrumentator().instrument(app)
 
 @app.get("/metrics")
 async def metrics(dep=Depends(verify_internal_token)):

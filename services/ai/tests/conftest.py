@@ -34,10 +34,7 @@ def patch_otel():
 @pytest.fixture(scope="session", autouse=True)
 def patch_prometheus():
     """Prevent Prometheus Instrumentator from registering on test client."""
-    mock_inst = MagicMock()
-    mock_inst.instrument.return_value = mock_inst
-    mock_inst.expose.return_value = mock_inst
-    with patch("app.main.Instrumentator", return_value=mock_inst):
+    with patch("app.main.Instrumentator"):
         yield
 
 
