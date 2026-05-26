@@ -29,6 +29,7 @@
         <env name="DB_DATABASE" value="aquerii_test" force="true"/>
         <env name="DB_USERNAME" value="aquerii_app"/>
         <env name="DB_PASSWORD" value="secret" force="true"/>
+        <env name="REDIS_HOST" value="localhost"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync" force="true"/>
         <env name="SESSION_DRIVER" value="array" force="true"/>
