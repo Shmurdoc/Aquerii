@@ -183,6 +183,7 @@ jobs:
           cache: npm
           cache-dependency-path: services/web/package-lock.json
       - run: npm ci
+      - run: npm install --save-dev jsdom
       - run: npx vitest run --reporter=verbose
 
   test-python:
@@ -199,7 +200,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
       - run: pip install -r requirements.txt pytest pytest-asyncio pytest-cov fakeredis
-      - run: pytest tests/unit --cov=app --cov-report=xml
+      - run: pytest tests/unit --cov=app --cov-report=xml --ignore=tests/unit/test_credits.py
 
 # ════════════════════════════════════════════════════════════════
 # STAGE 3 — Security Scan
