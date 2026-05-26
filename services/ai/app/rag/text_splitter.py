@@ -1,6 +1,5 @@
 import re
-import copy
-from typing import Any, Optional
+from typing import Any
 from abc import ABC, abstractmethod
 
 

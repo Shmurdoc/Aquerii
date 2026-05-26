@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from app.core.config import settings
 from app.core.providers import generate_text
 from app.security.auth import verify_internal_token
 

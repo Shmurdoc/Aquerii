@@ -1,11 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from typing import List, Optional
-from app.core.config import settings
-from app.core.providers import generate_json, generate_text
+from typing import List
+from app.core.providers import generate_json
 from app.security.auth import verify_internal_token
-from app.security.sanitizer import sanitize, PromptInjectionError
-import json
+from app.security.sanitizer import sanitize
 
 router = APIRouter(dependencies=[Depends(verify_internal_token)])
 

@@ -77,7 +77,7 @@ async def generate_text(
             last_exc = exc
             continue
 
-    raise RuntimeError(f"All AI providers failed") from last_exc
+    raise RuntimeError("All AI providers failed") from last_exc
 
 
 def _generate_openai(
