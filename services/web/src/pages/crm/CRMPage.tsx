@@ -274,14 +274,12 @@ export default function CRMPage() {
     }
   }
 
-  if (!workspace) return null
-
   // ── Pipeline mutations ─────────────────────────────────────
   const createPipeline = useMutation({
     mutationFn: (name: string) =>
-      api.post(`/workspaces/${workspace.id}/crm/pipelines`, { name }),
+      api.post(`/workspaces/${workspace!.id}/crm/pipelines`, { name }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace.id] })
+      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace?.id] })
       setAddingPipeline(false)
       setNewPipelineName('')
       toast.success('Pipeline created.')
@@ -291,9 +289,9 @@ export default function CRMPage() {
 
   const renamePipeline = useMutation({
     mutationFn: ({ id, name }: { id: string; name: string }) =>
-      api.patch(`/workspaces/${workspace.id}/crm/pipelines/${id}`, { name }),
+      api.patch(`/workspaces/${workspace!.id}/crm/pipelines/${id}`, { name }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace.id] })
+      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace?.id] })
       setEditingPipelineId(null)
       toast.success('Pipeline renamed.')
     },
@@ -302,9 +300,9 @@ export default function CRMPage() {
 
   const deletePipeline = useMutation({
     mutationFn: (id: string) =>
-      api.delete(`/workspaces/${workspace.id}/crm/pipelines/${id}`),
+      api.delete(`/workspaces/${workspace!.id}/crm/pipelines/${id}`),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace.id] })
+      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace?.id] })
       toast.success('Pipeline deleted.')
     },
     onError: () => toast.error('Failed to delete pipeline.'),
@@ -313,9 +311,9 @@ export default function CRMPage() {
   // ── Stage mutations ────────────────────────────────────────
   const createStage = useMutation({
     mutationFn: ({ pipelineId, name }: { pipelineId: string; name: string }) =>
-      api.post(`/workspaces/${workspace.id}/crm/pipelines/${pipelineId}/stages`, { name }),
+      api.post(`/workspaces/${workspace!.id}/crm/pipelines/${pipelineId}/stages`, { name }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace.id] })
+      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace?.id] })
       setAddingStageFor(null)
       setNewStageName('')
       toast.success('Stage added.')
@@ -327,11 +325,11 @@ export default function CRMPage() {
     mutationFn: ({ pipelineId, stageId, name, win_probability, color }: {
       pipelineId: string; stageId: string; name: string; win_probability: number; color: string
     }) =>
-      api.patch(`/workspaces/${workspace.id}/crm/pipelines/${pipelineId}/stages/${stageId}`, {
+      api.patch(`/workspaces/${workspace!.id}/crm/pipelines/${pipelineId}/stages/${stageId}`, {
         name, win_probability, color,
       }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace.id] })
+      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace?.id] })
       setEditingStageId(null)
     },
     onError: () => toast.error('Failed to update stage.'),
@@ -339,13 +337,15 @@ export default function CRMPage() {
 
   const deleteStage = useMutation({
     mutationFn: ({ pipelineId, stageId }: { pipelineId: string; stageId: string }) =>
-      api.delete(`/workspaces/${workspace.id}/crm/pipelines/${pipelineId}/stages/${stageId}`),
+      api.delete(`/workspaces/${workspace!.id}/crm/pipelines/${pipelineId}/stages/${stageId}`),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace.id] })
+      qc.invalidateQueries({ queryKey: ['crm-pipelines', workspace?.id] })
       toast.success('Stage deleted.')
     },
     onError: () => toast.error('Failed to delete stage.'),
   })
+
+  if (!workspace) return null
 
   const stages = [...(pipeline?.stages ?? [])].sort((a, b) => a.position - b.position)
 

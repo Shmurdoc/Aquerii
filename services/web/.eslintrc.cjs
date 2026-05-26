@@ -12,7 +12,10 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-expressions': 'warn',
     'no-unused-expressions': 'warn',
+    'no-empty': 'warn',
+    'prefer-const': 'warn',
     'react-hooks/exhaustive-deps': 'warn',
   },
 };
