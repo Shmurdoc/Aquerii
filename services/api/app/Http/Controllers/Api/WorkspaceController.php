@@ -11,6 +11,39 @@ use Illuminate\Support\Str;
 
 class WorkspaceController extends Controller
 {
+    // POST /workspaces
+    public function store(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'name'     => 'required|string|max:100',
+            'icon'     => 'nullable|string|max:10',
+            'color'    => 'nullable|string|max:20',
+            'timezone' => 'nullable|string|max:50',
+        ]);
+
+        $workspace = DB::transaction(function () use ($validated, $request) {
+            $ws = Workspace::create(array_merge($validated, [
+                'slug' => Str::slug($validated['name']) . '-' . Str::lower(Str::random(6)),
+                'plan' => 'free',
+                'plan_status' => 'active',
+            ]));
+
+            DB::table('workspace_members')->insert([
+                'id'           => Str::uuid(),
+                'workspace_id' => $ws->id,
+                'user_id'      => $request->user()->id,
+                'role'         => 'owner',
+                'joined_at'    => now(),
+                'created_at'   => now(),
+                'updated_at'   => now(),
+            ]);
+
+            return $ws;
+        });
+
+        return response()->json(['data' => $workspace], 201);
+    }
+
     // GET /workspaces/{workspace}
     public function show(Workspace $workspace): JsonResponse
     {
@@ -37,7 +70,7 @@ class WorkspaceController extends Controller
         $members = DB::table('workspace_members')
             ->join('users', 'users.id', '=', 'workspace_members.user_id')
             ->where('workspace_members.workspace_id', $workspace->id)
-            ->select('workspace_members.*', 'users.name', 'users.email', 'users.avatar_url')
+            ->select('workspace_members.role', 'workspace_members.joined_at', 'users.id', 'users.name', 'users.email', 'users.avatar_url')
             ->get();
 
         return response()->json(['data' => $members]);

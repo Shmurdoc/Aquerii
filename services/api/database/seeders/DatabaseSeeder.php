@@ -10,6 +10,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             SuperAdminSeeder::class,
+            AutomationLibrarySeeder::class,
+            ChartOfAccountsSeeder::class,
         ]);
+
+        if (app()->environment('testing')) {
+            $this->call(E2ESeeder::class);
+        }
     }
 }

@@ -44,11 +44,15 @@ const PALETTE = ['#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#22c55e', '#3b82f6
 export default function OnboardingPage() {
   const navigate = useNavigate()
   const setWorkspace = useAuthStore(s => s.setWorkspace)
+  const existingWorkspace = useAuthStore(s => s.workspace)
 
-  const [step,       setStep]       = useState(0)
+  // If the user already has a workspace (came from register), skip step 0
+  const initialStep = existingWorkspace ? 1 : 0
+
+  const [step,       setStep]       = useState(initialStep)
   const [role,       setRole]       = useState('')
   const [invites,    setInvites]    = useState<string[]>([''])
-  const [workspaceId, setWorkspaceId] = useState<string | null>(null)
+  const [workspaceId, setWorkspaceId] = useState<string | null>(existingWorkspace?.id ?? null)
   const [color,      setColor]      = useState(PALETTE[0])
 
   const wsForm = useForm<WorkspaceForm>({

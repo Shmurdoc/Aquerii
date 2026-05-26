@@ -14,24 +14,25 @@
         "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-query-builder": "^5.8",
         "spatie/laravel-data": "^4.8",
-        "spatie/laravel-media-library": "^11.7",
+        "spatie/laravel-medialibrary": "^11.7",
         "stripe/stripe-php": "^15.0",
-        "google/cloud-aiplatform": "^0.21",
-        "anthropic-sdk/anthropic-sdk": "^0.2",
+        "google/cloud-ai-platform": "^1.0",
+        "anthropic-ai/sdk": "^0.24",
         "league/flysystem-aws-s3-v3": "^3.28",
         "predis/predis": "^2.2",
         "open-telemetry/sdk": "^1.0",
         "open-telemetry/exporter-otlp": "^1.0",
-        "open-telemetry/opentelemetry-auto-laravel": "^0.0.5",
-        "tymon/jwt-auth": "^2.1",
+                "tymon/jwt-auth": "^2.1",
         "league/oauth2-server": "^8.5",
-        "socialiteproviders/google": "^4.8",
-        "socialiteproviders/github": "^4.6",
+        "socialiteproviders/google": "^4.0",
+        "socialiteproviders/github": "^4.0",
         "laravel/socialite": "^5.14",
         "pragmarx/google2fa-laravel": "^2.2",
         "brick/math": "^0.12",
         "meilisearch/meilisearch-php": "^1.8",
         "laravel/scout": "^10.10",
+        "webklex/php-imap": "^5.0",
+        "symfony/css-selector": "^7.0",
         "lorisleiva/laravel-actions": "^2.8"
     },
     "require-dev": {
@@ -75,6 +76,9 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
+        "platform": {
+            "php": "8.3.31"
+        },
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true

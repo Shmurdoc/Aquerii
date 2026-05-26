@@ -22,6 +22,7 @@ export interface BoardGroup {
 
 export interface Board {
   id: string
+  workspace_id: string
   name: string
   description: string | null
   icon: string | null
@@ -29,6 +30,7 @@ export interface Board {
   type: string
   default_view: string
   position: number
+  excalidraw_state: Record<string, unknown> | null
   columns: BoardColumn[]
   groups: BoardGroup[]
 }

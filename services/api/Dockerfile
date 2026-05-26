@@ -2,15 +2,15 @@ FROM php:8.3-fpm-alpine AS base
 
 # System deps
 RUN apk add --no-cache \
-    git curl unzip libpq-dev libzip-dev icu-dev \
+    gcc g++ make autoconf git curl unzip libpq-dev libzip-dev icu-dev \
     oniguruma-dev libxml2-dev linux-headers \
-    supervisor nginx
+    imap-dev supervisor nginx
 
 # PHP extensions
 RUN docker-php-ext-install \
     pdo pdo_pgsql pgsql \
     zip bcmath intl xml opcache \
-    pcntl sockets
+    pcntl sockets imap exif
 
 # Redis extension
 RUN pecl install redis && docker-php-ext-enable redis
@@ -24,9 +24,9 @@ COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # ── Dependencies ──────────────────────────────────────────────
-FROM base AS deps
+    FROM base AS deps
 COPY composer.json composer.lock ./
-RUN composer install --no-scripts --no-autoloader --prefer-dist --no-dev
+RUN composer install --no-scripts --no-autoloader --prefer-dist --no-dev --no-interaction
 
 # ── Development image ─────────────────────────────────────────
 FROM base AS development

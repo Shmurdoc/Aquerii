@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import type { Board } from '@/hooks/useBoards'
 import type { Item } from '@/hooks/useItems'
 import {
@@ -17,8 +17,21 @@ interface Props {
 }
 
 export default function CalendarView({ board, items, boardId }: Props) {
-  const [current,  setCurrent]  = useState(new Date())
-  const [selected, setSelected] = useState<Item | null>(null)
+  const [current,     setCurrent]     = useState(new Date())
+  const [selected,    setSelected]    = useState<Item | null>(null)
+  const [expandedDay, setExpandedDay] = useState<string | null>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
+
+  // Close popover on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+        setExpandedDay(null)
+      }
+    }
+    if (expandedDay) document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [expandedDay])
 
   const monthStart = startOfMonth(current)
   const monthEnd   = endOfMonth(current)
@@ -95,7 +108,7 @@ export default function CalendarView({ board, items, boardId }: Props) {
                   <div
                     key={di}
                     className={clsx(
-                      'bg-gray-950 p-1.5 min-h-[90px]',
+                      'bg-gray-950 p-1.5 min-h-[90px] relative',
                       outside && 'opacity-40'
                     )}
                   >
@@ -123,11 +136,45 @@ export default function CalendarView({ board, items, boardId }: Props) {
                         </button>
                       ))}
                       {dayItems.length > 3 && (
-                        <p className="text-[10px] text-gray-600 px-1">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setExpandedDay(expandedDay === key ? null : key)
+                          }}
+                          className="text-[10px] text-gray-500 hover:text-indigo-400 px-1 transition-colors w-full text-left"
+                        >
                           +{dayItems.length - 3} more
-                        </p>
+                        </button>
                       )}
                     </div>
+
+                    {/* Overflow popover */}
+                    {expandedDay === key && (
+                      <div
+                        ref={popoverRef}
+                        className="absolute z-50 top-0 left-full ml-1 w-52 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl p-2 space-y-0.5"
+                        onClick={e => e.stopPropagation()}
+                      >
+                        <p className="text-[10px] text-gray-500 font-medium px-1 pb-1">
+                          {format(d, 'MMM d')} — remaining items
+                        </p>
+                        <div className="max-h-48 overflow-y-auto space-y-0.5">
+                        {dayItems.slice(3).map(item => (
+                          <button
+                            key={item.id}
+                            onClick={() => { setSelected(item); setExpandedDay(null) }}
+                            className="w-full text-left truncate text-[11px] px-1.5 py-1 rounded font-medium transition-opacity hover:opacity-80"
+                            style={{
+                              backgroundColor: groupColor(item) + '30',
+                              color:           groupColor(item),
+                            }}
+                          >
+                            {item.title}
+                          </button>
+                        ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )
               })}

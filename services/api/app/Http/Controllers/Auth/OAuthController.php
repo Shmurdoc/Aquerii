@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\OauthAccount;
+use App\Models\OAuthAccount;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceMember;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
@@ -36,20 +37,19 @@ class OAuthController extends Controller
         }
 
         [$user, $isNew] = DB::transaction(function () use ($social, $provider) {
-            $oauth = OauthAccount::where('provider', $provider)
+            $oauth = OAuthAccount::where('provider', $provider)
                 ->where('provider_id', $social->getId())
                 ->first();
 
             if ($oauth) {
                 $oauth->update([
-                    'access_token'  => $social->token,
-                    'refresh_token' => $social->refreshToken,
+                    'access_token'  => Crypt::encryptString($social->token),
+                    'refresh_token' => $social->refreshToken ? Crypt::encryptString($social->refreshToken) : null,
                     'expires_at'    => $social->expiresIn ? now()->addSeconds($social->expiresIn) : null,
                 ]);
                 return [$oauth->user, false];
             }
 
-            // Find or create user by email
             $user  = User::firstOrCreate(
                 ['email' => $social->getEmail()],
                 [
@@ -59,16 +59,15 @@ class OAuthController extends Controller
                 ]
             );
 
-            OauthAccount::create([
+            OAuthAccount::create([
                 'user_id'       => $user->id,
                 'provider'      => $provider,
                 'provider_id'   => $social->getId(),
-                'access_token'  => $social->token,
-                'refresh_token' => $social->refreshToken,
+                'access_token'  => Crypt::encryptString($social->token),
+                'refresh_token' => $social->refreshToken ? Crypt::encryptString($social->refreshToken) : null,
                 'expires_at'    => $social->expiresIn ? now()->addSeconds($social->expiresIn) : null,
             ]);
 
-            // Auto-create workspace for brand-new users
             $isNew = $user->wasRecentlyCreated;
             if ($isNew) {
                 $slug      = Str::slug($user->name) . '-' . Str::lower(Str::random(5));

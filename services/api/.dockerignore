@@ -1,0 +1,7 @@
+vendor/
+node_modules/
+.git/
+.storage/
+docker-compose*.yml
+.DS_Store
+Thumbs.db

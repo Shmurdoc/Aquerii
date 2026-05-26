@@ -31,7 +31,7 @@ export default function RegisterPage() {
     onSuccess: (res) => {
       const { user, token, workspace } = res.data.data
       setAuth(token, user, workspace)
-      navigate('/boards')
+      navigate('/onboarding')
     },
     onError: (err: any) => {
       const errors = err.response?.data?.error?.errors

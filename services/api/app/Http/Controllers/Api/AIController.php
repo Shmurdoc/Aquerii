@@ -24,9 +24,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, 5);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
                 ->timeout(60)
-                ->post(config('services.ai.base_url') . '/chat', [
+                ->post(config('services.ai.url') . '/chat', [
                     'workspace_id' => $workspace->id,
                     'message'      => $validated['message'],
                     'history'      => $validated['history'] ?? [],
@@ -56,9 +56,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, 3);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.base_url') . '/documents/summarize', [
+                ->post(config('services.ai.url') . '/documents/summarize', [
                     'workspace_id' => $workspace->id,
                     'text'         => $validated['text'],
                 ]);
@@ -85,9 +85,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, 10);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.base_url') . '/crm/score', [
+                ->post(config('services.ai.url') . '/crm/score', [
                     'workspace_id' => $workspace->id,
                     'deal_id'      => $validated['deal_id'],
                 ]);

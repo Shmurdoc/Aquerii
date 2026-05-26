@@ -1,8 +1,7 @@
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc'
 import { Resource } from '@opentelemetry/resources'
-import { SEMRESATTRS_SERVICE_NAME, SEMRESATTRS_SERVICE_VERSION } from '@opentelemetry/semantic-conventions'
-import { SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base'
+import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
 
 const exporter = new OTLPTraceExporter({
   url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT ?? 'http://otel-collector:4317',
@@ -10,10 +9,14 @@ const exporter = new OTLPTraceExporter({
 
 const sdk = new NodeSDK({
   resource: new Resource({
-    [SEMRESATTRS_SERVICE_NAME]:    'aquerii-realtime',
-    [SEMRESATTRS_SERVICE_VERSION]: process.env.npm_package_version ?? '0.1.0',
+    'service.name':    'aquerii-realtime',
+    'service.version': process.env.npm_package_version ?? '0.1.0',
   }),
-  spanProcessor: new SimpleSpanProcessor(exporter),
+  spanProcessor: new BatchSpanProcessor(exporter, {
+    maxExportBatchSize:   512,
+    scheduledDelayMillis: 5000,
+    exportTimeoutMillis:  10000,
+  }),
 })
 
 sdk.start()

@@ -45,6 +45,19 @@ class BoardColumnController extends Controller
         return response()->json(['data' => ['id' => $id]], 201);
     }
 
+    // GET /workspaces/{workspace}/boards/{board}/columns/{column}
+    public function show(Workspace $workspace, string $boardId, string $columnId): JsonResponse
+    {
+        $column = DB::table('columns')
+            ->where('id', $columnId)
+            ->where('board_id', $boardId)
+            ->first();
+
+        abort_unless($column, 404);
+
+        return response()->json(['data' => $column]);
+    }
+
     // PATCH /workspaces/{workspace}/boards/{board}/columns/{column}
     public function update(Request $request, Workspace $workspace, string $boardId, string $columnId): JsonResponse
     {

@@ -10,13 +10,38 @@ export interface Item {
   group_id: string
   parent_id: string | null
   title: string
+  description: string | Record<string, unknown> | null
   status: string | null
   priority: string | null
   due_date: string | null
   position: number
   version: number
+  done: boolean
   column_values: Record<string, unknown>
   assignees: Array<{ id: string; name: string; avatar_url: string | null }>
+}
+
+/**
+ * Normalise a description value that may arrive from the API as either:
+ *   - a Tiptap JSON object  → returned as-is
+ *   - a plain string        → wrapped in a minimal Tiptap doc node
+ *   - null / undefined      → returned as null
+ */
+export function normalizeDescription(
+  raw: string | Record<string, unknown> | null | undefined
+): Record<string, unknown> | null {
+  if (!raw) return null
+  if (typeof raw === 'object') return raw
+  // Plain string — wrap so Tiptap can render it
+  return {
+    type: 'doc',
+    content: [
+      {
+        type: 'paragraph',
+        content: [{ type: 'text', text: raw }],
+      },
+    ],
+  }
 }
 
 export function useItems(boardId: string, groupId?: string) {
@@ -48,7 +73,10 @@ export function useItems(boardId: string, groupId?: string) {
     queryFn: async () => {
       const params = groupId ? { group_id: groupId } : {}
       const res    = await api.get(`/workspaces/${workspace!.id}/boards/${boardId}/items`, { params })
-      return res.data.data as Item[]
+      return (res.data.data as Item[]).map(item => ({
+        ...item,
+        description: normalizeDescription(item.description),
+      }))
     },
     enabled: !!workspace && !!boardId,
   })

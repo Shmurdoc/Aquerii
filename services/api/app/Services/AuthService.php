@@ -149,6 +149,15 @@ class AuthService
         return (bool) $g2fa->verifyKey($secret, $code);
     }
 
+    public function disableMfa(User $user): void
+    {
+        $user->update([
+            'two_factor_secret'         => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_enabled'        => false,
+        ]);
+    }
+
     private function uniqueSlug(string $name): string
     {
         $base = Str::slug($name);

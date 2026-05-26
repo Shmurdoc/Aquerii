@@ -10,3 +10,15 @@ Artisan::command('inspire', function () {
 
 // Reset monthly AI credits at the start of each month
 Schedule::command('app:reset-ai-credits')->monthlyOn(1, '00:00');
+
+// Send due-date reminders for items due in the next 24 hours
+Schedule::command('app:send-due-reminders')->hourly();
+
+// Revoke expired Sanctum tokens daily
+Schedule::command('sanctum:prune-expired')->daily();
+
+// Sync all email accounts every 5 minutes
+Schedule::job(new \App\Modules\Email\Jobs\SyncAllEmailAccounts())->everyFiveMinutes();
+
+// Alert stale contacts daily
+Schedule::command('crm:alert-stale-contacts')->daily();

@@ -1,0 +1,34 @@
+# ─── Environment ──────────────────────────────────────
+.env
+
+# ─── OS ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Node ─────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+
+# ─── PHP / Composer ───────────────────────────────────
+/vendor/
+composer.lock
+
+# ─── Laravel ──────────────────────────────────────────
+/storage/framework/cache/data/
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/logs/*
+/storage/debugbar/*
+/bootstrap/cache/*.php
+
+# ─── IDE ──────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ─── Docker ───────────────────────────────────────────
+docker-data/
+
+# ─── K8s secrets (use Vault/SealedSecrets in prod) ───
+infra/k8s/secrets.yaml

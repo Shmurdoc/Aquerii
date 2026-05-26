@@ -11,7 +11,7 @@ rule_files:
 alerting:
   alertmanagers:
     - static_configs:
-        - targets: []   # wire up Alertmanager here when added
+        - targets: [alertmanager:9093]
 
 scrape_configs:
 
@@ -36,18 +36,19 @@ scrape_configs:
 
   # ── Python AI service ────────────────────────────────────────
   - job_name: ai
+    metrics_path: /metrics
     static_configs:
-      - targets: [ai:9090]
+      - targets: [ai:8002]
 
   # ── PostgreSQL ───────────────────────────────────────────────
   - job_name: postgres
     static_configs:
-      - targets: [postgres:9187]   # postgres_exporter sidecar
+      - targets: [postgres-exporter:9187]
 
   # ── Redis ────────────────────────────────────────────────────
   - job_name: redis
     static_configs:
-      - targets: [redis:9121]      # redis_exporter sidecar
+      - targets: [redis-exporter:9121]
 
   # ── Caddy ────────────────────────────────────────────────────
   - job_name: caddy

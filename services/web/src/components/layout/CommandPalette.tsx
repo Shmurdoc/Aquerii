@@ -4,9 +4,12 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
 
-interface Props { onClose: () => void }
+interface Props {
+  onClose: () => void
+  onOpenItem?: (itemId: string) => void
+}
 
-export default function CommandPalette({ onClose }: Props) {
+export default function CommandPalette({ onClose, onOpenItem }: Props) {
   const [query, setQuery] = useState('')
   const navigate = useNavigate()
   const workspace = useAuthStore((s) => s.workspace)
@@ -23,6 +26,33 @@ export default function CommandPalette({ onClose }: Props) {
       api.get(`/workspaces/${workspace!.id}/search?q=${encodeURIComponent(query)}`).then((r) => r.data.data),
     enabled: !!workspace && query.length > 1,
   })
+
+  const handleResultClick = useCallback((r: { id: string; title: string; type: string }) => {
+    switch (r.type) {
+      case 'board':
+        navigate(`/boards/${r.id}`)
+        break
+      case 'document':
+        navigate(`/documents/${r.id}`)
+        break
+      case 'item':
+        if (onOpenItem) {
+          onOpenItem(r.id)
+        } else {
+          // fallback: navigate to boards and let the user find it
+          navigate('/boards')
+        }
+        break
+      case 'contact':
+      case 'deal':
+      case 'company':
+        navigate('/crm')
+        break
+      default:
+        break
+    }
+    onClose()
+  }, [navigate, onClose, onOpenItem])
 
   const staticCommands = [
     { label: 'Go to Boards',    action: () => { navigate('/boards');    onClose() } },
@@ -61,6 +91,7 @@ export default function CommandPalette({ onClose }: Props) {
           {results?.map((r: { id: string; title: string; type: string }) => (
             <button
               key={r.id}
+              onClick={() => handleResultClick(r)}
               className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
             >
               <span className="text-xs text-gray-500 uppercase mr-2">{r.type}</span>

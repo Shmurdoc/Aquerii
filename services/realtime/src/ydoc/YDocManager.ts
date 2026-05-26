@@ -99,7 +99,7 @@ export class YDocManager {
 
     const encoded = Y.encodeStateAsUpdate(state.doc)
     try {
-      await axios.patch(
+      await axios.put(
         `${this.apiUrl}/internal/documents/${docId}/ydoc`,
         { ydoc_state: Buffer.from(encoded).toString('base64') },
         {

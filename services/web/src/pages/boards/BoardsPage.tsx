@@ -1,12 +1,15 @@
-import { useBoards, useCreateBoard } from '@/hooks/useBoards'
+import { useState } from 'react'
+import { useBoards, useCreateBoard, useDeleteBoard } from '@/hooks/useBoards'
 import { useNavigate } from 'react-router-dom'
-import { Plus, LayoutGrid } from 'lucide-react'
+import { Plus, LayoutGrid, Trash2, MoreVertical } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function BoardsPage() {
   const { data: boards = [], isLoading } = useBoards()
   const createBoard = useCreateBoard()
+  const deleteBoard = useDeleteBoard()
   const navigate    = useNavigate()
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
 
   const handleCreate = async () => {
     try {
@@ -14,6 +17,23 @@ export default function BoardsPage() {
       navigate(`/boards/${res.data.data.id}`)
     } catch {
       toast.error('Failed to create board.')
+    }
+  }
+
+  const handleDelete = async (boardId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (confirmDelete === boardId) {
+      try {
+        await deleteBoard.mutateAsync(boardId)
+        toast.success('Board deleted.')
+      } catch {
+        toast.error('Failed to delete board.')
+      }
+      setConfirmDelete(null)
+    } else {
+      setConfirmDelete(boardId)
+      // Auto-cancel confirm after 3s
+      setTimeout(() => setConfirmDelete(c => c === boardId ? null : c), 3000)
     }
   }
 
@@ -44,24 +64,39 @@ export default function BoardsPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {boards.map(board => (
-            <button
-              key={board.id}
-              onClick={() => navigate(`/boards/${board.id}`)}
-              className="text-left bg-gray-900 border border-gray-800 hover:border-indigo-500/50 rounded-xl p-4 transition-colors group"
-            >
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-lg mb-3"
-                style={{ backgroundColor: board.color ?? '#6366f1' }}
+            <div key={board.id} className="relative group">
+              <button
+                data-testid="board-card"
+                onClick={() => navigate(`/boards/${board.id}`)}
+                className="w-full text-left bg-gray-900 border border-gray-800 hover:border-indigo-500/50 rounded-xl p-4 transition-colors"
               >
-                {board.icon ?? board.name[0]}
-              </div>
-              <p className="text-sm font-medium text-white group-hover:text-indigo-300 transition-colors truncate">
-                {board.name}
-              </p>
-              {board.description && (
-                <p className="text-xs text-gray-500 mt-0.5 truncate">{board.description}</p>
-              )}
-            </button>
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-lg mb-3"
+                  style={{ backgroundColor: board.color ?? '#6366f1' }}
+                >
+                  {board.icon ?? board.name[0]}
+                </div>
+                <p className="text-sm font-medium text-white group-hover:text-indigo-300 transition-colors truncate pr-6">
+                  {board.name}
+                </p>
+                {board.description && (
+                  <p className="text-xs text-gray-500 mt-0.5 truncate">{board.description}</p>
+                )}
+              </button>
+
+              {/* Delete button */}
+              <button
+                onClick={e => handleDelete(board.id, e)}
+                title={confirmDelete === board.id ? 'Click again to confirm' : 'Delete board'}
+                className={`absolute top-3 right-3 p-1 rounded transition-all ${
+                  confirmDelete === board.id
+                    ? 'opacity-100 text-red-400 bg-red-500/10'
+                    : 'opacity-0 group-hover:opacity-100 text-gray-500 hover:text-red-400 hover:bg-red-500/10'
+                }`}
+              >
+                <Trash2 size={13} />
+              </button>
+            </div>
           ))}
         </div>
       )}

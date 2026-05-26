@@ -1,12 +1,11 @@
-# app/routers/documents.py — AI document assistant
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-import anthropic
 from app.core.config import settings
 from app.core.credits import consume_credits, rollback_credits
+from app.core.providers import generate_text
+from app.security.auth import verify_internal_token
 
-router = APIRouter()
-client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+router = APIRouter(dependencies=[Depends(verify_internal_token)])
 
 ACTIONS = {
     "improve":   "Improve the writing quality, clarity, and flow of this text. Return only the improved text.",
@@ -20,7 +19,7 @@ ACTIONS = {
 class DocumentAssistRequest(BaseModel):
     workspace_id: str
     content: str
-    action: str   # improve | summarise | expand | simplify | fix
+    action: str
 
 
 class DocumentAssistResponse(BaseModel):
@@ -28,13 +27,7 @@ class DocumentAssistResponse(BaseModel):
 
 
 @router.post("/assist", response_model=DocumentAssistResponse)
-async def document_assist(
-    body: DocumentAssistRequest,
-    x_internal_key: str = Header(alias="X-Internal-Key"),
-):
-    if x_internal_key != settings.INTERNAL_API_KEY:
-        raise HTTPException(status_code=403, detail="Forbidden")
-
+async def document_assist(body: DocumentAssistRequest):
     if body.action not in ACTIONS:
         raise HTTPException(status_code=400, detail=f"Unknown action. Choose from: {list(ACTIONS.keys())}")
 
@@ -45,16 +38,13 @@ async def document_assist(
     if not ok:
         raise HTTPException(status_code=402, detail="AI_CREDITS_EXHAUSTED")
 
-    system = ACTIONS[body.action]
-
     try:
-        response = client.messages.create(
-            model="claude-3-5-sonnet-20241022",
+        result = await generate_text(
+            body.content,
+            system=ACTIONS[body.action],
             max_tokens=4096,
-            system=system,
-            messages=[{"role": "user", "content": body.content}],
         )
-        return DocumentAssistResponse(result=response.content[0].text)
+        return DocumentAssistResponse(result=result)
     except Exception as exc:
         await rollback_credits(body.workspace_id, settings.CREDIT_COST_DOCUMENT)
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc

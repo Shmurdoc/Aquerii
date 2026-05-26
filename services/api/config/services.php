@@ -31,4 +31,34 @@ return [
         'redirect' => env('GITHUB_REDIRECT_URI'),
     ],
 
+    'stripe' => [
+        'secret'          => env('STRIPE_SECRET'),
+        'webhook_secret'  => env('STRIPE_WEBHOOK_SECRET'),
+        'prices' => [
+            'starter'  => env('STRIPE_PRICE_STARTER'),
+            'growth'   => env('STRIPE_PRICE_GROWTH'),
+            'business' => env('STRIPE_PRICE_BUSINESS'),
+        ],
+    ],
+
+    'payfast' => [
+        'merchant_id'  => env('PAYFAST_MERCHANT_ID'),
+        'merchant_key' => env('PAYFAST_MERCHANT_KEY'),
+        'passphrase'   => env('PAYFAST_PASSPHRASE'),
+        'sandbox'      => env('PAYFAST_SANDBOX', false),
+    ],
+
+    'ai' => [
+        'url'    => env('AI_SERVICE_URL', 'http://ai:8002'),
+        'secret' => env('AI_SERVICE_SECRET'),
+    ],
+
+    'realtime' => [
+        'secret' => env('REALTIME_SECRET'),
+    ],
+
+    'gotenberg' => [
+        'url' => env('GOTENBERG_URL', 'http://gotenberg:3000'),
+    ],
+
 ];

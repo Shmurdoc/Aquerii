@@ -48,6 +48,19 @@ class AutomationController extends Controller
         return response()->json(['data' => ['id' => $id]], 201);
     }
 
+    // GET /workspaces/{workspace}/automations/{automation}
+    public function show(Workspace $workspace, string $automationId): JsonResponse
+    {
+        $automation = DB::table('automations')
+            ->where('id', $automationId)
+            ->where('workspace_id', $workspace->id)
+            ->first();
+
+        abort_unless($automation, 404);
+
+        return response()->json(['data' => $automation]);
+    }
+
     // PATCH /workspaces/{workspace}/automations/{automation}
     public function update(Request $request, Workspace $workspace, string $automationId): JsonResponse
     {
@@ -90,8 +103,10 @@ class AutomationController extends Controller
     public function runs(Workspace $workspace, string $automationId): JsonResponse
     {
         $runs = DB::table('automation_runs')
-            ->where('automation_id', $automationId)
-            ->orderBy('created_at', 'desc')
+            ->join('automations', 'automations.id', '=', 'automation_runs.automation_id')
+            ->where('automation_runs.automation_id', $automationId)
+            ->where('automations.workspace_id', $workspace->id)
+            ->orderBy('automation_runs.created_at', 'desc')
             ->limit(100)
             ->get();
 

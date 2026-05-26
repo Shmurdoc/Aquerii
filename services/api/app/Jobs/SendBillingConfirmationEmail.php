@@ -27,7 +27,6 @@ class SendBillingConfirmationEmail implements ShouldQueue
         $user = User::find($this->userId);
         if (!$user) return;
 
-        // Mail::to($user)->send(new \App\Mail\BillingConfirmation($this->eventType, $this->details));
-        // TODO: implement Mailable class
+        Mail::to($user)->send(new \App\Mail\BillingConfirmation($this->eventType, $this->details));
     }
 }

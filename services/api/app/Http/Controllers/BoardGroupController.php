@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Board;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -10,9 +11,16 @@ use Illuminate\Support\Str;
 
 class BoardGroupController extends Controller
 {
+    private function resolveBoard(Workspace $workspace, string $boardId): Board
+    {
+        return Board::where('workspace_id', $workspace->id)->findOrFail($boardId);
+    }
+
     // GET /workspaces/{workspace}/boards/{board}/groups
     public function index(Workspace $workspace, string $boardId): JsonResponse
     {
+        $this->resolveBoard($workspace, $boardId);
+
         $groups = DB::table('groups')
             ->where('board_id', $boardId)
             ->orderBy('position')
@@ -24,6 +32,8 @@ class BoardGroupController extends Controller
     // POST /workspaces/{workspace}/boards/{board}/groups
     public function store(Request $request, Workspace $workspace, string $boardId): JsonResponse
     {
+        $this->resolveBoard($workspace, $boardId);
+
         $validated = $request->validate([
             'name'  => 'required|string|max:100',
             'color' => 'sometimes|string|max:20',
@@ -45,9 +55,26 @@ class BoardGroupController extends Controller
         return response()->json(['data' => ['id' => $id]], 201);
     }
 
+    // GET /workspaces/{workspace}/boards/{board}/groups/{group}
+    public function show(Workspace $workspace, string $boardId, string $groupId): JsonResponse
+    {
+        $this->resolveBoard($workspace, $boardId);
+
+        $group = DB::table('groups')
+            ->where('id', $groupId)
+            ->where('board_id', $boardId)
+            ->first();
+
+        abort_unless($group, 404);
+
+        return response()->json(['data' => $group]);
+    }
+
     // PATCH /workspaces/{workspace}/boards/{board}/groups/{group}
     public function update(Request $request, Workspace $workspace, string $boardId, string $groupId): JsonResponse
     {
+        $this->resolveBoard($workspace, $boardId);
+
         $validated = $request->validate([
             'name'     => 'sometimes|string|max:100',
             'color'    => 'sometimes|string|max:20',
@@ -66,6 +93,8 @@ class BoardGroupController extends Controller
     // DELETE /workspaces/{workspace}/boards/{board}/groups/{group}
     public function destroy(Workspace $workspace, string $boardId, string $groupId): JsonResponse
     {
+        $this->resolveBoard($workspace, $boardId);
+
         DB::table('groups')
             ->where('id', $groupId)
             ->where('board_id', $boardId)
