@@ -2,6 +2,7 @@
 
 namespace App\Core\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -23,8 +24,8 @@ class Meeting extends Model
     {
         return [
             'starts_at' => 'datetime',
-            'ends_at'   => 'datetime',
-            'settings'  => 'array',
+            'ends_at' => 'datetime',
+            'settings' => 'array',
         ];
     }
 
@@ -35,7 +36,7 @@ class Meeting extends Model
 
     public function organizer()
     {
-        return $this->belongsTo(\App\Models\User::class, 'organizer_id');
+        return $this->belongsTo(User::class, 'organizer_id');
     }
 
     public function attendees()

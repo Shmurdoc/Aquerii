@@ -18,11 +18,11 @@ class Email extends Model
     ];
 
     protected $casts = [
-        'to_addresses'  => 'array',
-        'cc_addresses'  => 'array',
+        'to_addresses' => 'array',
+        'cc_addresses' => 'array',
         'bcc_addresses' => 'array',
-        'is_read'       => 'boolean',
-        'received_at'   => 'datetime',
+        'is_read' => 'boolean',
+        'received_at' => 'datetime',
     ];
 
     public function thread(): BelongsTo

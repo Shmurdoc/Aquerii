@@ -99,7 +99,7 @@ return new class extends Migration
 
         Schema::table('crm_companies', function (Blueprint $table) {
             $cols = ['email', 'phone', 'entity_type', 'invoice_count', 'sales_order_count',
-                     'purchase_order_count', 'total_revenue', 'total_spend', 'last_activity_at'];
+                'purchase_order_count', 'total_revenue', 'total_spend', 'last_activity_at'];
             foreach ($cols as $col) {
                 if (Schema::hasColumn('crm_companies', $col)) {
                     $table->dropColumn($col);

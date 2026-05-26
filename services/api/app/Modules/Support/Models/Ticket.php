@@ -25,11 +25,11 @@ class Ticket extends Model
     protected function casts(): array
     {
         return [
-            'tags'           => 'array',
-            'custom_fields'  => 'array',
-            'sla_due_at'     => 'datetime',
+            'tags' => 'array',
+            'custom_fields' => 'array',
+            'sla_due_at' => 'datetime',
             'sla_breached_at' => 'datetime',
-            'closed_at'      => 'datetime',
+            'closed_at' => 'datetime',
         ];
     }
 

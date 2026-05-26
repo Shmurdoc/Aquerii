@@ -17,9 +17,9 @@ class EmailThread extends Model
     ];
 
     protected $casts = [
-        'is_starred'      => 'boolean',
+        'is_starred' => 'boolean',
         'last_message_at' => 'datetime',
-        'message_count'   => 'integer',
+        'message_count' => 'integer',
     ];
 
     public function account(): BelongsTo

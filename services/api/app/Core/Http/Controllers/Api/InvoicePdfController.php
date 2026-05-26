@@ -1,11 +1,11 @@
 <?php
+
 namespace App\Core\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
-
+use App\Core\Models\Workspace;
 use App\Core\Services\PdfService;
 use App\Modules\Invoicing\Models\Invoice;
-use App\Core\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -21,16 +21,16 @@ class InvoicePdfController extends Controller
         $items = $invoice->items;
 
         // Resolve template from workspace settings
-        $settings  = $workspace->settings ?? [];
-        $template  = $settings['doc_template'] ?? 'modern';
-        $template  = in_array($template, ['modern', 'classic', 'minimal']) ? $template : 'modern';
+        $settings = $workspace->settings ?? [];
+        $template = $settings['doc_template'] ?? 'modern';
+        $template = in_array($template, ['modern', 'classic', 'minimal']) ? $template : 'modern';
 
         // Build a customer object from inline invoice fields (invoices store
         // customer data denormalised; no FK to crm_companies is guaranteed)
         $customer = (object) [
-            'name'    => $invoice->customer_name,
-            'email'   => $invoice->customer_email,
-            'phone'   => null,
+            'name' => $invoice->customer_name,
+            'email' => $invoice->customer_email,
+            'phone' => null,
             'address' => $invoice->billing_address,
         ];
 
@@ -39,8 +39,8 @@ class InvoicePdfController extends Controller
         ));
 
         return response($pdfContent, 200, [
-            'Content-Type'        => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="invoice-' . $invoice->invoice_number . '.pdf"',
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="invoice-'.$invoice->invoice_number.'.pdf"',
         ]);
     }
 }

@@ -46,7 +46,9 @@ class CrmAutomationService
             $actual = $context[$key] ?? null;
 
             if (is_array($expected)) {
-                if (!in_array($actual, $expected, true)) return false;
+                if (! in_array($actual, $expected, true)) {
+                    return false;
+                }
             } elseif ($actual !== $expected) {
                 return false;
             }

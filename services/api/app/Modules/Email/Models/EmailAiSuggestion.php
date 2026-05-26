@@ -17,7 +17,7 @@ class EmailAiSuggestion extends Model
 
     protected $casts = [
         'extracted_tasks' => 'array',
-        'approved_at'     => 'datetime',
+        'approved_at' => 'datetime',
     ];
 
     public function email(): BelongsTo

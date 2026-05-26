@@ -16,7 +16,7 @@ class CalendarSyncService
             ->where('provider', $sync->provider)
             ->first();
 
-        if (!$account || !$account->access_token) {
+        if (! $account || ! $account->access_token) {
             return ['success' => false, 'error' => 'No OAuth account linked'];
         }
 
@@ -25,9 +25,9 @@ class CalendarSyncService
 
         try {
             $events = match ($provider) {
-                'google'   => $this->fetchGoogleEvents($account, $sync->calendar_id, $daysBack, $daysForward),
+                'google' => $this->fetchGoogleEvents($account, $sync->calendar_id, $daysBack, $daysForward),
                 'microsoft' => $this->fetchOutlookEvents($account, $sync->calendar_id, $daysBack, $daysForward),
-                default    => [],
+                default => [],
             };
 
             $sync->update(['last_synced_at' => Carbon::now()]);
@@ -36,7 +36,7 @@ class CalendarSyncService
         } catch (\Throwable $e) {
             Log::error('CalendarSync failed', [
                 'provider' => $provider,
-                'error'    => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
 
             return ['success' => false, 'error' => $e->getMessage()];
@@ -50,14 +50,14 @@ class CalendarSyncService
 
         $response = Http::withToken($account->access_token)
             ->get("https://www.googleapis.com/calendar/v3/calendars/{$calendarId}/events", [
-                'timeMin'       => $timeMin,
-                'timeMax'       => $timeMax,
-                'singleEvents'  => 'true',
-                'orderBy'       => 'startTime',
+                'timeMin' => $timeMin,
+                'timeMax' => $timeMax,
+                'singleEvents' => 'true',
+                'orderBy' => 'startTime',
             ]);
 
-        if (!$response->successful()) {
-            throw new \RuntimeException('Google Calendar API error: ' . $response->body());
+        if (! $response->successful()) {
+            throw new \RuntimeException('Google Calendar API error: '.$response->body());
         }
 
         return $response->json('items', []);
@@ -72,11 +72,11 @@ class CalendarSyncService
             ->get("https://graph.microsoft.com/v1.0/me/calendars/{$calendarId}/events", [
                 '\$filter' => "start/dateTime ge '{$timeMin}' and end/dateTime le '{$timeMax}'",
                 '\$orderby' => 'start/dateTime',
-                '\$top'     => 50,
+                '\$top' => 50,
             ]);
 
-        if (!$response->successful()) {
-            throw new \RuntimeException('Outlook Graph API error: ' . $response->body());
+        if (! $response->successful()) {
+            throw new \RuntimeException('Outlook Graph API error: '.$response->body());
         }
 
         return $response->json('value', []);
@@ -86,12 +86,13 @@ class CalendarSyncService
     {
         try {
             return match ($provider) {
-                'google'   => $this->listGoogleCalendars($account),
+                'google' => $this->listGoogleCalendars($account),
                 'microsoft' => $this->listOutlookCalendars($account),
-                default    => [],
+                default => [],
             };
         } catch (\Throwable $e) {
             Log::error('CalendarSync list failed', ['provider' => $provider, 'error' => $e->getMessage()]);
+
             return [];
         }
     }
@@ -101,10 +102,12 @@ class CalendarSyncService
         $response = Http::withToken($account->access_token)
             ->get('https://www.googleapis.com/calendar/v3/users/me/calendarList');
 
-        if (!$response->successful()) return [];
+        if (! $response->successful()) {
+            return [];
+        }
 
-        return array_map(fn($c) => [
-            'id'   => $c['id'],
+        return array_map(fn ($c) => [
+            'id' => $c['id'],
             'name' => $c['summary'] ?? $c['id'],
         ], $response->json('items', []));
     }
@@ -114,10 +117,12 @@ class CalendarSyncService
         $response = Http::withToken($account->access_token)
             ->get('https://graph.microsoft.com/v1.0/me/calendars');
 
-        if (!$response->successful()) return [];
+        if (! $response->successful()) {
+            return [];
+        }
 
-        return array_map(fn($c) => [
-            'id'   => $c['id'],
+        return array_map(fn ($c) => [
+            'id' => $c['id'],
             'name' => $c['name'] ?? $c['id'],
         ], $response->json('value', []));
     }

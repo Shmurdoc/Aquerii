@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Workspace;
-use App\Models\WorkspaceMember;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-use PragmaRX\Google2FA\Google2FA;
 
 class AuthController extends Controller
 {
@@ -20,19 +18,19 @@ class AuthController extends Controller
     public function register(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'name'                  => 'required|string|max:255',
-            'email'                 => 'required|email|unique:users,email',
-            'password'              => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
-            'workspace_name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
+            'workspace_name' => 'required|string|max:255',
         ]);
 
         [$user, $workspace, $token] = $this->authService->register($data);
 
         return response()->json([
             'data' => [
-                'user'      => $this->userShape($user),
+                'user' => $this->userShape($user),
                 'workspace' => $this->workspaceShape($workspace),
-                'token'     => $token,
+                'token' => $token,
             ],
         ], 201);
     }
@@ -40,7 +38,7 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required|string',
             'mfa_code' => 'nullable|string|size:6',
         ]);
@@ -57,7 +55,7 @@ class AuthController extends Controller
 
         return response()->json([
             'data' => [
-                'user'  => $this->userShape($user),
+                'user' => $this->userShape($user),
                 'token' => $token,
             ],
         ]);
@@ -66,6 +64,7 @@ class AuthController extends Controller
     public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
+
         return response()->json(['data' => ['message' => 'Logged out.']]);
     }
 
@@ -73,6 +72,7 @@ class AuthController extends Controller
     {
         $request->validate(['token' => 'required|string']);
         $token = $this->authService->refreshToken($request->input('token'));
+
         return response()->json(['data' => ['token' => $token]]);
     }
 
@@ -80,23 +80,26 @@ class AuthController extends Controller
     {
         $request->validate(['email' => 'required|email']);
         $this->authService->sendPasswordReset($request->input('email'));
+
         return response()->json(['data' => ['message' => 'If that email exists, a reset link has been sent.']]);
     }
 
     public function resetPassword(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'token'    => 'required|string',
-            'email'    => 'required|email',
+            'token' => 'required|string',
+            'email' => 'required|email',
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
         ]);
         $this->authService->resetPassword($data);
+
         return response()->json(['data' => ['message' => 'Password reset successfully.']]);
     }
 
     public function verifyEmail(Request $request, string $id, string $hash): JsonResponse
     {
         $this->authService->verifyEmail($id, $hash, $request);
+
         return response()->json(['data' => ['message' => 'Email verified.']]);
     }
 
@@ -107,8 +110,8 @@ class AuthController extends Controller
 
         return response()->json([
             'data' => [
-                'secret'         => $secret,
-                'qr_url'         => $qrUrl,
+                'secret' => $secret,
+                'qr_url' => $qrUrl,
                 'recovery_codes' => $recoveryCodes,
             ],
         ]);
@@ -118,9 +121,10 @@ class AuthController extends Controller
     {
         $request->validate(['code' => 'required|string']);
         $ok = $this->authService->verifyMfaCode($request->user(), $request->input('code'));
-        if (!$ok) {
+        if (! $ok) {
             return response()->json(['error' => ['code' => 'MFA_INVALID', 'message' => 'Invalid MFA code.']], 422);
         }
+
         return response()->json(['data' => ['verified' => true]]);
     }
 
@@ -132,37 +136,38 @@ class AuthController extends Controller
         ]);
 
         if ($request->has('password')) {
-            if (!Hash::check($request->input('password'), $request->user()->password)) {
+            if (! Hash::check($request->input('password'), $request->user()->password)) {
                 return response()->json(['error' => ['code' => 'INVALID_PASSWORD', 'message' => 'Invalid password.']], 422);
             }
         } elseif ($request->has('code')) {
             $ok = $this->authService->verifyMfaCode($request->user(), $request->input('code'));
-            if (!$ok) {
+            if (! $ok) {
                 return response()->json(['error' => ['code' => 'MFA_INVALID', 'message' => 'Invalid MFA code.']], 422);
             }
         }
 
         $this->authService->disableMfa($request->user());
+
         return response()->json(['data' => ['message' => 'MFA disabled.']]);
     }
 
     private function userShape(User $user): array
     {
         return [
-            'id'         => $user->id,
-            'name'       => $user->name,
-            'email'      => $user->email,
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
             'avatar_url' => $user->avatar_url,
-            'locale'     => $user->locale,
-            'timezone'   => $user->timezone,
-            'mfa_enabled'=> $user->two_factor_enabled,
+            'locale' => $user->locale,
+            'timezone' => $user->timezone,
+            'mfa_enabled' => $user->two_factor_enabled,
         ];
     }
 
     private function workspaceShape(Workspace $workspace): array
     {
         return [
-            'id'   => $workspace->id,
+            'id' => $workspace->id,
             'name' => $workspace->name,
             'slug' => $workspace->slug,
             'plan' => $workspace->plan,

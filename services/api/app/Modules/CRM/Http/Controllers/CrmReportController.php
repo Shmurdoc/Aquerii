@@ -5,7 +5,6 @@ namespace App\Modules\CRM\Http\Controllers;
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
 use App\Modules\CRM\Models\CrmActivity;
-use App\Modules\CRM\Models\CrmContact;
 use App\Modules\CRM\Models\CrmDeal;
 use App\Modules\CRM\Models\CrmLead;
 use Illuminate\Http\JsonResponse;
@@ -65,7 +64,7 @@ class CrmReportController extends Controller
 
         $byStage = collect($durations->pluck('stage_breakdown')->flatten(1))
             ->groupBy('stage_name')
-            ->map(fn($group) => round($group->avg('days'), 1));
+            ->map(fn ($group) => round($group->avg('days'), 1));
 
         return response()->json(['data' => [
             'avg_deal_cycle_days' => $avgTotalDays,
@@ -84,11 +83,11 @@ class CrmReportController extends Controller
             ->whereNotNull('won_at')
             ->where('won_at', '>=', now()->subDays((int) $period))
             ->select(
-                DB::raw("DATE(won_at) as day"),
-                DB::raw("SUM(value) as revenue"),
-                DB::raw("COUNT(*) as deals_count")
+                DB::raw('DATE(won_at) as day'),
+                DB::raw('SUM(value) as revenue'),
+                DB::raw('COUNT(*) as deals_count')
             )
-            ->groupBy(DB::raw("DATE(won_at)"))
+            ->groupBy(DB::raw('DATE(won_at)'))
             ->orderBy('day')
             ->get();
 
@@ -129,24 +128,24 @@ class CrmReportController extends Controller
             ->whereNotNull('won_at')
             ->where('won_at', '>=', now()->subDays((int) $period))
             ->select(
-                DB::raw("DATE(won_at) as day"),
-                DB::raw("COUNT(*) as count"),
-                DB::raw("SUM(value) as value"),
+                DB::raw('DATE(won_at) as day'),
+                DB::raw('COUNT(*) as count'),
+                DB::raw('SUM(value) as value'),
                 DB::raw("COALESCE(loss_reason, 'won') as reason")
             )
-            ->groupBy(DB::raw("DATE(won_at)"), 'loss_reason')
+            ->groupBy(DB::raw('DATE(won_at)'), 'loss_reason')
             ->get();
 
         $lost = CrmDeal::where('workspace_id', $workspace->id)
             ->whereNotNull('lost_at')
             ->where('lost_at', '>=', now()->subDays((int) $period))
             ->select(
-                DB::raw("DATE(lost_at) as day"),
-                DB::raw("COUNT(*) as count"),
-                DB::raw("SUM(value) as value"),
+                DB::raw('DATE(lost_at) as day'),
+                DB::raw('COUNT(*) as count'),
+                DB::raw('SUM(value) as value'),
                 'loss_reason'
             )
-            ->groupBy(DB::raw("DATE(lost_at)"), 'loss_reason')
+            ->groupBy(DB::raw('DATE(lost_at)'), 'loss_reason')
             ->get();
 
         $lossReasons = CrmDeal::where('workspace_id', $workspace->id)
@@ -181,14 +180,14 @@ class CrmReportController extends Controller
             ->select(
                 'type',
                 DB::raw('COUNT(*) as count'),
-                DB::raw("DATE(created_at) as day")
+                DB::raw('DATE(created_at) as day')
             )
-            ->groupBy('type', DB::raw("DATE(created_at)"))
+            ->groupBy('type', DB::raw('DATE(created_at)'))
             ->orderBy('day')
             ->get();
 
         $byType = $activities->groupBy('type')
-            ->map(fn($group) => [
+            ->map(fn ($group) => [
                 'type' => $group->first()->type,
                 'count' => $group->sum('count'),
             ])->values();
@@ -224,7 +223,7 @@ class CrmReportController extends Controller
 
         $total = $sources->sum('count');
 
-        $withRates = $sources->map(fn($s) => [
+        $withRates = $sources->map(fn ($s) => [
             'source' => $s->source,
             'count' => $s->count,
             'pct' => $total > 0 ? round($s->count / $total * 100, 1) : 0,

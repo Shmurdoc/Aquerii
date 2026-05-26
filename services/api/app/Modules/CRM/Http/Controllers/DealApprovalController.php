@@ -29,15 +29,15 @@ class DealApprovalController extends Controller
     public function storeRule(Request $request, Workspace $workspace): JsonResponse
     {
         $data = $request->validate([
-            'name'              => 'required|string|max:255',
-            'description'       => 'nullable|string',
-            'threshold_min'     => 'nullable|numeric|min:0',
-            'threshold_max'     => 'nullable|numeric|min:0',
-            'approval_chain'    => 'sometimes|string|in:single,sequential',
-            'approvers'         => 'required|array',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'threshold_min' => 'nullable|numeric|min:0',
+            'threshold_max' => 'nullable|numeric|min:0',
+            'approval_chain' => 'sometimes|string|in:single,sequential',
+            'approvers' => 'required|array',
             'approvers.*.user_id' => 'required|uuid|exists:users,id',
             'approvers.*.order' => 'sometimes|integer',
-            'escalation_hours'  => 'nullable|integer|min:1',
+            'escalation_hours' => 'nullable|integer|min:1',
             'escalation_user_id' => 'nullable|uuid|exists:users,id',
         ]);
 
@@ -54,16 +54,16 @@ class DealApprovalController extends Controller
         abort_if($rule->workspace_id !== $workspace->id, 404);
 
         $data = $request->validate([
-            'name'              => 'sometimes|string|max:255',
-            'description'       => 'nullable|string',
-            'threshold_min'     => 'nullable|numeric|min:0',
-            'threshold_max'     => 'nullable|numeric|min:0',
-            'approval_chain'    => 'sometimes|string|in:single,sequential',
-            'approvers'         => 'sometimes|array',
+            'name' => 'sometimes|string|max:255',
+            'description' => 'nullable|string',
+            'threshold_min' => 'nullable|numeric|min:0',
+            'threshold_max' => 'nullable|numeric|min:0',
+            'approval_chain' => 'sometimes|string|in:single,sequential',
+            'approvers' => 'sometimes|array',
             'approvers.*.user_id' => 'required_with:approvers|uuid|exists:users,id',
-            'escalation_hours'  => 'nullable|integer|min:1',
+            'escalation_hours' => 'nullable|integer|min:1',
             'escalation_user_id' => 'nullable|uuid|exists:users,id',
-            'is_active'         => 'boolean',
+            'is_active' => 'boolean',
         ]);
 
         $rule->update($data);
@@ -75,6 +75,7 @@ class DealApprovalController extends Controller
     {
         abort_if($rule->workspace_id !== $workspace->id, 404);
         $rule->delete();
+
         return response()->json(['message' => 'Deleted'], 200);
     }
 

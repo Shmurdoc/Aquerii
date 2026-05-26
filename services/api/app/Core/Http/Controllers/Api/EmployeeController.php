@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Core\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class EmployeeController extends Controller
 {
@@ -35,12 +36,12 @@ class EmployeeController extends Controller
     {
         $userId = $request->route('userId');
         $data = $request->validate([
-            'job_title'    => 'nullable|string|max:200',
-            'department'   => 'nullable|string|max:200',
-            'phone'        => 'nullable|string|max:50',
-            'salary'       => 'nullable|numeric|min:0',
+            'job_title' => 'nullable|string|max:200',
+            'department' => 'nullable|string|max:200',
+            'phone' => 'nullable|string|max:50',
+            'salary' => 'nullable|numeric|min:0',
             'emergency_contact' => 'nullable|string',
-            'employed_at'  => 'nullable|date',
+            'employed_at' => 'nullable|date',
         ]);
 
         DB::table('workspace_members')
@@ -66,7 +67,7 @@ class EmployeeController extends Controller
             return response()->json(['message' => 'Already clocked in today.'], 409);
         }
 
-        $id = \Illuminate\Support\Str::uuid();
+        $id = Str::uuid();
         $now = now();
         $isLate = $now->gt(now()->setTime(9, 15, 0));
         DB::table('attendance_logs')->insert([
@@ -80,6 +81,7 @@ class EmployeeController extends Controller
         ]);
 
         $log = DB::table('attendance_logs')->where('id', $id)->first();
+
         return response()->json(['attendance' => $log]);
     }
 
@@ -94,7 +96,7 @@ class EmployeeController extends Controller
             ->whereDate('clocked_in_at', now()->toDateString())
             ->first();
 
-        if (!$log) {
+        if (! $log) {
             return response()->json(['message' => 'Not clocked in today.'], 404);
         }
 
@@ -103,13 +105,14 @@ class EmployeeController extends Controller
             ->update(['clocked_out_at' => now(), 'updated_at' => now()]);
 
         $log = DB::table('attendance_logs')->where('id', $log->id)->first();
+
         return response()->json(['attendance' => $log]);
     }
 
     public function attendanceHistory(Request $request, string $workspaceId)
     {
         $userId = $request->query('user_id', $request->user()->id);
-        $days = (int)$request->query('days', 30);
+        $days = (int) $request->query('days', 30);
 
         $logs = DB::table('attendance_logs')
             ->where('workspace_id', $workspaceId)
@@ -143,13 +146,13 @@ class EmployeeController extends Controller
     public function leaveStore(Request $request, string $workspaceId)
     {
         $data = $request->validate([
-            'type'       => 'required|in:annual,sick,personal,bereavement,maternity,paternity,other',
+            'type' => 'required|in:annual,sick,personal,bereavement,maternity,paternity,other',
             'start_date' => 'required|date|after_or_equal:today',
-            'end_date'   => 'required|date|after_or_equal:start_date',
-            'reason'     => 'nullable|string|max:1000',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'reason' => 'nullable|string|max:1000',
         ]);
 
-        $id = \Illuminate\Support\Str::uuid();
+        $id = Str::uuid();
         DB::table('leave_requests')->insert([
             'id' => $id,
             'workspace_id' => $workspaceId,
@@ -164,6 +167,7 @@ class EmployeeController extends Controller
         ]);
 
         $leave = DB::table('leave_requests')->where('id', $id)->first();
+
         return response()->json(['leave_request' => $leave], 201);
     }
 
@@ -210,13 +214,13 @@ class EmployeeController extends Controller
     public function expenseStore(Request $request, string $workspaceId)
     {
         $data = $request->validate([
-            'title'        => 'required|string|max:255',
-            'description'  => 'nullable|string',
-            'category'     => 'required|in:travel,meals,office_supplies,utilities,other',
-            'amount'       => 'required|numeric|min:0.01',
-            'currency'     => 'nullable|string|size:3',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'category' => 'required|in:travel,meals,office_supplies,utilities,other',
+            'amount' => 'required|numeric|min:0.01',
+            'currency' => 'nullable|string|size:3',
             'expense_date' => 'required|date',
-            'receipt'      => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'receipt' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ]);
 
         $receiptPath = null;
@@ -224,7 +228,7 @@ class EmployeeController extends Controller
             $receiptPath = $request->file('receipt')->store('receipts', 'public');
         }
 
-        $id = \Illuminate\Support\Str::uuid();
+        $id = Str::uuid();
         DB::table('expense_claims')->insert([
             'id' => $id,
             'workspace_id' => $workspaceId,
@@ -242,6 +246,7 @@ class EmployeeController extends Controller
         ]);
 
         $expense = DB::table('expense_claims')->where('id', $id)->first();
+
         return response()->json(['expense' => $expense], 201);
     }
 
@@ -279,16 +284,16 @@ class EmployeeController extends Controller
 
         $entitlements = [
             'annual' => 20,
-            'sick'   => 10,
+            'sick' => 10,
             'personal' => 5,
         ];
 
         $balances = [];
         foreach ($entitlements as $type => $total) {
-            $usedDays = (int)($used[$type] ?? 0);
+            $usedDays = (int) ($used[$type] ?? 0);
             $balances[$type] = [
                 'total' => $total,
-                'used'  => $usedDays,
+                'used' => $usedDays,
                 'remaining' => $total - $usedDays,
             ];
         }

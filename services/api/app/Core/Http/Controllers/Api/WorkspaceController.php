@@ -60,15 +60,15 @@ class WorkspaceController extends Controller
     public function update(Request $request, Workspace $workspace): JsonResponse
     {
         $validated = $request->validate([
-            'name'     => 'sometimes|string|max:100',
-            'icon'     => 'sometimes|string|max:10',
-            'color'    => 'sometimes|string|max:7|regex:/^#[0-9a-fA-F]{3,6}$/',
+            'name' => 'sometimes|string|max:100',
+            'icon' => 'sometimes|string|max:10',
+            'color' => 'sometimes|string|max:7|regex:/^#[0-9a-fA-F]{3,6}$/',
             'settings' => 'sometimes|array',
         ]);
 
         // Merge settings rather than overwriting
         if (isset($validated['settings'])) {
-            $current              = $workspace->settings ?? [];
+            $current = $workspace->settings ?? [];
             $validated['settings'] = array_merge($current, $validated['settings']);
         }
 
@@ -288,8 +288,8 @@ class WorkspaceController extends Controller
                 ->whereNull('deleted_at')
                 ->where(function ($cq) use ($like) {
                     $cq->where('first_name', 'ilike', $like)
-                       ->orWhere('last_name', 'ilike', $like)
-                       ->orWhere('email', 'ilike', $like);
+                        ->orWhere('last_name', 'ilike', $like)
+                        ->orWhere('email', 'ilike', $like);
                 })
                 ->selectRaw("id, CONCAT(COALESCE(first_name,''), ' ', COALESCE(last_name,'')) as title, 'contact' as type")
                 ->limit(5)

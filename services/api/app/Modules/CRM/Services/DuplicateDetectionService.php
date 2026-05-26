@@ -67,7 +67,7 @@ class DuplicateDetectionService
             'phone' => $primary->phone ?? $duplicate->phone,
             'job_title' => $primary->job_title ?? $duplicate->job_title,
             'company_id' => $primary->company_id ?? $duplicate->company_id,
-            'notes' => trim(($primary->notes ?? '') . "\n\n[Merged from duplicate] " . ($duplicate->notes ?? '')),
+            'notes' => trim(($primary->notes ?? '')."\n\n[Merged from duplicate] ".($duplicate->notes ?? '')),
             'lead_score' => max($primary->lead_score ?? 0, $duplicate->lead_score ?? 0),
         ]);
         $primary->save();

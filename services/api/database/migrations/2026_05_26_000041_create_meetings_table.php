@@ -9,7 +9,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('meetings')) {
+        if (! Schema::hasTable('meetings')) {
             Schema::create('meetings', function (Blueprint $table) {
                 $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
                 $table->uuid('workspace_id');

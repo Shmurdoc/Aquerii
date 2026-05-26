@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Board;
 use App\Models\Workspace;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -35,19 +35,19 @@ class BoardGroupController extends Controller
         $this->resolveBoard($workspace, $boardId);
 
         $validated = $request->validate([
-            'name'  => 'required|string|max:100',
+            'name' => 'required|string|max:100',
             'color' => 'sometimes|string|max:20',
         ]);
 
         $maxPos = DB::table('groups')->where('board_id', $boardId)->max('position') ?? 0;
-        $id     = Str::uuid()->toString();
+        $id = Str::uuid()->toString();
 
         DB::table('groups')->insert([
-            'id'         => $id,
-            'board_id'   => $boardId,
-            'name'       => $validated['name'],
-            'color'      => $validated['color'] ?? '#6366f1',
-            'position'   => $maxPos + 65536,
+            'id' => $id,
+            'board_id' => $boardId,
+            'name' => $validated['name'],
+            'color' => $validated['color'] ?? '#6366f1',
+            'position' => $maxPos + 65536,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -76,8 +76,8 @@ class BoardGroupController extends Controller
         $this->resolveBoard($workspace, $boardId);
 
         $validated = $request->validate([
-            'name'     => 'sometimes|string|max:100',
-            'color'    => 'sometimes|string|max:20',
+            'name' => 'sometimes|string|max:100',
+            'color' => 'sometimes|string|max:20',
             'position' => 'sometimes|numeric',
         ]);
         $validated['updated_at'] = now();

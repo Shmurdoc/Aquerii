@@ -27,7 +27,7 @@ class CrmAnalyticsController extends Controller
             ->get()
             ->groupBy('stage_id');
 
-        $funnel = $stages->map(fn($stage) => [
+        $funnel = $stages->map(fn ($stage) => [
             'stage_id' => $stage->id,
             'stage_name' => $stage->name,
             'pipeline_name' => DB::table('crm_pipelines')->where('id', $stage->pipeline_id)->value('name'),
@@ -65,7 +65,7 @@ class CrmAnalyticsController extends Controller
             ->orderBy('cohort_month', 'desc')
             ->limit(12)
             ->get()
-            ->map(fn($c) => [
+            ->map(fn ($c) => [
                 'cohort' => $c->cohort_month,
                 'acquired' => $c->acquired,
                 'converted' => $c->converted,
@@ -87,7 +87,7 @@ class CrmAnalyticsController extends Controller
             ->where('lifecycle_stage', 'customer')
             ->where(function ($q) use ($thresholdDays) {
                 $q->whereNull('last_touched_at')
-                  ->orWhere('last_touched_at', '<', now()->subDays($thresholdDays));
+                    ->orWhere('last_touched_at', '<', now()->subDays($thresholdDays));
             })
             ->withCount(['deals' => function ($q) {
                 $q->whereNull('won_at')->whereNull('lost_at');
@@ -104,7 +104,7 @@ class CrmAnalyticsController extends Controller
             ->where('lifecycle_stage', 'customer')
             ->where(function ($q) use ($thresholdDays) {
                 $q->whereNull('last_touched_at')
-                  ->orWhere('last_touched_at', '>=', now()->subDays($thresholdDays));
+                    ->orWhere('last_touched_at', '>=', now()->subDays($thresholdDays));
             })
             ->count();
 

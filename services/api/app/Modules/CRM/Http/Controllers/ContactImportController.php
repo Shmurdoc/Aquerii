@@ -22,7 +22,7 @@ class ContactImportController extends Controller
         $file = $request->file('file');
         $path = $file->storeAs(
             "imports/{$workspace->id}",
-            Str::uuid() . '.csv',
+            Str::uuid().'.csv',
         );
 
         $fieldMapping = $request->input('field_mapping')

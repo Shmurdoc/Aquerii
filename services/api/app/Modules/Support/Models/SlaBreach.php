@@ -19,9 +19,9 @@ class SlaBreach extends Model
     protected function casts(): array
     {
         return [
-            'breached_at'  => 'datetime',
+            'breached_at' => 'datetime',
             'escalated_at' => 'datetime',
-            'resolved_at'  => 'datetime',
+            'resolved_at' => 'datetime',
         ];
     }
 

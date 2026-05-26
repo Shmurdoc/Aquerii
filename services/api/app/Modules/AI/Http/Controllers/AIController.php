@@ -415,6 +415,7 @@ class AIController extends Controller
 
             if ($response->failed()) {
                 $this->refundCredits($workspace, $cost);
+
                 return response()->json(['error' => 'AI service error'], 502);
             }
 
@@ -422,6 +423,7 @@ class AIController extends Controller
         } catch (\Throwable $e) {
             $this->refundCredits($workspace, $cost);
             Log::error('AI dealSummary error', ['error' => $e->getMessage()]);
+
             return response()->json(['error' => 'AI unavailable'], 503);
         }
     }
@@ -453,6 +455,7 @@ class AIController extends Controller
 
             if ($response->failed()) {
                 $this->refundCredits($workspace, $cost);
+
                 return response()->json(['error' => 'AI service error'], 502);
             }
 
@@ -460,6 +463,7 @@ class AIController extends Controller
         } catch (\Throwable $e) {
             $this->refundCredits($workspace, $cost);
             Log::error('AI churnRisk error', ['error' => $e->getMessage()]);
+
             return response()->json(['error' => 'AI unavailable'], 503);
         }
     }
@@ -491,6 +495,7 @@ class AIController extends Controller
 
             if ($response->failed()) {
                 $this->refundCredits($workspace, $cost);
+
                 return response()->json(['error' => 'AI service error'], 502);
             }
 
@@ -498,6 +503,7 @@ class AIController extends Controller
         } catch (\Throwable $e) {
             $this->refundCredits($workspace, $cost);
             Log::error('AI nextAction error', ['error' => $e->getMessage()]);
+
             return response()->json(['error' => 'AI unavailable'], 503);
         }
     }
@@ -527,6 +533,7 @@ class AIController extends Controller
 
             if ($response->failed()) {
                 $this->refundCredits($workspace, $cost);
+
                 return response()->json(['error' => 'AI service error'], 502);
             }
 
@@ -534,6 +541,7 @@ class AIController extends Controller
         } catch (\Throwable $e) {
             $this->refundCredits($workspace, $cost);
             Log::error('AI emailCompose error', ['error' => $e->getMessage()]);
+
             return response()->json(['error' => 'AI unavailable'], 503);
         }
     }
@@ -559,6 +567,7 @@ class AIController extends Controller
 
             if ($response->failed()) {
                 $this->refundCredits($workspace, $cost);
+
                 return response()->json(['error' => 'AI service error'], 502);
             }
 
@@ -566,6 +575,7 @@ class AIController extends Controller
         } catch (\Throwable $e) {
             $this->refundCredits($workspace, $cost);
             Log::error('AI dataClean error', ['error' => $e->getMessage()]);
+
             return response()->json(['error' => 'AI unavailable'], 503);
         }
     }
@@ -591,6 +601,7 @@ class AIController extends Controller
 
             if ($response->failed()) {
                 $this->refundCredits($workspace, $cost);
+
                 return response()->json(['error' => 'AI service error'], 502);
             }
 
@@ -598,6 +609,7 @@ class AIController extends Controller
         } catch (\Throwable $e) {
             $this->refundCredits($workspace, $cost);
             Log::error('AI anomalyDetection error', ['error' => $e->getMessage()]);
+
             return response()->json(['error' => 'AI unavailable'], 503);
         }
     }

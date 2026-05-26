@@ -2,6 +2,7 @@
 
 namespace App\Modules\CRM\Models;
 
+use App\Core\Models\User;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,10 +22,10 @@ class CrmDealApproval extends Model
     protected function casts(): array
     {
         return [
-            'approval_log'  => 'array',
-            'step'          => 'integer',
-            'escalated_at'  => 'datetime',
-            'resolved_at'   => 'datetime',
+            'approval_log' => 'array',
+            'step' => 'integer',
+            'escalated_at' => 'datetime',
+            'resolved_at' => 'datetime',
         ];
     }
 
@@ -40,6 +41,6 @@ class CrmDealApproval extends Model
 
     public function currentApprover()
     {
-        return $this->belongsTo(\App\Core\Models\User::class, 'current_approver_id');
+        return $this->belongsTo(User::class, 'current_approver_id');
     }
 }

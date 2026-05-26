@@ -12,11 +12,11 @@ class KnowledgeBaseController extends Controller
     public function index(Request $request, string $workspace): JsonResponse
     {
         $articles = KnowledgeBaseArticle::where('workspace_id', $workspace)
-            ->when(!$request->include_draft, fn($q) => $q->where('is_published', true))
-            ->when($request->category, fn($q, $v) => $q->where('category', $v))
-            ->when($request->search, fn($q, $v) => $q->where(function ($sq) use ($v) {
+            ->when(! $request->include_draft, fn ($q) => $q->where('is_published', true))
+            ->when($request->category, fn ($q, $v) => $q->where('category', $v))
+            ->when($request->search, fn ($q, $v) => $q->where(function ($sq) use ($v) {
                 $sq->where('title', 'ilike', "%{$v}%")
-                   ->orWhere('content', 'ilike', "%{$v}%");
+                    ->orWhere('content', 'ilike', "%{$v}%");
             }))
             ->with('author:id,name')
             ->orderBy('views', 'desc')
@@ -39,10 +39,10 @@ class KnowledgeBaseController extends Controller
     public function store(Request $request, string $workspace): JsonResponse
     {
         $data = $request->validate([
-            'title'        => 'required|string|max:255',
-            'content'      => 'required|string',
-            'category'     => 'nullable|string|max:100',
-            'tags'         => 'nullable|array',
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'category' => 'nullable|string|max:100',
+            'tags' => 'nullable|array',
             'is_published' => 'boolean',
         ]);
 
@@ -59,10 +59,10 @@ class KnowledgeBaseController extends Controller
         $article = KnowledgeBaseArticle::where('workspace_id', $workspace)->findOrFail($article);
 
         $data = $request->validate([
-            'title'        => 'sometimes|string|max:255',
-            'content'      => 'sometimes|string',
-            'category'     => 'nullable|string|max:100',
-            'tags'         => 'nullable|array',
+            'title' => 'sometimes|string|max:255',
+            'content' => 'sometimes|string',
+            'category' => 'nullable|string|max:100',
+            'tags' => 'nullable|array',
             'is_published' => 'boolean',
         ]);
 
@@ -74,6 +74,7 @@ class KnowledgeBaseController extends Controller
     public function destroy(string $workspace, string $article): JsonResponse
     {
         KnowledgeBaseArticle::where('workspace_id', $workspace)->findOrFail($article)->delete();
+
         return response()->json(['message' => 'Deleted'], 200);
     }
 

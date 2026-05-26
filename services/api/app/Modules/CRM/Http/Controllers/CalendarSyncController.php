@@ -7,6 +7,7 @@ use App\Core\Models\OAuthAccount;
 use App\Core\Models\Workspace;
 use App\Modules\CRM\Models\CrmCalendarSync;
 use App\Modules\CRM\Services\CalendarSyncService;
+use App\Modules\CRM\Services\TelephonyService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -29,7 +30,7 @@ class CalendarSyncController extends Controller
     public function store(Request $request, Workspace $workspace): JsonResponse
     {
         $data = $request->validate([
-            'provider'    => 'required|string|in:google,microsoft',
+            'provider' => 'required|string|in:google,microsoft',
             'calendar_id' => 'required|string',
             'calendar_name' => 'nullable|string|max:255',
         ]);
@@ -49,6 +50,7 @@ class CalendarSyncController extends Controller
     {
         abort_if($sync->workspace_id !== $workspace->id, 404);
         $sync->delete();
+
         return response()->json(['message' => 'Deleted'], 200);
     }
 
@@ -58,7 +60,7 @@ class CalendarSyncController extends Controller
 
         $result = $this->syncService->syncEvents($sync);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return response()->json(['error' => ['code' => 'SYNC_FAILED', 'message' => $result['error']]], 502);
         }
 
@@ -73,7 +75,7 @@ class CalendarSyncController extends Controller
             ->where('provider', $data['provider'])
             ->first();
 
-        if (!$account) {
+        if (! $account) {
             return response()->json(['data' => []]);
         }
 
@@ -85,17 +87,17 @@ class CalendarSyncController extends Controller
     public function telephony(Request $request, Workspace $workspace): JsonResponse
     {
         $data = $request->validate([
-            'action'  => 'required|string|in:call,sms,status',
-            'to'      => 'required_if:action,call,sms|string',
+            'action' => 'required|string|in:call,sms,status',
+            'to' => 'required_if:action,call,sms|string',
             'message' => 'required_if:action,sms|string',
             'call_sid' => 'required_if:action,status|string',
         ]);
 
-        $service = app(\App\Modules\CRM\Services\TelephonyService::class);
+        $service = app(TelephonyService::class);
 
         return match ($data['action']) {
             'call' => response()->json(['data' => $service->initiateCall($data['to'])]),
-            'sms'  => response()->json(['data' => $service->sendSms($data['to'], $data['message'])]),
+            'sms' => response()->json(['data' => $service->sendSms($data['to'], $data['message'])]),
             'status' => response()->json(['data' => $service->getCallStatus($data['call_sid'])]),
         };
     }

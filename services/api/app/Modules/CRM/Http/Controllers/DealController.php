@@ -68,10 +68,10 @@ class DealController extends Controller
         ]));
 
         $this->automationService->evaluate($workspace->id, 'deal.created', [
-            'deal_id'     => $deal->id,
-            'value'       => $deal->value,
-            'owner_id'    => $deal->owner_id,
-            'entity_id'   => $deal->id,
+            'deal_id' => $deal->id,
+            'value' => $deal->value,
+            'owner_id' => $deal->owner_id,
+            'entity_id' => $deal->id,
             'entity_type' => 'deal',
         ]);
 
@@ -134,12 +134,12 @@ class DealController extends Controller
 
         if (isset($validated['stage_id']) && $validated['stage_id'] !== $oldStageId) {
             $this->automationService->evaluate($workspace->id, 'deal.stage_changed', [
-                'deal_id'      => $deal->id,
-                'stage_id'     => $deal->stage_id,
+                'deal_id' => $deal->id,
+                'stage_id' => $deal->stage_id,
                 'prev_stage_id' => $oldStageId,
-                'value'        => $deal->value,
-                'entity_id'    => $deal->id,
-                'entity_type'  => 'deal',
+                'value' => $deal->value,
+                'entity_id' => $deal->id,
+                'entity_type' => 'deal',
             ]);
         }
 
@@ -184,9 +184,9 @@ class DealController extends Controller
         ]);
 
         $this->automationService->evaluate($workspace->id, 'deal.won', [
-            'deal_id'     => $deal->id,
-            'value'       => $deal->value,
-            'entity_id'   => $deal->id,
+            'deal_id' => $deal->id,
+            'value' => $deal->value,
+            'entity_id' => $deal->id,
             'entity_type' => 'deal',
         ]);
 
@@ -211,10 +211,10 @@ class DealController extends Controller
         ]);
 
         $this->automationService->evaluate($workspace->id, 'deal.lost', [
-            'deal_id'     => $deal->id,
-            'value'       => $deal->value,
+            'deal_id' => $deal->id,
+            'value' => $deal->value,
             'loss_reason' => $deal->loss_reason,
-            'entity_id'   => $deal->id,
+            'entity_id' => $deal->id,
             'entity_type' => 'deal',
         ]);
 

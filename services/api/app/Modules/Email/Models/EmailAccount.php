@@ -20,9 +20,9 @@ class EmailAccount extends Model
 
     protected $casts = [
         'imap_port' => 'integer',
-        'imap_ssl'  => 'boolean',
+        'imap_ssl' => 'boolean',
         'smtp_port' => 'integer',
-        'smtp_ssl'  => 'boolean',
+        'smtp_ssl' => 'boolean',
         'last_synced_at' => 'datetime',
     ];
 

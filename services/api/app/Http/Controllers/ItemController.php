@@ -36,7 +36,7 @@ class ItemController extends Controller
 
         // Filter by assignee
         if ($request->has('assignee_id')) {
-            $query->whereHas('assignees', fn($q) => $q->where('users.id', $request->input('assignee_id')));
+            $query->whereHas('assignees', fn ($q) => $q->where('users.id', $request->input('assignee_id')));
         }
 
         // Filter by status
@@ -54,10 +54,10 @@ class ItemController extends Controller
         return response()->json([
             'data' => $items->items(),
             'meta' => [
-                'total'        => $items->total(),
-                'per_page'     => $items->perPage(),
+                'total' => $items->total(),
+                'per_page' => $items->perPage(),
                 'current_page' => $items->currentPage(),
-                'last_page'    => $items->lastPage(),
+                'last_page' => $items->lastPage(),
             ],
         ]);
     }
@@ -67,15 +67,15 @@ class ItemController extends Controller
         $boardModel = Board::where('workspace_id', $workspace)->findOrFail($board);
 
         $data = $request->validate([
-            'group_id'        => 'required|uuid|exists:board_groups,id',
-            'title'           => 'nullable|string|max:500',
-            'column_values'   => 'nullable|array',
-            'position'        => 'nullable|numeric',
-            'parent_id'       => 'nullable|uuid|exists:items,id',
+            'group_id' => 'required|uuid|exists:board_groups,id',
+            'title' => 'nullable|string|max:500',
+            'column_values' => 'nullable|array',
+            'position' => 'nullable|numeric',
+            'parent_id' => 'nullable|uuid|exists:items,id',
         ]);
 
         $group = BoardGroup::where('board_id', $board)->findOrFail($data['group_id']);
-        $item  = $this->itemService->create($boardModel, $group, $data, $request->user()->id);
+        $item = $this->itemService->create($boardModel, $group, $data, $request->user()->id);
 
         return response()->json(['data' => $item->load('assignees')], 201);
     }
@@ -99,15 +99,15 @@ class ItemController extends Controller
         $itemModel = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);
 
         $data = $request->validate([
-            'title'            => 'sometimes|string|max:500',
-            'description'      => 'nullable|array',
-            'status'           => 'nullable|string|max:100',
-            'priority'         => 'nullable|in:critical,high,medium,low',
-            'due_date'         => 'nullable|date',
-            'column_values'    => 'nullable|array',
-            'group_id'         => 'nullable|uuid|exists:board_groups,id',
-            'position'         => 'nullable|numeric',
-            'estimated_hours'  => 'nullable|numeric|min:0',
+            'title' => 'sometimes|string|max:500',
+            'description' => 'nullable|array',
+            'status' => 'nullable|string|max:100',
+            'priority' => 'nullable|in:critical,high,medium,low',
+            'due_date' => 'nullable|date',
+            'column_values' => 'nullable|array',
+            'group_id' => 'nullable|uuid|exists:board_groups,id',
+            'position' => 'nullable|numeric',
+            'estimated_hours' => 'nullable|numeric|min:0',
             'expected_version' => 'nullable|integer',
         ]);
 
@@ -125,6 +125,7 @@ class ItemController extends Controller
 
         $itemModel = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);
         $this->itemService->delete($itemModel, $request->user()->id);
+
         return response()->json(null, 204);
     }
 
@@ -147,6 +148,7 @@ class ItemController extends Controller
         $this->resolveBoard($workspace, $board);
 
         $subs = Item::where('parent_id', $item)->whereNull('deleted_at')->orderBy('position')->get();
+
         return response()->json(['data' => $subs]);
     }
 
@@ -159,7 +161,7 @@ class ItemController extends Controller
         $copy = $this->itemService->create(
             $original->board,
             $original->group,
-            ['title' => $original->title . ' (Copy)', 'column_values' => $original->column_values],
+            ['title' => $original->title.' (Copy)', 'column_values' => $original->column_values],
             $request->user()->id
         );
 
@@ -171,12 +173,12 @@ class ItemController extends Controller
         $this->resolveBoard($workspace, $board);
 
         $data = $request->validate([
-            'group_id'  => 'required|uuid|exists:board_groups,id',
-            'position'  => 'nullable|numeric',
+            'group_id' => 'required|uuid|exists:board_groups,id',
+            'position' => 'nullable|numeric',
         ]);
 
         $itemModel = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);
-        $updated   = $this->itemService->update($itemModel, $data, $request->user()->id);
+        $updated = $this->itemService->update($itemModel, $data, $request->user()->id);
 
         return response()->json(['data' => $updated]);
     }
@@ -188,9 +190,9 @@ class ItemController extends Controller
         $parent = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);
 
         $data = $request->validate([
-            'title'         => 'nullable|string|max:500',
+            'title' => 'nullable|string|max:500',
             'column_values' => 'nullable|array',
-            'position'      => 'nullable|numeric',
+            'position' => 'nullable|numeric',
         ]);
 
         $data['parent_id'] = $parent->id;
@@ -212,7 +214,7 @@ class ItemController extends Controller
         $request->validate(['user_id' => 'required|uuid|exists:users,id']);
 
         $itemModel = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);
-        $userId    = $request->input('user_id');
+        $userId = $request->input('user_id');
 
         // Idempotent — attach only if not already assigned
         if (! $itemModel->assignees()->where('users.id', $userId)->exists()) {

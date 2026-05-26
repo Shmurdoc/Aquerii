@@ -95,14 +95,14 @@ class ScannedDocumentController extends Controller
 
         $request->validate([
             'title' => 'nullable|string|max:255',
-            'tags'  => 'nullable|array',
+            'tags' => 'nullable|array',
             'tags.*' => 'string|max:100',
         ]);
 
         $document->fill(array_filter([
             'title' => $request->title,
-            'tags'  => $request->has('tags') ? $request->tags : null,
-        ], fn($v) => !is_null($v)));
+            'tags' => $request->has('tags') ? $request->tags : null,
+        ], fn ($v) => ! is_null($v)));
 
         $document->save();
 

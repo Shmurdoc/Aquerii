@@ -24,10 +24,10 @@ class EnforceSlaJob implements ShouldQueue
                     $ticket->update(['sla_breached_at' => Carbon::now()]);
 
                     SlaBreach::create([
-                        'ticket_id'    => $ticket->id,
+                        'ticket_id' => $ticket->id,
                         'sla_policy_id' => $ticket->sla_policy_id,
-                        'breach_type'  => 'resolution',
-                        'breached_at'  => Carbon::now(),
+                        'breach_type' => 'resolution',
+                        'breached_at' => Carbon::now(),
                     ]);
                 }
             });

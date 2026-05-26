@@ -12,9 +12,9 @@ class TicketController extends Controller
     public function index(Request $request, string $workspace): JsonResponse
     {
         $tickets = Ticket::where('workspace_id', $workspace)
-            ->when($request->status, fn($q, $v) => $q->where('status', $v))
-            ->when($request->priority, fn($q, $v) => $q->where('priority', $v))
-            ->when($request->assigned_to, fn($q, $v) => $q->where('assigned_to', $v))
+            ->when($request->status, fn ($q, $v) => $q->where('status', $v))
+            ->when($request->priority, fn ($q, $v) => $q->where('priority', $v))
+            ->when($request->assigned_to, fn ($q, $v) => $q->where('assigned_to', $v))
             ->with(['contact:id,name,email', 'assignee:id,name', 'slaPolicy:id,name'])
             ->orderBy('created_at', 'desc')
             ->paginate(25);
@@ -39,13 +39,13 @@ class TicketController extends Controller
     {
         $data = $request->validate([
             'contact_id' => 'nullable|exists:crm_contacts,id',
-            'subject'        => 'required|string|max:255',
-            'description'    => 'nullable|string',
-            'priority'       => 'nullable|string|in:low,normal,high,critical',
-            'channel'        => 'nullable|string|max:50',
-            'source'         => 'nullable|string|max:100',
-            'tags'           => 'nullable|array',
-            'custom_fields'  => 'nullable|array',
+            'subject' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'priority' => 'nullable|string|in:low,normal,high,critical',
+            'channel' => 'nullable|string|max:50',
+            'source' => 'nullable|string|max:100',
+            'tags' => 'nullable|array',
+            'custom_fields' => 'nullable|array',
         ]);
 
         $data['workspace_id'] = $workspace;
@@ -60,13 +60,13 @@ class TicketController extends Controller
         $ticket = Ticket::where('workspace_id', $workspace)->findOrFail($ticket);
 
         $data = $request->validate([
-            'subject'          => 'sometimes|string|max:255',
-            'description'      => 'nullable|string',
-            'status'           => 'sometimes|string|in:open,pending,resolved,closed',
-            'priority'         => 'sometimes|string|in:low,normal,high,critical',
-            'assigned_to'      => 'nullable|exists:users,id',
-            'tags'             => 'nullable|array',
-            'custom_fields'    => 'nullable|array',
+            'subject' => 'sometimes|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'sometimes|string|in:open,pending,resolved,closed',
+            'priority' => 'sometimes|string|in:low,normal,high,critical',
+            'assigned_to' => 'nullable|exists:users,id',
+            'tags' => 'nullable|array',
+            'custom_fields' => 'nullable|array',
             'resolution_summary' => 'nullable|string',
         ]);
 

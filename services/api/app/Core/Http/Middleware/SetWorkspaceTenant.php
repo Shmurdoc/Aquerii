@@ -29,7 +29,7 @@ class SetWorkspaceTenant
                     ->where('workspace_id', $workspaceId)
                     ->where('user_id', $user->id)
                     ->exists();
-                if (!$isMember) {
+                if (! $isMember) {
                     abort(403, 'Not a member of this workspace.');
                 }
             }

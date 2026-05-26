@@ -17,17 +17,17 @@ class AuditService
         array $meta = []
     ): void {
         AuditLog::create([
-            'workspace_id'  => $workspaceId,
-            'user_id'       => $userId,
-            'action'        => $action,
+            'workspace_id' => $workspaceId,
+            'user_id' => $userId,
+            'action' => $action,
             'resource_type' => $resourceType,
-            'resource_id'   => $resourceId,
-            'before'        => $before ?: null,
-            'after'         => $after ?: null,
-            'meta'          => $meta ?: null,
-            'ip_address'    => request()->ip(),
-            'user_agent'    => request()->userAgent(),
-            'created_at'    => now(),
+            'resource_id' => $resourceId,
+            'before' => $before ?: null,
+            'after' => $after ?: null,
+            'meta' => $meta ?: null,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+            'created_at' => now(),
         ]);
     }
 }

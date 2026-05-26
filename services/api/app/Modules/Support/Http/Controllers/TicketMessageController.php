@@ -27,9 +27,9 @@ class TicketMessageController extends Controller
         Ticket::where('workspace_id', $workspace)->findOrFail($ticket);
 
         $data = $request->validate([
-            'body'        => 'required|string',
+            'body' => 'required|string',
             'is_internal' => 'boolean',
-            'channel'     => 'nullable|string|max:50',
+            'channel' => 'nullable|string|max:50',
             'attachments' => 'nullable|array',
         ]);
 

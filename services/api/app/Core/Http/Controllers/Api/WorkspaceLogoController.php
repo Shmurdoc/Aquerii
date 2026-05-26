@@ -32,7 +32,7 @@ class WorkspaceLogoController extends Controller
             }
         }
 
-        $ext  = strtolower($request->file('image')->getClientOriginalExtension());
+        $ext = strtolower($request->file('image')->getClientOriginalExtension());
         $path = "workspaces/{$workspace->id}/logo.{$ext}";
         Storage::disk('s3')->put($path, file_get_contents($request->file('image')), 'public');
 

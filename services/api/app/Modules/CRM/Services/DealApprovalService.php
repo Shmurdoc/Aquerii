@@ -7,8 +7,6 @@ use App\Modules\CRM\Models\CrmApprovalRule;
 use App\Modules\CRM\Models\CrmDeal;
 use App\Modules\CRM\Models\CrmDealApproval;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class DealApprovalService
 {
@@ -18,27 +16,31 @@ class DealApprovalService
             ->where('is_active', true)
             ->where(function ($q) use ($deal) {
                 $q->whereNull('threshold_min')
-                  ->orWhere('threshold_min', '<=', $deal->value ?? 0);
+                    ->orWhere('threshold_min', '<=', $deal->value ?? 0);
             })
             ->where(function ($q) use ($deal) {
                 $q->whereNull('threshold_max')
-                  ->orWhere('threshold_max', '>=', $deal->value ?? 0);
+                    ->orWhere('threshold_max', '>=', $deal->value ?? 0);
             })
             ->first();
 
-        if (!$rule) return null;
+        if (! $rule) {
+            return null;
+        }
 
         $approvers = $rule->approvers ?? [];
-        if (empty($approvers)) return null;
+        if (empty($approvers)) {
+            return null;
+        }
 
         $approval = CrmDealApproval::create([
-            'workspace_id'       => $deal->workspace_id,
-            'deal_id'            => $deal->id,
-            'approval_rule_id'   => $rule->id,
-            'status'             => 'pending',
+            'workspace_id' => $deal->workspace_id,
+            'deal_id' => $deal->id,
+            'approval_rule_id' => $rule->id,
+            'status' => 'pending',
             'current_approver_id' => $approvers[0]['user_id'] ?? null,
-            'step'               => 1,
-            'approval_log'       => [],
+            'step' => 1,
+            'approval_log' => [],
         ]);
 
         $this->notifyApprover($approval);
@@ -50,10 +52,10 @@ class DealApprovalService
     {
         $log = $approval->approval_log ?? [];
         $log[] = [
-            'action'      => 'approved',
-            'user_id'     => $userId,
-            'note'        => $note,
-            'timestamp'   => Carbon::now()->toIso8601String(),
+            'action' => 'approved',
+            'user_id' => $userId,
+            'note' => $note,
+            'timestamp' => Carbon::now()->toIso8601String(),
         ];
 
         $rule = $approval->rule;
@@ -63,15 +65,15 @@ class DealApprovalService
         if ($nextStep < count($approvers)) {
             $nextApprover = $approvers[$nextStep] ?? null;
             $approval->update([
-                'step'               => $nextStep + 1,
+                'step' => $nextStep + 1,
                 'current_approver_id' => $nextApprover['user_id'] ?? null,
-                'approval_log'       => $log,
+                'approval_log' => $log,
             ]);
             $this->notifyApprover($approval);
         } else {
             $approval->update([
-                'status'       => 'approved',
-                'resolved_at'  => Carbon::now(),
+                'status' => 'approved',
+                'resolved_at' => Carbon::now(),
                 'approval_log' => $log,
             ]);
         }
@@ -81,15 +83,15 @@ class DealApprovalService
     {
         $log = $approval->approval_log ?? [];
         $log[] = [
-            'action'      => 'rejected',
-            'user_id'     => $userId,
-            'note'        => $note,
-            'timestamp'   => Carbon::now()->toIso8601String(),
+            'action' => 'rejected',
+            'user_id' => $userId,
+            'note' => $note,
+            'timestamp' => Carbon::now()->toIso8601String(),
         ];
 
         $approval->update([
-            'status'       => 'rejected',
-            'resolved_at'  => Carbon::now(),
+            'status' => 'rejected',
+            'resolved_at' => Carbon::now(),
             'approval_log' => $log,
         ]);
     }
@@ -97,19 +99,21 @@ class DealApprovalService
     public function escalate(CrmDealApproval $approval): void
     {
         $rule = $approval->rule;
-        if (!$rule?->escalation_user_id) return;
+        if (! $rule?->escalation_user_id) {
+            return;
+        }
 
         $log = $approval->approval_log ?? [];
         $log[] = [
-            'action'      => 'escalated',
+            'action' => 'escalated',
             'escalated_to' => $rule->escalation_user_id,
-            'timestamp'   => Carbon::now()->toIso8601String(),
+            'timestamp' => Carbon::now()->toIso8601String(),
         ];
 
         $approval->update([
             'current_approver_id' => $rule->escalation_user_id,
-            'escalated_at'        => Carbon::now(),
-            'approval_log'        => $log,
+            'escalated_at' => Carbon::now(),
+            'approval_log' => $log,
         ]);
 
         SendNotification::dispatch(
@@ -131,7 +135,9 @@ class DealApprovalService
             ->chunk(100, function ($approvals) {
                 foreach ($approvals as $approval) {
                     $rule = $approval->rule;
-                    if (!$rule?->escalation_hours) continue;
+                    if (! $rule?->escalation_hours) {
+                        continue;
+                    }
 
                     $escalatedSince = $approval->escalated_at->diffInHours(now());
                     if ($escalatedSince >= $rule->escalation_hours) {
@@ -143,7 +149,9 @@ class DealApprovalService
 
     protected function notifyApprover(CrmDealApproval $approval): void
     {
-        if (!$approval->current_approver_id) return;
+        if (! $approval->current_approver_id) {
+            return;
+        }
 
         SendNotification::dispatch(
             $approval->workspace_id,

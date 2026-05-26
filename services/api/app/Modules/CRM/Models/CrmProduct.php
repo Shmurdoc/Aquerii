@@ -22,9 +22,9 @@ class CrmProduct extends Model
     protected function casts(): array
     {
         return [
-            'unit_price'  => 'decimal:2',
-            'attributes'  => 'array',
-            'is_active'   => 'boolean',
+            'unit_price' => 'decimal:2',
+            'attributes' => 'array',
+            'is_active' => 'boolean',
         ];
     }
 

@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class CheckDealEscalations extends Command
 {
     protected $signature = 'crm:check-deal-escalations';
+
     protected $description = 'Check and escalate overdue deal approvals';
 
     public function handle(DealApprovalService $approvalService): int

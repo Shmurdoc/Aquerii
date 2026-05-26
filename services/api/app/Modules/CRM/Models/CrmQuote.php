@@ -23,15 +23,15 @@ class CrmQuote extends Model
     protected function casts(): array
     {
         return [
-            'line_items'    => 'array',
-            'subtotal'      => 'decimal:2',
-            'discount'      => 'decimal:2',
-            'tax'           => 'decimal:2',
-            'total'         => 'decimal:2',
-            'valid_until'   => 'datetime',
-            'sent_at'       => 'datetime',
-            'accepted_at'   => 'datetime',
-            'rejected_at'   => 'datetime',
+            'line_items' => 'array',
+            'subtotal' => 'decimal:2',
+            'discount' => 'decimal:2',
+            'tax' => 'decimal:2',
+            'total' => 'decimal:2',
+            'valid_until' => 'datetime',
+            'sent_at' => 'datetime',
+            'accepted_at' => 'datetime',
+            'rejected_at' => 'datetime',
         ];
     }
 

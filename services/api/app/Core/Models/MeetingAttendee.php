@@ -2,6 +2,7 @@
 
 namespace App\Core\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +19,7 @@ class MeetingAttendee extends Model
     protected function casts(): array
     {
         return [
-            'required'     => 'boolean',
+            'required' => 'boolean',
             'responded_at' => 'datetime',
         ];
     }
@@ -30,6 +31,6 @@ class MeetingAttendee extends Model
 
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 }

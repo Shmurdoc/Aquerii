@@ -16,7 +16,7 @@ class EntitySearchController extends Controller
      */
     public function search(Request $request, string $workspaceId): JsonResponse
     {
-        $q    = $request->query('q', '');
+        $q = $request->query('q', '');
         $type = $request->query('type'); // customer|supplier|both|prospect|null (all)
 
         $query = DB::table('crm_companies')
@@ -29,7 +29,7 @@ class EntitySearchController extends Controller
             );
 
         if (strlen((string) $q) >= 1) {
-            $query->where('name', 'ilike', '%' . $q . '%');
+            $query->where('name', 'ilike', '%'.$q.'%');
         }
 
         if ($type) {
@@ -70,7 +70,7 @@ class EntitySearchController extends Controller
             ->where('workspace_id', $workspaceId)
             ->where(function ($q) use ($companyId, $company) {
                 $q->where('customer_company_id', $companyId)
-                  ->orWhere('customer_name', $company->name);
+                    ->orWhere('customer_name', $company->name);
             })
             ->whereNull('deleted_at')
             ->orderByDesc('created_at')
@@ -96,10 +96,10 @@ class EntitySearchController extends Controller
             ->get();
 
         return response()->json([
-            'company'         => $company,
-            'contacts'        => $contacts,
-            'invoices'        => $invoices,
-            'sales_orders'    => $salesOrders,
+            'company' => $company,
+            'contacts' => $contacts,
+            'invoices' => $invoices,
+            'sales_orders' => $salesOrders,
             'purchase_orders' => $purchaseOrders,
         ]);
     }

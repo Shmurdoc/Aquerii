@@ -21,11 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'idempotent'     => EnforceIdempotency::class,
-            'throttle'       => ThrottleRequests::class,
-            'workspace'      => SetWorkspaceTenant::class,
+            'idempotent' => EnforceIdempotency::class,
+            'throttle' => ThrottleRequests::class,
+            'workspace' => SetWorkspaceTenant::class,
             'internal.secret' => InternalSecret::class,
-            'verified'       => EnsureEmailIsVerified::class,
+            'verified' => EnsureEmailIsVerified::class,
             'workspace.role' => RequireWorkspaceRole::class,
         ]);
     })

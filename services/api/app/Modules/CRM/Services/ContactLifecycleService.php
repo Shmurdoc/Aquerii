@@ -26,10 +26,10 @@ class ContactLifecycleService
             return $contact;
         }
 
-        if (!$this->isValidTransition($fromStage, $toStage)) {
+        if (! $this->isValidTransition($fromStage, $toStage)) {
             throw new \InvalidArgumentException(
                 "Invalid lifecycle transition: {$fromStage} -> {$toStage}. "
-                . "Allowed from {$fromStage}: " . implode(', ', self::VALID_TRANSITIONS[$fromStage] ?? [])
+                ."Allowed from {$fromStage}: ".implode(', ', self::VALID_TRANSITIONS[$fromStage] ?? [])
             );
         }
 

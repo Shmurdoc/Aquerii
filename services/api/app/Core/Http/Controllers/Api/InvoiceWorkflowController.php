@@ -18,6 +18,7 @@ class InvoiceWorkflowController extends Controller
     public function convertToInvoice(Request $request, string $workspaceId, string $soId): JsonResponse
     {
         $invoice = $this->workflow->convertToInvoice($workspaceId, $soId);
+
         return response()->json(['invoice' => $invoice], 201);
     }
 
@@ -27,16 +28,17 @@ class InvoiceWorkflowController extends Controller
     public function recordPayment(Request $request, string $workspaceId, string $invoiceId): JsonResponse
     {
         $data = $request->validate([
-            'amount'       => 'required|numeric|min:0.01',
-            'method'       => 'nullable|string|max:50',
-            'reference'    => 'nullable|string|max:200',
+            'amount' => 'required|numeric|min:0.01',
+            'method' => 'nullable|string|max:50',
+            'reference' => 'nullable|string|max:200',
             'payment_date' => 'nullable|date',
-            'notes'        => 'nullable|string',
+            'notes' => 'nullable|string',
         ]);
 
         $data['recorded_by'] = $request->user()?->id;
 
         $invoice = $this->workflow->recordPayment($workspaceId, $invoiceId, $data);
+
         return response()->json(['invoice' => $invoice]);
     }
 
@@ -67,8 +69,8 @@ class InvoiceWorkflowController extends Controller
             ->where('id', $invoiceId)
             ->where('workspace_id', $workspaceId)
             ->update([
-                'status'     => $data['status'],
-                'sent_at'    => $data['status'] === 'sent' ? now() : DB::raw('sent_at'),
+                'status' => $data['status'],
+                'sent_at' => $data['status'] === 'sent' ? now() : DB::raw('sent_at'),
                 'updated_at' => now(),
             ]);
 

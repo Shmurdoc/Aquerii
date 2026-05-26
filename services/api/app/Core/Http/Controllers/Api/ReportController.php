@@ -3,7 +3,6 @@
 namespace App\Core\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +15,7 @@ class ReportController extends Controller
     public function dashboard(Request $request, string $workspaceId)
     {
         $period = $request->query('period', '30'); // days
-        $since  = now()->subDays((int)$period)->startOfDay();
+        $since = now()->subDays((int) $period)->startOfDay();
 
         // Revenue this period vs last period
         $revenueThisPeriod = DB::table('invoices')
@@ -29,7 +28,7 @@ class ReportController extends Controller
         $revenuePrevPeriod = DB::table('invoices')
             ->where('workspace_id', $workspaceId)
             ->where('status', 'paid')
-            ->where('paid_at', '>=', now()->subDays((int)$period * 2)->startOfDay())
+            ->where('paid_at', '>=', now()->subDays((int) $period * 2)->startOfDay())
             ->where('paid_at', '<', $since)
             ->whereNull('deleted_at')
             ->sum('total');
@@ -55,7 +54,7 @@ class ReportController extends Controller
             ->where('status', 'paid')
             ->where('paid_at', '>=', now()->subDays(30)->startOfDay())
             ->whereNull('deleted_at')
-            ->select(DB::raw("DATE(paid_at) as day, SUM(total) as revenue"))
+            ->select(DB::raw('DATE(paid_at) as day, SUM(total) as revenue'))
             ->groupBy('day')
             ->orderBy('day')
             ->get();
@@ -91,18 +90,18 @@ class ReportController extends Controller
         $aging = $this->arAging($workspaceId);
 
         return response()->json([
-            'revenue_this_period'      => (float)$revenueThisPeriod,
-            'revenue_prev_period'      => (float)$revenuePrevPeriod,
-            'revenue_change_pct'       => $revenuePrevPeriod > 0
+            'revenue_this_period' => (float) $revenueThisPeriod,
+            'revenue_prev_period' => (float) $revenuePrevPeriod,
+            'revenue_change_pct' => $revenuePrevPeriod > 0
                 ? round((($revenueThisPeriod - $revenuePrevPeriod) / $revenuePrevPeriod) * 100, 1)
                 : null,
-            'outstanding'              => (float)$outstanding,
-            'overdue_count'            => (int)$overdue,
-            'open_items'               => (int)$openItems,
-            'revenue_by_day'           => $revenueByDay,
+            'outstanding' => (float) $outstanding,
+            'overdue_count' => (int) $overdue,
+            'open_items' => (int) $openItems,
+            'revenue_by_day' => $revenueByDay,
             'invoice_status_breakdown' => $invoiceStatusBreakdown,
-            'top_customers'            => $topCustomers,
-            'ar_aging'                 => $aging,
+            'top_customers' => $topCustomers,
+            'ar_aging' => $aging,
         ]);
     }
 
@@ -112,8 +111,8 @@ class ReportController extends Controller
 
         $buckets = [
             'current' => [0, 30],
-            '31_60'   => [31, 60],
-            '61_90'   => [61, 90],
+            '31_60' => [31, 60],
+            '61_90' => [61, 90],
             'over_90' => [91, 99999],
         ];
 
@@ -123,10 +122,10 @@ class ReportController extends Controller
                 ->where('workspace_id', $workspaceId)
                 ->whereIn('status', ['sent', 'partial'])
                 ->whereNull('deleted_at')
-                ->whereRaw("? ::date - due_date BETWEEN ? AND ?", [$today, $minDays, $maxDays])
+                ->whereRaw('? ::date - due_date BETWEEN ? AND ?', [$today, $minDays, $maxDays])
                 ->sum(DB::raw('total - amount_paid'));
 
-            $result[$key] = (float)$amount;
+            $result[$key] = (float) $amount;
         }
 
         return $result;
@@ -138,14 +137,14 @@ class ReportController extends Controller
      */
     public function invoices(Request $request, string $workspaceId)
     {
-        $from   = $request->query('from', now()->startOfMonth()->toDateString());
-        $to     = $request->query('to', now()->toDateString());
+        $from = $request->query('from', now()->startOfMonth()->toDateString());
+        $to = $request->query('to', now()->toDateString());
         $status = $request->query('status');
 
         $query = DB::table('invoices')
             ->where('workspace_id', $workspaceId)
             ->whereNull('deleted_at')
-            ->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59']);
+            ->whereBetween('created_at', [$from.' 00:00:00', $to.' 23:59:59']);
 
         if ($status) {
             $query->where('status', $status);
@@ -159,7 +158,7 @@ class ReportController extends Controller
         $summaryQuery = DB::table('invoices')
             ->where('workspace_id', $workspaceId)
             ->whereNull('deleted_at')
-            ->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59']);
+            ->whereBetween('created_at', [$from.' 00:00:00', $to.' 23:59:59']);
 
         if ($status) {
             $summaryQuery->where('status', $status);
@@ -182,18 +181,22 @@ class ReportController extends Controller
      */
     public function expenses(Request $request, string $workspaceId)
     {
-        $from     = $request->query('from', now()->startOfMonth()->toDateString());
-        $to       = $request->query('to', now()->toDateString());
+        $from = $request->query('from', now()->startOfMonth()->toDateString());
+        $to = $request->query('to', now()->toDateString());
         $category = $request->query('category');
-        $status   = $request->query('status');
+        $status = $request->query('status');
 
         $baseQuery = DB::table('expense_claims')
             ->where('workspace_id', $workspaceId)
             ->whereNull('deleted_at')
-            ->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59']);
+            ->whereBetween('created_at', [$from.' 00:00:00', $to.' 23:59:59']);
 
-        if ($category) $baseQuery->where('category', $category);
-        if ($status)   $baseQuery->where('status', $status);
+        if ($category) {
+            $baseQuery->where('category', $category);
+        }
+        if ($status) {
+            $baseQuery->where('status', $status);
+        }
 
         $expenses = (clone $baseQuery)
             ->select('id', 'title', 'category', 'amount', 'currency', 'status', 'expense_date', 'created_at')
@@ -222,10 +225,10 @@ class ReportController extends Controller
             ->get();
 
         return response()->json([
-            'summary'     => $summary,
+            'summary' => $summary,
             'by_category' => $byCategory,
-            'by_month'    => $byMonth,
-            'expenses'    => $expenses,
+            'by_month' => $byMonth,
+            'expenses' => $expenses,
         ]);
     }
 
@@ -235,12 +238,12 @@ class ReportController extends Controller
     public function procurement(Request $request, string $workspaceId)
     {
         $from = $request->query('from', now()->startOfMonth()->toDateString());
-        $to   = $request->query('to', now()->toDateString());
+        $to = $request->query('to', now()->toDateString());
 
         $baseQuery = DB::table('purchase_orders')
             ->where('workspace_id', $workspaceId)
             ->whereNull('deleted_at')
-            ->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59']);
+            ->whereBetween('created_at', [$from.' 00:00:00', $to.' 23:59:59']);
 
         $orders = (clone $baseQuery)
             ->select('id', 'order_number', 'supplier_name', 'status', 'total', 'currency', 'order_date', 'expected_date')
@@ -269,10 +272,10 @@ class ReportController extends Controller
             ->get();
 
         return response()->json([
-            'summary'     => $summary,
+            'summary' => $summary,
             'by_supplier' => $bySupplier,
-            'by_month'    => $byMonth,
-            'orders'      => $orders,
+            'by_month' => $byMonth,
+            'orders' => $orders,
         ]);
     }
 
@@ -319,11 +322,11 @@ class ReportController extends Controller
             ->get();
 
         return response()->json([
-            'total_products' => (int)$totalProducts,
-            'total_stock'    => (int)$totalStock,
-            'low_stock_items' => (int)$lowStock,
-            'categories'     => (int)$categories,
-            'by_category'    => $byCategory,
+            'total_products' => (int) $totalProducts,
+            'total_stock' => (int) $totalStock,
+            'low_stock_items' => (int) $lowStock,
+            'categories' => (int) $categories,
+            'by_category' => $byCategory,
             'recent_products' => $recentProducts,
         ]);
     }
@@ -333,29 +336,29 @@ class ReportController extends Controller
      */
     public function export(Request $request, string $workspaceId, string $type)
     {
-        $from   = $request->query('from', now()->startOfMonth()->toDateString());
-        $to     = $request->query('to', now()->toDateString());
+        $from = $request->query('from', now()->startOfMonth()->toDateString());
+        $to = $request->query('to', now()->toDateString());
         $format = $request->query('format', 'csv');
 
         $rows = match ($type) {
             'invoices' => DB::table('invoices')
                 ->where('workspace_id', $workspaceId)
                 ->whereNull('deleted_at')
-                ->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
+                ->whereBetween('created_at', [$from.' 00:00:00', $to.' 23:59:59'])
                 ->select('invoice_number', 'customer_name', 'status', 'total', 'amount_paid', 'due_date', 'paid_at')
                 ->get()
                 ->toArray(),
             'expenses' => DB::table('expense_claims')
                 ->where('workspace_id', $workspaceId)
                 ->whereNull('deleted_at')
-                ->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
+                ->whereBetween('created_at', [$from.' 00:00:00', $to.' 23:59:59'])
                 ->select('title', 'category', 'amount', 'currency', 'status', 'expense_date')
                 ->get()
                 ->toArray(),
             'procurement' => DB::table('purchase_orders')
                 ->where('workspace_id', $workspaceId)
                 ->whereNull('deleted_at')
-                ->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
+                ->whereBetween('created_at', [$from.' 00:00:00', $to.' 23:59:59'])
                 ->select('order_number', 'supplier_name', 'status', 'total', 'order_date', 'expected_date')
                 ->get()
                 ->toArray(),
@@ -366,17 +369,17 @@ class ReportController extends Controller
         $filename = "{$type}-{$from}-{$to}.csv";
 
         $headers = [
-            'Content-Type'        => 'text/csv',
+            'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
         ];
 
         $callback = function () use ($rows) {
             $handle = fopen('php://output', 'w');
-            if (!empty($rows)) {
-                fputcsv($handle, array_keys((array)$rows[0]));
+            if (! empty($rows)) {
+                fputcsv($handle, array_keys((array) $rows[0]));
             }
             foreach ($rows as $row) {
-                fputcsv($handle, (array)$row);
+                fputcsv($handle, (array) $row);
             }
             fclose($handle);
         };
@@ -404,19 +407,19 @@ class ReportController extends Controller
                 $daysOverdue <= 30 => '1-30 days',
                 $daysOverdue <= 60 => '31-60 days',
                 $daysOverdue <= 90 => '61-90 days',
-                default            => 'Over 90 days',
+                default => 'Over 90 days',
             };
             $result[] = [
-                'id'             => $inv->id,
+                'id' => $inv->id,
                 'invoice_number' => $inv->invoice_number,
-                'customer_name'  => $inv->customer_name,
-                'status'         => $inv->status,
-                'total'          => (float)$inv->total,
-                'amount_paid'    => (float)$inv->amount_paid,
-                'outstanding'    => (float)$inv->total - (float)$inv->amount_paid,
-                'due_date'       => $inv->due_date,
-                'days_overdue'   => $daysOverdue,
-                'aging_bucket'   => $bucket,
+                'customer_name' => $inv->customer_name,
+                'status' => $inv->status,
+                'total' => (float) $inv->total,
+                'amount_paid' => (float) $inv->amount_paid,
+                'outstanding' => (float) $inv->total - (float) $inv->amount_paid,
+                'due_date' => $inv->due_date,
+                'days_overdue' => $daysOverdue,
+                'aging_bucket' => $bucket,
             ];
         }
 

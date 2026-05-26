@@ -21,11 +21,11 @@ class CampaignAudience extends Model
     protected function casts(): array
     {
         return [
-            'sent_at'      => 'datetime',
-            'opened_at'    => 'datetime',
-            'clicked_at'   => 'datetime',
+            'sent_at' => 'datetime',
+            'opened_at' => 'datetime',
+            'clicked_at' => 'datetime',
             'converted_at' => 'datetime',
-            'metadata'     => 'array',
+            'metadata' => 'array',
         ];
     }
 

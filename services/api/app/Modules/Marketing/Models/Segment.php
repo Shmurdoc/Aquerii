@@ -22,11 +22,11 @@ class Segment extends Model
     protected function casts(): array
     {
         return [
-            'criteria'           => 'array',
-            'cached_count'      => 'integer',
+            'criteria' => 'array',
+            'cached_count' => 'integer',
             'last_calculated_at' => 'datetime',
-            'is_dynamic'        => 'boolean',
-            'tags'              => 'array',
+            'is_dynamic' => 'boolean',
+            'tags' => 'array',
         ];
     }
 

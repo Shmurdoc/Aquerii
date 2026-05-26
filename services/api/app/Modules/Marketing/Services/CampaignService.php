@@ -16,12 +16,12 @@ class CampaignService
 
         $new = array_diff($contactIds, $existing);
 
-        $rows = array_map(fn($id) => [
+        $rows = array_map(fn ($id) => [
             'campaign_id' => $campaign->id,
-            'contact_id'  => $id,
-            'status'      => 'queued',
-            'created_at'  => now(),
-            'updated_at'  => now(),
+            'contact_id' => $id,
+            'status' => 'queued',
+            'created_at' => now(),
+            'updated_at' => now(),
         ], $new);
 
         CampaignAudience::insert($rows);
@@ -32,10 +32,10 @@ class CampaignService
         $total = $campaign->sent_count ?: 1;
 
         return [
-            'open_rate'      => $total > 0 ? round(($campaign->opened_count / $total) * 100, 1) : 0,
-            'click_rate'     => $total > 0 ? round(($campaign->clicked_count / $total) * 100, 1) : 0,
+            'open_rate' => $total > 0 ? round(($campaign->opened_count / $total) * 100, 1) : 0,
+            'click_rate' => $total > 0 ? round(($campaign->clicked_count / $total) * 100, 1) : 0,
             'conversion_rate' => $total > 0 ? round(($campaign->converted_count / $total) * 100, 1) : 0,
-            'roi'            => $campaign->budget && $campaign->budget > 0
+            'roi' => $campaign->budget && $campaign->budget > 0
                 ? round((($campaign->converted_count * 100) - $campaign->actual_spend) / $campaign->budget * 100, 1) : null,
         ];
     }

@@ -11,7 +11,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use League\Csv\Reader;
 
 class ImportCrmContactsJob implements ShouldQueue
@@ -47,6 +46,7 @@ class ImportCrmContactsJob implements ShouldQueue
 
                     if (empty($data['first_name']) || empty($data['last_name'])) {
                         $errors[] = "Row {$rowIndex}: first_name and last_name required";
+
                         continue;
                     }
 
@@ -137,6 +137,7 @@ class ImportCrmContactsJob implements ShouldQueue
                 $data[$crmField] = $value;
             }
         }
+
         return $data;
     }
 }

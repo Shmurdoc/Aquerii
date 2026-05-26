@@ -10,19 +10,19 @@ class WorkspaceResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'           => $this->id,
-            'name'         => $this->name,
-            'slug'         => $this->slug,
-            'plan'         => $this->plan,
-            'owner_id'     => $this->owner_id,
+            'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'plan' => $this->plan,
+            'owner_id' => $this->owner_id,
             'member_count' => $this->members()->count(),
             // Branding
-            'logo_url'     => $this->logo_url,
-            'cover_url'    => $this->cover_url,
-            'color'        => $this->color,
-            'icon'         => $this->icon,
-            'settings'     => $this->settings ?? [],
-            'created_at'   => $this->created_at,
+            'logo_url' => $this->logo_url,
+            'cover_url' => $this->cover_url,
+            'color' => $this->color,
+            'icon' => $this->icon,
+            'settings' => $this->settings ?? [],
+            'created_at' => $this->created_at,
         ];
     }
 }

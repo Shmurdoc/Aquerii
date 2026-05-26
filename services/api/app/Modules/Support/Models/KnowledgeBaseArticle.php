@@ -22,8 +22,8 @@ class KnowledgeBaseArticle extends Model
     protected function casts(): array
     {
         return [
-            'tags'          => 'array',
-            'is_published'  => 'boolean',
+            'tags' => 'array',
+            'is_published' => 'boolean',
         ];
     }
 

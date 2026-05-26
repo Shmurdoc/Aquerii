@@ -21,9 +21,9 @@ class CrmCalendarSync extends Model
     protected function casts(): array
     {
         return [
-            'is_active'      => 'boolean',
+            'is_active' => 'boolean',
             'last_synced_at' => 'datetime',
-            'sync_config'    => 'array',
+            'sync_config' => 'array',
         ];
     }
 

@@ -2,8 +2,8 @@
 
 namespace App\Modules\CRM\Models;
 
-use App\Core\Models\Workspace;
 use App\Core\Models\User;
+use App\Core\Models\Workspace;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 

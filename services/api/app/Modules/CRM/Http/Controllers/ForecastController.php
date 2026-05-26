@@ -8,7 +8,6 @@ use App\Modules\CRM\Models\CrmDeal;
 use App\Modules\CRM\Models\CrmPipeline;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ForecastController extends Controller
 {
@@ -24,6 +23,7 @@ class ForecastController extends Controller
 
         $byPipeline = $deals->groupBy('pipeline_id')->map(function ($group) {
             $pipeline = CrmPipeline::find($group->first()->pipeline_id);
+
             return [
                 'pipeline_id' => $group->first()->pipeline_id,
                 'pipeline_name' => $pipeline?->name,
@@ -63,6 +63,7 @@ class ForecastController extends Controller
 
         $byRep = $deals->groupBy('owner_id')->map(function ($group) {
             $owner = $group->first()->owner;
+
             return [
                 'owner_id' => $group->first()->owner_id,
                 'owner_name' => $owner?->name,
@@ -84,6 +85,7 @@ class ForecastController extends Controller
 
         $byPipeline = $deals->groupBy('pipeline_id')->map(function ($group) {
             $pipeline = CrmPipeline::find($group->first()->pipeline_id);
+
             return [
                 'pipeline_id' => $group->first()->pipeline_id,
                 'pipeline_name' => $pipeline?->name,

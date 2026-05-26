@@ -23,11 +23,11 @@ class CrmAutomationRule extends Model
     {
         return [
             'trigger_config' => 'array',
-            'conditions'     => 'array',
-            'actions'        => 'array',
-            'is_active'      => 'boolean',
-            'run_count'      => 'integer',
-            'last_run_at'    => 'datetime',
+            'conditions' => 'array',
+            'actions' => 'array',
+            'is_active' => 'boolean',
+            'run_count' => 'integer',
+            'last_run_at' => 'datetime',
         ];
     }
 

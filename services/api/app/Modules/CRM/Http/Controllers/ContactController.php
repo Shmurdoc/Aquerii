@@ -6,8 +6,8 @@ use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
 use App\Modules\CRM\Http\Resources\CrmContactResource;
 use App\Modules\CRM\Models\CrmContact;
-use App\Modules\CRM\Services\CrmAutomationService;
 use App\Modules\CRM\Services\ContactLifecycleService;
+use App\Modules\CRM\Services\CrmAutomationService;
 use App\Modules\CRM\Services\DuplicateDetectionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -86,11 +86,11 @@ class ContactController extends Controller
         ]));
 
         $this->automationService->evaluate($workspace->id, 'contact.created', [
-            'contact_id'  => $contact->id,
+            'contact_id' => $contact->id,
             'lifecycle_stage' => $contact->lifecycle_stage,
-            'lead_score'  => $contact->lead_score,
-            'source'      => $contact->source,
-            'entity_id'   => $contact->id,
+            'lead_score' => $contact->lead_score,
+            'source' => $contact->source,
+            'entity_id' => $contact->id,
             'entity_type' => 'contact',
         ]);
 
@@ -160,12 +160,12 @@ class ContactController extends Controller
             );
 
             $this->automationService->evaluate($workspace->id, 'contact.stage_changed', [
-                'contact_id'       => $contact->id,
-                'prev_stage'       => $oldStage,
-                'lifecycle_stage'  => $contact->lifecycle_stage,
-                'lead_score'       => $contact->lead_score,
-                'entity_id'        => $contact->id,
-                'entity_type'      => 'contact',
+                'contact_id' => $contact->id,
+                'prev_stage' => $oldStage,
+                'lifecycle_stage' => $contact->lifecycle_stage,
+                'lead_score' => $contact->lead_score,
+                'entity_id' => $contact->id,
+                'entity_type' => 'contact',
             ]);
 
             return response()->json(['data' => $contact->load('stageHistory')]);

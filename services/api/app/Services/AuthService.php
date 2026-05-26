@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\PersonalAccessToken;
 use PragmaRX\Google2FA\Google2FA;
 
 class AuthService
@@ -20,12 +21,12 @@ class AuthService
     {
         return DB::transaction(function () use ($data) {
             $user = User::create([
-                'name'          => $data['name'],
-                'email'         => $data['email'],
+                'name' => $data['name'],
+                'email' => $data['email'],
                 'password_hash' => Hash::make($data['password']),
             ]);
 
-            $slug      = $this->uniqueSlug($data['workspace_name']);
+            $slug = $this->uniqueSlug($data['workspace_name']);
             $workspace = Workspace::create([
                 'name' => $data['workspace_name'],
                 'slug' => $slug,
@@ -33,10 +34,10 @@ class AuthService
 
             WorkspaceMember::create([
                 'workspace_id' => $workspace->id,
-                'user_id'      => $user->id,
-                'role'         => 'owner',
-                'status'       => 'active',
-                'joined_at'    => now(),
+                'user_id' => $user->id,
+                'role' => 'owner',
+                'status' => 'active',
+                'joined_at' => now(),
             ]);
 
             event(new Registered($user));
@@ -51,7 +52,7 @@ class AuthService
     {
         $user = User::where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password_hash)) {
+        if (! $user || ! Hash::check($data['password'], $user->password_hash)) {
             abort(401, json_encode([
                 'error' => ['code' => 'INVALID_CREDENTIALS', 'message' => 'Email or password is incorrect.'],
             ]));
@@ -62,11 +63,12 @@ class AuthService
             if (empty($data['mfa_code'])) {
                 // Store a short-lived pending session in cache
                 cache()->put("mfa_pending:{$user->id}", true, 300);
+
                 return 'MFA_REQUIRED';
             }
 
-            $g2fa = new Google2FA();
-            if (!$g2fa->verifyKey($user->two_factor_secret, $data['mfa_code'])) {
+            $g2fa = new Google2FA;
+            if (! $g2fa->verifyKey($user->two_factor_secret, $data['mfa_code'])) {
                 abort(422, json_encode([
                     'error' => ['code' => 'MFA_INVALID', 'message' => 'Invalid MFA code.'],
                 ]));
@@ -83,12 +85,13 @@ class AuthService
     {
         // Sanctum tokens are long-lived; for SPA use cookie-based auth.
         // For mobile / API clients: revoke old token, issue new one.
-        $pat = \Laravel\Sanctum\PersonalAccessToken::findToken($token);
-        if (!$pat) {
+        $pat = PersonalAccessToken::findToken($token);
+        if (! $pat) {
             abort(401, json_encode(['error' => ['code' => 'TOKEN_INVALID']]));
         }
         $user = $pat->tokenable;
         $pat->delete();
+
         return $user->createToken('auth', ['*'], now()->addDays(30))->plainTextToken;
     }
 
@@ -116,11 +119,11 @@ class AuthService
     {
         $user = User::findOrFail($id);
 
-        if (!hash_equals(sha1($user->email), $hash)) {
+        if (! hash_equals(sha1($user->email), $hash)) {
             abort(403, json_encode(['error' => ['code' => 'EMAIL_VERIFY_INVALID']]));
         }
 
-        if (!$user->email_verified_at) {
+        if (! $user->email_verified_at) {
             $user->update(['email_verified_at' => now()]);
             event(new Verified($user));
         }
@@ -128,15 +131,15 @@ class AuthService
 
     public function enableMfa(User $user): array
     {
-        $g2fa     = new Google2FA();
-        $secret   = $g2fa->generateSecretKey();
-        $qrUrl    = $g2fa->getQRCodeUrl('Aquerii', $user->email, $secret);
-        $recovery = collect(range(1, 8))->map(fn() => Str::random(10))->all();
+        $g2fa = new Google2FA;
+        $secret = $g2fa->generateSecretKey();
+        $qrUrl = $g2fa->getQRCodeUrl('Aquerii', $user->email, $secret);
+        $recovery = collect(range(1, 8))->map(fn () => Str::random(10))->all();
 
         $user->update([
-            'two_factor_secret'         => encrypt($secret),
+            'two_factor_secret' => encrypt($secret),
             'two_factor_recovery_codes' => encrypt(json_encode($recovery)),
-            'two_factor_enabled'        => true,
+            'two_factor_enabled' => true,
         ]);
 
         return [$secret, $qrUrl, $recovery];
@@ -144,17 +147,18 @@ class AuthService
 
     public function verifyMfaCode(User $user, string $code): bool
     {
-        $g2fa  = new Google2FA();
+        $g2fa = new Google2FA;
         $secret = decrypt($user->two_factor_secret);
+
         return (bool) $g2fa->verifyKey($secret, $code);
     }
 
     public function disableMfa(User $user): void
     {
         $user->update([
-            'two_factor_secret'         => null,
+            'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
-            'two_factor_enabled'        => false,
+            'two_factor_enabled' => false,
         ]);
     }
 
@@ -162,11 +166,12 @@ class AuthService
     {
         $base = Str::slug($name);
         $slug = $base;
-        $i    = 1;
+        $i = 1;
         while (Workspace::where('slug', $slug)->exists()) {
             $slug = "{$base}-{$i}";
             $i++;
         }
+
         return $slug;
     }
 }

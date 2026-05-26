@@ -23,8 +23,8 @@ class EmailTemplate extends Model
     protected function casts(): array
     {
         return [
-            'tokens'     => 'array',
-            'is_shared'  => 'boolean',
+            'tokens' => 'array',
+            'is_shared' => 'boolean',
         ];
     }
 

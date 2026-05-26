@@ -14,9 +14,9 @@ class AuditLog extends Model
     protected function casts(): array
     {
         return [
-            'before'     => 'array',
-            'after'      => 'array',
-            'meta'       => 'array',
+            'before' => 'array',
+            'after' => 'array',
+            'meta' => 'array',
             'created_at' => 'datetime',
         ];
     }

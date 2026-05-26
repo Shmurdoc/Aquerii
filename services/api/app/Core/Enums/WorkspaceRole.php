@@ -4,11 +4,11 @@ namespace App\Core\Enums;
 
 enum WorkspaceRole: string
 {
-    case Owner   = 'owner';
-    case Admin   = 'admin';
+    case Owner = 'owner';
+    case Admin = 'admin';
     case Manager = 'manager';
-    case Member  = 'member';
-    case Viewer  = 'viewer';
+    case Member = 'member';
+    case Viewer = 'viewer';
 
     public function canDo(string $permission): bool
     {
@@ -17,7 +17,7 @@ enum WorkspaceRole: string
 
     public function permissions(): array
     {
-        return match($this) {
+        return match ($this) {
             self::Owner, self::Admin => self::allPermissions(),
             self::Manager => [
                 'workspace.view', 'workspace.update',

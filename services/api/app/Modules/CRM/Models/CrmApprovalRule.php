@@ -23,11 +23,11 @@ class CrmApprovalRule extends Model
     protected function casts(): array
     {
         return [
-            'threshold_min'    => 'decimal:2',
-            'threshold_max'    => 'decimal:2',
-            'approvers'        => 'array',
+            'threshold_min' => 'decimal:2',
+            'threshold_max' => 'decimal:2',
+            'approvers' => 'array',
             'escalation_hours' => 'integer',
-            'is_active'        => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 

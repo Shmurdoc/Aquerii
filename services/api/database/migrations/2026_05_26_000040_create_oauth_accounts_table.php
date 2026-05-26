@@ -9,7 +9,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('oauth_accounts')) {
+        if (! Schema::hasTable('oauth_accounts')) {
             Schema::create('oauth_accounts', function (Blueprint $table) {
                 $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
                 $table->uuid('user_id');

@@ -52,25 +52,25 @@ class SalesOrderWorkflowService
             $invoiceId = Str::uuid()->toString();
 
             DB::table('invoices')->insert([
-                'id'                    => $invoiceId,
-                'workspace_id'          => $workspaceId,
-                'invoice_number'        => $invoiceNumber,
-                'status'                => 'draft',
+                'id' => $invoiceId,
+                'workspace_id' => $workspaceId,
+                'invoice_number' => $invoiceNumber,
+                'status' => 'draft',
                 'source_sales_order_id' => $salesOrderId,
-                'customer_id'           => $so->customer_id ?? null,
-                'customer_name'         => $so->customer_name ?? '',
-                'customer_email'        => $so->customer_email ?? null,
-                'currency'              => $so->currency ?? 'USD',
-                'issue_date'            => now()->toDateString(),
-                'due_date'              => now()->addDays(30)->toDateString(),
-                'subtotal'              => $so->subtotal ?? 0,
-                'tax_total'             => $so->tax_total ?? 0,
-                'total'                 => $so->total ?? 0,
-                'amount_paid'           => 0,
-                'notes'                 => $so->notes ?? null,
-                'created_by'            => $so->created_by,
-                'created_at'            => now(),
-                'updated_at'            => now(),
+                'customer_id' => $so->customer_id ?? null,
+                'customer_name' => $so->customer_name ?? '',
+                'customer_email' => $so->customer_email ?? null,
+                'currency' => $so->currency ?? 'USD',
+                'issue_date' => now()->toDateString(),
+                'due_date' => now()->addDays(30)->toDateString(),
+                'subtotal' => $so->subtotal ?? 0,
+                'tax_total' => $so->tax_total ?? 0,
+                'total' => $so->total ?? 0,
+                'amount_paid' => 0,
+                'notes' => $so->notes ?? null,
+                'created_by' => $so->created_by,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             // Copy line items from sales_order_items → invoice_items
@@ -80,15 +80,15 @@ class SalesOrderWorkflowService
 
             foreach ($items as $item) {
                 DB::table('invoice_items')->insert([
-                    'id'          => Str::uuid()->toString(),
-                    'invoice_id'  => $invoiceId,
+                    'id' => Str::uuid()->toString(),
+                    'invoice_id' => $invoiceId,
                     'description' => $item->description ?? '',
-                    'quantity'    => $item->quantity ?? 1,
-                    'unit_price'  => $item->unit_price ?? 0,
-                    'tax_rate'    => $item->tax_rate ?? 0,
-                    'total'       => $item->total ?? 0,
-                    'created_at'  => now(),
-                    'updated_at'  => now(),
+                    'quantity' => $item->quantity ?? 1,
+                    'unit_price' => $item->unit_price ?? 0,
+                    'tax_rate' => $item->tax_rate ?? 0,
+                    'total' => $item->total ?? 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -97,9 +97,9 @@ class SalesOrderWorkflowService
                 ->where('id', $salesOrderId)
                 ->update([
                     'converted_to_invoice_id' => $invoiceId,
-                    'converted_at'            => now(),
-                    'status'                  => 'fulfilled',
-                    'updated_at'              => now(),
+                    'converted_at' => now(),
+                    'status' => 'fulfilled',
+                    'updated_at' => now(),
                 ]);
 
             return DB::table('invoices')->where('id', $invoiceId)->first();
@@ -124,27 +124,27 @@ class SalesOrderWorkflowService
 
             $paymentId = Str::uuid()->toString();
             DB::table('invoice_payments')->insert([
-                'id'           => $paymentId,
+                'id' => $paymentId,
                 'workspace_id' => $workspaceId,
-                'invoice_id'   => $invoiceId,
-                'amount'       => $data['amount'],
-                'method'       => $data['method'] ?? null,
-                'reference'    => $data['reference'] ?? null,
+                'invoice_id' => $invoiceId,
+                'amount' => $data['amount'],
+                'method' => $data['method'] ?? null,
+                'reference' => $data['reference'] ?? null,
                 'payment_date' => $data['payment_date'] ?? now()->toDateString(),
-                'notes'        => $data['notes'] ?? null,
-                'recorded_by'  => $data['recorded_by'] ?? null,
-                'created_at'   => now(),
-                'updated_at'   => now(),
+                'notes' => $data['notes'] ?? null,
+                'recorded_by' => $data['recorded_by'] ?? null,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
-            $newPaid  = bcadd((string) ($invoice->amount_paid ?? 0), (string) $data['amount'], 2);
+            $newPaid = bcadd((string) ($invoice->amount_paid ?? 0), (string) $data['amount'], 2);
             $newStatus = bccomp($newPaid, (string) $invoice->total, 2) >= 0 ? 'paid' : 'partial';
 
             DB::table('invoices')->where('id', $invoiceId)->update([
                 'amount_paid' => $newPaid,
-                'status'      => $newStatus,
-                'paid_at'     => $newStatus === 'paid' ? now() : null,
-                'updated_at'  => now(),
+                'status' => $newStatus,
+                'paid_at' => $newStatus === 'paid' ? now() : null,
+                'updated_at' => now(),
             ]);
 
             return DB::table('invoices')->where('id', $invoiceId)->first();

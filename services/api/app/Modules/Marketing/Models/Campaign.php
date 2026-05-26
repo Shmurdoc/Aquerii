@@ -24,15 +24,15 @@ class Campaign extends Model
     protected function casts(): array
     {
         return [
-            'budget'        => 'decimal:2',
-            'actual_spend'  => 'decimal:2',
-            'started_at'    => 'datetime',
-            'ended_at'      => 'datetime',
+            'budget' => 'decimal:2',
+            'actual_spend' => 'decimal:2',
+            'started_at' => 'datetime',
+            'ended_at' => 'datetime',
             'target_audience' => 'array',
-            'tags'          => 'array',
-            'metadata'      => 'array',
-            'sent_count'    => 'integer',
-            'opened_count'  => 'integer',
+            'tags' => 'array',
+            'metadata' => 'array',
+            'sent_count' => 'integer',
+            'opened_count' => 'integer',
             'clicked_count' => 'integer',
             'converted_count' => 'integer',
         ];

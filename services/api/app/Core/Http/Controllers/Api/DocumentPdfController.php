@@ -1,57 +1,58 @@
 <?php
+
 namespace App\Core\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
-
 use App\Core\Services\PdfService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class DocumentPdfController extends Controller
 {
     private array $typeConfig = [
-        'quotes'          => ['entity_type' => 'customer'],
-        'sales-orders'    => ['entity_type' => 'customer'],
+        'quotes' => ['entity_type' => 'customer'],
+        'sales-orders' => ['entity_type' => 'customer'],
         'purchase-orders' => ['entity_type' => 'supplier'],
-        'goods-receipts'  => ['entity_type' => 'supplier'],
-        'receipts'        => ['entity_type' => 'customer'],
-        'credit-notes'    => ['entity_type' => 'customer'],
+        'goods-receipts' => ['entity_type' => 'supplier'],
+        'receipts' => ['entity_type' => 'customer'],
+        'credit-notes' => ['entity_type' => 'customer'],
     ];
 
     private array $typeToTable = [
-        'quotes'          => 'quotes',
-        'sales-orders'    => 'sales_orders',
+        'quotes' => 'quotes',
+        'sales-orders' => 'sales_orders',
         'purchase-orders' => 'purchase_orders',
-        'goods-receipts'  => 'goods_receipt_notes',
-        'receipts'        => 'receipts',
-        'credit-notes'    => 'credit_notes',
+        'goods-receipts' => 'goods_receipt_notes',
+        'receipts' => 'receipts',
+        'credit-notes' => 'credit_notes',
     ];
 
     private array $typeToItemsTable = [
-        'quotes'          => 'quote_items',
-        'sales-orders'    => 'sales_order_items',
+        'quotes' => 'quote_items',
+        'sales-orders' => 'sales_order_items',
         'purchase-orders' => 'purchase_order_items',
-        'goods-receipts'  => 'grn_items',
-        'receipts'        => 'receipt_items',
-        'credit-notes'    => 'credit_note_items',
+        'goods-receipts' => 'grn_items',
+        'receipts' => 'receipt_items',
+        'credit-notes' => 'credit_note_items',
     ];
 
     private array $typeToFkCol = [
-        'quotes'          => 'quote_id',
-        'sales-orders'    => 'sales_order_id',
+        'quotes' => 'quote_id',
+        'sales-orders' => 'sales_order_id',
         'purchase-orders' => 'purchase_order_id',
-        'goods-receipts'  => 'goods_receipt_note_id',
-        'receipts'        => 'receipt_id',
-        'credit-notes'    => 'credit_note_id',
+        'goods-receipts' => 'goods_receipt_note_id',
+        'receipts' => 'receipt_id',
+        'credit-notes' => 'credit_note_id',
     ];
 
     private array $typeToViewFolder = [
-        'quotes'          => 'quote',
-        'sales-orders'    => 'sales_order',
+        'quotes' => 'quote',
+        'sales-orders' => 'sales_order',
         'purchase-orders' => 'purchase_order',
-        'goods-receipts'  => 'goods_receipt',
-        'receipts'        => 'receipt',
-        'credit-notes'    => 'credit_note',
+        'goods-receipts' => 'goods_receipt',
+        'receipts' => 'receipt',
+        'credit-notes' => 'credit_note',
     ];
 
     public function __construct(private PdfService $pdf) {}
@@ -86,13 +87,13 @@ class DocumentPdfController extends Controller
         return $this->generate('credit-notes', $wid, $id);
     }
 
-    private function generate(string $type, string $workspaceId, string $documentId): \Illuminate\Http\Response
+    private function generate(string $type, string $workspaceId, string $documentId): Response
     {
-        $config      = $this->typeConfig[$type];
-        $table       = $this->typeToTable[$type];
-        $itemsTable  = $this->typeToItemsTable[$type];
-        $fkCol       = $this->typeToFkCol[$type];
-        $viewFolder  = $this->typeToViewFolder[$type];
+        $config = $this->typeConfig[$type];
+        $table = $this->typeToTable[$type];
+        $itemsTable = $this->typeToItemsTable[$type];
+        $fkCol = $this->typeToFkCol[$type];
+        $viewFolder = $this->typeToViewFolder[$type];
 
         $document = DB::table($table)
             ->where('workspace_id', $workspaceId)
@@ -104,7 +105,7 @@ class DocumentPdfController extends Controller
             ->get();
 
         $workspace = DB::table('workspaces')->where('id', $workspaceId)->first();
-        $settings  = is_string($workspace->settings ?? null)
+        $settings = is_string($workspace->settings ?? null)
             ? json_decode($workspace->settings, true)
             : (array) ($workspace->settings ?? []);
         $workspace->settings = $settings;
@@ -134,29 +135,29 @@ class DocumentPdfController extends Controller
         $document->payment_terms = $document->payment_terms ?? null;
 
         $pdfContent = $this->pdf->renderBladeAsPdf("pdfs.{$viewFolder}.{$template}", [
-            'document'   => $document,
-            'items'      => $items,
-            'workspace'  => $workspace,
-            'entity'     => $entity,
+            'document' => $document,
+            'items' => $items,
+            'workspace' => $workspace,
+            'entity' => $entity,
             'entityType' => $config['entity_type'],
         ]);
 
         return response($pdfContent, 200, [
-            'Content-Type'        => 'application/pdf',
+            'Content-Type' => 'application/pdf',
             'Content-Disposition' => "inline; filename=\"{$viewFolder}-{$document->number}.pdf\"",
         ]);
     }
 
     private function loadEntity(object $document, string $type, string $entityType): object
     {
-        $nameCol    = $entityType === 'supplier' ? 'supplier_name' : 'customer_name';
-        $emailCol   = $entityType === 'supplier' ? 'supplier_email' : 'customer_email';
+        $nameCol = $entityType === 'supplier' ? 'supplier_name' : 'customer_name';
+        $emailCol = $entityType === 'supplier' ? 'supplier_email' : 'customer_email';
         $addressCol = $entityType === 'supplier' ? null : 'billing_address';
 
         $entity = (object) [
-            'name'    => $document->{$nameCol} ?? 'N/A',
-            'email'   => $document->{$emailCol} ?? null,
-            'phone'   => $document->phone ?? null,
+            'name' => $document->{$nameCol} ?? 'N/A',
+            'email' => $document->{$emailCol} ?? null,
+            'phone' => $document->phone ?? null,
             'address' => null,
         ];
 
@@ -174,9 +175,9 @@ class DocumentPdfController extends Controller
                 ->where('id', $document->{$companyIdCol})
                 ->first();
             if ($company) {
-                $entity->name    = $company->name ?? $entity->name;
-                $entity->email   = $company->email ?? $entity->email;
-                $entity->phone   = $company->phone ?? $entity->phone;
+                $entity->name = $company->name ?? $entity->name;
+                $entity->email = $company->email ?? $entity->email;
+                $entity->phone = $company->phone ?? $entity->phone;
                 $entity->address = $entity->address ?? $company->country ?? null;
             }
         }

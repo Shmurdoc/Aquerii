@@ -34,7 +34,7 @@ class CurrencyService
         $toRate = self::$rates[$to] ?? null;
 
         if ($fromRate === null || $toRate === null) {
-            throw new \InvalidArgumentException("Unsupported currency: " . ($fromRate === null ? $from : $to));
+            throw new \InvalidArgumentException('Unsupported currency: '.($fromRate === null ? $from : $to));
         }
 
         $usdAmount = $amount / $fromRate;
@@ -59,10 +59,10 @@ class CurrencyService
             'ZAR' => 'R',
         ];
 
-        $symbol = $symbols[$currency] ?? $currency . ' ';
+        $symbol = $symbols[$currency] ?? $currency.' ';
         $formatted = number_format($amount, 2);
 
-        return $symbol . $formatted;
+        return $symbol.$formatted;
     }
 
     public static function currencies(): array
