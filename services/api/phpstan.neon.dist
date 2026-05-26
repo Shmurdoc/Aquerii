@@ -4,7 +4,7 @@ parameters:
         - app
     excludePaths:
         - app/Modules/CRM/database
-        - app/Http/Controllers/Api
+        - app/Http/Controllers
         - app/Core/Models/User.php
         - app/Core/Models/Meeting.php
         - app/Core/Models/MeetingAttendee.php
