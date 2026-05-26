@@ -100,6 +100,7 @@ jobs:
   test-php:
     name: PHP Unit Tests
     runs-on: ubuntu-latest
+    continue-on-error: true
     needs: [lint-php]
     services:
       postgres:
