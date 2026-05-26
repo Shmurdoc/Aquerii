@@ -21,6 +21,19 @@ composer.lock
 /storage/debugbar/*
 /bootstrap/cache/*.php
 
+# ─── Python ───────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+
+# ─── Build artifacts ─────────────────────────────────
+services/web/dist/
+services/web/playwright-report/
+services/web/test-results/
+services/api/bootstrap/cache/*.php
+services/api/storage/logs/*
+*.log
+
 # ─── IDE ──────────────────────────────────────────────
 .idea/
 .vscode/
