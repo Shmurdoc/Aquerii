@@ -27,7 +27,8 @@ async def lifespan(app: FastAPI):
     global _redis_client
     logger.info("AI service starting", env=settings.APP_ENV)
     setup_otel()
-    _redis_client = await aioredis.from_url(settings.REDIS_URL, decode_responses=True)
+    if settings.APP_ENV != "test":
+        _redis_client = await aioredis.from_url(settings.REDIS_URL, decode_responses=True)
     yield
     logger.info("AI service shutting down")
     if _redis_client:

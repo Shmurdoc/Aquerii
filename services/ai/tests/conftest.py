@@ -32,16 +32,9 @@ def patch_otel():
 
 
 @pytest.fixture(scope="session", autouse=True)
-def patch_prometheus():
-    """Prevent Prometheus Instrumentator from registering on test client."""
-    with patch("app.main.Instrumentator"):
-        yield
-
-
-@pytest.fixture(scope="session", autouse=True)
-def patch_aioredis_lifespan():
+def patch_redis():
     """Prevent lifespan from connecting to a real Redis server."""
     mock_redis = AsyncMock()
     mock_redis.aclose = AsyncMock()
-    with patch("app.main.aioredis.from_url", return_value=mock_redis):
+    with patch("app.main._redis_client", mock_redis):
         yield
