@@ -1,0 +1,12 @@
+{
+  "name": "nanoclaw-repl",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Operate and extend NanoClaw v2, ECC's zero-dependency session-aware REPL built on claude -p."
+}

@@ -11,6 +11,7 @@ npm-debug.log*
 
 # ─── PHP / Composer ───────────────────────────────────
 /vendor/
+services/api/vendor/
 composer.lock
 
 # ─── Laravel ──────────────────────────────────────────
@@ -42,6 +43,9 @@ services/api/storage/logs/*
 
 # ─── Docker ───────────────────────────────────────────
 docker-data/
+
+# ─── Scratch / personal notes ────────────────────────
+madoc*.md
 
 # ─── K8s secrets (use Vault/SealedSecrets in prod) ───
 infra/k8s/secrets.yaml

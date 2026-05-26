@@ -1,0 +1,12 @@
+{
+  "name": "postgres-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Sorgu optimizasyonu, \u015fema tasar\u0131m\u0131, indeksleme ve g\u00fcvenlik i\u00e7in PostgreSQL veritaban\u0131 kal\u0131plar\u0131. Supabase en iyi uygulamalar\u0131na dayan\u0131r."
+}

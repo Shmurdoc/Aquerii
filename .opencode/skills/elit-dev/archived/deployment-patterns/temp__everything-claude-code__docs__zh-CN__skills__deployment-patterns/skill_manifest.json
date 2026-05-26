@@ -1,0 +1,12 @@
+{
+  "name": "deployment-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u90e8\u7f72\u5de5\u4f5c\u6d41\u3001CI/CD\u6d41\u6c34\u7ebf\u6a21\u5f0f\u3001Docker\u5bb9\u5668\u5316\u3001\u5065\u5eb7\u68c0\u67e5\u3001\u56de\u6eda\u7b56\u7565\u4ee5\u53caWeb\u5e94\u7528\u7a0b\u5e8f\u7684\u751f\u4ea7\u5c31\u7eea\u68c0\u67e5\u6e05\u5355\u3002"
+}

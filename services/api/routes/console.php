@@ -22,3 +22,9 @@ Schedule::job(new \App\Modules\Email\Jobs\SyncAllEmailAccounts())->everyFiveMinu
 
 // Alert stale contacts daily
 Schedule::command('crm:alert-stale-contacts')->daily();
+
+// Check deal approval escalations
+Schedule::command('crm:check-deal-escalations')->everyFiveMinutes();
+
+// Check aging deals for automation triggers
+Schedule::command('crm:check-deal-aging')->hourly();

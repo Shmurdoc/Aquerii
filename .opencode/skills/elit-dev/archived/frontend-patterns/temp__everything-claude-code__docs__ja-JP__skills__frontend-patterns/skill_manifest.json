@@ -1,0 +1,12 @@
+{
+  "name": "frontend-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "React\u3001Next.js\u3001\u72b6\u614b\u7ba1\u7406\u3001\u30d1\u30d5\u30a9\u30fc\u30de\u30f3\u30b9\u6700\u9069\u5316\u3001UI\u30d9\u30b9\u30c8\u30d7\u30e9\u30af\u30c6\u30a3\u30b9\u306e\u305f\u3081\u306e\u30d5\u30ed\u30f3\u30c8\u30a8\u30f3\u30c9\u958b\u767a\u30d1\u30bf\u30fc\u30f3\u3002"
+}

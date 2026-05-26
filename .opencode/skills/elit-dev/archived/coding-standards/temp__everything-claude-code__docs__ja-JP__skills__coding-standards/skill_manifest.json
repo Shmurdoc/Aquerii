@@ -1,0 +1,12 @@
+{
+  "name": "coding-standards",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "TypeScript\u3001JavaScript\u3001React\u3001Node.js\u958b\u767a\u306e\u305f\u3081\u306e\u6c4e\u7528\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0\u6a19\u6e96\u3001\u30d9\u30b9\u30c8\u30d7\u30e9\u30af\u30c6\u30a3\u30b9\u3001\u30d1\u30bf\u30fc\u30f3\u3002"
+}

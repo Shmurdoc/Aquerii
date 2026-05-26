@@ -1,0 +1,12 @@
+{
+  "name": "springboot-tdd",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u4f7f\u7528JUnit 5\u3001Mockito\u3001MockMvc\u3001Testcontainers\u548cJaCoCo\u8fdb\u884cSpring Boot\u7684\u6d4b\u8bd5\u9a71\u52a8\u5f00\u53d1\u3002\u9002\u7528\u4e8e\u6dfb\u52a0\u529f\u80fd\u3001\u4fee\u590d\u9519\u8bef\u6216\u91cd\u6784\u65f6\u3002"
+}

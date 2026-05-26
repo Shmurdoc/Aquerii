@@ -1,0 +1,12 @@
+{
+  "name": "jpa-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Spring Boot'ta entity tasar\u0131m\u0131, ili\u015fkiler, sorgu optimizasyonu, transaction'lar, auditing, indeksleme, sayfalama ve pooling i\u00e7in JPA/Hibernate kal\u0131plar\u0131."
+}

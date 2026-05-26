@@ -1,0 +1,12 @@
+{
+  "name": "secrets-and-config-management",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Secure storage and rotation of secrets, config schemas, environment separation, and runtime configuration best practices."
+}

@@ -1,0 +1,12 @@
+{
+  "name": "knowledge-agent",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Build and query AI-powered knowledge bases from claude-mem observations. Use when users want to create focused \"brains\" from their observation history, ask questions about past work patterns, or co..."
+}

@@ -1,0 +1,12 @@
+{
+  "name": "swift-concurrency-6-2",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Swift 6.2 \u53ef\u63a5\u8fd1\u7684\u5e76\u53d1\u6027 \u2014 \u9ed8\u8ba4\u5355\u7ebf\u7a0b\uff0c@concurrent \u7528\u4e8e\u663e\u5f0f\u540e\u53f0\u5378\u8f7d\uff0c\u9694\u79bb\u4e00\u81f4\u6027\u7528\u4e8e\u4e3b actor \u7c7b\u578b\u3002"
+}

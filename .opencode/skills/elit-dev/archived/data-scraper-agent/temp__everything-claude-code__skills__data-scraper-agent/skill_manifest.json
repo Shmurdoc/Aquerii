@@ -1,0 +1,12 @@
+{
+  "name": "data-scraper-agent",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Build a fully automated AI-powered data collection agent for any public source \u2014 job boards, prices, news, GitHub, sports, anything. Scrapes on a schedule, enriches data with a free LLM (Gemini Fla..."
+}

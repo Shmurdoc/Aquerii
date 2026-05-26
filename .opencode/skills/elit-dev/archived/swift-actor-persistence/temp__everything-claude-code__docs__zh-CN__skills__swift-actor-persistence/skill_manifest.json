@@ -1,0 +1,12 @@
+{
+  "name": "swift-actor-persistence",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u5728 Swift \u4e2d\u4f7f\u7528 actor \u5b9e\u73b0\u7ebf\u7a0b\u5b89\u5168\u7684\u6570\u636e\u6301\u4e45\u5316\u2014\u2014\u57fa\u4e8e\u5185\u5b58\u7f13\u5b58\u4e0e\u6587\u4ef6\u652f\u6301\u7684\u5b58\u50a8\uff0c\u901a\u8fc7\u8bbe\u8ba1\u6d88\u9664\u6570\u636e\u7ade\u4e89\u3002"
+}

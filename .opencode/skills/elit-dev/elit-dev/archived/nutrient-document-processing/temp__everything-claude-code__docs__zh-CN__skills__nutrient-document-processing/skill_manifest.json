@@ -1,0 +1,12 @@
+{
+  "name": "nutrient-document-processing",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u4f7f\u7528Nutrient DWS API\u5904\u7406\u3001\u8f6c\u6362\u3001OCR\u8bc6\u522b\u3001\u63d0\u53d6\u3001\u7f16\u8f91\u3001\u7b7e\u540d\u548c\u586b\u5199\u6587\u6863\u3002\u652f\u6301PDF\u3001DOCX\u3001XLSX\u3001PPTX\u3001HTML\u548c\u56fe\u50cf\u683c\u5f0f\u3002"
+}

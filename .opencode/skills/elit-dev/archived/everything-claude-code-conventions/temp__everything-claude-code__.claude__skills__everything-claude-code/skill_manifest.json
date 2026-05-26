@@ -1,0 +1,12 @@
+{
+  "name": "everything-claude-code-conventions",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Development conventions and patterns for everything-claude-code. JavaScript project with conventional commits."
+}

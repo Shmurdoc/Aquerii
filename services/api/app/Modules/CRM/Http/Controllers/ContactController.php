@@ -6,6 +6,7 @@ use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
 use App\Modules\CRM\Http\Resources\CrmContactResource;
 use App\Modules\CRM\Models\CrmContact;
+use App\Modules\CRM\Services\CrmAutomationService;
 use App\Modules\CRM\Services\ContactLifecycleService;
 use App\Modules\CRM\Services\DuplicateDetectionService;
 use Illuminate\Http\JsonResponse;
@@ -16,6 +17,7 @@ class ContactController extends Controller
     public function __construct(
         protected ContactLifecycleService $lifecycleService,
         protected DuplicateDetectionService $duplicateService,
+        protected CrmAutomationService $automationService,
     ) {}
 
     public function index(Request $request, Workspace $workspace)
@@ -83,6 +85,15 @@ class ContactController extends Controller
             'source' => $validated['source'] ?? 'manual',
         ]));
 
+        $this->automationService->evaluate($workspace->id, 'contact.created', [
+            'contact_id'  => $contact->id,
+            'lifecycle_stage' => $contact->lifecycle_stage,
+            'lead_score'  => $contact->lead_score,
+            'source'      => $contact->source,
+            'entity_id'   => $contact->id,
+            'entity_type' => 'contact',
+        ]);
+
         return response()->json(['data' => $contact], 201);
     }
 
@@ -140,12 +151,22 @@ class ContactController extends Controller
         ]);
 
         try {
+            $oldStage = $contact->lifecycle_stage;
             $contact = $this->lifecycleService->transition(
                 $contact,
                 $validated['to_stage'],
                 $validated['reason'] ?? null,
                 $request->user()->id,
             );
+
+            $this->automationService->evaluate($workspace->id, 'contact.stage_changed', [
+                'contact_id'       => $contact->id,
+                'prev_stage'       => $oldStage,
+                'lifecycle_stage'  => $contact->lifecycle_stage,
+                'lead_score'       => $contact->lead_score,
+                'entity_id'        => $contact->id,
+                'entity_type'      => 'contact',
+            ]);
 
             return response()->json(['data' => $contact->load('stageHistory')]);
         } catch (\InvalidArgumentException $e) {

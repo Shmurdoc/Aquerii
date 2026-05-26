@@ -1,0 +1,12 @@
+{
+  "name": "regex-vs-llm-structured-text",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Decision framework for choosing between regex and LLM when parsing structured text \u2014 start with regex, add LLM only for low-confidence edge cases."
+}

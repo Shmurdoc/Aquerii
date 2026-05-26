@@ -1,0 +1,12 @@
+{
+  "name": "cost-aware-llm-pipeline",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Cost optimization patterns for LLM API usage \u2014 model routing by task complexity, budget tracking, retry logic, and prompt caching."
+}

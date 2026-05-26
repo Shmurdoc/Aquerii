@@ -1,0 +1,12 @@
+{
+  "name": "iterative-retrieval",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\uc11c\ube0c\uc5d0\uc774\uc804\ud2b8 \ucee8\ud14d\uc2a4\ud2b8 \ubb38\uc81c\ub97c \ud574\uacb0\ud558\uae30 \uc704\ud55c \uc810\uc9c4\uc801 \ucee8\ud14d\uc2a4\ud2b8 \uac80\uc0c9 \uac1c\uc120 \ud328\ud134"
+}

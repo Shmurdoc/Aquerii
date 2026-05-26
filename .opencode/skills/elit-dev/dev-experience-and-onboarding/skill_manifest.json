@@ -1,0 +1,12 @@
+{
+  "name": "dev-experience-and-onboarding",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Improve developer experience with local dev setups, reproducible environments, documentation, contributor guidelines, and onboarding checklists."
+}

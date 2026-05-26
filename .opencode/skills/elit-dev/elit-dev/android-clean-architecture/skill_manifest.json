@@ -1,0 +1,12 @@
+{
+  "name": "android-clean-architecture",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Clean Architecture patterns for Android and Kotlin Multiplatform projects \u2014 module structure, dependency rules, UseCases, Repositories, and data layer patterns."
+}

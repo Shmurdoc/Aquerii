@@ -1,0 +1,12 @@
+{
+  "name": "swift-concurrency-6-2",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Swift 6.2 Approachable Concurrency \u2014 single-threaded by default, @concurrent for explicit background offloading, isolated conformances for main actor types."
+}

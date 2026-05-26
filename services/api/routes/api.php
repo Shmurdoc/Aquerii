@@ -35,6 +35,13 @@ use App\Modules\CRM\Http\Controllers\ForecastController;
 use App\Modules\CRM\Http\Controllers\QuotaController;
 use App\Modules\CRM\Http\Controllers\SequenceController;
 use App\Modules\CRM\Http\Controllers\CallLogController;
+use App\Modules\CRM\Http\Controllers\CrmReportController;
+use App\Modules\CRM\Http\Controllers\CrmAnalyticsController;
+use App\Modules\CRM\Http\Controllers\CrmAutomationRuleController;
+use App\Modules\CRM\Http\Controllers\DealApprovalController;
+use App\Modules\CRM\Http\Controllers\ProductController;
+use App\Modules\CRM\Http\Controllers\QuoteController;
+use App\Modules\CRM\Http\Controllers\CalendarSyncController;
 use App\Http\Controllers\Api\WorkspaceInvitationController;
 
 // ── Health check (public) ─────────────────────────────────────────────────────
@@ -226,6 +233,52 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::post('crm/contacts/import',                [ContactImportController::class, 'store'])->middleware('idempotent');
         Route::get('crm/contacts/import/{importId}/status',[ContactImportController::class, 'status']);
 
+        // CRM Reports & Analytics
+        Route::get('crm/reports/pipeline-velocity',        [CrmReportController::class, 'pipelineVelocity']);
+        Route::get('crm/reports/revenue',                  [CrmReportController::class, 'revenue']);
+        Route::get('crm/reports/win-loss',                 [CrmReportController::class, 'winLoss']);
+        Route::get('crm/reports/activities',               [CrmReportController::class, 'activities']);
+        Route::get('crm/reports/lead-sources',             [CrmReportController::class, 'leadSources']);
+
+        Route::get('crm/analytics/funnel',                 [CrmAnalyticsController::class, 'funnel']);
+        Route::get('crm/analytics/cohort',                 [CrmAnalyticsController::class, 'cohort']);
+        Route::get('crm/analytics/churn-risk',             [CrmAnalyticsController::class, 'churnRisk']);
+        Route::get('crm/analytics/clv',                    [CrmAnalyticsController::class, 'clv']);
+
+        // CRM Automation Rules
+        Route::apiResource('crm/automation-rules',         CrmAutomationRuleController::class)->middleware('idempotent');
+
+        // CRM Deal Approval Rules
+        Route::get('crm/approval-rules',                   [DealApprovalController::class, 'rules']);
+        Route::post('crm/approval-rules',                  [DealApprovalController::class, 'storeRule'])->middleware('idempotent');
+        Route::patch('crm/approval-rules/{rule}',          [DealApprovalController::class, 'updateRule'])->middleware('idempotent');
+        Route::delete('crm/approval-rules/{rule}',         [DealApprovalController::class, 'destroyRule'])->middleware('idempotent');
+
+        // CRM Deal Approvals
+        Route::get('crm/deal-approvals',                   [DealApprovalController::class, 'approvals']);
+        Route::post('crm/deal-approvals/{approval}/approve',[DealApprovalController::class, 'approve'])->middleware('idempotent');
+        Route::post('crm/deal-approvals/{approval}/reject', [DealApprovalController::class, 'reject'])->middleware('idempotent');
+
+        // CRM Products
+        Route::apiResource('crm/products', ProductController::class)->middleware('idempotent');
+
+        // CRM Quotes
+        Route::apiResource('crm/quotes', QuoteController::class)->middleware('idempotent');
+        Route::post('crm/quotes/{quote}/send',             [QuoteController::class, 'send'])->middleware('idempotent');
+        Route::post('crm/quotes/{quote}/accept',           [QuoteController::class, 'accept'])->middleware('idempotent');
+        Route::post('crm/quotes/{quote}/reject',           [QuoteController::class, 'reject'])->middleware('idempotent');
+        Route::post('crm/quotes/{quote}/duplicate',        [QuoteController::class, 'duplicate'])->middleware('idempotent');
+
+        // CRM Calendar Sync
+        Route::get('crm/calendar-syncs',                   [CalendarSyncController::class, 'index']);
+        Route::post('crm/calendar-syncs',                  [CalendarSyncController::class, 'store'])->middleware('idempotent');
+        Route::delete('crm/calendar-syncs/{sync}',         [CalendarSyncController::class, 'destroy'])->middleware('idempotent');
+        Route::post('crm/calendar-syncs/{sync}/sync',      [CalendarSyncController::class, 'sync'])->middleware('idempotent');
+        Route::get('crm/provider-calendars',               [CalendarSyncController::class, 'listProviderCalendars']);
+
+        // CRM Telephony
+        Route::post('crm/telephony',                       [CalendarSyncController::class, 'telephony'])->middleware('idempotent');
+
         // Automations
         Route::get('automation-templates',                [AutomationController::class, 'templates']);
         Route::apiResource('automations',                 AutomationController::class)->middleware('idempotent');
@@ -244,6 +297,12 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::post('document/link-deal',         [AIController::class, 'linkDocumentToDeal']);
             Route::post('automation/generate',        [AIController::class, 'generateAutomation']);
             Route::post('flowchart/generate',         [AIController::class, 'generateFlowchart']);
+            Route::post('deal-summary',              [AIController::class, 'dealSummary']);
+            Route::post('churn-risk',                [AIController::class, 'churnRisk']);
+            Route::post('next-action',               [AIController::class, 'nextAction']);
+            Route::post('email-compose',             [AIController::class, 'emailCompose']);
+            Route::post('data-clean',                [AIController::class, 'dataClean']);
+            Route::post('anomaly-detection',          [AIController::class, 'anomalyDetection']);
         });
 
         // Invoices — PDF + workflow (SO→Invoice conversion, payments, status)

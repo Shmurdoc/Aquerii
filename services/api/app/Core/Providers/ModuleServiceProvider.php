@@ -14,6 +14,8 @@ use App\Modules\Inventory\Providers\InventoryServiceProvider;
 use App\Modules\Invoicing\Providers\InvoicingServiceProvider;
 use App\Modules\Purchasing\Providers\PurchasingServiceProvider;
 use App\Modules\Sales\Providers\SalesServiceProvider;
+use App\Modules\Support\Providers\SupportServiceProvider;
+use App\Modules\Marketing\Providers\MarketingServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -32,6 +34,8 @@ class ModuleServiceProvider extends ServiceProvider
         $this->registerIf('MODULE_ACCOUNTING', AccountingServiceProvider::class);
         $this->registerIf('MODULE_PURCHASING', PurchasingServiceProvider::class);
         $this->registerIf('MODULE_SALES', SalesServiceProvider::class);
+        $this->registerIf('MODULE_SUPPORT', SupportServiceProvider::class);
+        $this->registerIf('MODULE_MARKETING', MarketingServiceProvider::class);
     }
 
     private function registerIf(string $envKey, string $providerClass): void

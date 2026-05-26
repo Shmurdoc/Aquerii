@@ -1,0 +1,12 @@
+{
+  "name": "safety-guard",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Use this skill to prevent destructive operations when working on production systems or running agents autonomously."
+}

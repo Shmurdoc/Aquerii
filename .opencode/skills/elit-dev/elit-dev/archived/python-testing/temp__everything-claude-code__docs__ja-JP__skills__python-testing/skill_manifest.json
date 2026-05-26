@@ -1,0 +1,12 @@
+{
+  "name": "python-testing",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "pytest\u3001TDD\u624b\u6cd5\u3001\u30d5\u30a3\u30af\u30b9\u30c1\u30e3\u3001\u30e2\u30c3\u30af\u3001\u30d1\u30e9\u30e1\u30fc\u30bf\u5316\u3001\u30ab\u30d0\u30ec\u30c3\u30b8\u8981\u4ef6\u3092\u4f7f\u7528\u3057\u305fPython\u30c6\u30b9\u30c8\u6226\u7565\u3002"
+}

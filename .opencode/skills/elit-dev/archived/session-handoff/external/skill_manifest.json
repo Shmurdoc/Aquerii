@@ -1,0 +1,12 @@
+{
+  "name": "session-handoff",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Create a session-level continuation pack when the current coding window should offload context before continuing in a new window. Use when users ask to\u6574\u7406\u5f53\u524d session, prepare a new window to continue..."
+}

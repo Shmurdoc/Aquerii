@@ -12,6 +12,12 @@ return [
         'analyze_document' => env('AI_CREDIT_COST_ANALYZE_DOC', 6),
         'auto_tag_document' => env('AI_CREDIT_COST_AUTO_TAG_DOC', 4),
         'link_document_to_deal' => env('AI_CREDIT_COST_LINK_DEAL', 5),
+        'deal_summary' => env('AI_CREDIT_COST_DEAL_SUMMARY', 5),
+        'churn_risk' => env('AI_CREDIT_COST_CHURN_RISK', 5),
+        'next_action' => env('AI_CREDIT_COST_NEXT_ACTION', 5),
+        'email_compose' => env('AI_CREDIT_COST_EMAIL_COMPOSE', 5),
+        'data_clean' => env('AI_CREDIT_COST_DATA_CLEAN', 8),
+        'anomaly_detection' => env('AI_CREDIT_COST_ANOMALY_DETECTION', 8),
     ],
 
     'credit_limits' => [

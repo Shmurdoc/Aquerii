@@ -1,0 +1,12 @@
+{
+  "name": "dispatching-parallel-agents",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies"
+}

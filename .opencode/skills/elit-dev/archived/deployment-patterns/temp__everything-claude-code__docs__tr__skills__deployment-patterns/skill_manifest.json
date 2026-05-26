@@ -1,0 +1,12 @@
+{
+  "name": "deployment-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Deployment i\u015f ak\u0131\u015flar\u0131, CI/CD pipeline kal\u0131plar\u0131, Docker konteynerizasyonu, sa\u011fl\u0131k kontrolleri, rollback stratejileri ve web uygulamalar\u0131 i\u00e7in \u00fcretim haz\u0131rl\u0131\u011f\u0131 kontrol listeleri."
+}

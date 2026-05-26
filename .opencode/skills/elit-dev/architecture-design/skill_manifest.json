@@ -1,0 +1,12 @@
+{
+  "name": "architecture-design",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Provide architecture design patterns, system decomposition, tradeoff analysis, and anti-patterns to ensure scalable, maintainable, and evolvable systems. Use when designing or reviewing system-leve..."
+}

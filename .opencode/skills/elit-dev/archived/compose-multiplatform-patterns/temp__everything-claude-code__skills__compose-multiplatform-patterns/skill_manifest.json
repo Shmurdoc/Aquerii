@@ -1,0 +1,12 @@
+{
+  "name": "compose-multiplatform-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Compose Multiplatform and Jetpack Compose patterns for KMP projects \u2014 state management, navigation, theming, performance, and platform-specific UI."
+}

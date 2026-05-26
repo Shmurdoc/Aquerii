@@ -1,0 +1,12 @@
+{
+  "name": "golang-testing",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\ud14c\uc774\ube14 \uc8fc\ub3c4 \ud14c\uc2a4\ud2b8, \uc11c\ube0c\ud14c\uc2a4\ud2b8, \ubca4\uce58\ub9c8\ud06c, \ud37c\uc9d5, \ud14c\uc2a4\ud2b8 \ucee4\ubc84\ub9ac\uc9c0\ub97c \ud3ec\ud568\ud55c Go \ud14c\uc2a4\ud305 \ud328\ud134. \uad00\uc6a9\uc801 Go \uad00\ud589\uacfc \ud568\uaed8 TDD \ubc29\ubc95\ub860\uc744 \ub530\ub985\ub2c8\ub2e4."
+}

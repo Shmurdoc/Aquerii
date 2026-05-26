@@ -1,0 +1,12 @@
+{
+  "name": "coding-standards",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "TypeScript, JavaScript, React, Node.js \uac1c\ubc1c\uc744 \uc704\ud55c \ubc94\uc6a9 \ucf54\ub529 \ud45c\uc900, \ubaa8\ubc94 \uc0ac\ub840 \ubc0f \ud328\ud134."
+}

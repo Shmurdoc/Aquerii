@@ -1,0 +1,12 @@
+{
+  "name": "content-hash-cache-pattern",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Cache expensive file processing results using SHA-256 content hashes \u2014 path-independent, auto-invalidating, with service layer separation."
+}

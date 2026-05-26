@@ -1,0 +1,12 @@
+{
+  "name": "plankton-code-quality",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\"Write-time code quality enforcement using Plankton \u2014 auto-formatting, linting, and Claude-powered fixes on every file edit via hooks.\""
+}

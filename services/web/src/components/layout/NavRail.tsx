@@ -20,6 +20,7 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
+  { to: '/dashboard',  icon: LayoutGrid, label: 'Dashboard'  },
   { to: '/inbox',      icon: Inbox,      label: 'Inbox'      },
   { to: '/meetings',   icon: Video,      label: 'Meetings',   permission: 'meetings.*' },
   { to: '/employees',  icon: UserCheck,  label: 'Employees',  permission: 'employees.*' },

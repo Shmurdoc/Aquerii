@@ -1,0 +1,12 @@
+{
+  "name": "continuous-agent-loop",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Patterns for continuous autonomous agent loops with quality gates, evals, and recovery controls."
+}

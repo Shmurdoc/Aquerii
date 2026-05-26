@@ -1,0 +1,12 @@
+{
+  "name": "foundation-models-on-device",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u82f9\u679cFoundationModels\u6846\u67b6\u7528\u4e8e\u8bbe\u5907\u4e0a\u7684LLM\u2014\u2014\u6587\u672c\u751f\u6210\u3001\u4f7f\u7528@Generable\u8fdb\u884c\u5f15\u5bfc\u751f\u6210\u3001\u5de5\u5177\u8c03\u7528\uff0c\u4ee5\u53ca\u5728iOS 26+\u4e2d\u7684\u5feb\u7167\u6d41\u3002"
+}

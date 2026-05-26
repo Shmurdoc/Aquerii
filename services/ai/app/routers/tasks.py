@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from app.core.config import settings
-from app.core.credits import consume_credits, rollback_credits
 from app.core.providers import generate_json
 from app.security.auth import verify_internal_token
 
@@ -30,9 +29,8 @@ class TaskAssistResponse(BaseModel):
 
 @router.post("/assist", response_model=TaskAssistResponse)
 async def task_assist(body: TaskAssistRequest):
-    ok = await consume_credits(body.workspace_id, settings.CREDIT_COST_TASK_ASSIST)
-    if not ok:
-        raise HTTPException(status_code=402, detail="AI_CREDITS_EXHAUSTED")
+    # Credits are charged by the API gateway; the AI service trusts the caller
+    # (internal-token protected) and does not modify credit counters.
 
     prompt = f"Task: {body.title}\n"
     if body.description:
@@ -42,5 +40,4 @@ async def task_assist(body: TaskAssistRequest):
         data = await generate_json(prompt, system=SYSTEM)
         return TaskAssistResponse(**data)
     except Exception as exc:
-        await rollback_credits(body.workspace_id, settings.CREDIT_COST_TASK_ASSIST)
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc

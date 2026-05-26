@@ -1,0 +1,12 @@
+{
+  "name": "tdd-workflow",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\uc0c8 \uae30\ub2a5 \uc791\uc131, \ubc84\uadf8 \uc218\uc815 \ub610\ub294 \ucf54\ub4dc \ub9ac\ud329\ud130\ub9c1 \uc2dc \uc774 \uc2a4\ud0ac\uc744 \uc0ac\uc6a9\ud558\uc138\uc694. \ub2e8\uc704, \ud1b5\ud569, E2E \ud14c\uc2a4\ud2b8\ub97c \ud3ec\ud568\ud55c 80% \uc774\uc0c1\uc758 \ucee4\ubc84\ub9ac\uc9c0\ub85c \ud14c\uc2a4\ud2b8 \uc8fc\ub3c4 \uac1c\ubc1c\uc744 \uc2dc\ud589\ud569\ub2c8\ub2e4."
+}

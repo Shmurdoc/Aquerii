@@ -1,0 +1,12 @@
+{
+  "name": "performance-and-scaling",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Performance engineering, capacity planning, profiling, benchmarking, caching strategies, and scalability patterns."
+}

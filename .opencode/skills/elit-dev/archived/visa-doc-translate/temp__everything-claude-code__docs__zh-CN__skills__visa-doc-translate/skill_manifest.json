@@ -1,0 +1,12 @@
+{
+  "name": "visa-doc-translate",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u5c06\u7b7e\u8bc1\u7533\u8bf7\u6587\u4ef6\uff08\u56fe\u7247\uff09\u7ffb\u8bd1\u6210\u82f1\u6587\uff0c\u5e76\u521b\u5efa\u5305\u542b\u539f\u6587\u548c\u8bd1\u6587\u7684\u53cc\u8bedPDF"
+}

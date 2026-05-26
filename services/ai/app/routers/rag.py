@@ -3,7 +3,6 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 import chromadb
 from app.core.config import settings
-from app.core.credits import consume_credits, rollback_credits
 from app.core.providers import generate_text, generate_embedding
 from app.security.auth import verify_internal_token
 from app.rag.indexer import hybrid_search as rag_hybrid_search, rebuild_faiss
@@ -92,9 +91,8 @@ async def rebuild_index_endpoint(body: RebuildIndexRequest):
 
 @router.post("/query", response_model=QueryResponse)
 async def query(body: QueryRequest):
-    ok = await consume_credits(body.workspace_id, settings.CREDIT_COST_RAG)
-    if not ok:
-        raise HTTPException(status_code=402, detail="AI_CREDITS_EXHAUSTED")
+    # Credits are charged by the API gateway; the AI service trusts the caller
+    # (internal-token protected) and does not modify credit counters.
 
     try:
         if settings.RAG_HYBRID_SEARCH and settings.FAISS_ENABLED:
@@ -141,15 +139,13 @@ async def query(body: QueryRequest):
         answer = await generate_text(prompt, max_tokens=512)
         return QueryResponse(answer=answer, sources=sources)
     except Exception as exc:
-        await rollback_credits(body.workspace_id, settings.CREDIT_COST_RAG)
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc
 
 
 @router.post("/query-direct", response_model=QueryResponse)
 async def query_direct(body: QueryRequest):
-    ok = await consume_credits(body.workspace_id, settings.CREDIT_COST_RAG)
-    if not ok:
-        raise HTTPException(status_code=402, detail="AI_CREDITS_EXHAUSTED")
+    # Credits are charged by the API gateway; the AI service trusts the caller
+    # (internal-token protected) and does not modify credit counters.
 
     try:
         query_embedding = generate_embedding(body.query)
@@ -179,5 +175,4 @@ async def query_direct(body: QueryRequest):
         answer = await generate_text(prompt, max_tokens=512)
         return QueryResponse(answer=answer, sources=list(set(sources)))
     except Exception as exc:
-        await rollback_credits(body.workspace_id, settings.CREDIT_COST_RAG)
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc

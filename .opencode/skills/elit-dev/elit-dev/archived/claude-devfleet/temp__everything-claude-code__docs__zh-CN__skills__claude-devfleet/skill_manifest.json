@@ -1,0 +1,12 @@
+{
+  "name": "claude-devfleet",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u901a\u8fc7Claude DevFleet\u534f\u8c03\u591a\u667a\u80fd\u4f53\u7f16\u7801\u4efb\u52a1\u2014\u2014\u89c4\u5212\u9879\u76ee\u3001\u5728\u9694\u79bb\u7684\u5de5\u4f5c\u6811\u4e2d\u5e76\u884c\u8c03\u5ea6\u667a\u80fd\u4f53\u3001\u76d1\u63a7\u8fdb\u5ea6\u5e76\u8bfb\u53d6\u7ed3\u6784\u5316\u62a5\u544a\u3002"
+}

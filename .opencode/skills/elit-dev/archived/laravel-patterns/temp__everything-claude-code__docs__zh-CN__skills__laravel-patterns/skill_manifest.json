@@ -1,0 +1,12 @@
+{
+  "name": "laravel-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Laravel\u67b6\u6784\u6a21\u5f0f\u3001\u8def\u7531/\u63a7\u5236\u5668\u3001Eloquent ORM\u3001\u670d\u52a1\u5c42\u3001\u961f\u5217\u3001\u4e8b\u4ef6\u3001\u7f13\u5b58\u4ee5\u53ca\u7528\u4e8e\u751f\u4ea7\u5e94\u7528\u7684API\u8d44\u6e90\u3002"
+}

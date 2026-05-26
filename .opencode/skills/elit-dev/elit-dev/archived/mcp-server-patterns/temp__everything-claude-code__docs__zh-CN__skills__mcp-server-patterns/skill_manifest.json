@@ -1,0 +1,12 @@
+{
+  "name": "mcp-server-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u4f7f\u7528Node/TypeScript SDK\u6784\u5efaMCP\u670d\u52a1\u5668\u2014\u2014\u5de5\u5177\u3001\u8d44\u6e90\u3001\u63d0\u793a\u3001Zod\u9a8c\u8bc1\u3001stdio\u4e0e\u53ef\u6d41\u5f0fHTTP\u5bf9\u6bd4\u3002\u4f7f\u7528Context7\u6216\u5b98\u65b9MCP\u6587\u6863\u83b7\u53d6\u6700\u65b0API\u4fe1\u606f\u3002"
+}

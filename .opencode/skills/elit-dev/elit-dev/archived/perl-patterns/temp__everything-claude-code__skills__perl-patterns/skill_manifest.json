@@ -1,0 +1,12 @@
+{
+  "name": "perl-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Modern Perl 5.36+ idioms, best practices, and conventions for building robust, maintainable Perl applications."
+}

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import {
   AlertTriangle, CheckSquare, DollarSign, Download,
   BarChart3, ShoppingCart, Package, TrendingUp, Clock,
+  Users, Target, Activity, GitFork, TrendingDown,
 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
@@ -83,6 +84,12 @@ const TABS = [
   { key: 'expenses', label: 'Expenses', icon: DollarSign },
   { key: 'procurement', label: 'Procurement', icon: ShoppingCart },
   { key: 'inventory', label: 'Inventory', icon: Package },
+  { key: 'pipeline', label: 'Pipeline', icon: GitFork },
+  { key: 'revenue', label: 'Revenue', icon: TrendingUp },
+  { key: 'winloss', label: 'Win/Loss', icon: Target },
+  { key: 'leads', label: 'Lead Sources', icon: Users },
+  { key: 'churn', label: 'Churn Risk', icon: TrendingDown },
+  { key: 'clv', label: 'CLV', icon: Activity },
 ]
 
 function todayStr(): string {
@@ -110,10 +117,12 @@ async function downloadCSV(wid: string, type: string, from: string, to: string) 
 export default function ReportsPage() {
   const [activeTab, setActiveTab] = useState('overview')
   const [period, setPeriod] = useState('30')
+  const [crmPeriod, setCrmPeriod] = useState('60')
   const [expenseFrom, setExpenseFrom] = useState(monthStartStr())
   const [expenseTo, setExpenseTo] = useState(todayStr())
   const [procurementFrom, setProcurementFrom] = useState(monthStartStr())
   const [procurementTo, setProcurementTo] = useState(todayStr())
+  const [churnThreshold, setChurnThreshold] = useState('90')
 
   const wid = useAuthStore((s) => s.workspace?.id ?? '')
 
@@ -167,6 +176,71 @@ export default function ReportsPage() {
     },
     enabled: !!wid,
     staleTime: 60_000,
+  })
+
+  // ── CRM Pipeline data ──────────────────────────────────────────────────────
+
+  const { data: pipelineData, isLoading: pipeLoading } = useQuery<any>({
+    queryKey: ['crm-reports', 'pipeline-velocity', wid, crmPeriod],
+    queryFn: async () => { const r = await api.get(`/workspaces/${wid}/crm/reports/pipeline-velocity`, { params: { days: crmPeriod } }); return r.data },
+    enabled: !!wid && activeTab === 'pipeline',
+    staleTime: 60_000,
+  })
+
+  const { data: revenueData, isLoading: revLoading } = useQuery<any>({
+    queryKey: ['crm-reports', 'revenue', wid, crmPeriod],
+    queryFn: async () => { const r = await api.get(`/workspaces/${wid}/crm/reports/revenue`, { params: { period: crmPeriod } }); return r.data },
+    enabled: !!wid && activeTab === 'revenue',
+    staleTime: 60_000,
+  })
+
+  const { data: winlossData, isLoading: wlLoading } = useQuery<any>({
+    queryKey: ['crm-reports', 'win-loss', wid, crmPeriod],
+    queryFn: async () => { const r = await api.get(`/workspaces/${wid}/crm/reports/win-loss`, { params: { period: crmPeriod } }); return r.data },
+    enabled: !!wid && activeTab === 'winloss',
+    staleTime: 60_000,
+  })
+
+  const { data: activitiesData, isLoading: actLoading } = useQuery<any>({
+    queryKey: ['crm-reports', 'activities', wid, crmPeriod],
+    queryFn: async () => { const r = await api.get(`/workspaces/${wid}/crm/reports/activities`, { params: { period: crmPeriod } }); return r.data },
+    enabled: !!wid && activeTab === 'pipeline',
+    staleTime: 60_000,
+  })
+
+  const { data: leadSourcesData, isLoading: lsLoading } = useQuery<any>({
+    queryKey: ['crm-reports', 'lead-sources', wid],
+    queryFn: async () => { const r = await api.get(`/workspaces/${wid}/crm/reports/lead-sources`); return r.data },
+    enabled: !!wid && activeTab === 'leads',
+    staleTime: 120_000,
+  })
+
+  const { data: funnelData, isLoading: funnelLoading } = useQuery<any>({
+    queryKey: ['crm-analytics', 'funnel', wid],
+    queryFn: async () => { const r = await api.get(`/workspaces/${wid}/crm/analytics/funnel`); return r.data },
+    enabled: !!wid && activeTab === 'pipeline',
+    staleTime: 120_000,
+  })
+
+  const { data: churnData, isLoading: churnLoading } = useQuery<any>({
+    queryKey: ['crm-analytics', 'churn-risk', wid, churnThreshold],
+    queryFn: async () => { const r = await api.get(`/workspaces/${wid}/crm/analytics/churn-risk`, { params: { threshold_days: churnThreshold } }); return r.data },
+    enabled: !!wid && activeTab === 'churn',
+    staleTime: 120_000,
+  })
+
+  const { data: clvData, isLoading: clvLoading } = useQuery<any>({
+    queryKey: ['crm-analytics', 'clv', wid],
+    queryFn: async () => { const r = await api.get(`/workspaces/${wid}/crm/analytics/clv`); return r.data },
+    enabled: !!wid && activeTab === 'clv',
+    staleTime: 300_000,
+  })
+
+  const { data: cohortData } = useQuery<any>({
+    queryKey: ['crm-analytics', 'cohort', wid],
+    queryFn: async () => { const r = await api.get(`/workspaces/${wid}/crm/analytics/cohort`); return r.data },
+    enabled: !!wid && activeTab === 'clv',
+    staleTime: 300_000,
   })
 
   // ── Derived ────────────────────────────────────────────────────────────────
@@ -523,6 +597,289 @@ export default function ReportsPage() {
     )
   }
 
+  // ── CRM Pipeline ───────────────────────────────────────────────────────────
+
+  function renderPipeline() {
+    if (pipeLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading pipeline data...</div>
+    const d = pipelineData?.data
+    const f = funnelData?.data
+    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No pipeline data.</div>
+    return (
+      <div className="p-6 space-y-6">
+        <div className="grid grid-cols-3 gap-4">
+          <DashboardWidget title="Avg Deal Cycle" value={`${d.avg_deal_cycle_days}d`} subtitle="Days from creation to won">
+            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Clock size={12} /> Last {crmPeriod} days</div>
+          </DashboardWidget>
+          <DashboardWidget title="Won Deals" value={d.won_deal_count} subtitle="In period">
+            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Target size={12} /> Closed won</div>
+          </DashboardWidget>
+          <DashboardWidget title="Velocity/Day" value={fmtCurrency(d.velocity_per_day)} subtitle="Revenue per day">
+            <div className="flex items-center gap-1.5 text-xs text-gray-500"><TrendingUp size={12} /> Pipeline speed</div>
+          </DashboardWidget>
+        </div>
+
+        {d.avg_days_by_stage && Object.keys(d.avg_days_by_stage).length > 0 && (
+          <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Avg Days by Stage</p>
+            <div className="space-y-2">
+              {Object.entries(d.avg_days_by_stage).map(([stage, days]) => (
+                <div key={stage} className="flex items-center gap-3">
+                  <span className="text-xs text-gray-400 w-40">{stage}</span>
+                  <div className="flex-1 bg-gray-800 rounded-full h-2">
+                    <div className="bg-indigo-500 h-2 rounded-full" style={{ width: `${Math.min(100, (days as number) / (d.avg_deal_cycle_days || 1) * 100)}%` }} />
+                  </div>
+                  <span className="text-xs text-gray-300 w-12 text-right">{days as number}d</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {f && (
+          <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Funnel</p>
+            <div className="space-y-2">
+              {f.stages?.map((stage: any) => (
+                <div key={stage.stage_id} className="flex items-center gap-3">
+                  <span className="text-xs text-gray-400 w-36 truncate">{stage.stage_name}</span>
+                  <div className="flex-1 bg-gray-800 rounded-full h-3">
+                    <div className="bg-indigo-500 h-3 rounded-full" style={{ width: `${stage.deal_count > 0 ? Math.min(100, stage.deal_count) : 1}%` }} />
+                  </div>
+                  <span className="text-xs text-gray-300 w-16 text-right">{stage.deal_count}</span>
+                  <span className="text-xs text-gray-500 w-24 text-right font-mono">{fmtCurrency(stage.total_value)}</span>
+                </div>
+              ))}
+              <div className="flex items-center gap-3 pt-2 border-t border-gray-800">
+                <span className="text-xs text-green-400 w-36">Won</span>
+                <span className="text-xs text-gray-300">{f.won}</span>
+                <span className="text-xs text-red-400 ml-8">Lost</span>
+                <span className="text-xs text-gray-300">{f.lost}</span>
+                <span className="text-xs text-gray-500 ml-auto">Conversion: {f.conversion_rate}%</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ── CRM Revenue ───────────────────────────────────────────────────────────
+
+  function renderRevenue() {
+    if (revLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading revenue...</div>
+    const d = revenueData?.data
+    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No revenue data.</div>
+    return (
+      <div className="p-6 space-y-6">
+        <div className="grid grid-cols-4 gap-4">
+          <DashboardWidget title="Revenue" value={fmtCurrency(d.total_revenue)} subtitle={`Last ${crmPeriod} days`} changePct={d.revenue_change_pct}>
+            <div className="flex items-center gap-1.5 text-xs text-gray-500"><TrendingUp size={12} /> Won deals</div>
+          </DashboardWidget>
+          <DashboardWidget title="Won Deals" value={d.won_deals} subtitle="Closed won">
+            <div className="flex items-center gap-1.5 text-xs text-green-400"><Target size={12} /> Won</div>
+          </DashboardWidget>
+          <DashboardWidget title="Lost Deals" value={d.lost_deals} subtitle="Closed lost">
+            <div className="flex items-center gap-1.5 text-xs text-red-400"><TrendingDown size={12} /> Lost</div>
+          </DashboardWidget>
+          <DashboardWidget title="Avg Deal Size" value={d.won_deals > 0 ? fmtCurrency(d.total_revenue / d.won_deals) : '$0'} subtitle="Per won deal">
+            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Activity size={12} /> Average</div>
+          </DashboardWidget>
+        </div>
+        {d.by_day && d.by_day.length > 0 && (
+          <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Revenue by Day</p>
+            <div className="flex justify-center">
+              <BarChart data={d.by_day.map((r: any) => ({ label: r.day.slice(5), value: parseFloat(r.revenue), color: '#34d399' }))} width={600} height={180} formatValue={(v) => fmtCurrency(v)} />
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ── CRM Win/Loss ──────────────────────────────────────────────────────────
+
+  function renderWinLoss() {
+    if (wlLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading win/loss...</div>
+    const d = winlossData?.data
+    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No win/loss data.</div>
+    return (
+      <div className="p-6 space-y-6">
+        <div className="grid grid-cols-4 gap-4">
+          <DashboardWidget title="Win Rate" value={`${d.win_rate}%`} subtitle="Closed won vs total">
+            <div className="flex items-center gap-1.5 text-xs text-green-400"><Target size={12} /> Win rate</div>
+          </DashboardWidget>
+          <DashboardWidget title="Won Value" value={fmtCurrency(d.won_value)} subtitle="Total won revenue">
+            <div className="flex items-center gap-1.5 text-xs text-green-400"><TrendingUp size={12} /> Won</div>
+          </DashboardWidget>
+          <DashboardWidget title="Lost Value" value={fmtCurrency(d.lost_value)} subtitle="Total lost revenue">
+            <div className="flex items-center gap-1.5 text-xs text-red-400"><TrendingDown size={12} /> Lost</div>
+          </DashboardWidget>
+          <DashboardWidget title="Deals Closed" value={`${d.won_count + d.lost_count}`} subtitle={`${d.won_count} won · ${d.lost_count} lost`}>
+            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Activity size={12} /> Total closed</div>
+          </DashboardWidget>
+        </div>
+        {d.loss_reasons && d.loss_reasons.length > 0 && (
+          <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Loss Reasons</p>
+            <div className="space-y-2">
+              {d.loss_reasons.map((r: any) => (
+                <div key={r.loss_reason} className="flex items-center gap-3">
+                  <span className="text-xs text-gray-400 w-40 truncate">{r.loss_reason}</span>
+                  <div className="flex-1 bg-gray-800 rounded-full h-2">
+                    <div className="bg-red-500 h-2 rounded-full" style={{ width: `${d.lost_count > 0 ? r.count / d.lost_count * 100 : 0}%` }} />
+                  </div>
+                  <span className="text-xs text-gray-300 w-12 text-right">{r.count}</span>
+                  <span className="text-xs text-gray-500 w-24 text-right font-mono">{fmtCurrency(r.value)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ── CRM Lead Sources ──────────────────────────────────────────────────────
+
+  function renderLeadSources() {
+    if (lsLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading lead sources...</div>
+    const d = leadSourcesData?.data
+    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No lead source data.</div>
+    return (
+      <div className="p-6 space-y-6">
+        <DashboardWidget title="Total Leads" value={d.total_leads} subtitle="All sources" />
+        {d.sources && d.sources.length > 0 && (
+          <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
+            <table className="w-full text-sm">
+              <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+                <th className="pb-2 font-medium">Source</th><th className="pb-2 font-medium text-right">Leads</th><th className="pb-2 font-medium text-right">%</th><th className="pb-2 font-medium text-right">Converted</th><th className="pb-2 font-medium text-right">Conv. Rate</th>
+              </tr></thead>
+              <tbody>{d.sources.map((s: any) => (
+                <tr key={s.source} className="border-b border-gray-800/50">
+                  <td className="py-2 text-gray-300 text-xs">{s.source}</td>
+                  <td className="py-2 text-right text-xs text-gray-200">{s.count}</td>
+                  <td className="py-2 text-right text-xs text-gray-500">{s.pct}%</td>
+                  <td className="py-2 text-right text-xs text-gray-200">{s.converted}</td>
+                  <td className="py-2 text-right text-xs text-green-400">{s.conversion_rate}%</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ── Churn Risk ────────────────────────────────────────────────────────────
+
+  function renderChurn() {
+    if (churnLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading churn data...</div>
+    const d = churnData?.data
+    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No churn data.</div>
+    return (
+      <div className="p-6 space-y-6">
+        <div className="grid grid-cols-3 gap-4">
+          <DashboardWidget title="Total Customers" value={d.total_customers} subtitle="All time">
+            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Users size={12} /> Customer base</div>
+          </DashboardWidget>
+          <DashboardWidget title="Active" value={d.active_customers} subtitle="Touched in period">
+            <div className="flex items-center gap-1.5 text-xs text-green-400"><Activity size={12} /> Engaged</div>
+          </DashboardWidget>
+          <DashboardWidget title="At Risk" value={`${d.at_risk_count} (${d.churn_rate}%)`} subtitle="No touch in period">
+            <div className="flex items-center gap-1.5 text-xs text-red-400"><TrendingDown size={12} /> Churn risk</div>
+          </DashboardWidget>
+        </div>
+        {d.at_risk_contacts && d.at_risk_contacts.length > 0 && (
+          <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">At-Risk Contacts</p>
+            <table className="w-full text-sm">
+              <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+                <th className="pb-2 font-medium">Name</th><th className="pb-2 font-medium">Email</th><th className="pb-2 font-medium text-right">Score</th><th className="pb-2 font-medium">Last Touch</th><th className="pb-2 font-medium text-right">Value</th>
+              </tr></thead>
+              <tbody>{d.at_risk_contacts.map((c: any) => (
+                <tr key={c.id} className="border-b border-gray-800/50">
+                  <td className="py-2 text-gray-300 text-xs">{c.first_name} {c.last_name}</td>
+                  <td className="py-2 text-xs text-gray-500">{c.email}</td>
+                  <td className="py-2 text-right text-xs text-gray-200">{c.lead_score ?? '-'}</td>
+                  <td className="py-2 text-xs text-gray-500">{c.last_touched_at ? new Date(c.last_touched_at).toLocaleDateString() : 'Never'}</td>
+                  <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(c.deal_value ?? 0)}</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ── CLV ───────────────────────────────────────────────────────────────────
+
+  function renderClv() {
+    if (clvLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading CLV data...</div>
+    const d = clvData?.data
+    const cohort = cohortData?.data
+    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No CLV data.</div>
+    return (
+      <div className="p-6 space-y-6">
+        <div className="grid grid-cols-4 gap-4">
+          <DashboardWidget title="Avg LTV" value={fmtCurrency(d.avg_ltv)} subtitle="Per customer with revenue">
+            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Activity size={12} /> Lifetime value</div>
+          </DashboardWidget>
+          <DashboardWidget title="Max LTV" value={fmtCurrency(d.max_ltv)} subtitle="Highest value customer">
+            <div className="flex items-center gap-1.5 text-xs text-gray-500"><TrendingUp size={12} /> Top performer</div>
+          </DashboardWidget>
+          <DashboardWidget title="Total Revenue" value={fmtCurrency(d.total_revenue)} subtitle="All time won">
+            <div className="flex items-center gap-1.5 text-xs text-gray-500"><DollarSign size={12} /> Closed won</div>
+          </DashboardWidget>
+          <DashboardWidget title="Rev/Contact" value={fmtCurrency(d.revenue_per_contact)} subtitle="Average across all">
+            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Users size={12} /> Per contact</div>
+          </DashboardWidget>
+        </div>
+
+        {d.by_lifecycle_stage && d.by_lifecycle_stage.length > 0 && (
+          <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">LTV by Lifecycle Stage</p>
+            <table className="w-full text-sm">
+              <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+                <th className="pb-2 font-medium">Stage</th><th className="pb-2 font-medium text-right">Contacts</th><th className="pb-2 font-medium text-right">Avg LTV</th><th className="pb-2 font-medium text-right">Total Value</th>
+              </tr></thead>
+              <tbody>{d.by_lifecycle_stage.map((s: any) => (
+                <tr key={s.lifecycle_stage} className="border-b border-gray-800/50">
+                  <td className="py-2 text-gray-300 text-xs capitalize">{s.lifecycle_stage}</td>
+                  <td className="py-2 text-right text-xs text-gray-200">{s.count}</td>
+                  <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(parseFloat(s.avg_ltv))}</td>
+                  <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(parseFloat(s.total_value))}</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+        )}
+
+        {cohort && cohort.length > 0 && (
+          <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Monthly Cohorts (last 12)</p>
+            <table className="w-full text-sm">
+              <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+                <th className="pb-2 font-medium">Cohort</th><th className="pb-2 font-medium text-right">Acquired</th><th className="pb-2 font-medium text-right">Converted</th><th className="pb-2 font-medium text-right">Conv. Rate</th><th className="pb-2 font-medium text-right">Revenue</th><th className="pb-2 font-medium text-right">Rev/Contact</th>
+              </tr></thead>
+              <tbody>{cohort.map((c: any) => (
+                <tr key={c.cohort} className="border-b border-gray-800/50">
+                  <td className="py-2 text-gray-300 text-xs">{new Date(c.cohort).toLocaleDateString(undefined, { year: 'numeric', month: 'short' })}</td>
+                  <td className="py-2 text-right text-xs text-gray-200">{c.acquired}</td>
+                  <td className="py-2 text-right text-xs text-gray-200">{c.converted}</td>
+                  <td className="py-2 text-right text-xs text-green-400">{c.conversion_rate}%</td>
+                  <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(c.revenue)}</td>
+                  <td className="py-2 text-right font-mono text-xs text-gray-500">{fmtCurrency(c.revenue_per_contact)}</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   // ─── Render ────────────────────────────────────────────────────────────────
 
   return (
@@ -552,8 +909,8 @@ export default function ReportsPage() {
           })}
         </div>
 
-        {/* Period selector (overview only) */}
-        {activeTab === 'overview' && (
+        {/* Period selector (overview / CRM reports) */}
+        {(activeTab === 'overview') && (
           <div className="flex gap-1 ml-auto">
             {PERIODS.map(({ label, value }) => (
               <button
@@ -566,6 +923,45 @@ export default function ReportsPage() {
                 }`}
               >
                 {label}
+              </button>
+            ))}
+          </div>
+        )}
+        {(['pipeline', 'revenue', 'winloss']).includes(activeTab) && (
+          <div className="flex gap-1 ml-auto">
+            {[
+              { label: '30d', value: '30' },
+              { label: '60d', value: '60' },
+              { label: '90d', value: '90' },
+            ].map(({ label, value }) => (
+              <button
+                key={value}
+                onClick={() => setCrmPeriod(value)}
+                className={`text-xs px-3 py-1 rounded transition-colors ${
+                  crmPeriod === value
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-gray-800 text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
+        {activeTab === 'churn' && (
+          <div className="flex gap-1 ml-auto items-center">
+            <span className="text-xs text-gray-500">Threshold:</span>
+            {['30', '60', '90', '180'].map(v => (
+              <button
+                key={v}
+                onClick={() => setChurnThreshold(v)}
+                className={`text-xs px-3 py-1 rounded transition-colors ${
+                  churnThreshold === v
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-gray-800 text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                {v}d
               </button>
             ))}
           </div>
@@ -598,6 +994,12 @@ export default function ReportsPage() {
         {activeTab === 'expenses' && renderExpenses()}
         {activeTab === 'procurement' && renderProcurement()}
         {activeTab === 'inventory' && renderInventory()}
+        {activeTab === 'pipeline' && renderPipeline()}
+        {activeTab === 'revenue' && renderRevenue()}
+        {activeTab === 'winloss' && renderWinLoss()}
+        {activeTab === 'leads' && renderLeadSources()}
+        {activeTab === 'churn' && renderChurn()}
+        {activeTab === 'clv' && renderClv()}
       </div>
     </div>
   )

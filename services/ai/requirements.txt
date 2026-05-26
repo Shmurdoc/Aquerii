@@ -12,7 +12,7 @@ anthropic==0.30.0
 
 # Vector DB
 chromadb==0.5.3
-faiss-cpu==1.8.0.post1
+faiss-cpu==1.13.2
 
 # Reranker (HuixiangDou pattern)
 sentence-transformers==3.0.1

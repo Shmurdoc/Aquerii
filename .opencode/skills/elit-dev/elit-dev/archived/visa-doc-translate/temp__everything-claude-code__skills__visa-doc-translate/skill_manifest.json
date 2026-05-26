@@ -1,0 +1,12 @@
+{
+  "name": "visa-doc-translate",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Translate visa application documents (images) to English and create a bilingual PDF with original and translation"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "nextjs-turbopack",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Next.js 16+ \u548c Turbopack \u2014 \u589e\u91cf\u6253\u5305\u3001\u6587\u4ef6\u7cfb\u7edf\u7f13\u5b58\u3001\u5f00\u53d1\u901f\u5ea6\uff0c\u4ee5\u53ca\u4f55\u65f6\u4f7f\u7528 Turbopack \u4e0e webpack\u3002"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "django-tdd",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Django \u6d4b\u8bd5\u7b56\u7565\uff0c\u5305\u62ec pytest-django\u3001TDD \u65b9\u6cd5\u3001factory_boy\u3001\u6a21\u62df\u3001\u8986\u76d6\u7387\u4ee5\u53ca\u6d4b\u8bd5 Django REST Framework API\u3002"
+}

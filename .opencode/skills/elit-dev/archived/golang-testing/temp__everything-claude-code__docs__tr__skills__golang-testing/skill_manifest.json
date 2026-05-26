@@ -1,0 +1,12 @@
+{
+  "name": "golang-testing",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Table-driven testler, subtestler, benchmark'lar, fuzzing ve test coverage i\u00e7eren Go test desenleri. TDD metodolojisi ile idiomatic Go uygulamalar\u0131n\u0131 takip eder."
+}

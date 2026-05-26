@@ -218,6 +218,9 @@ Route::post('crm/leads/{lead}/convert', [LeadController::class, 'convert']);
 **File (update):** `services/api/app/Modules/AI/Http/Controllers/AIController.php`
 - New methods forwarding to AI service
 
+### 8.3 Credit flow decision
+- Credits are now charged exclusively at the API gateway layer (Laravel API). The AI service (services/ai) trusts internal callers authenticated by the internal token and no longer increments or rolls back credit counters. This prevents double-charging and centralises metering in the API service.
+
 ---
 
 ## Summary: New Tables (19 total)

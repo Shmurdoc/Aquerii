@@ -1,0 +1,12 @@
+{
+  "name": "database-migrations",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u6570\u636e\u5e93\u8fc1\u79fb\u6700\u4f73\u5b9e\u8df5\uff0c\u6db5\u76d6\u6a21\u5f0f\u53d8\u66f4\u3001\u6570\u636e\u8fc1\u79fb\u3001\u56de\u6eda\u4ee5\u53ca\u96f6\u505c\u673a\u90e8\u7f72\uff0c\u9002\u7528\u4e8ePostgreSQL\u3001MySQL\u53ca\u5e38\u7528ORM\uff08Prisma\u3001Drizzle\u3001Django\u3001TypeORM\u3001golang-migrate\uff09\u3002"
+}

@@ -10,7 +10,9 @@ from fastapi.responses import Response
 
 from app.core.config import settings
 from app.core.otel import setup_otel
-from app.middleware.credit_meter import CreditMeterMiddleware
+# NOTE: Credit metering is performed at the Laravel API gateway (single-source of truth).
+# The AI service is protected by an internal token and will not run its own credit
+# accounting middleware by default to avoid double-charging.
 from app.routers import health, tasks, documents, crm, chat, rag, email
 from app.routers import ai_routes
 from app.security.auth import verify_internal_token
@@ -48,16 +50,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Credit metering middleware (Redis client injected after lifespan init)
-# Note: middleware is registered before the app starts, so we pass a factory lambda
-# that resolves _redis_client at request time.
-class _LazyCreditMeter(CreditMeterMiddleware):
-    async def dispatch(self, request, call_next):
-        if _redis_client is not None:
-            self.redis = _redis_client
-        return await super().dispatch(request, call_next)
-
-app.add_middleware(_LazyCreditMeter, redis_client=None)  # type: ignore[arg-type]
+# Intentionally not registering CreditMeterMiddleware here. If you want
+# AI-service-level metering in the future, re-enable the middleware and
+# ensure configuration matches billing expectations.
 
 # Prometheus metrics on /metrics
 _instrumentator = Instrumentator().instrument(app)

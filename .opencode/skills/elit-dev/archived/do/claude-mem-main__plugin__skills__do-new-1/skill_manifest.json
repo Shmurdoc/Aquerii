@@ -1,0 +1,12 @@
+{
+  "name": "do",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Execute a phased implementation plan using subagents. Use when asked to execute, run, or carry out a plan \u2014 especially one created by make-plan."
+}

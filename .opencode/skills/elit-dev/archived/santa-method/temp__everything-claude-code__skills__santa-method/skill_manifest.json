@@ -1,0 +1,12 @@
+{
+  "name": "santa-method",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\"Multi-agent adversarial verification with convergence loop. Two independent review agents must both pass before output ships.\""
+}

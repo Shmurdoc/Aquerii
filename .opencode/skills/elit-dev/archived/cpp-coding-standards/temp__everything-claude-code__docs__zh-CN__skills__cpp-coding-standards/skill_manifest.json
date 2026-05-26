@@ -1,0 +1,12 @@
+{
+  "name": "cpp-coding-standards",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u57fa\u4e8eC++\u6838\u5fc3\u6307\u5357\uff08isocpp.github.io\uff09\u7684C++\u7f16\u7801\u6807\u51c6\u3002\u5728\u7f16\u5199\u3001\u5ba1\u67e5\u6216\u91cd\u6784C++\u4ee3\u7801\u65f6\u4f7f\u7528\uff0c\u4ee5\u5f3a\u5236\u5b9e\u65bd\u73b0\u4ee3\u3001\u5b89\u5168\u548c\u60ef\u7528\u7684\u5b9e\u8df5\u3002"
+}

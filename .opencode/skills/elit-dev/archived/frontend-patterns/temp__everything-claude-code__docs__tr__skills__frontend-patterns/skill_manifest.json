@@ -1,0 +1,12 @@
+{
+  "name": "frontend-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "React, Next.js, state y\u00f6netimi, performans optimizasyonu ve UI en iyi uygulamalar\u0131 i\u00e7in frontend geli\u015ftirme kal\u0131plar\u0131."
+}

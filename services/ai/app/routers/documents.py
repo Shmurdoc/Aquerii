@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from app.core.config import settings
-from app.core.credits import consume_credits, rollback_credits
 from app.core.providers import generate_text
 from app.security.auth import verify_internal_token
 
@@ -34,9 +33,8 @@ async def document_assist(body: DocumentAssistRequest):
     if len(body.content) > 50_000:
         raise HTTPException(status_code=400, detail="Content too long (max 50,000 characters)")
 
-    ok = await consume_credits(body.workspace_id, settings.CREDIT_COST_DOCUMENT)
-    if not ok:
-        raise HTTPException(status_code=402, detail="AI_CREDITS_EXHAUSTED")
+    # Credits are charged by the API gateway; the AI service trusts the caller
+    # (internal-token protected) and does not modify credit counters.
 
     try:
         result = await generate_text(
@@ -46,5 +44,4 @@ async def document_assist(body: DocumentAssistRequest):
         )
         return DocumentAssistResponse(result=result)
     except Exception as exc:
-        await rollback_credits(body.workspace_id, settings.CREDIT_COST_DOCUMENT)
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc

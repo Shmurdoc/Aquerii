@@ -1,0 +1,12 @@
+{
+  "name": "kotlin-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Coroutine'ler, null safety ve DSL builder'lar ile sa\u011flam, verimli ve s\u00fcrd\u00fcr\u00fclebilir Kotlin uygulamalar\u0131 olu\u015fturmak i\u00e7in idiomatic Kotlin kal\u0131plar\u0131, en iyi uygulamalar ve konvansiyonlar."
+}

@@ -1,0 +1,12 @@
+{
+  "name": "agentic-engineering",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Operate as an agentic engineer using eval-first execution, decomposition, and cost-aware model routing."
+}

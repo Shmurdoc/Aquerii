@@ -4,6 +4,12 @@ import clsx from 'clsx'
 
 // Sub-nav definitions per top-level section
 const SECTIONS: Record<string, { label: string; items: { to: string; label: string }[] }> = {
+  '/dashboard': {
+    label: 'Dashboard',
+    items: [
+      { to: '/dashboard', label: 'Overview' },
+    ],
+  },
   '/boards': {
     label: 'Work',
     items: [
@@ -26,6 +32,22 @@ const SECTIONS: Record<string, { label: string; items: { to: string; label: stri
       { to: '/crm/forecast',    label: 'Forecast'   },
       { to: '/crm/quotas',      label: 'Quotas'     },
       { to: '/crm/sequences',   label: 'Sequences'  },
+    ],
+  },
+  '/support': {
+    label: 'Support',
+    items: [
+      { to: '/support/tickets',        label: 'Tickets'   },
+      { to: '/support/knowledge-base', label: 'Knowledge Base' },
+      { to: '/support/slas',           label: 'SLAs'      },
+    ],
+  },
+  '/marketing': {
+    label: 'Marketing',
+    items: [
+      { to: '/marketing/campaigns',        label: 'Campaigns' },
+      { to: '/marketing/email-templates',  label: 'Email Templates' },
+      { to: '/marketing/segments',         label: 'Segments' },
     ],
   },
   '/settings': {

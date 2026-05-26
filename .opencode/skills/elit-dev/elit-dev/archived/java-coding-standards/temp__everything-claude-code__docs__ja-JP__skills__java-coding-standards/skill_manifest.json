@@ -1,0 +1,12 @@
+{
+  "name": "java-coding-standards",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Spring Boot\u30b5\u30fc\u30d3\u30b9\u5411\u3051\u306eJava\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0\u6a19\u6e96\uff1a\u547d\u540d\u3001\u4e0d\u5909\u6027\u3001Optional\u4f7f\u7528\u3001\u30b9\u30c8\u30ea\u30fc\u30e0\u3001\u4f8b\u5916\u3001\u30b8\u30a7\u30cd\u30ea\u30af\u30b9\u3001\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u30ec\u30a4\u30a2\u30a6\u30c8\u3002"
+}

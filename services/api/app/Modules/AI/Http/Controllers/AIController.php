@@ -381,6 +381,227 @@ class AIController extends Controller
         }
     }
 
+    // POST /workspaces/{workspace}/ai/deal-summary
+    public function dealSummary(Request $request, Workspace $workspace): JsonResponse
+    {
+        $validated = $request->validate([
+            'deal_title' => 'required|string|max:500',
+            'deal_value' => 'nullable|numeric',
+            'stage' => 'required|string|max:100',
+            'contact_name' => 'nullable|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'days_in_stage' => 'nullable|integer|min:0',
+            'probability' => 'nullable|integer|min:0|max:100',
+            'notes' => 'nullable|string|max:5000',
+        ]);
+
+        $cost = $this->creditCost('deal_summary');
+        $this->deductCredits($workspace, $cost);
+
+        try {
+            $response = Http::withToken(config('services.ai.internal_token'))
+                ->timeout(30)
+                ->post(config('services.ai.base_url').'/crm/deal-summary', [
+                    'workspace_id' => $workspace->id,
+                    'deal_title' => $validated['deal_title'],
+                    'deal_value' => $validated['deal_value'] ?? null,
+                    'stage' => $validated['stage'],
+                    'contact_name' => $validated['contact_name'] ?? null,
+                    'company_name' => $validated['company_name'] ?? null,
+                    'days_in_stage' => $validated['days_in_stage'] ?? null,
+                    'probability' => $validated['probability'] ?? null,
+                    'notes' => $validated['notes'] ?? null,
+                ]);
+
+            if ($response->failed()) {
+                $this->refundCredits($workspace, $cost);
+                return response()->json(['error' => 'AI service error'], 502);
+            }
+
+            return response()->json($response->json());
+        } catch (\Throwable $e) {
+            $this->refundCredits($workspace, $cost);
+            Log::error('AI dealSummary error', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'AI unavailable'], 503);
+        }
+    }
+
+    // POST /workspaces/{workspace}/ai/churn-risk
+    public function churnRisk(Request $request, Workspace $workspace): JsonResponse
+    {
+        $validated = $request->validate([
+            'contact_name' => 'required|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'days_since_last_contact' => 'nullable|integer|min:0',
+            'open_deals_value' => 'nullable|numeric|min:0',
+            'open_deals_count' => 'nullable|integer|min:0',
+            'support_tickets_last_30d' => 'nullable|integer|min:0',
+            'email_open_rate' => 'nullable|numeric|min:0|max:1',
+            'custom_context' => 'nullable|string|max:2000',
+        ]);
+
+        $cost = $this->creditCost('churn_risk');
+        $this->deductCredits($workspace, $cost);
+
+        try {
+            $response = Http::withToken(config('services.ai.internal_token'))
+                ->timeout(30)
+                ->post(config('services.ai.base_url').'/crm/churn-risk', array_merge(
+                    ['workspace_id' => $workspace->id],
+                    $validated,
+                ));
+
+            if ($response->failed()) {
+                $this->refundCredits($workspace, $cost);
+                return response()->json(['error' => 'AI service error'], 502);
+            }
+
+            return response()->json($response->json());
+        } catch (\Throwable $e) {
+            $this->refundCredits($workspace, $cost);
+            Log::error('AI churnRisk error', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'AI unavailable'], 503);
+        }
+    }
+
+    // POST /workspaces/{workspace}/ai/next-action
+    public function nextAction(Request $request, Workspace $workspace): JsonResponse
+    {
+        $validated = $request->validate([
+            'deal_title' => 'required|string|max:500',
+            'stage' => 'required|string|max:100',
+            'deal_value' => 'nullable|numeric',
+            'contact_name' => 'nullable|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'days_in_stage' => 'nullable|integer|min:0',
+            'last_action' => 'nullable|string|max:1000',
+            'custom_context' => 'nullable|string|max:2000',
+        ]);
+
+        $cost = $this->creditCost('next_action');
+        $this->deductCredits($workspace, $cost);
+
+        try {
+            $response = Http::withToken(config('services.ai.internal_token'))
+                ->timeout(30)
+                ->post(config('services.ai.base_url').'/crm/next-action', array_merge(
+                    ['workspace_id' => $workspace->id],
+                    $validated,
+                ));
+
+            if ($response->failed()) {
+                $this->refundCredits($workspace, $cost);
+                return response()->json(['error' => 'AI service error'], 502);
+            }
+
+            return response()->json($response->json());
+        } catch (\Throwable $e) {
+            $this->refundCredits($workspace, $cost);
+            Log::error('AI nextAction error', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'AI unavailable'], 503);
+        }
+    }
+
+    // POST /workspaces/{workspace}/ai/email-compose
+    public function emailCompose(Request $request, Workspace $workspace): JsonResponse
+    {
+        $validated = $request->validate([
+            'deal_title' => 'nullable|string|max:500',
+            'contact_name' => 'required|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'email_type' => 'nullable|string|in:follow-up,introduction,proposal,meeting-request,thank-you',
+            'tone' => 'nullable|string|in:professional,casual,formal,friendly',
+            'custom_context' => 'nullable|string|max:2000',
+        ]);
+
+        $cost = $this->creditCost('email_compose');
+        $this->deductCredits($workspace, $cost);
+
+        try {
+            $response = Http::withToken(config('services.ai.internal_token'))
+                ->timeout(30)
+                ->post(config('services.ai.base_url').'/crm/email-compose', array_merge(
+                    ['workspace_id' => $workspace->id],
+                    $validated,
+                ));
+
+            if ($response->failed()) {
+                $this->refundCredits($workspace, $cost);
+                return response()->json(['error' => 'AI service error'], 502);
+            }
+
+            return response()->json($response->json());
+        } catch (\Throwable $e) {
+            $this->refundCredits($workspace, $cost);
+            Log::error('AI emailCompose error', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'AI unavailable'], 503);
+        }
+    }
+
+    // POST /workspaces/{workspace}/ai/data-clean
+    public function dataClean(Request $request, Workspace $workspace): JsonResponse
+    {
+        $validated = $request->validate([
+            'dataset_type' => 'nullable|string|in:contacts,deals,leads,companies',
+            'data' => 'required|string|max:50000',
+        ]);
+
+        $cost = $this->creditCost('data_clean');
+        $this->deductCredits($workspace, $cost);
+
+        try {
+            $response = Http::withToken(config('services.ai.internal_token'))
+                ->timeout(60)
+                ->post(config('services.ai.base_url').'/crm/data-clean', array_merge(
+                    ['workspace_id' => $workspace->id],
+                    $validated,
+                ));
+
+            if ($response->failed()) {
+                $this->refundCredits($workspace, $cost);
+                return response()->json(['error' => 'AI service error'], 502);
+            }
+
+            return response()->json($response->json());
+        } catch (\Throwable $e) {
+            $this->refundCredits($workspace, $cost);
+            Log::error('AI dataClean error', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'AI unavailable'], 503);
+        }
+    }
+
+    // POST /workspaces/{workspace}/ai/anomaly-detection
+    public function anomalyDetection(Request $request, Workspace $workspace): JsonResponse
+    {
+        $validated = $request->validate([
+            'data_type' => 'nullable|string|in:deals,contacts,leads,payments',
+            'data' => 'required|string|max:50000',
+        ]);
+
+        $cost = $this->creditCost('anomaly_detection');
+        $this->deductCredits($workspace, $cost);
+
+        try {
+            $response = Http::withToken(config('services.ai.internal_token'))
+                ->timeout(60)
+                ->post(config('services.ai.base_url').'/crm/anomaly-detection', array_merge(
+                    ['workspace_id' => $workspace->id],
+                    $validated,
+                ));
+
+            if ($response->failed()) {
+                $this->refundCredits($workspace, $cost);
+                return response()->json(['error' => 'AI service error'], 502);
+            }
+
+            return response()->json($response->json());
+        } catch (\Throwable $e) {
+            $this->refundCredits($workspace, $cost);
+            Log::error('AI anomalyDetection error', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'AI unavailable'], 503);
+        }
+    }
+
     // ─── Helpers ───────────────────────────────────────────────────────────────
 
     private function creditCost(string $op): int

@@ -28,6 +28,14 @@ import LeadsPage     from '@/pages/crm/LeadsPage'
 import ForecastPage  from '@/pages/crm/ForecastPage'
 import QuotasPage    from '@/pages/crm/QuotasPage'
 import SequencesPage from '@/pages/crm/SequencesPage'
+import TicketsPage from '@/pages/support/TicketsPage'
+import TicketDetailPage from '@/pages/support/TicketDetailPage'
+import KnowledgeBasePage from '@/pages/support/KnowledgeBasePage'
+import SlaPage from '@/pages/support/SlaPage'
+import DashboardPage from '@/pages/DashboardPage'
+import CampaignsPage from '@/pages/marketing/CampaignsPage'
+import EmailTemplatesPage from '@/pages/marketing/EmailTemplatesPage'
+import SegmentsPage from '@/pages/marketing/SegmentsPage'
 import SettingsPage      from '@/pages/settings/SettingsPage'
 import EmployeePage      from '@/pages/employees/EmployeePage'
 import InboxPage         from '@/pages/inbox/InboxPage'
@@ -98,7 +106,8 @@ export default function App() {
             </RequireAuth>
           }
         >
-          <Route index element={<Navigate to="/boards" replace />} />
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard"       element={<DashboardPage />} />
           <Route path="/inbox"           element={<InboxPage />} />
           <Route path="/meetings"        element={<MeetingsPage />} />
           <Route path="/employees"       element={<EmployeePage />} />
@@ -113,6 +122,15 @@ export default function App() {
           <Route path="/crm/forecast"   element={<ForecastPage />} />
           <Route path="/crm/quotas"     element={<QuotasPage />} />
           <Route path="/crm/sequences"  element={<SequencesPage />} />
+          <Route path="/support" element={<Navigate to="/support/tickets" replace />} />
+          <Route path="/support/tickets"         element={<TicketsPage />} />
+          <Route path="/support/tickets/:ticketId" element={<TicketDetailPage />} />
+          <Route path="/support/knowledge-base"  element={<KnowledgeBasePage />} />
+          <Route path="/support/slas"            element={<SlaPage />} />
+          <Route path="/marketing" element={<Navigate to="/marketing/campaigns" replace />} />
+          <Route path="/marketing/campaigns"       element={<CampaignsPage />} />
+          <Route path="/marketing/email-templates" element={<EmailTemplatesPage />} />
+          <Route path="/marketing/segments"        element={<SegmentsPage />} />
           <Route path="/erp"              element={<Navigate to="/erp/invoicing" replace />} />
           <Route element={<ERPLayout />}>
             <Route path="/erp/invoicing"   element={<InvoicingPage />} />

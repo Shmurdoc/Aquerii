@@ -5,12 +5,19 @@ namespace App\Modules\CRM\Http\Controllers;
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
 use App\Modules\CRM\Models\CrmDeal;
+use App\Modules\CRM\Services\CrmAutomationService;
+use App\Modules\CRM\Services\DealApprovalService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class DealController extends Controller
 {
+    public function __construct(
+        protected CrmAutomationService $automationService,
+        protected DealApprovalService $approvalService,
+    ) {}
+
     public function index(Request $request, Workspace $workspace): JsonResponse
     {
         $query = CrmDeal::where('workspace_id', $workspace->id)
@@ -59,6 +66,16 @@ class DealController extends Controller
             'currency' => $validated['currency'] ?? 'USD',
             'position' => $maxPos + 65536,
         ]));
+
+        $this->automationService->evaluate($workspace->id, 'deal.created', [
+            'deal_id'     => $deal->id,
+            'value'       => $deal->value,
+            'owner_id'    => $deal->owner_id,
+            'entity_id'   => $deal->id,
+            'entity_type' => 'deal',
+        ]);
+
+        $this->approvalService->createApprovalIfNeeded($deal);
 
         return response()->json(['data' => $deal->load(['stage', 'contact', 'owner'])], 201);
     }
@@ -112,7 +129,19 @@ class DealController extends Controller
             'position' => 'sometimes|numeric',
         ]);
 
+        $oldStageId = $deal->stage_id;
         $deal->update($validated);
+
+        if (isset($validated['stage_id']) && $validated['stage_id'] !== $oldStageId) {
+            $this->automationService->evaluate($workspace->id, 'deal.stage_changed', [
+                'deal_id'      => $deal->id,
+                'stage_id'     => $deal->stage_id,
+                'prev_stage_id' => $oldStageId,
+                'value'        => $deal->value,
+                'entity_id'    => $deal->id,
+                'entity_type'  => 'deal',
+            ]);
+        }
 
         return response()->json(['data' => $deal]);
     }
@@ -154,6 +183,13 @@ class DealController extends Controller
             'loss_details' => null,
         ]);
 
+        $this->automationService->evaluate($workspace->id, 'deal.won', [
+            'deal_id'     => $deal->id,
+            'value'       => $deal->value,
+            'entity_id'   => $deal->id,
+            'entity_type' => 'deal',
+        ]);
+
         return response()->json(['data' => $deal->load(['pipeline', 'stage', 'contact'])]);
     }
 
@@ -172,6 +208,14 @@ class DealController extends Controller
             'won_at' => null,
             'loss_reason' => $validated['loss_reason'] ?? null,
             'loss_details' => $validated['loss_details'] ?? null,
+        ]);
+
+        $this->automationService->evaluate($workspace->id, 'deal.lost', [
+            'deal_id'     => $deal->id,
+            'value'       => $deal->value,
+            'loss_reason' => $deal->loss_reason,
+            'entity_id'   => $deal->id,
+            'entity_type' => 'deal',
         ]);
 
         return response()->json(['data' => $deal->load(['pipeline', 'stage', 'contact'])]);

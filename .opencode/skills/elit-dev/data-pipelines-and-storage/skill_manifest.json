@@ -1,0 +1,12 @@
+{
+  "name": "data-pipelines-and-storage",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Data architecture, ETL/ELT patterns, schema evolution, data validation, backups, and retention policies for production data systems."
+}

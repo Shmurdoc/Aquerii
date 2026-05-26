@@ -1,0 +1,12 @@
+{
+  "name": "swift-protocol-di-testing",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u57fa\u4e8e\u534f\u8bae\u7684\u4f9d\u8d56\u6ce8\u5165\uff0c\u7528\u4e8e\u53ef\u6d4b\u8bd5\u7684Swift\u4ee3\u7801\u2014\u2014\u4f7f\u7528\u805a\u7126\u534f\u8bae\u548cSwift Testing\u6a21\u62df\u6587\u4ef6\u7cfb\u7edf\u3001\u7f51\u7edc\u548c\u5916\u90e8API\u3002"
+}

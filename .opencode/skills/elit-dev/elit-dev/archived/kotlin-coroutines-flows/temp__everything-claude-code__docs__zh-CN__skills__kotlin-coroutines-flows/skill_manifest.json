@@ -1,0 +1,12 @@
+{
+  "name": "kotlin-coroutines-flows",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Kotlin\u534f\u7a0b\u4e0eFlow\u5728Android\u548cKMP\u4e2d\u7684\u6a21\u5f0f\u2014\u2014\u7ed3\u6784\u5316\u5e76\u53d1\u3001Flow\u64cd\u4f5c\u7b26\u3001StateFlow\u3001\u9519\u8bef\u5904\u7406\u548c\u6d4b\u8bd5\u3002"
+}

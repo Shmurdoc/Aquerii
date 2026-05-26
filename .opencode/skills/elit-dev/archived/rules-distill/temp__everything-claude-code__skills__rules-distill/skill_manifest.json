@@ -1,0 +1,12 @@
+{
+  "name": "rules-distill",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\"Scan skills to extract cross-cutting principles and distill them into rules \u2014 append, revise, or create new rule files\""
+}

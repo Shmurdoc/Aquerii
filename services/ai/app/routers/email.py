@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List, Optional
 from app.core.config import settings
-from app.core.credits import consume_credits, rollback_credits
 from app.core.providers import generate_text
 from app.security.auth import verify_internal_token
 import json
@@ -44,9 +43,8 @@ async def process_email(body: EmailProcessRequest):
     if not content.strip():
         raise HTTPException(status_code=400, detail="Email body is empty")
 
-    ok = await consume_credits(body.workspace_id, settings.CREDIT_COST_DOCUMENT)
-    if not ok:
-        raise HTTPException(status_code=402, detail="AI_CREDITS_EXHAUSTED")
+    # Credits are tracked and enforced by the API service. This router no longer
+    # modifies credit counters — the API forwards requests after charging the workspace.
 
     prompt = f"""You are an AI assistant helping a professional handle their email inbox.
 
@@ -78,8 +76,6 @@ Subject: {body.subject}
             extracted_tasks=[ExtractedTask(**t) for t in data.get("extracted_tasks", [])],
         )
     except json.JSONDecodeError as exc:
-        await rollback_credits(body.workspace_id, settings.CREDIT_COST_DOCUMENT)
         raise HTTPException(status_code=502, detail=f"AI returned invalid JSON: {exc}") from exc
     except Exception as exc:
-        await rollback_credits(body.workspace_id, settings.CREDIT_COST_DOCUMENT)
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc

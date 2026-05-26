@@ -1,0 +1,12 @@
+{
+  "name": "observability-and-monitoring",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Logging, metrics, tracing, SLOs/SLOs, alerting, and dashboards to detect, understand, and act on production issues."
+}

@@ -1,0 +1,12 @@
+{
+  "name": "kotlin-ktor-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Ktor \u670d\u52a1\u5668\u6a21\u5f0f\uff0c\u5305\u62ec\u8def\u7531 DSL\u3001\u63d2\u4ef6\u3001\u8eab\u4efd\u9a8c\u8bc1\u3001Koin DI\u3001kotlinx.serialization\u3001WebSockets \u548c testApplication \u6d4b\u8bd5\u3002"
+}
