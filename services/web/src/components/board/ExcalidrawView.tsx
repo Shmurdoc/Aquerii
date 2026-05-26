@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useRef, useEffect } from 'react'
 import type { ExcalidrawElement } from '@excalidraw/excalidraw/types/element/types'
 import type { AppState, BinaryFiles } from '@excalidraw/excalidraw/types/types'
-import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import type { Board } from '@/hooks/useBoards'
 

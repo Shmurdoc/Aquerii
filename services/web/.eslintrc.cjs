@@ -11,6 +11,8 @@ module.exports = {
   plugins: ['react-hooks'],
   rules: {
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-explicit-any': 'warn',
+    'no-unused-expressions': 'warn',
     'react-hooks/exhaustive-deps': 'warn',
   },
 };

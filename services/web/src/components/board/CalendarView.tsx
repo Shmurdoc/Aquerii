@@ -4,7 +4,7 @@ import type { Item } from '@/hooks/useItems'
 import {
   startOfMonth, endOfMonth, startOfWeek, endOfWeek,
   addDays, addMonths, subMonths,
-  isSameMonth, isSameDay, isToday, format, parseISO,
+  isSameMonth, isToday, format,
 } from 'date-fns'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import clsx from 'clsx'

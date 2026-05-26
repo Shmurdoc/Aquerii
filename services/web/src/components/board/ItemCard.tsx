@@ -1,6 +1,6 @@
 import type { Item } from '@/hooks/useItems'
 import { format } from 'date-fns'
-import { Calendar, AlertCircle, User } from 'lucide-react'
+import { Calendar, AlertCircle } from 'lucide-react'
 import clsx from 'clsx'
 
 const PRIORITY_COLOR: Record<string, string> = {
@@ -15,7 +15,7 @@ interface Props {
   boardId: string
 }
 
-export default function ItemCard({ item, boardId }: Props) {
+export default function ItemCard({ item, boardId: _boardId }: Props) {
   const isOverdue = item.due_date && new Date(item.due_date) < new Date()
 
   return (

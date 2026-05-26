@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
-import { useAuthStore } from '@/stores/authStore'
+
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { RequireAuth, RequireOnboarding } from '@/components/auth/RouteGuards'
 import { BrandingProvider } from '@/contexts/BrandingContext'

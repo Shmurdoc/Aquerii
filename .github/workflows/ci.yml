@@ -57,9 +57,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: services/realtime/package-lock.json
-      - run: npm ci
+      - run: npm install
       - run: npm run lint
       - run: npm run build
 
@@ -168,9 +166,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: services/realtime/package-lock.json
-      - run: npm ci
+      - run: npm install
       - run: npm test -- --coverage
 
   test-web:
@@ -252,7 +248,7 @@ jobs:
       - name: Node (realtime) — npm audit
         working-directory: services/realtime
         run: |
-          npm ci --quiet
+          npm install --quiet
           npm audit --audit-level=high
 
       - name: Node (web) — npm audit
