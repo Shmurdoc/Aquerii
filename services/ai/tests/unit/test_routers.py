@@ -39,7 +39,7 @@ def client():
     mock_model = MagicMock()
     mock_model.generate_content.return_value.text = "Mock AI response text."
 
-    with patch("app.routers.ai_routes.genai") as mock_genai, \
+    with patch("app.routers.ai_routes.genai", create=True) as mock_genai, \
          patch("app.routers.tasks.genai", create=True), \
          patch("app.routers.documents.genai", create=True), \
          patch("app.routers.crm.genai", create=True), \
