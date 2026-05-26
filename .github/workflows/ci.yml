@@ -140,9 +140,11 @@ jobs:
       - name: Prepare test env
         run: |
           cp .env.example .env.testing
+          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env.testing
           sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env.testing
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env.testing
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
+          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env.testing
           mkdir -p storage/framework/{views,cache,testing}
           php artisan key:generate --env=testing --quiet
 
@@ -362,9 +364,11 @@ jobs:
         working-directory: services/api
         run: |
           cp .env.example .env
+          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env
           sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
+          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
           composer install --prefer-dist --no-scripts --no-progress --quiet
           mkdir -p storage/framework/{views,cache,testing}
           php artisan key:generate --force
@@ -436,6 +440,12 @@ jobs:
           sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
+          cp .env.example .env
+          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env
+          sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env
+          sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
+          sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
+          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
           composer install --prefer-dist --no-scripts --no-progress --quiet
           mkdir -p storage/framework/{views,cache,testing}
           php artisan key:generate --force
