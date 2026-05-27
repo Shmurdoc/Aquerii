@@ -29,3 +29,6 @@ Schedule::command('crm:check-deal-escalations')->everyFiveMinutes();
 
 // Check aging deals for automation triggers
 Schedule::command('crm:check-deal-aging')->hourly();
+
+// Dunning: downgrade after 3 days past due, suspend after 7 days
+Schedule::command('billing:dunning')->daily();

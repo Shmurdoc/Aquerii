@@ -38,7 +38,7 @@ class WorkspaceResource extends Resource
                     ->options(['free' => 'Free', 'starter' => 'Starter', 'growth' => 'Growth', 'business' => 'Business', 'enterprise' => 'Enterprise'])
                     ->required(),
                 Forms\Components\Select::make('plan_status')
-                    ->options(['active' => 'Active', 'trialing' => 'Trialing', 'past_due' => 'Past Due', 'cancelled' => 'Cancelled'])
+                    ->options(['active' => 'Active', 'trialing' => 'Trialing', 'past_due' => 'Past Due', 'cancelled' => 'Cancelled', 'suspended' => 'Suspended'])
                     ->default('active'),
                 Forms\Components\TextInput::make('stripe_customer_id')->maxLength(255),
                 Forms\Components\TextInput::make('stripe_subscription_id')->maxLength(255),
@@ -95,7 +95,7 @@ class WorkspaceResource extends Resource
                 Tables\Filters\SelectFilter::make('plan')
                     ->options(['free' => 'Free', 'starter' => 'Starter', 'growth' => 'Growth', 'business' => 'Business', 'enterprise' => 'Enterprise']),
                 Tables\Filters\SelectFilter::make('plan_status')
-                    ->options(['active' => 'Active', 'trialing' => 'Trialing', 'past_due' => 'Past Due', 'cancelled' => 'Cancelled']),
+                    ->options(['active' => 'Active', 'trialing' => 'Trialing', 'past_due' => 'Past Due', 'cancelled' => 'Cancelled', 'suspended' => 'Suspended']),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

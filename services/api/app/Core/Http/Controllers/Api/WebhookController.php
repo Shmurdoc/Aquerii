@@ -169,6 +169,21 @@ class WebhookController extends Controller
             return;
         }
 
+        $workspace->update([
+            'plan_status' => 'past_due',
+            'plan_expires_at' => Carbon::createFromTimestamp($invoice->period_end ?? $invoice->created),
+        ]);
+
+        DB::table('billing_events')->insert([
+            'id' => Str::uuid(),
+            'workspace_id' => $workspace->id,
+            'processor' => 'stripe',
+            'processor_event_id' => $invoice->id,
+            'event_type' => 'invoice_payment_failed',
+            'payload' => json_encode(['invoice_id' => $invoice->id, 'amount' => $invoice->amount_due]),
+            'processed_at' => now(),
+        ]);
+
         Log::warning('Stripe invoice payment failed', [
             'workspace_id' => $workspace->id,
             'invoice_id' => $invoice->id,
