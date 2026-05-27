@@ -149,6 +149,9 @@ jobs:
           mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --env=testing --quiet
 
+      - name: Run migrations
+        run: php artisan migrate --seed --env=testing
+
       - run: composer test -- --coverage-clover coverage.xml
 
       - name: Upload coverage
