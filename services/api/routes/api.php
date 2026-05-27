@@ -110,6 +110,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::post('logo', [WorkspaceLogoController::class, 'store'])->middleware('idempotent');
         Route::delete('logo', [WorkspaceLogoController::class, 'destroy'])->middleware('idempotent');
 
+        // Search
+        Route::get('search', [WorkspaceController::class, 'search']);
+
         // Members
         Route::get('members', [WorkspaceController::class, 'members']);
         Route::post('members', [WorkspaceController::class, 'inviteMember'])->middleware('idempotent');
