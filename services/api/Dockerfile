@@ -48,8 +48,9 @@ COPY . .
 RUN mkdir -p storage/framework/{views,cache,cache/data,sessions,testing} storage/logs \
  && chmod -R 775 storage bootstrap/cache \
  && cp .env.example .env 2>/dev/null || true \
- && composer dump-autoload --optimize --classmap-authoritative \
+ && composer dump-autoload --optimize --classmap-authoritative --no-scripts \
  && php artisan key:generate --force \
+ && php artisan package:discover --ansi \
  && php artisan config:cache \
  && php artisan route:cache \
  && php artisan view:cache
