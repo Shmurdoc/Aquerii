@@ -46,6 +46,16 @@ class User extends Authenticatable
             ->wherePivot('status', 'active');
     }
 
+    public function workspaceMembers()
+    {
+        return $this->hasMany(WorkspaceMember::class, 'user_id');
+    }
+
+    public function ownedCompanies()
+    {
+        return $this->hasMany(\App\Modules\CRM\Models\CrmCompany::class, 'owner_id');
+    }
+
     public function oauthAccounts()
     {
         return $this->hasMany(OauthAccount::class);

@@ -2,12 +2,15 @@
 
 namespace App\Core\Models;
 
+use App\Core\Enums\SubscriptionPlan;
 use App\Modules\Documents\Models\Document;
 use Database\Factories\WorkspaceFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Workspace extends Model
 {
@@ -34,6 +37,7 @@ class Workspace extends Model
             'settings' => 'array',
             'trial_ends_at' => 'datetime',
             'plan_expires_at' => 'datetime',
+            'suspended_at' => 'datetime',
             'automations_reset_at' => 'datetime',
             'ai_credits_reset_at' => 'datetime',
             'storage_quota_bytes' => 'integer',
@@ -75,5 +79,22 @@ class Workspace extends Model
     public function hasStorageCapacity(int $bytes): bool
     {
         return ($this->storage_used_bytes + $bytes) <= $this->storage_quota_bytes;
+    }
+
+    public function usage(): HasMany
+    {
+        return $this->hasMany(WorkspaceUsage::class, 'workspace_id', 'id');
+    }
+
+    public function planFeatures(): array
+    {
+        $plan = SubscriptionPlan::tryFrom($this->plan ?? 'free') ?? SubscriptionPlan::Free;
+
+        return $plan->features();
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->plan_status === 'suspended';
     }
 }
