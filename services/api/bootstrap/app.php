@@ -6,6 +6,7 @@ use App\Core\Http\Middleware\EnforceIdempotency;
 use App\Core\Http\Middleware\EnsureEmailIsVerified;
 use App\Core\Http\Middleware\InternalSecret;
 use App\Core\Http\Middleware\RequireWorkspaceRole;
+use App\Core\Http\Middleware\SecureHeaders;
 use App\Core\Http\Middleware\SetWorkspaceTenant;
 use App\Core\Http\Middleware\ThrottleRequests;
 use Illuminate\Foundation\Application;
@@ -21,6 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
         apiPrefix: 'api',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->prepend(SecureHeaders::class);
+
         $middleware->alias([
             'idempotent' => EnforceIdempotency::class,
             'throttle' => ThrottleRequests::class,
