@@ -2,6 +2,7 @@
 
 namespace App\Modules\AI\Http\Controllers;
 
+use App\Core\Enums\SubscriptionPlan;
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
 use Illuminate\Http\JsonResponse;
@@ -126,9 +127,8 @@ class AIController extends Controller
     // GET /workspaces/{workspace}/ai/credits
     public function credits(Workspace $workspace): JsonResponse
     {
-        $plan = $workspace->plan ?? 'free';
-        $limits = config('ai.credit_limits') ?? ['free' => 100, 'starter' => 500, 'growth' => 2000, 'business' => 10000];
-        $limit = $limits[$plan] ?? 100;
+        $plan = SubscriptionPlan::fromWorkspace($workspace);
+        $limit = $plan->feature('ai_credits');
 
         $used = (int) Redis::get("ai_credits:{$workspace->id}") ?? 0;
 
@@ -633,15 +633,13 @@ class AIController extends Controller
      */
     private function deductCredits(Workspace $workspace, int $amount): void
     {
-        $plan = $workspace->plan ?? 'free';
-        $limits = config('ai.credit_limits') ?? ['free' => 100, 'starter' => 500, 'growth' => 2000, 'business' => 10000];
-        $limit = $limits[$plan] ?? 100;
+        $plan = SubscriptionPlan::fromWorkspace($workspace);
+        $limit = $plan->feature('ai_credits');
 
         $key = "ai_credits:{$workspace->id}";
         $expires = now()->endOfMonth()->timestamp;
 
         // Atomic Lua: increment only if result would not exceed limit.
-        // Returns new value if allowed, or -1 if limit would be exceeded.
         $lua = <<<'LUA'
 local key     = KEYS[1]
 local amount  = tonumber(ARGV[1])
@@ -659,16 +657,29 @@ LUA;
         $result = Redis::eval($lua, 1, $key, $amount, $limit, $expires);
 
         abort_if($result === -1, 402, 'AI credit limit reached for your plan.');
+
+        // Persist to DB for historical tracking
+        if ($result > 0) {
+            DB::table('workspaces')->where('id', $workspace->id)->update([
+                'ai_credits_used' => $result,
+                'ai_credits_reset_at' => now()->endOfMonth(),
+            ]);
+        }
     }
 
     private function refundCredits(Workspace $workspace, int $amount): void
     {
         $key = "ai_credits:{$workspace->id}";
         Redis::decrby($key, $amount);
-        // Prevent going below zero on refund (e.g. if key expired)
         $current = (int) Redis::get($key);
         if ($current < 0) {
             Redis::set($key, 0);
+            $current = 0;
         }
+
+        // Persist refund to DB
+        DB::table('workspaces')->where('id', $workspace->id)->update([
+            'ai_credits_used' => $current,
+        ]);
     }
 }

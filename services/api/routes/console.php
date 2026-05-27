@@ -35,3 +35,6 @@ Schedule::command('billing:dunning')->daily();
 
 // Recalculate workspace usage from actual database counts
 Schedule::command('workspace:recalculate-usage')->dailyAt('02:00');
+
+// Purge expired trials daily
+Schedule::command('app:purge-expired-trials')->daily();
