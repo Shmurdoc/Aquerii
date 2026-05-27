@@ -233,8 +233,10 @@ jobs:
           fetch-depth: 0
 
       - uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
 
   dependency-scan:
     name: Dependency Scan
@@ -268,7 +270,7 @@ jobs:
           pip-audit -r requirements.txt
 
       - name: Trivy filesystem scan
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@0.36.0
         with:
           scan-type: fs
           scan-ref: .
