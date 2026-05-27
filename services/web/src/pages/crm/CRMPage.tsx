@@ -6,7 +6,7 @@ import { Plus, DollarSign, ChevronDown, Sparkles, Loader2, User, Building2, Sett
 import clsx from 'clsx'
 import toast from 'react-hot-toast'
 import DealDetailModal from '@/components/crm/DealDetailModal'
-import { Deal, Pipeline, Stage, selectPipeline, dealsByStage, stageValue } from '@/lib/crm'
+import { Deal, Pipeline, Stage, CrmContact, CrmCompany, selectPipeline, dealsByStage, stageValue } from '@/lib/crm'
 
 type CRMTab = 'deals' | 'contacts' | 'companies'
 
@@ -16,7 +16,7 @@ function ContactsTab({ workspaceId }: { workspaceId: string }) {
   const [showAdd, setShowAdd] = useState(false)
   const [form, setForm] = useState({ first_name: '', last_name: '', email: '', phone: '' })
 
-  const { data: contacts = [], isLoading } = useQuery<any[]>({
+  const { data: contacts = [], isLoading } = useQuery<CrmContact[]>({
     queryKey: ['crm-contacts', workspaceId],
     queryFn: async () => {
       const res = await api.get(`/workspaces/${workspaceId}/crm/contacts`)
@@ -81,7 +81,7 @@ function ContactsTab({ workspaceId }: { workspaceId: string }) {
         </div>
       ) : (
         <div className="space-y-1">
-          {contacts.map((c: any) => (
+          {contacts.map((c: CrmContact) => (
             <div key={c.id} className="flex items-center gap-3 px-4 py-2.5 bg-gray-900 border border-gray-800 rounded-lg hover:border-gray-700 transition-colors">
               <div className="w-8 h-8 rounded-full bg-indigo-600/30 flex items-center justify-center text-indigo-300 text-sm font-medium shrink-0">
                 {c.first_name?.[0] ?? '?'}
@@ -105,7 +105,7 @@ function CompaniesTab({ workspaceId }: { workspaceId: string }) {
   const [showAdd, setShowAdd] = useState(false)
   const [form, setForm] = useState({ name: '', domain: '', industry: '' })
 
-  const { data: companies = [], isLoading } = useQuery<any[]>({
+  const { data: companies = [], isLoading } = useQuery<CrmCompany[]>({
     queryKey: ['crm-companies', workspaceId],
     queryFn: async () => {
       const res = await api.get(`/workspaces/${workspaceId}/crm/companies`)
@@ -170,7 +170,7 @@ function CompaniesTab({ workspaceId }: { workspaceId: string }) {
         </div>
       ) : (
         <div className="space-y-1">
-          {companies.map((c: any) => (
+          {companies.map((c: CrmCompany) => (
             <div key={c.id} className="flex items-center gap-3 px-4 py-2.5 bg-gray-900 border border-gray-800 rounded-lg hover:border-gray-700 transition-colors">
               <div className="w-8 h-8 rounded-lg bg-gray-700 flex items-center justify-center text-gray-300 text-sm font-bold shrink-0">
                 {c.name?.[0] ?? '?'}

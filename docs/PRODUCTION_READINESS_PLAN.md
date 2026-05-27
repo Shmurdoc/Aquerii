@@ -33,6 +33,12 @@ These were listed as open but were already resolved in prior or current session 
 
 ---
 
+## Reality Audit Update (2026-05-27)
+
+Cross-referenced this doc against actual code. All items under "QUICK BUGS (All Done)" confirmed fixed. New items added:
+
+- **Caddyfile fix**: `handle /superadmin*` → `super-admin:8001` was stale (service merged into `app/Modules/Admin/`). Updated to `handle /admin*` → `api:8000`.
+
 ## ACTUALLY REMAINING
 
 ### Blocked (needs user action or infrastructure)

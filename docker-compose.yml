@@ -23,6 +23,17 @@ services:
     networks:
       - public
       - api_net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
 
   # ─── LARAVEL API ──────────────────────────────────────────────
   api:
@@ -89,6 +100,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 512M
 
   # ─── HORIZON (Queue Worker) ───────────────────────────────────
   horizon:
@@ -133,6 +149,17 @@ services:
     networks:
       - api_net
       - data_net
+    healthcheck:
+      test: ["CMD", "php", "artisan", "horizon:status"]
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 256M
 
   # ─── NODE.JS REALTIME ─────────────────────────────────────────
   realtime:
@@ -165,6 +192,11 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
   # ─── PYTHON AI SERVICE ────────────────────────────────────────
   ai:
@@ -199,6 +231,11 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
 
   # ─── POSTGRESQL ───────────────────────────────────────────────
   postgres:
@@ -219,6 +256,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
     command: >
       postgres
         -c shared_buffers=256MB
@@ -248,6 +290,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 640M
 
   # ─── MEILISEARCH ─────────────────────────────────────────────
   meilisearch:
@@ -266,6 +313,11 @@ services:
       interval: 20s
       timeout: 10s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
 
   # ─── MINIO (Object Storage) ───────────────────────────────────
   minio:
@@ -286,6 +338,11 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
   # ─── CHROMADB (Vector DB for AI RAG) ─────────────────────────
   chromadb:
@@ -295,6 +352,17 @@ services:
       - chromadb_data:/chroma/chroma
     networks:
       - data_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
 
   # ─── CLICKHOUSE (Analytics) ───────────────────────────────────
   clickhouse:
@@ -312,6 +380,17 @@ services:
         hard: 262144
     networks:
       - data_net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8123/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
 
   # ─── MAILPIT (Dev Email) ──────────────────────────────────────
   mailpit:
@@ -337,6 +416,11 @@ services:
     networks:
       - data_net
       - observability_net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
   # ─── GRAFANA ──────────────────────────────────────────────────
   grafana:
@@ -355,6 +439,11 @@ services:
       - prometheus
     networks:
       - observability_net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
   # ─── LOKI (Log aggregation) ───────────────────────────────────
   loki:
@@ -400,6 +489,17 @@ services:
     networks:
       - public
       - api_net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 64M
 
 networks:
   public:

@@ -1,9 +1,9 @@
 # BossPlan — Aquerii Complete Implementation Master Document
 
-> **Last updated:** 2026-05-24  
+> **Last updated:** 2026-05-27 (reality audit)  
 > **Status:** Active — see `docs/PRODUCTION_READINESS_PLAN.md` for urgent ship-blocking items  
 > **Covers:** Bug fixes, missing UI surfaces, floating API elimination, phased rollout  
-> **Session update (2026-05-24):** 38 backend routes now registered for Accounting, Automation, Invoicing, Inventory, Purchasing, Sales. All floating API gaps are **backend-complete** — only frontend UI work remains (see Phase 4). Authz, SQL injection, CORS, CSP, Docker security hardening also resolved.
+> **Session update (2026-05-27):** Code reality audit completed — cross-referenced this doc + QA_FINDINGS.md + PRODUCTION_READINESS_PLAN.md against actual code. Most claimed issues are already fixed or functionally resolved. NavRail.tsx and InboxPage.tsx (Phase 1) already exist. ContactsPage.tsx (Phase 2) already exists. B3 (comment author name) functionally resolved via manual query. B4–B6 already fixed. C-8 (`services/super-admin/`) is the only truly new gap found. See `madoc1.md` for full session details.
 
 ---
 
@@ -15,7 +15,7 @@ These are real defects with root causes identified. Fix these before any new fea
 |---|-----|-----------|-------------|
 | B1 | `done` column missing on items | No `done` column in `items` migration | New migration: `$table->boolean('done')->default(false)` |
 | B2 | Item description saves as JSONB but reads as plain string | `ItemController` stores raw string; Tiptap expects JSON node tree | Normalize on read in `useItems.ts` |
-| B3 | Comment author shows UUID, not name | `CommentController::index` doesn't join `users` table | Add `->with('user')` in query; include `user.name` in `CommentResource` |
+| B3 | Comment author shows UUID, not name | `CommentController::index` uses raw `DB::table('comments')` without Eloquent `with('user')` | ✓ **Functionally resolved** — controller does manual `DB::table('users')` fetch and maps names into response `author.name`. Not via Eloquent but correct at runtime. |
 | B4 | Paperless thumbnail 404 | `lib/paperless.ts` thumbnail route doesn't match Paperless-ngx `/api/documents/{id}/thumb/` | Fix URL pattern in `lib/paperless.ts` |
 | B5 | Tag IDs shown instead of tag names in `PaperlessFileDrawer` | `tags` field returns array of IDs; tags not resolved | Fetch tag list and map IDs to names in `PaperlessFileDrawer.tsx` |
 | B6 | Calendar "+N more" expands nothing | Click handler not wired in `CalendarView.tsx` | Add expand state + popover in `CalendarView.tsx` |
@@ -100,14 +100,14 @@ No new files except one migration. All other changes are edits to existing files
 
 | Task | File | Change |
 |------|------|--------|
-| B1: Add `done` column | `services/api/database/migrations/XXXX_add_done_to_items_table.php` (NEW) | `$table->boolean('done')->default(false)` |
-| B1: Expose `done` in resource | `services/api/app/Core/Http/Resources/ItemResource.php` | Add `'done' => $this->done` |
-| B2: Normalize description on read | `services/web/src/hooks/useItems.ts` | Wrap plain string in Tiptap doc node on read |
-| B3: Join user on comment | `services/api/app/Core/Http/Controllers/CommentController.php` | Add `->with('user')` |
-| B3: Return author name | `services/api/app/Core/Http/Resources/CommentResource.php` | Add `'author_name' => $this->user?->name` |
-| B4: Fix thumbnail URL | `services/web/src/lib/paperless.ts` | Update thumbnail path to `/api/documents/{id}/thumb/` |
-| B5: Resolve tag names | `services/web/src/components/documents/PaperlessFileDrawer.tsx` | Fetch `/api/tags/` on mount; map IDs to names |
-| B6: Wire calendar expand | `services/web/src/components/board/CalendarView.tsx` | Add `expandedDay` state; render popover with all items on click |
+| B1: Add `done` column | `services/api/database/migrations/XXXX_add_done_to_items_table.php` | ✓ Done — migration `2026_05_24_000001_add_done_to_items_table.php` exists |
+| B1: Expose `done` in resource | `services/api/app/Core/Http/Resources/ItemResource.php` | ✓ Done |
+| B2: Normalize description on read | `services/web/src/hooks/useItems.ts` | ✓ Done — `normalizeDescription()` wired |
+| B3: Join user on comment | `services/api/app/Core/Http/Controllers/CommentController.php` | ✓ **Functionally resolved** — manual `DB::table('users')` fetch maps names, no Eloquent needed |
+| B3: Return author name | `services/api/app/Core/Http/Resources/CommentResource.php` | ✓ **N/A** — no CommentResource exists; raw response includes `author.name` |
+| B4: Fix thumbnail URL | `services/web/src/lib/paperless.ts` | ✓ Done |
+| B5: Resolve tag names | `services/web/src/components/documents/PaperlessFileDrawer.tsx` | ✓ Done — `/api/tags/` fetched on mount |
+| B6: Wire calendar expand | `services/web/src/components/board/CalendarView.tsx` | ✓ Done — `expandedDay` state + popover wired |
 
 **Acceptance criteria:** All 6 bugs pass manual verification. No regressions on boards, CRM, or documents.
 
@@ -119,12 +119,12 @@ Replace the flat sidebar with a two-panel nav. Prerequisite for all module pages
 
 | Task | File | Change |
 |------|------|--------|
-| Create NavRail | `services/web/src/components/layout/NavRail.tsx` (NEW) | 48px icon rail; active module highlight |
+| Create NavRail | `services/web/src/components/layout/NavRail.tsx` (NEW) | ✓ **Already exists** |
 | Create ContextPanel | `services/web/src/components/layout/ContextPanel.tsx` (NEW) | 200px collapsible panel; module-specific sub-nav |
 | Replace Sidebar | `services/web/src/components/layout/Sidebar.tsx` | Gut and replace with Rail + ContextPanel wiring |
 | Update AppLayout | `services/web/src/layouts/AppLayout.tsx` | Render `<NavRail>` + `<ContextPanel>` + `<Outlet>` |
 | Upgrade CommandPalette | `services/web/src/components/layout/CommandPalette.tsx` | Add create actions + global search + keyboard navigation |
-| Add Inbox page | `services/web/src/pages/inbox/InboxPage.tsx` (NEW) | Full notifications list; mark read/unread |
+| Add Inbox page | `services/web/src/pages/inbox/InboxPage.tsx` (NEW) | ✓ **Already exists** |
 | Register /inbox route | `services/web/src/App.tsx` | Add `<Route path="/inbox" element={<InboxPage />} />` |
 | Wire socket push | `services/web/src/hooks/useNotifications.ts` | Call `notificationStore.addNotification` on socket `notification` event |
 | TopBar bell → inbox | `services/web/src/components/layout/TopBar.tsx` | Navigate to `/inbox` on bell click |
@@ -144,7 +144,7 @@ Wire all uncovered CRM endpoints.
 | Deal update/delete | `services/web/src/components/crm/DealDetailModal.tsx` | Wire PATCH + DELETE; type `deal` prop properly |
 | Deal move | `services/web/src/components/crm/DealCard.tsx` | PATCH `/crm/deals/{id}/move` on drag |
 | Deal score | `services/web/src/components/crm/DealDetailModal.tsx` | Score input; POST `/crm/deals/{id}/score` |
-| Contacts page | `services/web/src/pages/crm/ContactsPage.tsx` (NEW) | Full CRUD table for contacts |
+| Contacts page | `services/web/src/pages/crm/ContactsPage.tsx` (NEW) | ✓ **Already exists** |
 | Companies page | `services/web/src/pages/crm/CompaniesPage.tsx` (NEW) | Full CRUD table for companies |
 | CRM sub-routes | `services/web/src/App.tsx` | Add `/crm/contacts`, `/crm/companies` |
 | CRM hook | `services/web/src/hooks/useCRM.ts` (NEW) | All CRM API calls consolidated |

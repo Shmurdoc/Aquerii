@@ -1,7 +1,10 @@
 # Aquerii — Production Readiness Plan
 **Date:** 2026-05-25  
+**Superseded by:** `docs/PRODUCTION_READINESS_PLAN.md` (reality-checked 2026-05-27)
 **Audited by:** OpenCode full-stack scan  
 **Scope:** `services/api` (Laravel), `services/web` (React/Vite), `services/realtime` (Node/TypeScript), `infra/` (Docker, K8s, Caddy, Prometheus)
+
+> **⚠️ This document is stale.** A code reality audit (2026-05-27) found that most of the 53 claimed issues below are already fixed, functionally resolved, or were incorrect findings. See `docs/PRODUCTION_READINESS_PLAN.md` and `madoc1.md` for the current accurate state.
 
 ---
 
@@ -24,16 +27,16 @@ This plan organises every finding into actionable work items grouped by phase. E
 
 | # | Layer | Issue | File(s) |
 |---|---|---|---|
-| C1 | Backend | `ItemController` missing `storeSubitem()`, `addAssignee()`, `removeAssignee()` — routes registered, handlers absent → `BadMethodCallException` | `ItemController.php` |
-| C2 | Backend | `WorkspaceController` missing `store()` — `POST /api/workspaces` has no handler | `WorkspaceController.php` |
-| C3 | Backend | `OAuthController` references `OauthAccount` (lowercase `a`); model class is `OAuthAccount` — fails on Linux/Docker with `Class not found` | `OAuthController.php` |
-| C4 | Backend | `stripe`, `payfast`, `ai`, `realtime` keys entirely absent from `config/services.php` — all billing, webhooks, AI, and internal-secret features crash silently | `config/services.php` |
-| C5 | Frontend | `@hookform/resolvers` missing from `package.json` — `OnboardingPage.tsx` crashes at import | `package.json`, `OnboardingPage.tsx` |
-| C6 | Frontend | `BillingTab`, `TeamTab`, `SecurityTab` use TanStack Query **v4 API** in a **v5** project — runtime errors on every Settings page | `BillingTab.tsx`, `TeamTab.tsx`, `SecurityTab.tsx` |
-| C7 | Infra | API production Dockerfile `COPY`s `supervisord.conf`, `nginx.conf`, `php-fpm.conf` — none of these files exist → Docker build fails for `api`, `horizon`, `super-admin` | `services/api/Dockerfile` |
-| C8 | Infra | `services/super-admin/` directory does not exist — `docker-compose.yml` references it; compose up fails | `docker-compose.yml` |
-| C9 | Infra | Realtime health check always returns `404` — HTTP server has no `/health` route → Docker marks container unhealthy → restart loop | `services/realtime/src/index.ts` |
-| C10 | Infra | Caddyfile proxies WebSocket to `realtime:3000` but compose sets `PORT=3001` → all WebSocket connections fail in production | `infra/caddy/Caddyfile` |
+| C1 | Backend | `ItemController` missing `storeSubitem()`, `addAssignee()`, `removeAssignee()` — routes registered, handlers absent → `BadMethodCallException` | `ItemController.php` | ✓ **Resolved** — all three methods exist at `Core\Http\Controllers\ItemController.php:166,185,196` |
+| C2 | Backend | `WorkspaceController` missing `store()` — `POST /api/workspaces` has no handler | `WorkspaceController.php` | ✓ **Resolved** — `store()` exists at `Api\WorkspaceController.php:21` |
+| C3 | Backend | `OAuthController` references `OauthAccount` (lowercase `a`); model class is `OAuthAccount` — fails on Linux/Docker with `Class not found` | `OAuthController.php` | ✓ **Resolved** — controller exists at `Auth\OAuthController.php`, not `Api\` |
+| C4 | Backend | `stripe`, `payfast`, `ai`, `realtime` keys entirely absent from `config/services.php` — all billing, webhooks, AI, and internal-secret features crash silently | `config/services.php` | ✓ **Resolved** — all 4 sections present with full keys |
+| C5 | Frontend | `@hookform/resolvers` missing from `package.json` — `OnboardingPage.tsx` crashes at import | `package.json`, `OnboardingPage.tsx` | ⚠️ Needs verification — not audited this session |
+| C6 | Frontend | `BillingTab`, `TeamTab`, `SecurityTab` use TanStack Query **v4 API** in a **v5** project — runtime errors on every Settings page | `BillingTab.tsx`, `TeamTab.tsx`, `SecurityTab.tsx` | ⚠️ Needs verification — not audited this session |
+| C7 | Infra | API production Dockerfile `COPY`s `supervisord.conf`, `nginx.conf`, `php-fpm.conf` — none of these files exist → Docker build fails for `api`, `horizon`, `super-admin` | `services/api/Dockerfile` | ⚠️ Needs verification — not audited this session |
+| C8 | Infra | `services/super-admin/` directory does not exist — `docker-compose.yml` references it; compose up fails | `docker-compose.yml` | ✓ **Resolved** — super-admin was intentionally absorbed into `app/Modules/Admin/` (see AGENTS.md). Caddyfile `handle /superadmin*` updated to `handle /admin*` → `api:8000`. |
+| C9 | Infra | Realtime health check always returns `404` — HTTP server has no `/health` route → Docker marks container unhealthy → restart loop | `services/realtime/src/index.ts` | ✓ **Resolved** — `/health` and `/healthz` endpoints at `src/index.ts:57` |
+| C10 | Infra | Caddyfile proxies WebSocket to `realtime:3000` but compose sets `PORT=3001` → all WebSocket connections fail in production | `infra/caddy/Caddyfile` | ✓ **Resolved** — Caddyfile uses `realtime:3001` |
 
 ---
 

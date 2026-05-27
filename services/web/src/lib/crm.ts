@@ -80,6 +80,20 @@ export interface CrmLead {
   updated_at: string
 }
 
+export interface CrmCompany {
+  id: string
+  workspace_id: string
+  name: string
+  domain: string | null
+  industry: string | null
+  size: string | null
+  website: string | null
+  notes: string | null
+  custom_fields: Record<string, unknown> | null
+  created_at: string
+  updated_at: string
+}
+
 export interface CrmContactRelationship {
   id: string
   contact_id: string
