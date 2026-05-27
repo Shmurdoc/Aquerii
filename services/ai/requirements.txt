@@ -1,8 +1,9 @@
 # Core
-fastapi==0.111.0
-uvicorn[standard]==0.30.1
+fastapi==0.115.12
+uvicorn[standard]==0.34.3
 pydantic==2.7.4
 pydantic-settings==2.3.4
+
 httpx==0.27.0
 
 # AI Providers
@@ -16,6 +17,7 @@ faiss-cpu==1.13.2
 
 # Reranker (HuixiangDou pattern)
 sentence-transformers==3.0.1
+transformers>=5.0.0
 
 # Redis
 redis[hiredis]==5.0.7
@@ -33,8 +35,9 @@ prometheus-fastapi-instrumentator==7.0.0
 
 # PDF processing
 pdfplumber==0.11.1
-pypdf==4.2.0
+pypdf==6.10.2
 pdf2image==1.17.0
+pdfminer.six>=20251230
 
 # OCR fallback for scanned/image-based PDFs (dual-engine)
 rapidocr-onnxruntime==1.4.1
@@ -42,4 +45,4 @@ rapidocr-onnxruntime==1.4.1
 # Utilities
 tenacity==8.4.1
 structlog==24.2.0
-python-multipart==0.0.9
+python-multipart==0.0.27
