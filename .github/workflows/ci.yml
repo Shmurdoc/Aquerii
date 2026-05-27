@@ -255,7 +255,7 @@ jobs:
         working-directory: services/realtime
         run: |
           npm install --quiet
-          npm audit --audit-level=high --omit=dev --ignore-advisories GHSA-q7rr-3cgh-j5r3,GHSA-w5hq-g745-h8pq
+          npm audit --audit-level=high --omit=dev
 
       - name: Node (web) — npm audit
         working-directory: services/web
