@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             SuperAdminSeeder::class,
             AutomationLibrarySeeder::class,
             ChartOfAccountsSeeder::class,
+            FeaturesSeeder::class,
         ]);
 
         if (app()->environment('testing')) {

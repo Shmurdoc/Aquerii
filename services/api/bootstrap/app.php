@@ -4,6 +4,7 @@ use App\Core\Exceptions\Handler;
 use App\Core\Http\Middleware\EnforceIdempotency;
 use App\Core\Http\Middleware\EnsureEmailIsVerified;
 use App\Core\Http\Middleware\InternalSecret;
+use App\Core\Http\Middleware\CheckFeatureAccess;
 use App\Core\Http\Middleware\RequireWorkspaceRole;
 use App\Core\Http\Middleware\SetWorkspaceTenant;
 use App\Core\Http\Middleware\ThrottleRequests;
@@ -27,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'internal.secret' => InternalSecret::class,
             'verified' => EnsureEmailIsVerified::class,
             'workspace.role' => RequireWorkspaceRole::class,
+            'feature' => CheckFeatureAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

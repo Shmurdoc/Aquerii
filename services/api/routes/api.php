@@ -168,7 +168,7 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::patch('notifications/{id}/read', [NotificationController::class, 'markRead']);
         Route::post('notifications/read-all', [NotificationController::class, 'markAllRead']);
 
-        // CRM
+        // CRM (basic: free tier; pipelines: gated)
         Route::get('crm/pipelines', [PipelineController::class, 'index']);
         Route::post('crm/pipelines', [PipelineController::class, 'store'])->middleware('idempotent');
         Route::get('crm/pipelines/{pipeline}', [PipelineController::class, 'show']);
@@ -285,13 +285,15 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         // CRM Telephony
         Route::post('crm/telephony', [CalendarSyncController::class, 'telephony'])->middleware('idempotent');
 
-        // Automations
-        Route::get('automation-templates', [AutomationController::class, 'templates']);
-        Route::apiResource('automations', AutomationController::class)->middleware('idempotent');
-        Route::get('automations/{automation}/runs', [AutomationController::class, 'runs']);
+        // Automations (gated by plan)
+        Route::middleware('feature:module.automation')->group(function () {
+            Route::get('automation-templates', [AutomationController::class, 'templates']);
+            Route::apiResource('automations', AutomationController::class)->middleware('idempotent');
+            Route::get('automations/{automation}/runs', [AutomationController::class, 'runs']);
+        });
 
-        // AI (workspace-scoped)
-        Route::prefix('ai')->middleware(['idempotent', 'throttle:60,1'])->group(function () {
+        // AI (workspace-scoped, gated by plan)
+        Route::prefix('ai')->middleware(['feature:module.ai', 'idempotent', 'throttle:60,1'])->group(function () {
             Route::post('chat', [AIController::class, 'chat']);
             Route::post('summarize', [AIController::class, 'summarize']);
             Route::post('score-deal', [AIController::class, 'scoreDeal']);
@@ -311,21 +313,22 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::post('anomaly-detection', [AIController::class, 'anomalyDetection']);
         });
 
-        // Invoices — PDF + workflow (SO→Invoice conversion, payments, status)
-        Route::get('invoices/{invoice}/pdf', [InvoicePdfController::class, 'show']);
-        Route::get('invoices/{invoice}/payments', [InvoiceWorkflowController::class, 'listPayments']);
-        Route::post('invoices/{invoice}/payments', [InvoiceWorkflowController::class, 'recordPayment'])->middleware('idempotent');
-        Route::patch('invoices/{invoice}/status', [InvoiceWorkflowController::class, 'updateStatus'])->middleware('idempotent');
-        Route::post('sales/orders/{so}/convert-to-invoice', [InvoiceWorkflowController::class, 'convertToInvoice'])->middleware('idempotent');
+        // ── ERP: Invoicing, Sales, Purchasing, Inventory, Accounting ──
+        Route::middleware('feature:module.erp')->group(function () {
+            Route::get('invoices/{invoice}/pdf', [InvoicePdfController::class, 'show']);
+            Route::get('invoices/{invoice}/payments', [InvoiceWorkflowController::class, 'listPayments']);
+            Route::post('invoices/{invoice}/payments', [InvoiceWorkflowController::class, 'recordPayment'])->middleware('idempotent');
+            Route::patch('invoices/{invoice}/status', [InvoiceWorkflowController::class, 'updateStatus'])->middleware('idempotent');
+            Route::post('sales/orders/{so}/convert-to-invoice', [InvoiceWorkflowController::class, 'convertToInvoice'])->middleware('idempotent');
 
-        // Document PDFs (quotes, SO, PO, GRN, receipts, credit notes)
-        Route::prefix('documents')->group(function () {
-            Route::get('quotes/{id}/pdf', [DocumentPdfController::class, 'quote']);
-            Route::get('sales-orders/{id}/pdf', [DocumentPdfController::class, 'salesOrder']);
-            Route::get('purchase-orders/{id}/pdf', [DocumentPdfController::class, 'purchaseOrder']);
-            Route::get('goods-receipts/{id}/pdf', [DocumentPdfController::class, 'goodsReceipt']);
-            Route::get('receipts/{id}/pdf', [DocumentPdfController::class, 'receipt']);
-            Route::get('credit-notes/{id}/pdf', [DocumentPdfController::class, 'creditNote']);
+            Route::prefix('documents')->group(function () {
+                Route::get('quotes/{id}/pdf', [DocumentPdfController::class, 'quote']);
+                Route::get('sales-orders/{id}/pdf', [DocumentPdfController::class, 'salesOrder']);
+                Route::get('purchase-orders/{id}/pdf', [DocumentPdfController::class, 'purchaseOrder']);
+                Route::get('goods-receipts/{id}/pdf', [DocumentPdfController::class, 'goodsReceipt']);
+                Route::get('receipts/{id}/pdf', [DocumentPdfController::class, 'receipt']);
+                Route::get('credit-notes/{id}/pdf', [DocumentPdfController::class, 'creditNote']);
+            });
         });
     });
 });
