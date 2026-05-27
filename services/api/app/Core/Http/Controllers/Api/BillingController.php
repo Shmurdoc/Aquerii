@@ -50,7 +50,7 @@ class BillingController extends Controller
                     'marketing' => $plan->hasFeature('module.marketing'),
                 ],
                 'plan_limits' => [
-                    'max_seats' => $plan->maxSeats(),
+                    'max_seats' => $plan->seatLimit(),
                     'max_boards' => $plan->feature('boards'),
                     'max_storage_mb' => $plan->feature('storage'),
                     'ai_credits' => $plan->feature('ai_credits'),
