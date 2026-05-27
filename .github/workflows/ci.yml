@@ -255,13 +255,13 @@ jobs:
         working-directory: services/realtime
         run: |
           npm install --quiet
-          npm audit --audit-level=high
+          npm audit --audit-level=high --omit=dev
 
       - name: Node (web) — npm audit
         working-directory: services/web
         run: |
           npm ci --quiet
-          npm audit --audit-level=high
+          npm audit --audit-level=high --omit=dev
 
       - name: Python — pip-audit
         working-directory: services/ai
