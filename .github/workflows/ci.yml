@@ -73,7 +73,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: services/web/package-lock.json
+          cache-dependency-path: services/web/package.json
       - run: npm ci
       - run: npm run lint
 
@@ -146,7 +146,7 @@ jobs:
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
           sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env.testing
           sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env.testing
-          mkdir -p storage/framework/{views,cache,testing}
+          mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --env=testing --quiet
 
       - run: composer test -- --coverage-clover coverage.xml
@@ -185,7 +185,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: services/web/package-lock.json
+          cache-dependency-path: services/web/package.json
       - run: npm ci
       - run: npm install --save-dev jsdom @testing-library/jest-dom
       - run: npx vitest run --reporter=verbose 2>&1 || echo "Some test failures, continuing"
@@ -260,7 +260,7 @@ jobs:
       - name: Node (web) — npm audit
         working-directory: services/web
         run: |
-          npm ci --quiet
+          npm install --legacy-peer-deps --quiet
           npm audit --audit-level=high --omit=dev
 
       - name: Python — pip-audit
@@ -375,7 +375,7 @@ jobs:
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
           sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
           composer install --prefer-dist --no-scripts --no-progress --quiet
-          mkdir -p storage/framework/{views,cache,testing}
+          mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --force
           php artisan migrate --force --seed
           php artisan serve --port=8000 --env=.env &
@@ -386,7 +386,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: services/web/package-lock.json
+          cache-dependency-path: services/web/package.json
 
       - name: Install deps
         working-directory: services/web
@@ -452,7 +452,7 @@ jobs:
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
           sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
           composer install --prefer-dist --no-scripts --no-progress --quiet
-          mkdir -p storage/framework/{views,cache,testing}
+          mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --force
           php artisan migrate --force --seed
           php artisan serve --port=8000 --env=.env &
@@ -483,7 +483,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: services/web/package-lock.json
+          cache-dependency-path: services/web/package.json
       - run: npm ci
       - run: npx lhci autorun --config=lighthouserc.cjs
 
