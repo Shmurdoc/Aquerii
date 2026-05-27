@@ -4,6 +4,7 @@ namespace App\Modules\CRM\Http\Controllers;
 
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
+use App\Core\Services\UsageService;
 use App\Modules\CRM\Models\CrmPipeline;
 use App\Modules\CRM\Models\CrmPipelineStage;
 use Illuminate\Http\JsonResponse;
@@ -20,9 +21,11 @@ class PipelineController extends Controller
         return response()->json(['data' => $pipelines]);
     }
 
-    public function store(Request $request, Workspace $workspace): JsonResponse
+    public function store(Request $request, Workspace $workspace, UsageService $usage): JsonResponse
     {
         $this->authorize('create', [CrmPipeline::class, $workspace]);
+
+        $usage->enforce($workspace, 'crm_pipelines');
 
         $validated = $request->validate([
             'name' => 'required|string|max:100',
@@ -34,6 +37,8 @@ class PipelineController extends Controller
             'name' => $validated['name'],
             'is_default' => $validated['is_default'] ?? false,
         ]);
+
+        $usage->increment($workspace, 'crm_pipelines');
 
         $defaultStages = [
             ['name' => 'Lead',         'color' => '#6366f1', 'win_probability' => 10],

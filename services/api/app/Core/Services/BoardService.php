@@ -4,15 +4,22 @@ namespace App\Core\Services;
 
 use App\Core\Models\Board;
 use App\Core\Models\BoardGroup;
+use App\Core\Models\Workspace;
+use App\Core\Services\UsageService;
 use Illuminate\Support\Facades\DB;
 
 class BoardService
 {
+    public function __construct(private UsageService $usageService) {}
+
     /**
      * Create a board with a default group and standard columns.
      */
     public function create(string $workspaceId, array $data, string $userId): Board
     {
+        $workspace = Workspace::findOrFail($workspaceId);
+        $this->usageService->enforce($workspace, 'boards');
+
         return DB::transaction(function () use ($workspaceId, $data, $userId) {
             $board = Board::create([
                 'workspace_id' => $workspaceId,

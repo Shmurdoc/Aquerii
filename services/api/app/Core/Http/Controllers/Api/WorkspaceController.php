@@ -3,12 +3,9 @@
 namespace App\Core\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
-use App\Core\Mail\WorkspaceInvitation;
-use App\Core\Models\Board;
-use App\Core\Models\Item;
 use App\Core\Models\Workspace;
-use App\Core\Models\WorkspaceMember;
-use Carbon\Carbon;
+use App\Core\Services\Auth0Service;
+use App\Core\Services\UsageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -151,7 +148,7 @@ class WorkspaceController extends Controller
     }
 
     // DELETE /workspaces/{workspace}/members/{userId}
-    public function removeMember(Request $request, Workspace $workspace, string $userId): JsonResponse
+    public function removeMember(Request $request, Workspace $workspace, string $userId, UsageService $usage): JsonResponse
     {
         // Prevent removing yourself if owner
         $member = DB::table('workspace_members')
@@ -160,14 +157,21 @@ class WorkspaceController extends Controller
             ->first();
 
         abort_unless($member, 404);
-        abort_if($member->role === 'owner' && $userId === $request->user()->id, 403, 'Owner cannot remove themselves.');
+
+        if ($member->role === 'owner' && $request->user()->id === $userId) {
+            return response()->json(['error' => 'Owners cannot remove themselves.'], 422);
+        }
 
         DB::table('workspace_members')
             ->where('workspace_id', $workspace->id)
             ->where('user_id', $userId)
             ->delete();
 
-        return response()->json(['data' => ['removed' => true]]);
+        if ($member->status === 'active') {
+            $usage->decrement($workspace, 'seats');
+        }
+
+        return response()->json(['data' => ['removed' => true]], 200);
     }
 
     // PATCH /workspaces/{workspace}/members/{userId}
@@ -200,7 +204,7 @@ class WorkspaceController extends Controller
     }
 
     // POST /invites/{token}/accept  (public route — token is the credential)
-    public function acceptInvite(Request $request, string $token): JsonResponse
+    public function acceptInvite(Request $request, string $token, UsageService $usage): JsonResponse
     {
         $invite = DB::table('workspace_members')
             ->where('invite_token', $token)
@@ -224,6 +228,9 @@ class WorkspaceController extends Controller
             ], 403);
         }
 
+        $workspace = Workspace::findOrFail($invite->workspace_id);
+        $usage->enforce($workspace, 'seats');
+
         DB::table('workspace_members')
             ->where('id', $invite->id)
             ->update([
@@ -233,6 +240,8 @@ class WorkspaceController extends Controller
                 'invite_token' => null,
                 'updated_at' => now(),
             ]);
+
+        $usage->increment($workspace, 'seats');
 
         return response()->json(['data' => ['accepted' => true, 'workspace_id' => $invite->workspace_id]]);
     }

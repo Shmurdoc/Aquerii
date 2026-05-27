@@ -32,3 +32,6 @@ Schedule::command('crm:check-deal-aging')->hourly();
 
 // Dunning: downgrade after 3 days past due, suspend after 7 days
 Schedule::command('billing:dunning')->daily();
+
+// Recalculate workspace usage from actual database counts
+Schedule::command('workspace:recalculate-usage')->dailyAt('02:00');

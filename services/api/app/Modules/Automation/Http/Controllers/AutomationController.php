@@ -4,6 +4,7 @@ namespace App\Modules\Automation\Http\Controllers;
 
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
+use App\Core\Services\UsageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,8 +24,10 @@ class AutomationController extends Controller
     }
 
     // POST /workspaces/{workspace}/automations
-    public function store(Request $request, Workspace $workspace): JsonResponse
+    public function store(Request $request, Workspace $workspace, UsageService $usage): JsonResponse
     {
+        $usage->enforce($workspace, 'automation_rules');
+
         $validated = $request->validate([
             'name' => 'required|string|max:150',
             'trigger' => 'required|array',
@@ -44,6 +47,8 @@ class AutomationController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        $usage->increment($workspace, 'automation_rules');
 
         return response()->json(['data' => ['id' => $id]], 201);
     }
