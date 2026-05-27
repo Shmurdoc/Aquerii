@@ -72,7 +72,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm ci
+      - run: npm install --legacy-peer-deps
       - run: npm run lint
 
   lint-python:
@@ -182,7 +182,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm ci
+      - run: npm install --legacy-peer-deps
       - run: npm install --save-dev jsdom @testing-library/jest-dom
       - run: npx vitest run --reporter=verbose 2>&1 || echo "Some test failures, continuing"
 
@@ -384,7 +384,7 @@ jobs:
 
       - name: Install deps
         working-directory: services/web
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       - name: Install Playwright browsers
         working-directory: services/web
@@ -476,7 +476,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm ci
+      - run: npm install --legacy-peer-deps
       - run: npx lhci autorun --config=lighthouserc.cjs
 
 # ════════════════════════════════════════════════════════════════
