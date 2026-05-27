@@ -18,7 +18,8 @@ const BASE_URL = __ENV.BASE_URL || 'http://localhost:8000';
 
 export default function () {
   const auth = login('test@example.com', 'password123');
-  const { token, workspaceId: wsId } = auth;
+  const token = auth.token;
+  const wsId = workspaceId(token);
   const headers = authedHeaders(token);
 
   // Browse boards

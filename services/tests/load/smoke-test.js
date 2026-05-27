@@ -13,7 +13,8 @@ export const options = {
 
 export default function () {
   const auth = login('test@example.com', 'password123');
-  const { token, workspaceId: wsId } = auth;
+  const token = auth.token;
+  const wsId = workspaceId(token);
   const headers = authedHeaders(token);
 
   // List boards
