@@ -3,9 +3,12 @@
 namespace App\Modules\Admin\Providers\Filament;
 
 use App\Modules\Admin\Filament\Pages\Dashboard;
+use App\Modules\Admin\Filament\Pages\EmailAnalytics;
+use App\Modules\Admin\Filament\Pages\StorageAnalytics;
 use App\Modules\Admin\Filament\Resources\AuditLogResource;
 use App\Modules\Admin\Filament\Resources\BillingResource;
 use App\Modules\Admin\Filament\Resources\FeatureFlagResource;
+use App\Modules\Admin\Filament\Resources\TicketResource;
 use App\Modules\Admin\Filament\Resources\UserResource;
 use App\Modules\Admin\Filament\Resources\WorkspaceResource;
 use Filament\Http\Middleware\Authenticate;
@@ -38,10 +41,13 @@ class AdminPanelProvider extends PanelProvider
                 UserResource::class,
                 FeatureFlagResource::class,
                 BillingResource::class,
+                TicketResource::class,
                 AuditLogResource::class,
             ])
             ->pages([
                 Dashboard::class,
+                EmailAnalytics::class,
+                StorageAnalytics::class,
             ])
             ->discoverWidgets(in: app_path('Modules/Admin/Filament/Widgets'), for: 'App\\Modules\\Admin\\Filament\\Widgets')
             ->middleware([
