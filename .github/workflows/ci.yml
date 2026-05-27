@@ -428,7 +428,7 @@ jobs:
           mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --force
           php artisan migrate --force --seed
-          php artisan serve --port=8000 --env=.env &
+          php artisan serve --port=8000 &
           sleep 3
 
       - name: Setup Node
@@ -507,7 +507,7 @@ jobs:
           mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --force
           php artisan migrate --force --seed
-          php artisan serve --port=8000 --env=.env &
+          php artisan serve --port=8000 &
           sleep 3
 
       - name: Install k6
