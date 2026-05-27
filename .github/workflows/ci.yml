@@ -486,6 +486,12 @@ jobs:
           extensions: pdo, pgsql, redis, zip, bcmath, intl
           coverage: none
 
+      - name: Start Meilisearch
+        run: |
+          docker run -d --name meilisearch -p 7700:7700 \
+            -e MEILI_MASTER_KEY=test_key \
+            getmeili/meilisearch:v1.6
+
       - name: Start API server
         working-directory: services/api
         run: |
@@ -494,10 +500,9 @@ jobs:
           sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
-          sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env
-          sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
-          sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
           sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
+          echo "MEILISEARCH_HOST=http://localhost:7700" >> .env
+          echo "MEILISEARCH_KEY=test_key" >> .env
           composer install --prefer-dist --no-scripts --no-progress --quiet
           mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --force
