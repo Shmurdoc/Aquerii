@@ -217,6 +217,37 @@ enum SubscriptionPlan: string
         return $this->features()[$featureKey] ?? false;
     }
 
+    public function feature(string $key): int
+    {
+        return match ($key) {
+            'seats' => $this->seatLimit(),
+            'boards' => $this->boardLimit(),
+            'storage' => $this->storageLimitBytes(),
+            'ai_credits' => $this->aiCreditsMonthly(),
+            'automation_rules' => $this->automationRuleLimit(),
+            'email_accounts' => $this->emailAccountLimit(),
+            'crm_pipelines' => $this->crmPipelineLimit(),
+            'max_invoices' => $this->invoiceMonthlyLimit(),
+            'rate_limit' => $this->rateLimitPerMinute(),
+            default => -1,
+        };
+    }
+
+    public function limits(): array
+    {
+        return [
+            'seats' => $this->feature('seats'),
+            'boards' => $this->feature('boards'),
+            'storage' => $this->feature('storage'),
+            'ai_credits' => $this->feature('ai_credits'),
+            'automation_rules' => $this->feature('automation_rules'),
+            'email_accounts' => $this->feature('email_accounts'),
+            'crm_pipelines' => $this->feature('crm_pipelines'),
+            'max_invoices' => $this->feature('max_invoices'),
+            'rate_limit' => $this->feature('rate_limit'),
+        ];
+    }
+
     public static function fromWorkspace(\App\Core\Models\Workspace $workspace): self
     {
         return self::tryFrom($workspace->plan) ?? self::Free;
