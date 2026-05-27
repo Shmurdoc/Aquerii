@@ -2,6 +2,7 @@
 
 namespace App\Core\Http\Controllers\Api;
 
+use App\Core\Enums\SubscriptionPlan;
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
 use Illuminate\Http\JsonResponse;
@@ -26,14 +27,38 @@ class BillingController extends Controller
             ])
             : null;
 
+        $plan = SubscriptionPlan::from($workspace->plan ?? 'free');
+
         return response()->json([
             'data' => [
-                'plan' => $workspace->plan,
+                'plan' => $plan->value,
+                'label' => $plan->label(),
                 'status' => $sub?->status ?? 'none',
                 'current_period_end' => $sub?->current_period_end,
                 'cancel_at_period_end' => $sub?->cancel_at_period_end ?? false,
                 'seat_count' => $workspace->seat_count,
                 'storage_used_bytes' => $workspace->storage_used_bytes,
+                'limits' => $plan->limits(),
+                'features' => [
+                    'ai' => $plan->hasFeature('module.ai'),
+                    'automation' => $plan->hasFeature('module.automation'),
+                    'boards' => $plan->hasFeature('module.boards'),
+                    'crm_pipelines' => $plan->hasFeature('module.crm_pipelines'),
+                    'erp' => $plan->hasFeature('module.erp'),
+                    'email' => $plan->hasFeature('module.email'),
+                    'support' => $plan->hasFeature('module.support'),
+                    'marketing' => $plan->hasFeature('module.marketing'),
+                ],
+                'plan_limits' => [
+                    'max_seats' => $plan->maxSeats(),
+                    'max_boards' => $plan->feature('boards'),
+                    'max_storage_mb' => $plan->feature('storage'),
+                    'ai_credits' => $plan->feature('ai_credits'),
+                    'automation_rules' => $plan->feature('automation_rules'),
+                    'email_accounts' => $plan->feature('email_accounts'),
+                    'crm_pipelines' => $plan->feature('crm_pipelines'),
+                    'max_invoices' => $plan->feature('max_invoices'),
+                ],
             ],
         ]);
     }
