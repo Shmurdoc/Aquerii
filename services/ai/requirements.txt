@@ -16,8 +16,7 @@ chromadb==0.5.3
 faiss-cpu==1.13.2
 
 # Reranker (HuixiangDou pattern)
-sentence-transformers==3.0.1
-transformers>=5.0.0
+sentence-transformers==4.1.0
 
 # Redis
 redis[hiredis]==5.0.7
