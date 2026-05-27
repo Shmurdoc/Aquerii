@@ -361,9 +361,9 @@ jobs:
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
           sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env.testing
           sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env.testing
-          sed -i 's|MEILISEARCH_HOST=.*|MEILISEARCH_HOST=http://localhost:7700|' .env.testing || true
-          sed -i 's|MEILISEARCH_KEY=.*|MEILISEARCH_KEY=test_key|' .env.testing || true
           sed -i "s|CACHE_DRIVER=.*|CACHE_DRIVER=array|" .env.testing || echo "CACHE_DRIVER=array" >> .env.testing
+          echo "MEILISEARCH_HOST=http://localhost:7700" >> .env.testing
+          echo "MEILISEARCH_KEY=test_key" >> .env.testing
           mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --env=testing --quiet
 
