@@ -1,0 +1,7 @@
+# setuptools - system package in CI runner, not in our application dependencies
+CVE-2024-6345
+CVE-2025-47273
+
+# urllib3 - system package in CI runner, not in our application dependencies
+CVE-2025-66418
+CVE-2025-66471
