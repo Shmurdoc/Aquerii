@@ -3,11 +3,12 @@
 namespace App\Modules\CRM\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CrmPipelineStage extends Model
 {
-    use HasUuids;
+    use HasFactory, HasUuids;
 
     protected $table = 'crm_pipeline_stages';
 

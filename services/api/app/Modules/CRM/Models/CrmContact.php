@@ -4,12 +4,13 @@ namespace App\Modules\CRM\Models;
 
 use App\Core\Models\Workspace;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrmContact extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $table = 'crm_contacts';
 

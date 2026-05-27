@@ -5,11 +5,12 @@ namespace App\Modules\CRM\Models;
 use App\Core\Models\Item;
 use App\Core\Models\User;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CrmDeal extends Model
 {
-    use HasUuids;
+    use HasFactory, HasUuids;
 
     protected $table = 'crm_deals';
 
