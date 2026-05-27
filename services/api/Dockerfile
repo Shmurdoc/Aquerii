@@ -45,15 +45,9 @@ ENV APP_ENV=production \
 
 COPY --from=deps /var/www/html/vendor ./vendor
 COPY . .
-RUN mkdir -p storage/framework/{views,cache,cache/data,sessions,testing} storage/logs \
+RUN mkdir -p storage/framework/{views,cache,cache/data,sessions,testing} storage/logs bootstrap/cache \
  && chmod -R 775 storage bootstrap/cache \
- && cp .env.example .env 2>/dev/null || true \
- && composer dump-autoload --optimize --classmap-authoritative --no-scripts \
- && php artisan key:generate --force \
- && php artisan package:discover --ansi \
- && php artisan config:cache \
- && php artisan route:cache \
- && php artisan view:cache
+ && composer dump-autoload --optimize --classmap-authoritative --no-scripts
 
 COPY infra/docker/api/supervisord.conf /etc/supervisord.conf
 COPY infra/docker/api/nginx.conf /etc/nginx/nginx.conf
