@@ -23,6 +23,7 @@ class WorkspaceMember extends Model
 
     protected $fillable = [
         'workspace_id', 'user_id', 'role', 'invited_by', 'joined_at',
+        'status', 'invited_email', 'invite_token',
     ];
 
     protected function casts(): array

@@ -100,7 +100,6 @@ jobs:
   test-php:
     name: PHP Unit Tests
     runs-on: ubuntu-latest
-    continue-on-error: true
     needs: [lint-php]
     services:
       postgres:
@@ -269,7 +268,7 @@ jobs:
           pip-audit -r requirements.txt
 
       - name: Trivy filesystem scan
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: fs
           scan-ref: .

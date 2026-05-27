@@ -59,6 +59,7 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->middleware($isTest ? [] : ['throttle:5,1']);
     Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->middleware($isTest ? [] : ['throttle:3,1']);
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->middleware($isTest ? ['idempotent'] : ['throttle:5,1', 'idempotent']);
+    Route::post('verify-email/resend', [AuthController::class, 'resendVerification']);
     Route::post('verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail']);
     Route::get('oauth/{provider}', [OAuthController::class, 'redirect']);
     Route::get('oauth/{provider}/callback', [OAuthController::class, 'callback']);
@@ -68,6 +69,11 @@ Route::prefix('auth')->group(function () {
 Route::get('invitations/{token}/accept', [WorkspaceInvitationController::class, 'accept'])
     ->middleware('throttle:20,1')
     ->name('invitations.accept');
+
+// ── Invite accept via token (auth required — links token to logged-in user) ──
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('invites/{token}/accept', [WorkspaceController::class, 'acceptInvite'])->middleware('idempotent');
+});
 
 // ── Billing webhooks (raw body — bypass idempotency & auth) ──────────────────
 Route::post('webhooks/stripe', [WebhookController::class, 'stripe']);
