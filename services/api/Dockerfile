@@ -23,12 +23,12 @@ COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# ── Dependencies ──────────────────────────────────────────────
-    FROM base AS deps
-COPY composer.json composer.lock ./
+# Dependencies
+FROM base AS deps
+COPY composer.json composer.lock* ./
 RUN composer install --no-scripts --no-autoloader --prefer-dist --no-dev --no-interaction
 
-# ── Development image ─────────────────────────────────────────
+# Development image
 FROM base AS development
 COPY --from=deps /var/www/html/vendor ./vendor
 COPY . .
@@ -37,7 +37,7 @@ RUN cp .env.example .env 2>/dev/null || true
 EXPOSE 8000
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
 
-# ── Production image ──────────────────────────────────────────
+# Production image
 FROM base AS production
 ENV APP_ENV=production \
     APP_DEBUG=false \
