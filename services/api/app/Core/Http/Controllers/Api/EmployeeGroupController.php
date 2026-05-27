@@ -13,8 +13,6 @@ class EmployeeGroupController extends Controller
 {
     public function index(Workspace $workspace): JsonResponse
     {
-        $this->authorize('view', $workspace);
-
         return response()->json([
             'data' => $workspace->employeeGroups()->with(['manager', 'manager.user'])->get(),
         ]);
@@ -22,8 +20,6 @@ class EmployeeGroupController extends Controller
 
     public function store(Request $request, Workspace $workspace): JsonResponse
     {
-        $this->authorize('update', $workspace);
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
@@ -39,7 +35,6 @@ class EmployeeGroupController extends Controller
 
     public function show(Workspace $workspace, EmployeeGroup $employeeGroup): JsonResponse
     {
-        $this->authorize('view', $workspace);
         abort_if($employeeGroup->workspace_id !== $workspace->id, 404);
 
         return response()->json([
@@ -49,7 +44,6 @@ class EmployeeGroupController extends Controller
 
     public function update(Request $request, Workspace $workspace, EmployeeGroup $employeeGroup): JsonResponse
     {
-        $this->authorize('update', $workspace);
         abort_if($employeeGroup->workspace_id !== $workspace->id, 404);
 
         $validated = $request->validate([
@@ -66,7 +60,6 @@ class EmployeeGroupController extends Controller
 
     public function destroy(Workspace $workspace, EmployeeGroup $employeeGroup): JsonResponse
     {
-        $this->authorize('update', $workspace);
         abort_if($employeeGroup->workspace_id !== $workspace->id, 404);
 
         // Nullify employee_group_id on members before deleting
@@ -78,7 +71,7 @@ class EmployeeGroupController extends Controller
 
     public function orgChart(Workspace $workspace): JsonResponse
     {
-        $this->authorize('view', $workspace);
+        return response()->json([
 
         $groups = $workspace->employeeGroups()->with(['manager.user', 'members.user'])->get();
         $unassigned = $workspace->members()
