@@ -59,8 +59,9 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->middleware($isTest ? [] : ['throttle:5,1']);
     Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->middleware($isTest ? [] : ['throttle:3,1']);
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->middleware($isTest ? ['idempotent'] : ['throttle:5,1', 'idempotent']);
+    Route::post('refresh', [AuthController::class, 'refresh'])->middleware($isTest ? [] : ['throttle:10,1']);
     Route::post('verify-email/resend', [AuthController::class, 'resendVerification']);
-    Route::post('verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail']);
+    Route::post('verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
     Route::get('oauth/{provider}', [OAuthController::class, 'redirect']);
     Route::get('oauth/{provider}/callback', [OAuthController::class, 'callback']);
 });
@@ -84,10 +85,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
     // Auth actions
     Route::post('auth/logout', [AuthController::class, 'logout']);
-    Route::post('auth/mfa/enable', [AuthController::class, 'enableMfa'])->middleware('idempotent');
+    Route::post('auth/mfa/enable', [AuthController::class, 'enableMfa'])->middleware(['idempotent', 'verified']);
     Route::post('auth/mfa/verify', [AuthController::class, 'verifyMfa'])->middleware('throttle:5,1');
     Route::post('auth/mfa/disable', [AuthController::class, 'disableMfa']);
-    Route::post('auth/refresh', [AuthController::class, 'refresh'])->middleware('throttle:10,1');
 
     // Current user
     Route::get('me', [UserController::class, 'me']);

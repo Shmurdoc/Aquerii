@@ -50,7 +50,9 @@ return [
 
     'ai' => [
         'url' => env('AI_SERVICE_URL', 'http://ai:8002'),
+        'base_url' => env('AI_SERVICE_URL', 'http://ai:8002'),
         'secret' => env('AI_SERVICE_SECRET'),
+        'internal_token' => env('AI_SERVICE_SECRET'),
     ],
 
     'realtime' => [
