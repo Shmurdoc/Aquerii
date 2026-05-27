@@ -219,6 +219,7 @@ jobs:
         uses: semgrep/semgrep-action@v1
         with:
           config: p/default
+          auditOn: pull_request
 
   secrets-scan:
     name: Secrets — Gitleaks
