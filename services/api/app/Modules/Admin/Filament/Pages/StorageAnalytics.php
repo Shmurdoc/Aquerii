@@ -12,9 +12,13 @@ class StorageAnalytics extends Page implements Tables\Contracts\HasTable
     use Tables\Concerns\InteractsWithTable;
 
     protected static ?string $navigationIcon = 'heroicon-o-hard-drive';
+
     protected static ?string $navigationLabel = 'Storage Analytics';
+
     protected static ?string $navigationGroup = 'Monitoring';
+
     protected static ?int $navigationSort = 2;
+
     protected static string $view = 'filament::pages.dashboard';
 
     public function table(Table $table): Table

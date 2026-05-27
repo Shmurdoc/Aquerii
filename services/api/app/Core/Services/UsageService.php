@@ -4,7 +4,6 @@ namespace App\Core\Services;
 
 use App\Core\Enums\SubscriptionPlan;
 use App\Core\Models\Workspace;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 class UsageService

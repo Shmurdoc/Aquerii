@@ -6,6 +6,7 @@ use App\Core\Models\Workspace;
 use App\Modules\Admin\Filament\Resources\WorkspaceResource\Pages;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -114,7 +115,7 @@ class WorkspaceResource extends Resource
                     ])
                     ->action(function (array $data, Workspace $record) {
                         $record->update(['plan' => $data['plan']]);
-                        \Filament\Notifications\Notification::make()
+                        Notification::make()
                             ->success()
                             ->title("Plan overridden to {$data['plan']}")
                             ->body("Reason: {$data['reason']}")

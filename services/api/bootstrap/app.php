@@ -1,10 +1,10 @@
 <?php
 
 use App\Core\Exceptions\Handler;
+use App\Core\Http\Middleware\CheckFeatureAccess;
 use App\Core\Http\Middleware\EnforceIdempotency;
 use App\Core\Http\Middleware\EnsureEmailIsVerified;
 use App\Core\Http\Middleware\InternalSecret;
-use App\Core\Http\Middleware\CheckFeatureAccess;
 use App\Core\Http\Middleware\RequireWorkspaceRole;
 use App\Core\Http\Middleware\SetWorkspaceTenant;
 use App\Core\Http\Middleware\ThrottleRequests;

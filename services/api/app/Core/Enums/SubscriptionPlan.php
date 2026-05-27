@@ -2,6 +2,8 @@
 
 namespace App\Core\Enums;
 
+use App\Core\Models\Workspace;
+
 enum SubscriptionPlan: string
 {
     case Free = 'free';
@@ -248,7 +250,7 @@ enum SubscriptionPlan: string
         ];
     }
 
-    public static function fromWorkspace(\App\Core\Models\Workspace $workspace): self
+    public static function fromWorkspace(Workspace $workspace): self
     {
         return self::tryFrom($workspace->plan) ?? self::Free;
     }

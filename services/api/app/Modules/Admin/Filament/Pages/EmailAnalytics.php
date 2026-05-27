@@ -12,9 +12,13 @@ class EmailAnalytics extends Page implements Tables\Contracts\HasTable
     use Tables\Concerns\InteractsWithTable;
 
     protected static ?string $navigationIcon = 'heroicon-o-envelope';
+
     protected static ?string $navigationLabel = 'Email Analytics';
+
     protected static ?string $navigationGroup = 'Monitoring';
+
     protected static ?int $navigationSort = 1;
+
     protected static string $view = 'filament::pages.dashboard';
 
     public function table(Table $table): Table

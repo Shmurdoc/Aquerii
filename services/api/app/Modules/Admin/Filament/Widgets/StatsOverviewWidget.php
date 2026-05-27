@@ -2,6 +2,7 @@
 
 namespace App\Modules\Admin\Filament\Widgets;
 
+use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -18,7 +19,7 @@ class StatsOverviewWidget extends BaseWidget
         $totalWorkspaces = Workspace::count();
         $activeWorkspaces = Workspace::whereIn('plan_status', ['active', 'trialing'])->count();
         $trialWorkspaces = Workspace::where('plan_status', 'trialing')->count();
-        $totalUsers = \App\Core\Models\User::count();
+        $totalUsers = User::count();
 
         return [
             Stat::make('Total Workspaces', number_format($totalWorkspaces))
