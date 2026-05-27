@@ -100,6 +100,19 @@ button, a, [role="button"] {
   from { opacity: 0; transform: scale(0.95); }
   to   { opacity: 1; transform: scale(1); }
 }
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px -5px rgba(124, 58, 237, 0.15); }
+  50%      { box-shadow: 0 0 35px -5px rgba(124, 58, 237, 0.3); }
+}
+@keyframes progressFill {
+  from { width: 0%; }
+}
+.animate-glow-pulse {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+.animate-progress-fill {
+  animation: progressFill 1.2s ease-out forwards;
+}
 .animate-slide-up  { animation: slideUp  var(--duration-200) var(--ease-spring); }
 .animate-fade-in   { animation: fadeIn   var(--duration-150) var(--ease-out); }
 .animate-scale-in  { animation: scaleIn  var(--duration-200) var(--ease-spring); }

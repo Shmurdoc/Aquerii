@@ -25,13 +25,49 @@ export interface WorkspaceMember {
 
 export type MemberRole = 'owner' | 'admin' | 'manager' | 'member' | 'viewer'
 
+export interface PlanLimits {
+  max_seats: number
+  max_boards: number
+  max_storage_mb: number
+  ai_credits: number
+  automation_rules: number
+  email_accounts: number
+  crm_pipelines: number
+  max_invoices: number
+}
+
+export interface FeatureFlags {
+  ai: boolean
+  automation: boolean
+  boards: boolean
+  crm_pipelines: boolean
+  erp: boolean
+  email: boolean
+  support: boolean
+  marketing: boolean
+}
+
 export interface BillingInfo {
   plan: string
+  label: string
   status: string
   current_period_end: number | null
   cancel_at_period_end: boolean
   seat_count: number
   storage_used_bytes: number
+  limits: PlanLimits
+  features: FeatureFlags
+  plan_limits: PlanLimits
+}
+
+export interface BillingEventItem {
+  id: string
+  event_type: string
+  processor: string
+  amount_cents: number
+  currency: string
+  created_at: string
+  workspace: { name: string }
 }
 
 export interface UserProfile {
@@ -47,11 +83,118 @@ export interface UserProfile {
   updated_at: string
 }
 
-export const PLANS: { id: string; label: string; price: string; features: string[] }[] = [
-  { id: 'free',     label: 'Free',     price: '$0',    features: ['3 seats', '100 MB storage', '5 automations'] },
-  { id: 'starter',  label: 'Starter',  price: '$9',    features: ['10 seats', '1 GB storage', '20 automations', 'AI credits'] },
-  { id: 'growth',   label: 'Growth',   price: '$29',   features: ['25 seats', '10 GB storage', '50 automations', 'AI credits', 'API access'] },
-  { id: 'business', label: 'Business', price: '$99',   features: ['Unlimited seats', '100 GB storage', 'Unlimited automations', 'AI credits', 'API access', 'Priority support'] },
+export type PlanId = 'free' | 'starter' | 'growth' | 'business' | 'enterprise'
+
+export interface PlanDefinition {
+  id: PlanId
+  label: string
+  price: string
+  annualPrice: string
+  description: string
+  popular: boolean
+  features: string[]
+  highlight?: string
+}
+
+export const PLANS: PlanDefinition[] = [
+  {
+    id: 'free',
+    label: 'Free',
+    price: '$0',
+    annualPrice: '$0',
+    description: 'Get started with basic tools',
+    popular: false,
+    features: [
+      '3 team members',
+      '2 boards',
+      '100 MB storage',
+      'Basic CRM',
+      '5 automation rules',
+      'Email support',
+    ],
+  },
+  {
+    id: 'starter',
+    label: 'Starter',
+    price: '$9',
+    annualPrice: '$7',
+    description: 'For growing teams',
+    popular: false,
+    features: [
+      '10 team members',
+      '10 boards',
+      '5 GB storage',
+      'CRM pipelines',
+      '200 AI credits/mo',
+      '5 automation rules',
+      '1 email account',
+      'API access',
+    ],
+  },
+  {
+    id: 'growth',
+    label: 'Growth',
+    price: '$29',
+    annualPrice: '$24',
+    description: 'Scale your operations',
+    popular: true,
+    features: [
+      '25 team members',
+      '50 boards',
+      '25 GB storage',
+      'Full CRM + pipelines',
+      '1,000 AI credits/mo',
+      '25 automation rules',
+      '3 email accounts',
+      'ERP suite',
+      'Support ticketing',
+      'API access',
+    ],
+  },
+  {
+    id: 'business',
+    label: 'Business',
+    price: '$99',
+    annualPrice: '$79',
+    description: 'For serious organizations',
+    popular: false,
+    features: [
+      '100 team members',
+      'Unlimited boards',
+      '100 GB storage',
+      'Full CRM + pipelines',
+      '5,000 AI credits/mo',
+      'Unlimited automation rules',
+      '10 email accounts',
+      'Full ERP suite',
+      'Support ticketing',
+      'Marketing tools',
+      'HR module',
+      'API + export access',
+    ],
+  },
+  {
+    id: 'enterprise',
+    label: 'Enterprise',
+    price: 'Custom',
+    annualPrice: 'Custom',
+    description: 'Tailored for your enterprise',
+    popular: false,
+    highlight: 'Contact sales for custom pricing, dedicated support, and SLA guarantees.',
+    features: [
+      'Unlimited team members',
+      'Unlimited boards',
+      '999 TB storage',
+      'Everything in Business',
+      '99,999 AI credits/mo',
+      'Custom integrations',
+      'Dedicated support',
+      'On-premise option',
+      'Custom SLA',
+      'SSO / SAML',
+      'Audit logs',
+    ],
+  },
 ]
 
 export interface AuditLogEntry {
@@ -124,7 +267,7 @@ export const settingsApi = {
   // Billing
   getBilling: async (): Promise<BillingInfo> => {
     const res = await api.get(`/workspaces/${wid()}/billing`)
-    return res.data?.data ?? { plan: 'free', status: 'none', current_period_end: null, cancel_at_period_end: false, seat_count: 0, storage_used_bytes: 0 }
+    return res.data?.data ?? { plan: 'free', label: 'Free', status: 'none', current_period_end: null, cancel_at_period_end: false, seat_count: 0, storage_used_bytes: 0, limits: { max_seats: 3, max_boards: 2, max_storage_mb: 100, ai_credits: 0, automation_rules: 5, email_accounts: 0, crm_pipelines: 1, max_invoices: 0 }, features: { ai: false, automation: false, boards: true, crm_pipelines: false, erp: false, email: false, support: false, marketing: false }, plan_limits: { max_seats: 3, max_boards: 2, max_storage_mb: 100, ai_credits: 0, automation_rules: 5, email_accounts: 0, crm_pipelines: 1, max_invoices: 0 } }
   },
 
   createCheckout: async (payload: { price_id: string; success_url: string; cancel_url: string }): Promise<{ url: string }> => {
