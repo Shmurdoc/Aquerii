@@ -71,8 +71,6 @@ class EmployeeGroupController extends Controller
 
     public function orgChart(Workspace $workspace): JsonResponse
     {
-        return response()->json([
-
         $groups = $workspace->employeeGroups()->with(['manager.user', 'members.user'])->get();
         $unassigned = $workspace->members()
             ->whereNull('employee_group_id')
