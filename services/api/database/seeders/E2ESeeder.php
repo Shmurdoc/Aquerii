@@ -31,7 +31,7 @@ class E2ESeeder extends Seeder
 
         $workspace = Workspace::firstOrCreate(
             ['name' => 'Test Workspace', 'owner_id' => $user->id],
-            ['name' => 'Test Workspace', 'owner_id' => $user->id]
+            ['name' => 'Test Workspace', 'owner_id' => $user->id, 'slug' => 'test-workspace']
         );
 
         WorkspaceMember::firstOrCreate([
