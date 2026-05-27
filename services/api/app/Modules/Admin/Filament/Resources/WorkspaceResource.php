@@ -34,21 +34,25 @@ class WorkspaceResource extends Resource
 
             Forms\Components\Section::make('Billing')->schema([
                 Forms\Components\Select::make('plan')
-                    ->options(['free' => 'Free', 'starter' => 'Starter', 'growth' => 'Growth', 'business' => 'Business'])
+                    ->options(['free' => 'Free', 'starter' => 'Starter', 'growth' => 'Growth', 'business' => 'Business', 'enterprise' => 'Enterprise'])
                     ->required(),
+                Forms\Components\Select::make('plan_status')
+                    ->options(['active' => 'Active', 'trialing' => 'Trialing', 'past_due' => 'Past Due', 'cancelled' => 'Cancelled'])
+                    ->default('active'),
                 Forms\Components\TextInput::make('stripe_customer_id')->maxLength(255),
                 Forms\Components\TextInput::make('stripe_subscription_id')->maxLength(255),
+                Forms\Components\DateTimePicker::make('trial_ends_at'),
                 Forms\Components\DateTimePicker::make('plan_expires_at'),
             ])->columns(2),
 
             Forms\Components\Section::make('Limits')->schema([
                 Forms\Components\TextInput::make('seat_count')
                     ->numeric()->default(1),
+                Forms\Components\TextInput::make('seat_quota')
+                    ->numeric()->default(10),
                 Forms\Components\TextInput::make('storage_quota_bytes')
                     ->numeric()->default(5368709120),
                 Forms\Components\TextInput::make('storage_used_bytes')
-                    ->numeric()->disabled(),
-                Forms\Components\TextInput::make('ai_credits_used')
                     ->numeric()->disabled(),
             ])->columns(2),
         ]);
@@ -60,29 +64,62 @@ class WorkspaceResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('slug')->searchable(),
-                Tables\Columns\BadgeColumn::make('plan')
-                    ->colors([
-                        'gray' => 'free',
-                        'primary' => 'starter',
-                        'success' => 'growth',
-                        'warning' => 'business',
-                    ]),
+                Tables\Columns\TextColumn::make('plan')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'free' => 'gray',
+                        'starter' => 'primary',
+                        'growth' => 'success',
+                        'business' => 'warning',
+                        'enterprise' => 'danger',
+                        default => 'gray',
+                    }),
+                Tables\Columns\TextColumn::make('plan_status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'active' => 'success',
+                        'trialing' => 'info',
+                        'past_due' => 'danger',
+                        'cancelled' => 'gray',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('seat_count')->label('Seats')->sortable(),
                 Tables\Columns\TextColumn::make('members_count')
                     ->counts('members')->label('Members'),
+                Tables\Columns\TextColumn::make('trial_ends_at')->dateTime()->sortable()->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('plan')
-                    ->options(['free' => 'Free', 'starter' => 'Starter', 'growth' => 'Growth', 'business' => 'Business']),
+                    ->options(['free' => 'Free', 'starter' => 'Starter', 'growth' => 'Growth', 'business' => 'Business', 'enterprise' => 'Enterprise']),
+                Tables\Filters\SelectFilter::make('plan_status')
+                    ->options(['active' => 'Active', 'trialing' => 'Trialing', 'past_due' => 'Past Due', 'cancelled' => 'Cancelled']),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('impersonate')
-                    ->icon('heroicon-o-arrow-right-on-rectangle')
+                Tables\Actions\Action::make('override_plan')
+                    ->label('Override Plan')
+                    ->icon('heroicon-o-currency-dollar')
                     ->color('warning')
-                    ->requiresConfirmation()
-                    ->action(fn (Workspace $record) => redirect()->route('filament.admin.impersonate', $record)),
+                    ->form([
+                        Forms\Components\Select::make('plan')
+                            ->label('New Plan')
+                            ->options(['free' => 'Free', 'starter' => 'Starter', 'growth' => 'Growth', 'business' => 'Business', 'enterprise' => 'Enterprise'])
+                            ->required(),
+                        Forms\Components\TextInput::make('reason')
+                            ->label('Reason')
+                            ->required()
+                            ->maxLength(500),
+                    ])
+                    ->action(function (array $data, Workspace $record) {
+                        $record->update(['plan' => $data['plan']]);
+                        \Filament\Notifications\Notification::make()
+                            ->success()
+                            ->title("Plan overridden to {$data['plan']}")
+                            ->body("Reason: {$data['reason']}")
+                            ->send();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
