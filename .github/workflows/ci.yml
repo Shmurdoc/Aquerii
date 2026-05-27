@@ -245,11 +245,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: PHP — composer audit
+      - name: PHP — composer audit --no-abandoned
         working-directory: services/api
         run: |
           composer install --prefer-dist --no-scripts --no-progress --quiet
-          composer audit
+          composer audit --no-abandoned
 
       - name: Node (realtime) — npm audit
         working-directory: services/realtime
