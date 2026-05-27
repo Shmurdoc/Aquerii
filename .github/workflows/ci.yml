@@ -14,6 +14,7 @@ env:
   PHP_VERSION: "8.3"
   NODE_VERSION: "20"
   PYTHON_VERSION: "3.11"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 # ════════════════════════════════════════════════════════════════
 # STAGE 1 — Static Analysis (runs in parallel)
@@ -218,7 +219,6 @@ jobs:
         uses: semgrep/semgrep-action@v1
         with:
           config: p/default
-          auditOn: pull_request
 
   secrets-scan:
     name: Secrets — Gitleaks
@@ -226,8 +226,6 @@ jobs:
     needs: [test-php, test-node, test-web, test-python]
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: gitleaks/gitleaks-action@v2
         continue-on-error: true
@@ -310,24 +308,75 @@ jobs:
     name: Integration Tests
     runs-on: ubuntu-latest
     needs: [docker-build]
-    continue-on-error: true
+    services:
+      postgres:
+        image: postgres:15.6
+        env:
+          POSTGRES_DB: aquerii_test
+          POSTGRES_USER: aquerii_app
+          POSTGRES_PASSWORD: secret
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7.2-alpine
+        ports: ["6379:6379"]
+        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
-      - name: Start stack
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: pdo, pgsql, redis, zip, bcmath, intl
+          coverage: pcov
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: services/api/vendor
+          key: composer-${{ hashFiles('services/api/composer.lock') }}
+
+      - run: composer install --prefer-dist --no-scripts --no-progress
+        working-directory: services/api
+
+      - name: Start Meilisearch
         run: |
-          cp .env.example .env
-          docker compose up -d postgres redis meilisearch --wait --timeout 120 || true
-          sleep 10
-          docker compose run --rm api php artisan migrate --force --seed
+          docker run -d --name meilisearch -p 7700:7700 \
+            -e MEILI_MASTER_KEY=test_key \
+            getmeili/meilisearch:v1.6
+
+      - name: Prepare test env
+        working-directory: services/api
+        run: |
+          cp .env.example .env.testing
+          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env.testing
+          sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env.testing
+          sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env.testing
+          sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
+          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env.testing
+          sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env.testing
+          sed -i 's|MEILISEARCH_HOST=.*|MEILISEARCH_HOST=http://localhost:7700|' .env.testing || true
+          sed -i 's|MEILISEARCH_KEY=.*|MEILISEARCH_KEY=test_key|' .env.testing || true
+          sed -i "s|CACHE_DRIVER=.*|CACHE_DRIVER=array|" .env.testing || echo "CACHE_DRIVER=array" >> .env.testing
+          mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
+          php artisan key:generate --env=testing --quiet
+
+      - name: Run migrations
+        working-directory: services/api
+        run: php artisan migrate --force --seed --env=testing
 
       - name: Run API integration tests
         working-directory: services/api
         run: composer test -- --group=integration
 
-      - name: Tear down
+      - name: Cleanup Meilisearch
         if: always()
-        run: docker compose down -v
+        run: docker rm -f meilisearch || true
 
 # ════════════════════════════════════════════════════════════════
 # STAGE 6 — E2E Tests (Playwright)
@@ -440,11 +489,10 @@ jobs:
         working-directory: services/api
         run: |
           cp .env.example .env
+          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env
           sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
-          cp .env.example .env
-          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env
           sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
@@ -458,8 +506,8 @@ jobs:
 
       - name: Install k6
         run: |
-          sudo apt-get update
-          sudo apt-get install -y k6
+          curl -sL https://github.com/grafana/k6/releases/download/v0.55.0/k6-v0.55.0-linux-amd64.tar.gz | tar xz
+          sudo mv k6-v0.55.0-linux-amd64/k6 /usr/local/bin/k6
 
       - name: Run k6 smoke test
         run: k6 run services/tests/load/smoke-test.js --env BASE_URL=http://localhost:8000

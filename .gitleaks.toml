@@ -4,6 +4,5 @@ useDefault = true
 [[allowlists]]
 description = "Ignore gstack skill files and opencode config"
 paths = [
-    '''.opencode/''',
-    '''\.opencode/''',
+    '''(.*)?\.opencode/''',
 ]

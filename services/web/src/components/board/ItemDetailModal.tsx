@@ -9,6 +9,38 @@ import { X, Calendar, User, Flag, Paperclip, MessageSquare, GitBranch, Trash2, P
 import clsx from 'clsx'
 import toast from 'react-hot-toast'
 
+interface Comment {
+  id: string
+  author?: { name?: string; avatar_url?: string | null }
+  body: string
+  created_at: string
+}
+
+interface FileAttachment {
+  id: string
+  url: string
+  filename: string
+  size: number
+}
+
+interface SubItem {
+  id: string
+  title: string
+  done: boolean
+}
+
+interface Document {
+  id: string
+  title?: string
+  filename?: string
+  url?: string
+}
+
+interface Deal {
+  id: string
+  name: string
+}
+
 /** Extract a plain-text string from a description that may be a Tiptap JSON doc or raw string. */
 function descriptionToText(raw: Item['description']): string {
   if (!raw) return ''
@@ -124,7 +156,7 @@ export default function ItemDetailModal({ item, boardId, onClose, onDeleted }: P
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['items', boardId] })
       toast.success('Item deleted.')
-      onDeleted ? onDeleted() : onClose()
+      if (onDeleted) onDeleted(); else onClose()
     },
     onError: () => toast.error('Failed to delete item.'),
   })
@@ -204,7 +236,7 @@ export default function ItemDetailModal({ item, boardId, onClose, onDeleted }: P
                 <p className="text-xs text-gray-600">No files attached.</p>
               ) : (
                 <div className="space-y-1">
-                  {files.map((f: any) => (
+                  {files.map((f: FileAttachment) => (
                     <a
                       key={f.id}
                       href={f.url}
@@ -227,7 +259,7 @@ export default function ItemDetailModal({ item, boardId, onClose, onDeleted }: P
                 <MessageSquare size={11} /> Comments
               </label>
               <div className="space-y-3 mb-3">
-                {comments.map((c: any) => (
+                {comments.map((c: Comment) => (
                   <div key={c.id} className="flex gap-2 group">
                     <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 mt-0.5">
                       {c.author?.name?.[0] ?? 'U'}
@@ -388,7 +420,7 @@ function SubItems({ itemId, boardId, workspaceId }: { itemId: string; boardId: s
         <label className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-1.5">
           <GitBranch size={11} /> Sub-items
           {subitems.length > 0 && (
-            <span className="text-gray-600">({subitems.filter((s: any) => s.done).length}/{subitems.length})</span>
+            <span className="text-gray-600">({subitems.filter((s: SubItem) => s.done).length}/{subitems.length})</span>
           )}
         </label>
         <button onClick={() => setAdding(true)} className="text-xs text-indigo-400 hover:text-indigo-300">
@@ -398,7 +430,7 @@ function SubItems({ itemId, boardId, workspaceId }: { itemId: string; boardId: s
 
       {subitems.length > 0 && (
         <div className="space-y-1 mb-2">
-          {subitems.map((sub: any) => (
+          {subitems.map((sub: SubItem) => (
             <div key={sub.id} className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -477,7 +509,7 @@ function LinkedDocuments({ itemId, workspaceId }: { itemId: string; workspaceId:
         <p className="text-xs text-gray-600">None linked.</p>
       ) : (
         <div className="space-y-1">
-          {documents.map((d: any) => (
+          {documents.map((d: Document) => (
             <div key={d.id} className="flex items-center gap-1 group">
               <FileText size={10} className="text-gray-500 flex-shrink-0" />
               <span className="text-xs text-indigo-400 truncate flex-1">{d.title ?? d.filename ?? 'Untitled'}</span>
@@ -493,7 +525,7 @@ function LinkedDocuments({ itemId, workspaceId }: { itemId: string; workspaceId:
           {deals.length > 0 && (
             <>
               <div className="text-[10px] text-gray-600 font-medium pt-1">Linked Deals</div>
-              {deals.map((d: any) => (
+              {deals.map((d: Deal) => (
                 <div key={d.id} className="flex items-center gap-1">
                   <ExternalLink size={10} className="text-blue-500 flex-shrink-0" />
                   <span className="text-xs text-blue-400 truncate flex-1">{d.name}</span>
@@ -511,7 +543,7 @@ function LinkedDocuments({ itemId, workspaceId }: { itemId: string; workspaceId:
 function AssigneeSelector({
   itemId, boardId, workspaceId, current,
 }: {
-  itemId: string; boardId: string; workspaceId: string; current: any[]
+  itemId: string; boardId: string; workspaceId: string; current: Item['assignees']
 }) {
   const qc = useQueryClient()
   const [open, setOpen] = useState(false)
@@ -568,7 +600,7 @@ function AssigneeSelector({
 
       {open && (
         <div className="mt-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
-          {members.map((m: any) => {
+          {members.map((m: { user_id: string; user?: { name?: string; avatar_url?: string | null } }) => {
             const assigned = currentIds.includes(m.user_id)
             return (
               <button

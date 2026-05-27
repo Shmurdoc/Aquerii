@@ -26,7 +26,7 @@ export default function RuleBuilderModal({ initial, onSave, onClose, isPending }
     setTrigger({ type, config: {} })
   }
 
-  function updateTriggerConfig(key: string, value: any) {
+  function updateTriggerConfig(key: string, value: string) {
     setTrigger((prev) => ({ ...prev, config: { ...prev.config, [key]: value } }))
   }
 
