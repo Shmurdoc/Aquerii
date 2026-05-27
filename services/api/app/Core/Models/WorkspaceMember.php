@@ -24,6 +24,9 @@ class WorkspaceMember extends Model
     protected $fillable = [
         'workspace_id', 'user_id', 'role', 'invited_by', 'joined_at',
         'status', 'invited_email', 'invite_token',
+        'job_title', 'department', 'phone', 'salary', 'salary_currency',
+        'emergency_contact', 'employed_at',
+        'employee_group_id', 'reports_to',
     ];
 
     protected function casts(): array
@@ -41,5 +44,20 @@ class WorkspaceMember extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function employeeGroup()
+    {
+        return $this->belongsTo(EmployeeGroup::class);
+    }
+
+    public function reportsTo()
+    {
+        return $this->belongsTo(self::class, 'reports_to');
+    }
+
+    public function subordinates()
+    {
+        return $this->hasMany(self::class, 'reports_to');
     }
 }

@@ -5,6 +5,7 @@ use App\Core\Http\Controllers\Api\BrandingController;
 use App\Core\Http\Controllers\Api\BulkActionController;
 use App\Core\Http\Controllers\Api\CommentController;
 use App\Core\Http\Controllers\Api\DocumentPdfController;
+use App\Core\Http\Controllers\Api\EmployeeGroupController;
 use App\Core\Http\Controllers\Api\FileController;
 use App\Core\Http\Controllers\Api\InvoicePdfController;
 use App\Core\Http\Controllers\Api\InvoiceWorkflowController;
@@ -117,6 +118,10 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // Invitations
         Route::post('invitations', [WorkspaceInvitationController::class, 'store'])->middleware('idempotent');
+
+        // Employee Groups (org chart / role hierarchy)
+        Route::get('employee-groups/org-chart', [EmployeeGroupController::class, 'orgChart']);
+        Route::apiResource('employee-groups', EmployeeGroupController::class)->middleware('idempotent');
         Route::get('invitations', [WorkspaceInvitationController::class, 'index']);
         Route::delete('invitations/{token}', [WorkspaceInvitationController::class, 'destroy'])->middleware('idempotent');
 
