@@ -226,7 +226,7 @@ export default function BillingTab() {
             <UsageMeter
               label="Storage"
               used={billing.storage_used_bytes}
-              limit={limits?.max_storage_mb ? limits.max_storage_mb * 1024 * 1024 : 100 * 1024 * 1024}
+              limit={limits?.max_storage_bytes ?? limits?.storage ?? 100 * 1024 * 1024}
               unit="bytes"
             />
             <UsageMeter
@@ -236,7 +236,7 @@ export default function BillingTab() {
             />
             <UsageMeter
               label="AI Credits"
-              used={0}
+              used={billing.ai_credits_used ?? 0}
               limit={limits?.ai_credits ?? 200}
             />
           </div>

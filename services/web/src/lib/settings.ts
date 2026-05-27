@@ -28,7 +28,7 @@ export type MemberRole = 'owner' | 'admin' | 'manager' | 'member' | 'viewer'
 export interface PlanLimits {
   max_seats: number
   max_boards: number
-  max_storage_mb: number
+  max_storage_bytes: number
   ai_credits: number
   automation_rules: number
   email_accounts: number
@@ -55,6 +55,7 @@ export interface BillingInfo {
   cancel_at_period_end: boolean
   seat_count: number
   storage_used_bytes: number
+  ai_credits_used: number
   limits: PlanLimits
   features: FeatureFlags
   plan_limits: PlanLimits

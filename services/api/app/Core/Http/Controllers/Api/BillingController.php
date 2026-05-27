@@ -38,6 +38,7 @@ class BillingController extends Controller
                 'cancel_at_period_end' => $sub?->cancel_at_period_end ?? false,
                 'seat_count' => $workspace->seat_count,
                 'storage_used_bytes' => $workspace->storage_used_bytes,
+                'ai_credits_used' => $workspace->ai_credits_used,
                 'limits' => $plan->limits(),
                 'features' => [
                     'ai' => $plan->hasFeature('module.ai'),
@@ -51,8 +52,8 @@ class BillingController extends Controller
                 ],
                 'plan_limits' => [
                     'max_seats' => $plan->seatLimit(),
-                    'max_boards' => $plan->feature('boards'),
-                    'max_storage_mb' => $plan->feature('storage'),
+                    'max_boards' => $plan->boardLimit(),
+                    'max_storage_bytes' => $plan->storageLimitBytes(),
                     'ai_credits' => $plan->feature('ai_credits'),
                     'automation_rules' => $plan->feature('automation_rules'),
                     'email_accounts' => $plan->feature('email_accounts'),
