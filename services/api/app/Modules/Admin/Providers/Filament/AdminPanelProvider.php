@@ -4,6 +4,7 @@ namespace App\Modules\Admin\Providers\Filament;
 
 use App\Modules\Admin\Filament\Pages\Dashboard;
 use App\Modules\Admin\Filament\Resources\AuditLogResource;
+use App\Modules\Admin\Filament\Resources\BillingResource;
 use App\Modules\Admin\Filament\Resources\FeatureFlagResource;
 use App\Modules\Admin\Filament\Resources\UserResource;
 use App\Modules\Admin\Filament\Resources\WorkspaceResource;
@@ -36,6 +37,7 @@ class AdminPanelProvider extends PanelProvider
                 WorkspaceResource::class,
                 UserResource::class,
                 FeatureFlagResource::class,
+                BillingResource::class,
                 AuditLogResource::class,
             ])
             ->pages([
