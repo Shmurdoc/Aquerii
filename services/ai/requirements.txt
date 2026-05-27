@@ -33,10 +33,9 @@ opentelemetry-instrumentation-httpx==0.46b0
 prometheus-fastapi-instrumentator==7.0.0
 
 # PDF processing
-pdfplumber==0.11.1
+pdfplumber>=0.11.4
 pypdf==6.10.2
 pdf2image==1.17.0
-pdfminer.six>=20251230
 
 # OCR fallback for scanned/image-based PDFs (dual-engine)
 rapidocr-onnxruntime==1.4.1
