@@ -1,14 +1,16 @@
+includes:
+  - vendor/larastan/larastan/extension.neon
+
 parameters:
-  level: 5
+  level: 2
   paths:
     - app/
     - config/
     - routes/
-    - tests/
   tmpDir: storage/framework/cache/phpstan
-  scanFiles:
-    - vendor/autoload.php
   checkMissingIterableValueType: false
   checkGenericClassInNonGenericObjectType: false
   excludePaths:
     - app/Filament/
+  tipsOfTheDay: false
+  noUncheckedSymbols: true

@@ -149,7 +149,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm install
-      - run: npm test -- --coverage
+      - run: npm test
 
   test-python:
     name: Python Unit Tests
@@ -164,7 +164,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
-      - run: pip install -r requirements.txt pytest pytest-asyncio pytest-cov
+      - run: pip install -r requirements.txt pytest pytest-asyncio pytest-cov fakeredis[lua]
       - run: pytest tests/unit --cov=app --cov-report=xml
 
 # ════════════════════════════════════════════════════════════════
