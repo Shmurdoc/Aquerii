@@ -23,7 +23,7 @@ Track implementation status. When starting a new feature, confirm the previous o
 | bg-06 | Offline sync (conflict resolution) | HIGH | ✅ DONE | Version tracking, conflict detection, resolution UI |
 | bg-07 | Sentiment/burnout detection | HIGH | ✅ DONE | 5-factor scoring, daily metrics, risk dashboard |
 | bg-08 | Predictive project management (ML) | VERY HIGH | ✅ DONE | Rule-based predictions + ML roadmap |
-| bg-09 | Digital twin / what-if simulation | VERY HIGH | ❌ NOT STARTED | Simulation engine for project scenarios |
+| bg-09 | Digital twin / what-if simulation | VERY HIGH | ✅ DONE | Scenario planner, what-if adjustments, simulation |
 | bg-10 | Meeting effectiveness + OKR cascade | HIGH | ✅ DONE | Effectiveness scoring, goals/key results, meeting outcomes |
 | bg-11 | AI-recommended automations (pattern detection) | HIGH | ❌ NOT STARTED | AI suggests automations based on usage patterns |
 | bg-12 | Team capacity backend (workload model) | MEDIUM | ✅ DONE | Migration + Controller + Frontend Capacity tab |
@@ -266,13 +266,40 @@ Track implementation status. When starting a new feature, confirm the previous o
 
 ---
 
+### bg-09: Digital Twin / What-If Simulation ✅
+**Completed:** 2026-05-29
+**Files:**
+- `services/api/database/migrations/2026_05_29_000082_create_scenarios_tables.php` — scenarios + adjustments
+- `services/api/app/Core/Models/Scenario.php` — scenario model with snapshot + results
+- `services/api/app/Core/Models/ScenarioAdjustment.php` — what-if adjustment model
+- `services/api/app/Core/Http/Controllers/Api/ScenarioController.php` — CRUD + simulate + compare
+- `services/web/src/pages/scenarios/ScenariosPage.tsx` — scenario UI with adjustment builder
+
+**API:**
+- `GET/POST/PUT/DELETE /api/workspaces/{id}/scenarios` — CRUD
+- `POST /api/workspaces/{id}/scenarios/{id}/adjustments` — add what-if
+- `DELETE /api/workspaces/{id}/scenarios/{id}/adjustments/{adj}` — remove what-if
+- `POST /api/workspaces/{id}/scenarios/{id}/simulate` — run simulation
+- `POST /api/workspaces/{id}/scenarios/compare` — compare scenarios
+
+**Adjustment types:**
+- `add_delay` — delay a task by X days
+- `add_resource` — add team capacity
+- `remove_task` — remove task from scope
+- `change_scope` — add/remove estimated hours
+- `change_deadline` — adjust task deadline
+
+**Simulation outputs:** projected timeline, risk score, workload, weeks needed
+
+---
+
 ## Next Feature to Implement
 
 **Next up: bg-11 — AI-recommended automations (pattern detection)** (HIGH priority)
 
-When starting, confirm bg-08 is working correctly by running:
+When starting, confirm bg-09 is working correctly by running:
 ```bash
-php artisan route:list --path=predictions
+php artisan route:list --path=scenarios
 ```
 
 ---
