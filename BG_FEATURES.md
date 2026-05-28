@@ -20,7 +20,7 @@ Track implementation status. When starting a new feature, confirm the previous o
 | bg-03 | Project email addresses (inbound → tasks) | MEDIUM | ❌ NOT STARTED | Needs email parsing + auto-task creation |
 | bg-04 | Real-time chat system | HIGH | ✅ DONE | Channels, messages, WebSocket, typing indicators |
 | bg-05 | KB auto-capture from resolved issues | MEDIUM | ✅ DONE | Auto-generates draft KB article on ticket resolve |
-| bg-06 | Offline sync (conflict resolution) | HIGH | 🔧 PARTIAL | `MutationQueue.ts` exists, needs conflict resolution logic |
+| bg-06 | Offline sync (conflict resolution) | HIGH | ✅ DONE | Version tracking, conflict detection, resolution UI |
 | bg-07 | Sentiment/burnout detection | HIGH | ❌ NOT STARTED | ML-based sentiment analysis on team activity |
 | bg-08 | Predictive project management (ML) | VERY HIGH | ❌ NOT STARTED | ML models for deadline prediction, risk scoring |
 | bg-09 | Digital twin / what-if simulation | VERY HIGH | ❌ NOT STARTED | Simulation engine for project scenarios |
@@ -119,13 +119,39 @@ Track implementation status. When starting a new feature, confirm the previous o
 
 ---
 
+### bg-06: Offline Sync with Conflict Resolution ✅
+**Completed:** 2026-05-28
+**Files:**
+- `services/api/database/migrations/2026_05_28_000078_create_sync_conflicts_table.php` — stores conflicts for resolution
+- `services/api/app/Core/Models\SyncConflict.php` — conflict model with resolution tracking
+- `services/api/app/Core/Http/Controllers/Api/OfflineSyncController.php` — GET/PATCH/POST conflict endpoints
+- `services/web/src/offline/MutationQueue.ts` — version tracking, conflict detection, conflict storage
+- `services/web/src/components/sync/ConflictResolver.tsx` — per-conflict UI (keep mine/theirs/compare)
+- `services/web/src/components/sync/SyncStatus.tsx` — online/offline indicator with pending count
+- `services/web/src/layouts/AppLayout.tsx` — integrated ConflictResolver + SyncStatus
+
+**API:**
+- `GET /api/workspaces/{id}/sync/conflicts` — list unresolved conflicts
+- `PATCH /api/workspaces/{id}/sync/conflicts/{conflict}` — resolve a conflict
+- `POST /api/workspaces/{id}/sync/conflicts/resolve-all` — bulk resolve (keep_local/keep_server)
+
+**Behavior:**
+- MutationQueue tracks `entityVersion` for each queued mutation
+- On replay, detects version conflicts (409 from server)
+- Stores conflicts locally in IndexedDB for user resolution
+- ConflictResolver shows per-conflict UI with side-by-side comparison
+- Bulk resolve options: "Keep all mine" or "Keep all theirs"
+- SyncStatus shows online/offline + pending mutation count
+
+---
+
 ## Next Feature to Implement
 
-**Next up: bg-06 — Offline sync (conflict resolution)** (HIGH priority)
+**Next up: bg-07 — Sentiment/burnout detection** (HIGH priority)
 
-When starting, confirm bg-04 is working correctly by running:
+When starting, confirm bg-06 is working correctly by running:
 ```bash
-php artisan route:list --path=chat
+php artisan route:list --path=sync/conflicts
 ```
 
 ---
