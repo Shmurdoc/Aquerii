@@ -14,9 +14,12 @@ use Illuminate\Database\Eloquent\Builder;
 class WorkspaceResource extends Resource
 {
     protected static ?string $model = Workspace::class;
-    protected static ?string $navigationIcon  = 'heroicon-o-building-office-2';
+
+    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
+
     protected static ?string $navigationGroup = 'Platform';
-    protected static ?int    $navigationSort  = 1;
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -59,7 +62,7 @@ class WorkspaceResource extends Resource
                 Tables\Columns\TextColumn::make('slug')->searchable(),
                 Tables\Columns\BadgeColumn::make('plan')
                     ->colors([
-                        'gray'    => 'free',
+                        'gray' => 'free',
                         'primary' => 'starter',
                         'success' => 'growth',
                         'warning' => 'business',
@@ -79,7 +82,7 @@ class WorkspaceResource extends Resource
                     ->icon('heroicon-o-arrow-right-on-rectangle')
                     ->color('warning')
                     ->requiresConfirmation()
-                    ->action(fn(Workspace $record) => redirect()->route('filament.admin.impersonate', $record)),
+                    ->action(fn (Workspace $record) => redirect()->route('filament.admin.impersonate', $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -96,9 +99,9 @@ class WorkspaceResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListWorkspaces::route('/'),
+            'index' => Pages\ListWorkspaces::route('/'),
             'create' => Pages\CreateWorkspace::route('/create'),
-            'edit'   => Pages\EditWorkspace::route('/{record}/edit'),
+            'edit' => Pages\EditWorkspace::route('/{record}/edit'),
         ];
     }
 

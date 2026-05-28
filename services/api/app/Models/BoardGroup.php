@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BoardGroup extends Model
 {
-    use HasUuids, HasFactory;
+    use HasFactory, HasUuids;
 
     protected $table = 'board_groups';
 
@@ -19,9 +19,9 @@ class BoardGroup extends Model
     protected function casts(): array
     {
         return [
-            'collapsed'    => 'boolean',
+            'collapsed' => 'boolean',
             'is_collapsed' => 'boolean',
-            'position'     => 'float',
+            'position' => 'float',
         ];
     }
 

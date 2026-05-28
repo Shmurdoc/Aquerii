@@ -22,10 +22,10 @@ class CrmContact extends Model
     protected function casts(): array
     {
         return [
-            'lead_score'    => 'integer',
-            'tags'          => 'array',
+            'lead_score' => 'integer',
+            'tags' => 'array',
             'custom_fields' => 'array',
-            'deal_value'    => 'float',
+            'deal_value' => 'float',
         ];
     }
 

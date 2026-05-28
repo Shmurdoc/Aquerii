@@ -9,10 +9,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('billing_events', function (Blueprint $table) {
-            if (!Schema::hasColumn('billing_events', 'amount_cents')) {
+            if (! Schema::hasColumn('billing_events', 'amount_cents')) {
                 $table->unsignedBigInteger('amount_cents')->default(0)->after('payload');
             }
-            if (!Schema::hasColumn('billing_events', 'currency')) {
+            if (! Schema::hasColumn('billing_events', 'currency')) {
                 $table->char('currency', 3)->default('USD')->after('amount_cents');
             }
         });

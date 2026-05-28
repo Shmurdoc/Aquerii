@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Workspace;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -27,22 +27,22 @@ class DocumentController extends Controller
     public function store(Request $request, Workspace $workspace): JsonResponse
     {
         $validated = $request->validate([
-            'title'     => 'sometimes|string|max:255',
+            'title' => 'sometimes|string|max:255',
             'parent_id' => 'sometimes|nullable|uuid',
-            'icon'      => 'sometimes|string|max:10',
+            'icon' => 'sometimes|string|max:10',
         ]);
 
         $id = Str::uuid()->toString();
         DB::table('documents')->insert([
-            'id'           => $id,
+            'id' => $id,
             'workspace_id' => $workspace->id,
-            'title'        => $validated['title'] ?? 'Untitled',
-            'parent_id'    => $validated['parent_id'] ?? null,
-            'icon'         => $validated['icon'] ?? null,
-            'created_by'   => $request->user()->id,
-            'content'      => json_encode([]),
-            'created_at'   => now(),
-            'updated_at'   => now(),
+            'title' => $validated['title'] ?? 'Untitled',
+            'parent_id' => $validated['parent_id'] ?? null,
+            'icon' => $validated['icon'] ?? null,
+            'created_by' => $request->user()->id,
+            'content' => json_encode([]),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         return response()->json(['data' => ['id' => $id]], 201);
@@ -66,9 +66,9 @@ class DocumentController extends Controller
     public function update(Request $request, Workspace $workspace, string $docId): JsonResponse
     {
         $validated = $request->validate([
-            'title'   => 'sometimes|string|max:255',
+            'title' => 'sometimes|string|max:255',
             'content' => 'sometimes',
-            'icon'    => 'sometimes|nullable|string|max:10',
+            'icon' => 'sometimes|nullable|string|max:10',
         ]);
 
         if (isset($validated['content']) && ! is_string($validated['content'])) {

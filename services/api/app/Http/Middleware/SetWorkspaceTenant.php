@@ -23,19 +23,19 @@ class SetWorkspaceTenant
 
         if ($workspaceId) {
             // Validate UUID format to prevent SQL injection
-            if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $workspaceId)) {
+            if (! preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $workspaceId)) {
                 return response()->json([
                     'error' => [
-                        'code'    => 'INVALID_WORKSPACE',
+                        'code' => 'INVALID_WORKSPACE',
                         'message' => 'Invalid workspace identifier.',
                     ],
                 ], 400);
             }
 
             // Only set PostgreSQL session variable when using a pgsql connection
-            if (\Illuminate\Support\Facades\DB::getDriverName() === 'pgsql') {
+            if (DB::getDriverName() === 'pgsql') {
                 // PostgreSQL SET does not support parameter binding; UUID is pre-validated above.
-                \Illuminate\Support\Facades\DB::statement("SET app.workspace_id = '{$workspaceId}'");
+                DB::statement("SET app.workspace_id = '{$workspaceId}'");
             }
 
             $request->attributes->set('workspace_id', $workspaceId);

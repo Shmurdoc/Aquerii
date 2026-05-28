@@ -18,7 +18,7 @@ class CrmPipelineStage extends Model
     protected function casts(): array
     {
         return [
-            'position'        => 'float',
+            'position' => 'float',
             'win_probability' => 'integer',
         ];
     }

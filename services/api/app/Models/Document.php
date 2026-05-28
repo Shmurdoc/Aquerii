@@ -19,8 +19,8 @@ class Document extends Model
     protected function casts(): array
     {
         return [
-            'content'        => 'array',
-            'is_locked'      => 'boolean',
+            'content' => 'array',
+            'is_locked' => 'boolean',
             'last_edited_at' => 'datetime',
         ];
     }

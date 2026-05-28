@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Item;
+use App\Events\ItemUpdated;
 use App\Models\Board;
 use App\Models\BoardGroup;
-use App\Events\ItemUpdated;
+use App\Models\Item;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * Core write path for items.
@@ -22,16 +23,16 @@ class ItemService
 
             $item = Item::create([
                 'workspace_id' => $board->workspace_id,
-                'board_id'     => $board->id,
-                'group_id'     => $group->id,
-                'title'        => $data['title'] ?? 'New Item',
-                'position'     => $position,
-                'column_values'=> $data['column_values'] ?? [],
-                'created_by'   => $createdBy,
+                'board_id' => $board->id,
+                'group_id' => $group->id,
+                'title' => $data['title'] ?? 'New Item',
+                'position' => $position,
+                'column_values' => $data['column_values'] ?? [],
+                'created_by' => $createdBy,
             ]);
 
             $this->logRealtimeEvent($board->workspace_id, "board:{$board->id}", 'item.created', [
-                'item_id'  => $item->id,
+                'item_id' => $item->id,
                 'group_id' => $group->id,
             ], $createdBy);
 
@@ -69,7 +70,7 @@ class ItemService
             $item->delete();
 
             $this->logRealtimeEvent($item->workspace_id, "board:{$item->board_id}", 'item.deleted', [
-                'item_id'  => $item->id,
+                'item_id' => $item->id,
                 'group_id' => $item->group_id,
             ], $actorId);
         });
@@ -78,6 +79,7 @@ class ItemService
     private function nextPosition(string $groupId): float
     {
         $max = Item::where('group_id', $groupId)->whereNull('deleted_at')->max('position');
+
         return ($max ?? 0) + 65536;
     }
 
@@ -85,17 +87,17 @@ class ItemService
         string $workspaceId,
         string $room,
         string $type,
-        array  $payload,
+        array $payload,
         ?string $actorId
     ): void {
         DB::table('realtime_events')->insert([
-            'event_id'    => \Illuminate\Support\Str::uuid(),
-            'workspace_id'=> $workspaceId,
-            'room'        => $room,
-            'type'        => $type,
-            'payload'     => json_encode($payload),
-            'actor_id'    => $actorId,
-            'sequence'    => 0, // assigned by DB trigger
+            'event_id' => Str::uuid(),
+            'workspace_id' => $workspaceId,
+            'room' => $room,
+            'type' => $type,
+            'payload' => json_encode($payload),
+            'actor_id' => $actorId,
+            'sequence' => 0, // assigned by DB trigger
             'occurred_at' => now(),
         ]);
     }

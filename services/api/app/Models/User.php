@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasUuids, HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, HasUuids, Notifiable;
 
     protected $fillable = [
         'name', 'email', 'password_hash', 'avatar_url',
@@ -24,10 +24,10 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at'  => 'datetime',
+            'email_verified_at' => 'datetime',
             'two_factor_enabled' => 'boolean',
-            'last_seen_at'       => 'datetime',
-            'deleted_at'         => 'datetime',
+            'last_seen_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
     }
 

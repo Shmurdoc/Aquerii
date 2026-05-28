@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Board extends Model
 {
-    use HasUuids, HasFactory, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $table = 'boards';
 
@@ -22,9 +22,9 @@ class Board extends Model
     protected function casts(): array
     {
         return [
-            'settings'    => 'array',
+            'settings' => 'array',
             'is_archived' => 'boolean',
-            'position'    => 'float',
+            'position' => 'float',
         ];
     }
 

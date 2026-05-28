@@ -14,9 +14,12 @@ use Illuminate\Support\Facades\Hash;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-    protected static ?string $navigationIcon  = 'heroicon-o-users';
+
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
     protected static ?string $navigationGroup = 'Platform';
-    protected static ?int    $navigationSort  = 2;
+
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -33,14 +36,14 @@ class UserResource extends Resource
             Forms\Components\Section::make('Security')->schema([
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->dehydrateStateUsing(fn($s) => Hash::make($s))
-                    ->dehydrated(fn($s) => filled($s))
-                    ->required(fn(string $context) => $context === 'create')
+                    ->dehydrateStateUsing(fn ($s) => Hash::make($s))
+                    ->dehydrated(fn ($s) => filled($s))
+                    ->required(fn (string $context) => $context === 'create')
                     ->label('New Password'),
                 Forms\Components\Toggle::make('email_verified')
                     ->label('Email Verified')
-                    ->dehydrateStateUsing(fn($s) => $s ? now() : null)
-                    ->afterStateHydrated(fn($c, $r) => $c->state(filled($r?->email_verified_at))),
+                    ->dehydrateStateUsing(fn ($s) => $s ? now() : null)
+                    ->afterStateHydrated(fn ($c, $r) => $c->state(filled($r?->email_verified_at))),
                 Forms\Components\Toggle::make('totp_enabled')->disabled()->label('MFA Enabled'),
             ])->columns(2),
         ]);
@@ -72,7 +75,7 @@ class UserResource extends Resource
                     ->icon('heroicon-o-no-symbol')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->action(fn(User $record) => $record->tokens()->delete()),
+                    ->action(fn (User $record) => $record->tokens()->delete()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -84,9 +87,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListUsers::route('/'),
+            'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            'edit'   => Pages\EditUser::route('/{record}/edit'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 }

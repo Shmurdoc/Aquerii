@@ -2,22 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
 class FeatureFlag extends Model
 {
     use HasUuids;
 
-    protected $table      = 'superadmin.feature_flags';
+    protected $table = 'superadmin.feature_flags';
+
     protected $primaryKey = 'key';
-    public    $incrementing = false;
-    protected $keyType    = 'string';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
 
     protected $fillable = ['key', 'enabled', 'description', 'workspace_ids'];
 
     protected $casts = [
-        'enabled'       => 'boolean',
+        'enabled' => 'boolean',
         'workspace_ids' => 'array',
     ];
 
@@ -25,10 +28,14 @@ class FeatureFlag extends Model
     public static function isEnabled(string $key, ?string $workspaceId = null): bool
     {
         $flag = static::find($key);
-        if (! $flag || ! $flag->enabled) return false;
+        if (! $flag || ! $flag->enabled) {
+            return false;
+        }
 
         $ids = $flag->workspace_ids;
-        if (empty($ids)) return true; // global
+        if (empty($ids)) {
+            return true;
+        } // global
 
         return $workspaceId && in_array($workspaceId, $ids);
     }

@@ -10,7 +10,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Item extends Model
 {
-    use HasUuids, HasFactory, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'workspace_id', 'board_id', 'group_id', 'parent_id',
@@ -22,13 +22,13 @@ class Item extends Model
     protected function casts(): array
     {
         return [
-            'description'    => 'array',
-            'column_values'  => 'array',
-            'due_date'       => 'datetime',
-            'reminder_at'    => 'datetime',
-            'tracked_hours'  => 'float',
-            'estimated_hours'=> 'float',
-            'version'        => 'integer',
+            'description' => 'array',
+            'column_values' => 'array',
+            'due_date' => 'datetime',
+            'reminder_at' => 'datetime',
+            'tracked_hours' => 'float',
+            'estimated_hours' => 'float',
+            'version' => 'integer',
         ];
     }
 
@@ -81,9 +81,9 @@ class Item extends Model
             throw new HttpResponseException(
                 response()->json([
                     'error' => [
-                        'code'             => 'CONCURRENT_EDIT',
-                        'message'          => 'Item was modified by another user. Reload and retry.',
-                        'current_version'  => $this->version,
+                        'code' => 'CONCURRENT_EDIT',
+                        'message' => 'Item was modified by another user. Reload and retry.',
+                        'current_version' => $this->version,
                         'expected_version' => $expectedVersion,
                     ],
                 ], 409)

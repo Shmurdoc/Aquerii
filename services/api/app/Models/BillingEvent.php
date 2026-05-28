@@ -19,7 +19,7 @@ class BillingEvent extends Model
     protected function casts(): array
     {
         return [
-            'payload'      => 'array',
+            'payload' => 'array',
             'amount_cents' => 'integer',
             'processed_at' => 'datetime',
         ];

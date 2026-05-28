@@ -8,7 +8,6 @@ use App\Models\CrmPipelineStage;
 use App\Models\Workspace;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class PipelineController extends Controller
 {
@@ -26,14 +25,14 @@ class PipelineController extends Controller
         $this->authorize('create', [CrmPipeline::class, $workspace]);
 
         $validated = $request->validate([
-            'name'       => 'required|string|max:100',
+            'name' => 'required|string|max:100',
             'is_default' => 'sometimes|boolean',
         ]);
 
         $pipeline = CrmPipeline::create([
             'workspace_id' => $workspace->id,
-            'name'         => $validated['name'],
-            'is_default'   => $validated['is_default'] ?? false,
+            'name' => $validated['name'],
+            'is_default' => $validated['is_default'] ?? false,
         ]);
 
         $defaultStages = [
@@ -47,11 +46,11 @@ class PipelineController extends Controller
 
         foreach ($defaultStages as $i => $stage) {
             CrmPipelineStage::create([
-                'pipeline_id'     => $pipeline->id,
-                'workspace_id'    => $workspace->id,
-                'name'            => $stage['name'],
-                'color'           => $stage['color'],
-                'position'        => ($i + 1) * 65536,
+                'pipeline_id' => $pipeline->id,
+                'workspace_id' => $workspace->id,
+                'name' => $stage['name'],
+                'color' => $stage['color'],
+                'position' => ($i + 1) * 65536,
                 'win_probability' => $stage['win_probability'],
             ]);
         }
@@ -72,7 +71,7 @@ class PipelineController extends Controller
         $this->authorize('update', $pipeline);
 
         $validated = $request->validate([
-            'name'       => 'sometimes|string|max:100',
+            'name' => 'sometimes|string|max:100',
             'is_default' => 'sometimes|boolean',
         ]);
 

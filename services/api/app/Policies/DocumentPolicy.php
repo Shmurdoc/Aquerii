@@ -23,6 +23,7 @@ class DocumentPolicy
         if ($this->isAdmin($user, $document->workspace_id)) {
             return true;
         }
+
         return $document->last_edited_by === $user->id || $document->created_by === $user->id;
     }
 

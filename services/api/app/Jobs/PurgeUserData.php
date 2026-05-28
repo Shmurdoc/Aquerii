@@ -22,12 +22,14 @@ class PurgeUserData implements ShouldQueue
     public function handle(): void
     {
         $user = User::find($this->userId);
-        if (!$user) return;
+        if (! $user) {
+            return;
+        }
 
         // Anonymize user data (GDPR erasure)
         $user->update([
-            'name'       => 'Deleted User',
-            'email'      => "deleted_{$this->userId}@purged.local",
+            'name' => 'Deleted User',
+            'email' => "deleted_{$this->userId}@purged.local",
             'avatar_url' => null,
             'deleted_at' => now(),
         ]);

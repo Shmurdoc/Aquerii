@@ -20,10 +20,10 @@ class Automation extends Model
     {
         return [
             'trigger_config' => 'array',
-            'actions'        => 'array',
-            'is_active'      => 'boolean',
-            'run_count'      => 'integer',
-            'last_run_at'    => 'datetime',
+            'actions' => 'array',
+            'is_active' => 'boolean',
+            'run_count' => 'integer',
+            'last_run_at' => 'datetime',
         ];
     }
 

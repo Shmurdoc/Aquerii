@@ -31,11 +31,11 @@ class WorkspaceInvite extends Mailable
             markdown: 'emails.workspace.invite',
             with: [
                 'workspaceName' => $this->invitation->workspace->name,
-                'inviterName'   => $this->inviterName,
-                'role'          => $this->invitation->role,
-                'acceptUrl'     => config('app.frontend_url')
-                    . '/invitations/' . $this->invitation->token . '/accept',
-                'expiresAt'     => $this->invitation->expires_at->toFormattedDateString(),
+                'inviterName' => $this->inviterName,
+                'role' => $this->invitation->role,
+                'acceptUrl' => config('app.frontend_url')
+                    .'/invitations/'.$this->invitation->token.'/accept',
+                'expiresAt' => $this->invitation->expires_at->toFormattedDateString(),
             ],
         );
     }

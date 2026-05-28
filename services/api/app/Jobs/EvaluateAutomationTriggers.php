@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Models\Automation;
 use App\Models\AutomationRun;
 use App\Models\Item;
-use App\Models\BoardGroup;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -30,7 +29,9 @@ class EvaluateAutomationTriggers implements ShouldQueue
     public function handle(): void
     {
         $item = Item::find($this->itemId);
-        if (! $item) return;
+        if (! $item) {
+            return;
+        }
 
         $automations = Automation::where('workspace_id', $item->workspace_id)
             ->where('board_id', $item->board_id)
@@ -40,11 +41,11 @@ class EvaluateAutomationTriggers implements ShouldQueue
 
         foreach ($automations as $automation) {
             $run = AutomationRun::create([
-                'automation_id'        => $automation->id,
-                'workspace_id'         => $automation->workspace_id,
+                'automation_id' => $automation->id,
+                'workspace_id' => $automation->workspace_id,
                 'triggered_by_item_id' => $item->id,
-                'status'               => 'running',
-                'started_at'           => now(),
+                'status' => 'running',
+                'started_at' => now(),
             ]);
 
             try {
@@ -56,13 +57,13 @@ class EvaluateAutomationTriggers implements ShouldQueue
             } catch (Throwable $e) {
                 Log::error('Automation action failed', [
                     'automation_id' => $automation->id,
-                    'item_id'       => $item->id,
-                    'error'         => $e->getMessage(),
+                    'item_id' => $item->id,
+                    'error' => $e->getMessage(),
                 ]);
                 $run->update([
-                    'status'       => 'failed',
+                    'status' => 'failed',
                     'completed_at' => now(),
-                    'error'        => $e->getMessage(),
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
@@ -83,7 +84,7 @@ class EvaluateAutomationTriggers implements ShouldQueue
     private function executeActions(array $actions, Item $item, string $workspaceId): void
     {
         foreach ($actions as $action) {
-            $type   = $action['type'] ?? '';
+            $type = $action['type'] ?? '';
             $config = $action['config'] ?? [];
 
             match ($type) {
@@ -93,8 +94,8 @@ class EvaluateAutomationTriggers implements ShouldQueue
 
                 'assign_user' => DB::table('item_assignees')
                     ->insertOrIgnore([
-                        'item_id'     => $item->id,
-                        'user_id'     => $config['user_id'],
+                        'item_id' => $item->id,
+                        'user_id' => $config['user_id'],
                         'assigned_by' => null,
                         'assigned_at' => now(),
                     ]),
@@ -123,17 +124,17 @@ class EvaluateAutomationTriggers implements ShouldQueue
         $groupId = $config['group_id'] ?? $source->group_id;
 
         DB::table('items')->insert([
-            'id'           => Str::uuid()->toString(),
+            'id' => Str::uuid()->toString(),
             'workspace_id' => $workspaceId,
-            'board_id'     => $source->board_id,
-            'group_id'     => $groupId,
-            'title'        => $config['title'] ?? 'New item (automation)',
-            'status'       => 'pending',
-            'position'     => (DB::table('items')->where('group_id', $groupId)->max('position') ?? 0) + 65536,
-            'created_by'   => null,
-            'version'      => 1,
-            'created_at'   => now(),
-            'updated_at'   => now(),
+            'board_id' => $source->board_id,
+            'group_id' => $groupId,
+            'title' => $config['title'] ?? 'New item (automation)',
+            'status' => 'pending',
+            'position' => (DB::table('items')->where('group_id', $groupId)->max('position') ?? 0) + 65536,
+            'created_by' => null,
+            'version' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 }

@@ -19,11 +19,11 @@ class WorkspaceInvitationController extends Controller
     {
         $validated = $request->validate([
             'email' => 'required|email',
-            'role'  => 'sometimes|in:admin,member,viewer',
+            'role' => 'sometimes|in:admin,member,viewer',
         ]);
 
         $email = strtolower($validated['email']);
-        $role  = $validated['role'] ?? 'member';
+        $role = $validated['role'] ?? 'member';
 
         // Don't invite existing members
         $existingUser = DB::table('users')->where('email', $email)->first();
@@ -43,11 +43,11 @@ class WorkspaceInvitationController extends Controller
 
         $invitation = WorkspaceInvitation::create([
             'workspace_id' => $workspace->id,
-            'email'        => $email,
-            'role'         => $role,
-            'token'        => Str::uuid()->toString(),
-            'invited_by'   => $request->user()->name,
-            'expires_at'   => now()->addDays(7),
+            'email' => $email,
+            'role' => $role,
+            'token' => Str::uuid()->toString(),
+            'invited_by' => $request->user()->name,
+            'expires_at' => now()->addDays(7),
         ]);
 
         // Load the workspace relationship for the mail
@@ -101,15 +101,15 @@ class WorkspaceInvitationController extends Controller
                 ->where('user_id', $user->id)
                 ->exists();
 
-            if (!$alreadyMember) {
+            if (! $alreadyMember) {
                 DB::table('workspace_members')->insert([
-                    'id'           => Str::uuid(),
+                    'id' => Str::uuid(),
                     'workspace_id' => $invitation->workspace_id,
-                    'user_id'      => $user->id,
-                    'role'         => $invitation->role,
-                    'joined_at'    => now(),
-                    'created_at'   => now(),
-                    'updated_at'   => now(),
+                    'user_id' => $user->id,
+                    'role' => $invitation->role,
+                    'joined_at' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -117,9 +117,9 @@ class WorkspaceInvitationController extends Controller
 
             return response()->json([
                 'data' => [
-                    'status'       => 'joined',
+                    'status' => 'joined',
                     'workspace_id' => $invitation->workspace_id,
-                    'workspace'    => $invitation->workspace->only(['id', 'name', 'slug', 'icon', 'color']),
+                    'workspace' => $invitation->workspace->only(['id', 'name', 'slug', 'icon', 'color']),
                 ],
             ]);
         }
@@ -127,11 +127,11 @@ class WorkspaceInvitationController extends Controller
         // No account yet — return invite metadata so the frontend can pre-fill register
         return response()->json([
             'data' => [
-                'status'         => 'register_required',
-                'email'          => $invitation->email,
+                'status' => 'register_required',
+                'email' => $invitation->email,
                 'workspace_name' => $invitation->workspace->name,
-                'role'           => $invitation->role,
-                'token'          => $token,
+                'role' => $invitation->role,
+                'token' => $token,
             ],
         ]);
     }

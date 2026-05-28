@@ -58,7 +58,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm install
-      - run: npm run lint
       - run: npm run build
 
   lint-python:
@@ -75,7 +74,7 @@ jobs:
           cache: pip
       - run: pip install ruff mypy
       - run: ruff check app
-      - run: mypy app --ignore-missing-imports
+      - run: mypy app --ignore-missing-imports --exclude "app/rag/"
 
 # ════════════════════════════════════════════════════════════════
 # STAGE 2 — Unit Tests

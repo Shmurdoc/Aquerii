@@ -39,14 +39,14 @@ class DealController extends Controller
         $this->authorize('create', [CrmDeal::class, $workspace]);
 
         $validated = $request->validate([
-            'pipeline_id'         => 'required|uuid',
-            'stage_id'            => 'required|uuid',
-            'title'               => 'sometimes|string|max:255',
-            'value'               => 'sometimes|nullable|numeric',
-            'currency'            => 'sometimes|string|size:3',
-            'contact_id'          => 'sometimes|nullable|uuid',
-            'company_id'          => 'sometimes|nullable|uuid',
-            'probability'         => 'sometimes|integer|min:0|max:100',
+            'pipeline_id' => 'required|uuid',
+            'stage_id' => 'required|uuid',
+            'title' => 'sometimes|string|max:255',
+            'value' => 'sometimes|nullable|numeric',
+            'currency' => 'sometimes|string|size:3',
+            'contact_id' => 'sometimes|nullable|uuid',
+            'company_id' => 'sometimes|nullable|uuid',
+            'probability' => 'sometimes|integer|min:0|max:100',
             'expected_close_date' => 'sometimes|nullable|date',
         ]);
 
@@ -54,10 +54,10 @@ class DealController extends Controller
 
         $deal = CrmDeal::create(array_merge($validated, [
             'workspace_id' => $workspace->id,
-            'owner_id'     => $request->user()->id,
-            'title'        => $validated['title'] ?? 'New Deal',
-            'currency'     => $validated['currency'] ?? 'USD',
-            'position'     => $maxPos + 65536,
+            'owner_id' => $request->user()->id,
+            'title' => $validated['title'] ?? 'New Deal',
+            'currency' => $validated['currency'] ?? 'USD',
+            'position' => $maxPos + 65536,
         ]));
 
         return response()->json(['data' => $deal->load(['stage', 'contact', 'owner'])], 201);
@@ -76,15 +76,15 @@ class DealController extends Controller
         $this->authorize('update', $deal);
 
         $validated = $request->validate([
-            'title'               => 'sometimes|string|max:255',
-            'stage_id'            => 'sometimes|uuid',
-            'value'               => 'sometimes|nullable|numeric',
-            'currency'            => 'sometimes|string|size:3',
-            'probability'         => 'sometimes|integer|min:0|max:100',
+            'title' => 'sometimes|string|max:255',
+            'stage_id' => 'sometimes|uuid',
+            'value' => 'sometimes|nullable|numeric',
+            'currency' => 'sometimes|string|size:3',
+            'probability' => 'sometimes|integer|min:0|max:100',
             'expected_close_date' => 'sometimes|nullable|date',
-            'contact_id'          => 'sometimes|nullable|uuid',
-            'company_id'          => 'sometimes|nullable|uuid',
-            'notes'               => 'sometimes|nullable|string',
+            'contact_id' => 'sometimes|nullable|uuid',
+            'company_id' => 'sometimes|nullable|uuid',
+            'notes' => 'sometimes|nullable|string',
         ]);
 
         $deal->update($validated);
@@ -120,13 +120,13 @@ class DealController extends Controller
     {
         abort_if($deal->workspace_id !== $workspace->id, 404);
 
-        $aiUrl    = config('services.ai.url', 'http://ai:8002');
+        $aiUrl = config('services.ai.url', 'http://ai:8002');
         $aiSecret = config('services.ai.secret');
 
         $response = Http::withHeader('X-Internal-Secret', $aiSecret)
             ->post("{$aiUrl}/internal/score-deal", ['deal_id' => $deal->id]);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             return response()->json(['error' => ['code' => 'AI_ERROR', 'message' => 'AI scoring failed.']], 502);
         }
 
