@@ -24,7 +24,7 @@ Track implementation status. When starting a new feature, confirm the previous o
 | bg-07 | Sentiment/burnout detection | HIGH | ✅ DONE | 5-factor scoring, daily metrics, risk dashboard |
 | bg-08 | Predictive project management (ML) | VERY HIGH | ❌ NOT STARTED | ML models for deadline prediction, risk scoring |
 | bg-09 | Digital twin / what-if simulation | VERY HIGH | ❌ NOT STARTED | Simulation engine for project scenarios |
-| bg-10 | Meeting effectiveness + OKR cascade | HIGH | ❌ NOT STARTED | Meeting scoring + OKR alignment tracking |
+| bg-10 | Meeting effectiveness + OKR cascade | HIGH | ✅ DONE | Effectiveness scoring, goals/key results, meeting outcomes |
 | bg-11 | AI-recommended automations (pattern detection) | HIGH | ❌ NOT STARTED | AI suggests automations based on usage patterns |
 | bg-12 | Team capacity backend (workload model) | MEDIUM | ✅ DONE | Migration + Controller + Frontend Capacity tab |
 | bg-13 | My Day backend (task pinning, auto-populate) | LOW | ✅ DONE | `MyDayPage.tsx` + `useMyDayTasks` hook + `GET /my-day` API |
@@ -220,13 +220,38 @@ Track implementation status. When starting a new feature, confirm the previous o
 
 ---
 
+### bg-10: Meeting Effectiveness + OKR Cascade ✅
+**Completed:** 2026-05-28
+**Files:**
+- `services/api/database/migrations/2026_05_28_000081_create_goals_tables.php` — goals, key_results, meeting_outcomes
+- `services/api/app/Core/Models/Goal.php` — objective model with progress calculation
+- `services/api/app/Core/Models/KeyResult.php` — measurable outcome model
+- `services/api/app/Core/Models/MeetingOutcome.php` — meeting effectiveness record
+- `services/api/app/Core/Http/Controllers/Api/GoalController.php` — CRUD + auto-progress
+- `services/api/app/Core/Http/Controllers/Api/MeetingOutcomeController.php` — store outcomes
+- `services/web/src/pages/meetings/MeetingsPage.tsx` — effectiveness scoring UI
+
+**API:**
+- `GET/POST/PUT/DELETE /api/workspaces/{id}/goals` — goals CRUD
+- `POST /api/workspaces/{id}/meetings/{meeting}/outcome` — save meeting outcome
+- `GET /api/workspaces/{id}/meetings/{meeting}/outcome` — get meeting outcome
+- `GET /api/workspaces/{id}/meeting-outcomes` — list all outcomes
+
+**Behavior:**
+- After completed meeting → rate effectiveness (1-5 stars)
+- Capture decisions and action items
+- Link meeting to a goal
+- Auto-update key result progress based on effectiveness score
+
+---
+
 ## Next Feature to Implement
 
 **Next up: bg-11 — AI-recommended automations (pattern detection)** (HIGH priority)
 
-When starting, confirm bg-02 is working correctly by running:
+When starting, confirm bg-10 is working correctly by running:
 ```bash
-php artisan route:list --path=meetings
+php artisan route:list --path=goals
 ```
 
 ---
