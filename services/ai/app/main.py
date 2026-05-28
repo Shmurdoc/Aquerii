@@ -13,7 +13,7 @@ from app.core.otel import setup_otel
 # NOTE: Credit metering is performed at the Laravel API gateway (single-source of truth).
 # The AI service is protected by an internal token and will not run its own credit
 # accounting middleware by default to avoid double-charging.
-from app.routers import health, tasks, documents, crm, chat, rag_routes, email
+from app.routers import health, tasks, documents, crm, chat, rag_routes, email, predictions
 from app.routers import ai_routes
 from app.security.auth import verify_internal_token
 
@@ -72,4 +72,5 @@ app.include_router(crm.router,         prefix="/crm",        tags=["crm"])
 app.include_router(chat.router,        prefix="/chat",        tags=["chat"])
 app.include_router(rag_routes.router,  prefix="/rag",        tags=["rag"])
 app.include_router(email.router,       prefix="/email",      tags=["email"])
+app.include_router(predictions.router, prefix="/predictions", tags=["predictions"])
 app.include_router(ai_routes.router,                         tags=["ai"])

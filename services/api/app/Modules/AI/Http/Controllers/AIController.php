@@ -682,4 +682,75 @@ LUA;
             'ai_credits_used' => $current,
         ]);
     }
+
+    // ── Predictions (rule-based) ──────────────────────────────────────────────
+
+    public function predictTaskDuration(Request $request, Workspace $workspace): JsonResponse
+    {
+        $validated = $request->validate([
+            'assignee_id' => 'required|string',
+            'board_id' => 'required|string',
+            'task_title' => 'nullable|string',
+            'estimated_hours' => 'nullable|numeric|min:0',
+            'priority' => 'nullable|string|in:critical,high,medium,low',
+        ]);
+
+        $response = $this->callAIService('/predictions/task-duration', $validated);
+
+        return response()->json($response);
+    }
+
+    public function predictDelayRisk(Request $request, Workspace $workspace): JsonResponse
+    {
+        $validated = $request->validate([
+            'project_id' => 'required|string',
+            'total_tasks' => 'required|integer|min:0',
+            'completed_tasks' => 'required|integer|min:0',
+            'days_elapsed' => 'required|integer|min:0',
+            'total_days' => 'required|integer|min:1',
+            'overdue_tasks' => 'nullable|integer|min:0',
+        ]);
+
+        $response = $this->callAIService('/predictions/delay-risk', $validated);
+
+        return response()->json($response);
+    }
+
+    public function predictOKRProgress(Request $request, Workspace $workspace): JsonResponse
+    {
+        $validated = $request->validate([
+            'goal_id' => 'required|string',
+            'current_progress' => 'required|numeric|min:0|max:100',
+            'days_elapsed' => 'required|integer|min:0',
+            'total_days' => 'required|integer|min:1',
+            'key_results_completed' => 'required|integer|min:0',
+            'key_results_total' => 'required|integer|min:1',
+        ]);
+
+        $response = $this->callAIService('/predictions/okr-progress', $validated);
+
+        return response()->json($response);
+    }
+
+    private function callAIService(string $endpoint, array $data): mixed
+    {
+        $aiServiceUrl = config('services.ai.url', 'http://ai:8001');
+        $internalSecret = config('services.ai.internal_secret', '');
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $internalSecret,
+            'Content-Type' => 'application/json',
+        ])->timeout(30)->post("{$aiServiceUrl}{$endpoint}", $data);
+
+        if ($response->failed()) {
+            Log::error('AI service prediction failed', [
+                'endpoint' => $endpoint,
+                'status' => $response->status(),
+            ]);
+
+            throw new \RuntimeException('Prediction service unavailable');
+        }
+
+        return $response->json();
+    }
 }
