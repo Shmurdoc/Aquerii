@@ -6,7 +6,7 @@ import { useAuthStore } from '@/stores/authStore'
 import toast from 'react-hot-toast'
 import clsx from 'clsx'
 
-const TABS = ['Directory', 'Attendance', 'Leave', 'Expenses'] as const
+const TABS = ['Directory', 'Capacity', 'Attendance', 'Leave', 'Expenses'] as const
 type Tab = (typeof TABS)[number]
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -482,6 +482,118 @@ function LeaveTab({ wid }: { wid: string }) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+//  TAB: Capacity
+// ═══════════════════════════════════════════════════════════════════════════════
+
+interface CapacityMember {
+  user_id: string; name: string; email: string
+  job_title: string | null; department: string | null
+  weekly_capacity_hours: number; assigned_hours: number
+  tracked_hours: number; utilization_pct: number
+  active_task_count: number; capacity_notes: string | null
+}
+
+function CapacityTab({ wid }: { wid: string }) {
+  const qc = useQueryClient()
+
+  const { data: members = [], isLoading } = useQuery<CapacityMember[]>({
+    queryKey: ['team-capacity', wid],
+    queryFn: async () => {
+      const res = await api.get(`/workspaces/${wid}/hr/capacity`)
+      return res.data.data
+    },
+    enabled: !!wid,
+  })
+
+  const updateCapacity = useMutation({
+    mutationFn: ({ userId, data }: { userId: string; data: { weekly_capacity_hours: number; capacity_notes?: string } }) =>
+      api.patch(`/workspaces/${wid}/hr/capacity/${userId}`, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['team-capacity', wid] })
+      toast.success('Capacity updated.')
+    },
+    onError: () => toast.error('Failed to update capacity.'),
+  })
+
+  function utilizationColor(pct: number) {
+    if (pct > 100) return 'bg-red-500'
+    if (pct > 80) return 'bg-amber-500'
+    return 'bg-emerald-500'
+  }
+
+  if (isLoading) {
+    return <div className="text-sm text-[var(--color-text-muted)] py-8 text-center">Loading capacity data...</div>
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-[var(--color-text-muted)]">
+          Current week workload based on estimated hours of active tasks
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        {members.map((m) => (
+          <GlassCard key={m.user_id} className="p-4 flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-[var(--color-accent-light)] flex items-center justify-center text-[var(--color-accent-text)] text-sm font-bold">
+                {m.name.charAt(0).toUpperCase()}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-[var(--color-text-primary)] truncate">{m.name}</p>
+                {m.job_title && <p className="text-xs text-[var(--color-text-muted)] truncate">{m.job_title}</p>}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-[var(--color-text-muted)]">Utilization</span>
+                <span className="font-mono font-medium text-[var(--color-text-primary)]">{m.utilization_pct}%</span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-[var(--color-bg-hover)] overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${utilizationColor(m.utilization_pct)}`}
+                  style={{ width: `${Math.min(m.utilization_pct, 100)}%` }}
+                />
+              </div>
+              <div className="flex justify-between text-xs text-[var(--color-text-muted)]">
+                <span>{m.assigned_hours}h assigned</span>
+                <span>{m.weekly_capacity_hours}h capacity</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs text-[var(--color-text-muted)]">
+              <span>{m.active_task_count} active tasks</span>
+              {m.tracked_hours > 0 && <span>· {m.tracked_hours}h tracked</span>}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min={0}
+                max={168}
+                step={0.5}
+                value={m.weekly_capacity_hours}
+                onChange={(e) => {
+                  const val = parseFloat(e.target.value) || 0
+                  updateCapacity.mutate({ userId: m.user_id, data: { weekly_capacity_hours: val } })
+                }}
+                className="w-20 bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1 text-xs text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]"
+              />
+              <span className="text-xs text-[var(--color-text-muted)]">hrs/week</span>
+            </div>
+          </GlassCard>
+        ))}
+        {members.length === 0 && (
+          <p className="text-sm text-[var(--color-text-muted)] col-span-full text-center py-8">No team members found.</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 //  TAB: Expenses
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -748,6 +860,7 @@ export default function EmployeePage() {
 
       <div className="flex-1 overflow-y-auto p-6">
         {tab === 'Directory' && <DirectoryTab wid={wid} />}
+        {tab === 'Capacity' && <CapacityTab wid={wid} />}
         {tab === 'Attendance' && <AttendanceTab wid={wid} />}
         {tab === 'Leave' && <LeaveTab wid={wid} />}
         {tab === 'Expenses' && <ExpensesTab wid={wid} />}

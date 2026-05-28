@@ -1,6 +1,7 @@
 <?php
 
 use App\Core\Http\Controllers\Api\EmployeeController;
+use App\Core\Http\Controllers\Api\TeamCapacityController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -25,5 +26,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('hr/expenses', [EmployeeController::class, 'expenseIndex']);
         Route::post('hr/expenses', [EmployeeController::class, 'expenseStore'])->middleware('idempotent');
         Route::patch('hr/expenses/{expenseId}/action', [EmployeeController::class, 'expenseApprove'])->middleware('idempotent');
+
+        // Team capacity
+        Route::get('hr/capacity', [TeamCapacityController::class, 'index']);
+        Route::patch('hr/capacity/{userId}', [TeamCapacityController::class, 'update'])->middleware('idempotent');
     });
 });

@@ -31,6 +31,7 @@ class WorkspaceMember extends Model
         'emergency_contact', 'employed_at',
         'employee_group_id', 'reports_to',
         'company_id', 'is_company_owner',
+        'weekly_capacity_hours', 'capacity_notes',
     ];
 
     protected function casts(): array

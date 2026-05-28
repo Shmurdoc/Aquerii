@@ -27,7 +27,10 @@ os.environ.setdefault("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4317")
 @pytest.fixture(scope="session", autouse=True)
 def patch_otel():
     """Disable OTel so tests don't require a collector."""
-    with patch("app.core.otel.setup_otel", return_value=None):
+    try:
+        with patch("app.core.otel.setup_otel", return_value=None):
+            yield
+    except (ModuleNotFoundError, AttributeError):
         yield
 
 
@@ -36,5 +39,8 @@ def patch_redis():
     """Prevent lifespan from connecting to a real Redis server."""
     mock_redis = AsyncMock()
     mock_redis.aclose = AsyncMock()
-    with patch("app.main._redis_client", mock_redis):
+    try:
+        with patch("app.main._redis_client", mock_redis):
+            yield
+    except (ModuleNotFoundError, AttributeError):
         yield
