@@ -13,6 +13,7 @@ type ButtonProps = {
   iconOnly?: boolean
   fullWidth?: boolean
   disabled?: boolean
+  title?: string
   children?: ReactNode
   className?: string
   href?: string

@@ -3,7 +3,7 @@ import { type LucideIcon } from 'lucide-react'
 import { clsx } from 'clsx'
 import { X } from 'lucide-react'
 
-type BadgeVariant = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
+type BadgeVariant = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'error' | 'info'
 type BadgeSize = 'sm' | 'md' | 'lg'
 
 type BadgeProps = {
@@ -24,6 +24,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   success: 'bg-[var(--color-status-done)] text-white',
   warning: 'bg-[var(--color-status-progress)] text-white',
   danger: 'bg-[var(--color-status-blocked)] text-white',
+  error: 'bg-[var(--color-status-blocked)] text-white',
   info: 'bg-[var(--color-status-review)] text-white',
 }
 

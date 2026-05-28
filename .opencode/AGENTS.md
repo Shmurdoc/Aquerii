@@ -74,10 +74,10 @@ Follows PROJECT_MADOC_ELITE_AI_CODING_CREW.md:
 
 - **Workspace**: `C:\Users\madoc\source\repos\Aquerii`
 - **API**: Laravel 11 + PostgreSQL (with RLS) + Redis + MinIO
-- **Services**: 19 Docker services in docker-compose (target: 9)
-- **Tests**: 47 discoverable, need Docker to run
-- **Sidecars**: InvenTree, paperless-ngx (to be absorbed Phase 3)
-- **Progress**: Phase 2 complete (Admin module — super-admin merged)
+- **Services**: 18 Docker services (all running — caddy, api, horizon, realtime, ai, postgres, redis, meilisearch, minio, chromadb, clickhouse, mailpit, prometheus, grafana, loki, otel-collector, vault, web)
+- **Tests**: 108 frontend (Vitest, 19 test files) | 12 backend (Pest PHPUnit)
+- **Sidecars**: InvenTree, paperless-ngx (standalone services, not yet absorbed)
+- **Progress**: Phase 4+ complete — CRM (pipelines, contacts, deals, companies, quotas, quotes, products), AI copilot (chat, streaming, credits), ERP (billing, PayFast, invoices, POs, SOs), Automation (rule builder, triggers), Meetings, Reports, Email, Documents, Marketing, Support Desk, Settings, UI component library, CSS variable theming
 
 ### Phase 1: Module Architecture
 
