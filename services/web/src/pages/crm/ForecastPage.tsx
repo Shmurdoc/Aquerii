@@ -1,6 +1,7 @@
 import { useAuthStore } from '@/stores/authStore'
 import { useForecast, useForecastByRep, useForecastByPipeline } from '@/lib/crm'
 import { DollarSign, TrendingUp, Target, CheckCircle, Loader2 } from 'lucide-react'
+import { Card } from '@/components/ui'
 
 export default function ForecastPage() {
   const workspace = useAuthStore(s => s.workspace)
@@ -10,7 +11,7 @@ export default function ForecastPage() {
   const { data: byPipeline } = useForecastByPipeline(workspace?.id)
 
   if (!workspace || isLoading) return (
-    <div className="flex items-center justify-center h-full"><Loader2 size={20} className="animate-spin text-gray-500" /></div>
+    <div className="flex items-center justify-center h-full"><Loader2 size={20} className="animate-spin text-[var(--color-text-muted)]" /></div>
   )
 
   const f = forecast?.data
@@ -25,58 +26,58 @@ export default function ForecastPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-lg font-semibold text-white">Forecast</h1>
+      <h1 className="text-lg font-semibold text-[var(--color-text-primary)]">Forecast</h1>
 
       <div className="grid grid-cols-5 gap-4">
         {cards.map(c => (
-          <div key={c.label} className="bg-gray-900 border border-gray-800 rounded-xl p-4">
+          <Card key={c.label} padding="md" className="!rounded-xl">
             <div className="flex items-center gap-2 mb-2">
               <c.icon size={14} className={c.color} />
-              <span className="text-xs text-gray-500">{c.label}</span>
+              <span className="text-xs text-[var(--color-text-muted)]">{c.label}</span>
             </div>
             <p className={`text-xl font-bold ${c.color}`}>${c.value.toLocaleString()}</p>
-          </div>
+          </Card>
         ))}
       </div>
 
       <div className="grid grid-cols-2 gap-6">
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
-          <h2 className="text-sm font-semibold text-gray-300 mb-3">By Rep</h2>
+        <Card padding="md" className="!rounded-xl">
+          <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] mb-3">By Rep</h2>
           {(byRep?.data ?? []).length === 0 ? (
-            <p className="text-xs text-gray-600">No data</p>
+            <p className="text-xs text-[var(--color-text-muted)]">No data</p>
           ) : (
             <div className="space-y-2">
               {(byRep?.data ?? []).map((r: any) => (
                 <div key={r.rep_id} className="flex items-center gap-3">
-                  <span className="text-sm text-gray-200 flex-1 truncate">{r.rep_name}</span>
+                  <span className="text-sm text-[var(--color-text-primary)] flex-1 truncate">{r.rep_name}</span>
                   <div className="text-right">
-                    <p className="text-sm text-gray-200">${r.amount.toLocaleString()}</p>
-                    <p className="text-xs text-gray-500">weighted: ${r.weighted.toLocaleString()}</p>
+                    <p className="text-sm text-[var(--color-text-primary)]">${r.amount.toLocaleString()}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">weighted: ${r.weighted.toLocaleString()}</p>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </Card>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
-          <h2 className="text-sm font-semibold text-gray-300 mb-3">By Pipeline</h2>
+        <Card padding="md" className="!rounded-xl">
+          <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] mb-3">By Pipeline</h2>
           {(byPipeline?.data ?? []).length === 0 ? (
-            <p className="text-xs text-gray-600">No data</p>
+            <p className="text-xs text-[var(--color-text-muted)]">No data</p>
           ) : (
             <div className="space-y-2">
               {(byPipeline?.data ?? []).map((p: any) => (
                 <div key={p.pipeline_id} className="flex items-center gap-3">
-                  <span className="text-sm text-gray-200 flex-1 truncate">{p.pipeline_name}</span>
+                  <span className="text-sm text-[var(--color-text-primary)] flex-1 truncate">{p.pipeline_name}</span>
                   <div className="text-right">
-                    <p className="text-sm text-gray-200">${p.amount.toLocaleString()}</p>
-                    <p className="text-xs text-gray-500">weighted: ${p.weighted.toLocaleString()}</p>
+                    <p className="text-sm text-[var(--color-text-primary)]">${p.amount.toLocaleString()}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">weighted: ${p.weighted.toLocaleString()}</p>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </div>
   )

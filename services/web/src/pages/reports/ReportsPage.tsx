@@ -11,8 +11,7 @@ import { formatCurrency, formatDate } from '@/lib/erp'
 import { DashboardWidget } from '@/components/dashboard/DashboardWidget'
 import { Sparkline } from '@/components/charts/Sparkline'
 import { BarChart } from '@/components/charts/BarChart'
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+import { Button } from '@/components/ui'
 
 interface RevenueDay {
   day: string; revenue: string | number
@@ -64,8 +63,6 @@ interface InventoryReport {
   recent_products: { id: string; name: string; sku: string | null; unit_price: number; currency: string }[]
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
 const PERIODS = [
   { label: '7d', value: '7' },
   { label: '30d', value: '30' },
@@ -112,8 +109,6 @@ async function downloadCSV(wid: string, type: string, from: string, to: string) 
   URL.revokeObjectURL(url)
 }
 
-// ─── Main page ────────────────────────────────────────────────────────────────
-
 export default function ReportsPage() {
   const [activeTab, setActiveTab] = useState('overview')
   const [period, setPeriod] = useState('30')
@@ -126,8 +121,6 @@ export default function ReportsPage() {
 
   const wid = useAuthStore((s) => s.workspace?.id ?? '')
 
-  // ── Overview data ──────────────────────────────────────────────────────────
-
   const { data: dashData, isLoading: dashLoading, isError: dashError } = useQuery<DashboardData>({
     queryKey: ['reports', 'dashboard', wid, period],
     queryFn: async () => {
@@ -137,8 +130,6 @@ export default function ReportsPage() {
     enabled: !!wid,
     staleTime: 60_000,
   })
-
-  // ── Expenses data ──────────────────────────────────────────────────────────
 
   const { data: expenseData, isLoading: expLoading } = useQuery<ExpenseReport>({
     queryKey: ['reports', 'expenses', wid, expenseFrom, expenseTo],
@@ -152,8 +143,6 @@ export default function ReportsPage() {
     staleTime: 30_000,
   })
 
-  // ── Procurement data ───────────────────────────────────────────────────────
-
   const { data: procData, isLoading: procLoading } = useQuery<ProcurementReport>({
     queryKey: ['reports', 'procurement', wid, procurementFrom, procurementTo],
     queryFn: async () => {
@@ -166,8 +155,6 @@ export default function ReportsPage() {
     staleTime: 30_000,
   })
 
-  // ── Inventory data ─────────────────────────────────────────────────────────
-
   const { data: invData, isLoading: invLoading } = useQuery<InventoryReport>({
     queryKey: ['reports', 'inventory', wid],
     queryFn: async () => {
@@ -177,8 +164,6 @@ export default function ReportsPage() {
     enabled: !!wid,
     staleTime: 60_000,
   })
-
-  // ── CRM Pipeline data ──────────────────────────────────────────────────────
 
   const { data: pipelineData, isLoading: pipeLoading } = useQuery<any>({
     queryKey: ['crm-reports', 'pipeline-velocity', wid, crmPeriod],
@@ -243,8 +228,6 @@ export default function ReportsPage() {
     staleTime: 300_000,
   })
 
-  // ── Derived ────────────────────────────────────────────────────────────────
-
   const sparklineData = (dashData?.revenue_by_day ?? []).map((d) => ({
     value: typeof d.revenue === 'string' ? parseFloat(d.revenue) : d.revenue,
   }))
@@ -260,11 +243,9 @@ export default function ReportsPage() {
 
   function fmtCurrency(n: number) { return formatCurrency(n, 'USD') }
 
-  // ── Render tab content ─────────────────────────────────────────────────────
-
   function renderOverview() {
-    if (dashLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading reports...</div>
-    if (dashError || !dashData) return <div className="flex items-center justify-center h-full gap-2 text-red-400 text-sm"><AlertTriangle size={15} /> Failed to load report data.</div>
+    if (dashLoading) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading reports...</div>
+    if (dashError || !dashData) return <div className="flex items-center justify-center h-full gap-2 text-sm" style={{ color: 'var(--color-status-blocked)' }}><AlertTriangle size={15} /> Failed to load report data.</div>
 
     return (
       <div className="p-6 space-y-6">
@@ -277,7 +258,7 @@ export default function ReportsPage() {
             )}
           </DashboardWidget>
           <DashboardWidget title="Outstanding AR" value={fmtCurrency(dashData.outstanding)} subtitle="Unpaid sent invoices">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><DollarSign size={12} /> Total receivable balance</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><DollarSign size={12} /> Total receivable balance</div>
           </DashboardWidget>
           <DashboardWidget title="Overdue Invoices" value={dashData.overdue_count} subtitle="Past due date">
             <div className={`flex items-center gap-1.5 text-xs ${dashData.overdue_count > 0 ? 'text-red-400' : 'text-emerald-400'}`}>
@@ -285,36 +266,36 @@ export default function ReportsPage() {
             </div>
           </DashboardWidget>
           <DashboardWidget title="Open Tasks" value={dashData.open_items} subtitle="Across all boards">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><CheckSquare size={12} /> Board items in progress</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><CheckSquare size={12} /> Board items in progress</div>
           </DashboardWidget>
         </div>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">AR Aging</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>AR Aging</p>
             <div className="flex justify-center"><BarChart data={agingBars} width={320} height={150} formatValue={(v) => fmtCurrency(v)} /></div>
             <div className="flex gap-4 justify-center mt-2 flex-wrap">
               {agingBars.map((b) => (
-                <div key={b.label} className="flex items-center gap-1.5 text-xs text-gray-400">
+                <div key={b.label} className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                   <span className="w-2.5 h-2.5 rounded-sm" style={{ background: b.color }} />{b.label}: {fmtCurrency(b.value)}
                 </div>
               ))}
             </div>
           </div>
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Top Customers</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Top Customers</p>
             {dashData.top_customers.length === 0 ? (
-              <p className="text-xs text-gray-600 text-center py-6">No paid invoices yet</p>
+              <p className="text-xs text-center py-6" style={{ color: 'var(--color-text-muted)' }}>No paid invoices yet</p>
             ) : (
               <table className="w-full text-sm">
-                <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+                <thead><tr className="text-left text-xs uppercase tracking-wide border-b" style={{ color: 'var(--color-text-muted)', borderColor: 'var(--color-glass-border)' }}>
                   <th className="pb-2 font-medium">Customer</th><th className="pb-2 font-medium text-right">Revenue</th><th className="pb-2 font-medium text-right">Invoices</th>
                 </tr></thead>
                 <tbody>{dashData.top_customers.map((c, i) => (
-                  <tr key={i} className="border-b border-gray-800/50">
-                    <td className="py-2 text-gray-300 text-xs">{c.customer_name}</td>
-                    <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(typeof c.revenue === 'string' ? parseFloat(c.revenue) : c.revenue)}</td>
-                    <td className="py-2 text-right text-xs text-gray-500">{c.invoice_count}</td>
+                  <tr key={i} className="border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+                    <td className="py-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>{c.customer_name}</td>
+                    <td className="py-2 text-right font-mono text-xs" style={{ color: 'var(--color-text-primary)' }}>{fmtCurrency(typeof c.revenue === 'string' ? parseFloat(c.revenue) : c.revenue)}</td>
+                    <td className="py-2 text-right text-xs" style={{ color: 'var(--color-text-muted)' }}>{c.invoice_count}</td>
                   </tr>
                 ))}</tbody>
               </table>
@@ -323,16 +304,16 @@ export default function ReportsPage() {
         </div>
 
         <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-          <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Invoice Status Breakdown</p>
+          <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Invoice Status Breakdown</p>
           {dashData.invoice_status_breakdown.length === 0 ? (
-            <p className="text-xs text-gray-600 text-center py-4">No invoices found</p>
+            <p className="text-xs text-center py-4" style={{ color: 'var(--color-text-muted)' }}>No invoices found</p>
           ) : (
             <div className="flex flex-wrap gap-3">
               {dashData.invoice_status_breakdown.map((s) => (
-                <div key={s.status} className="flex flex-col gap-1 px-4 py-3 rounded-lg border border-gray-800 bg-gray-800/40 min-w-[110px]">
+                <div key={s.status} className="flex flex-col gap-1 px-4 py-3 rounded-lg border min-w-[110px]" style={{ borderColor: 'var(--color-glass-border)', background: 'var(--color-bg-hover)' }}>
                   <span className="text-xs font-medium" style={{ color: STATUS_COLORS[s.status] ?? '#9ca3af' }}>{s.status.charAt(0).toUpperCase() + s.status.slice(1)}</span>
-                  <span className="text-lg font-bold text-gray-100">{s.count}</span>
-                  <span className="text-xs text-gray-500 font-mono">{fmtCurrency(typeof s.total === 'string' ? parseFloat(s.total) : s.total)}</span>
+                  <span className="text-lg font-bold" style={{ color: 'var(--color-text-primary)' }}>{s.count}</span>
+                  <span className="text-xs font-mono" style={{ color: 'var(--color-text-muted)' }}>{fmtCurrency(typeof s.total === 'string' ? parseFloat(s.total) : s.total)}</span>
                 </div>
               ))}
             </div>
@@ -343,7 +324,7 @@ export default function ReportsPage() {
   }
 
   function renderExpenses() {
-    if (expLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading expenses...</div>
+    if (expLoading) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading expenses...</div>
 
     const s = expenseData?.summary
 
@@ -359,22 +340,19 @@ export default function ReportsPage() {
 
     return (
       <div className="p-6 space-y-6">
-        {/* Header with CSV download */}
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-gray-200">Expense Report</h2>
-          <button onClick={() => downloadCSV(wid, 'expenses', expenseFrom, expenseTo)}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-500 transition-colors">
+          <h2 className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Expense Report</h2>
+          <Button size="sm" onClick={() => downloadCSV(wid, 'expenses', expenseFrom, expenseTo)}>
             <Download size={13} /> CSV
-          </button>
+          </Button>
         </div>
 
-        {/* Summary cards */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <DashboardWidget title="Total Claims" value={s?.total_count ?? 0} subtitle="In period">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><TrendingUp size={12} /> All expenses</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><TrendingUp size={12} /> All expenses</div>
           </DashboardWidget>
           <DashboardWidget title="Total Amount" value={fmtCurrency(s?.total_amount ?? 0)} subtitle="Sum of all claims">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><DollarSign size={12} /> {s?.total_count ?? 0} claims</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><DollarSign size={12} /> {s?.total_count ?? 0} claims</div>
           </DashboardWidget>
           <DashboardWidget title="Pending" value={fmtCurrency(s?.pending ?? 0)} subtitle="Awaiting approval">
             <div className="flex items-center gap-1.5 text-xs text-yellow-400"><Clock size={12} /> Needs review</div>
@@ -384,46 +362,44 @@ export default function ReportsPage() {
           </DashboardWidget>
         </div>
 
-        {/* Charts */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">By Category</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>By Category</p>
             {catBars.length === 0 ? (
-              <p className="text-xs text-gray-600 text-center py-6">No expense data</p>
+              <p className="text-xs text-center py-6" style={{ color: 'var(--color-text-muted)' }}>No expense data</p>
             ) : (
               <div className="flex justify-center"><BarChart data={catBars} width={320} height={160} formatValue={(v) => fmtCurrency(v)} /></div>
             )}
           </div>
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">By Month</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>By Month</p>
             {monthBars.length === 0 ? (
-              <p className="text-xs text-gray-600 text-center py-6">No expense data</p>
+              <p className="text-xs text-center py-6" style={{ color: 'var(--color-text-muted)' }}>No expense data</p>
             ) : (
               <div className="flex justify-center"><BarChart data={monthBars} width={320} height={160} formatValue={(v) => fmtCurrency(v)} /></div>
             )}
           </div>
         </div>
 
-        {/* Expenses table */}
         <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-          <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Expense Claims</p>
+          <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Expense Claims</p>
           {expenseList.length === 0 ? (
-            <p className="text-xs text-gray-600 text-center py-4">No expense claims found</p>
+            <p className="text-xs text-center py-4" style={{ color: 'var(--color-text-muted)' }}>No expense claims found</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+                <thead><tr className="text-left text-xs uppercase tracking-wide border-b" style={{ color: 'var(--color-text-muted)', borderColor: 'var(--color-glass-border)' }}>
                   <th className="pb-2 font-medium">Title</th><th className="pb-2 font-medium">Category</th>
                   <th className="pb-2 font-medium text-right">Amount</th><th className="pb-2 font-medium">Status</th>
                   <th className="pb-2 font-medium">Date</th>
                 </tr></thead>
                 <tbody>{expenseList.map((e: any) => (
-                  <tr key={e.id} className="border-b border-gray-800/50">
-                    <td className="py-2 text-gray-300 text-xs">{e.title}</td>
-                    <td className="py-2 text-xs text-gray-400">{e.category}</td>
-                    <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(parseFloat(e.amount))}</td>
+                  <tr key={e.id} className="border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+                    <td className="py-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>{e.title}</td>
+                    <td className="py-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>{e.category}</td>
+                    <td className="py-2 text-right font-mono text-xs" style={{ color: 'var(--color-text-primary)' }}>{fmtCurrency(parseFloat(e.amount))}</td>
                     <td className="py-2 text-xs"><span className="px-2 py-0.5 rounded-full text-[10px]" style={{ background: (STATUS_COLORS[e.status] ?? '#6b7280') + '20', color: STATUS_COLORS[e.status] ?? '#9ca3af' }}>{e.status}</span></td>
-                    <td className="py-2 text-xs text-gray-500">{formatDate(e.expense_date)}</td>
+                    <td className="py-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>{formatDate(e.expense_date)}</td>
                   </tr>
                 ))}</tbody>
               </table>
@@ -435,7 +411,7 @@ export default function ReportsPage() {
   }
 
   function renderProcurement() {
-    if (procLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading procurement...</div>
+    if (procLoading) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading procurement...</div>
 
     const s = procData?.summary
 
@@ -453,19 +429,18 @@ export default function ReportsPage() {
     return (
       <div className="p-6 space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-gray-200">Procurement Report</h2>
-          <button onClick={() => downloadCSV(wid, 'procurement', procurementFrom, procurementTo)}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-500 transition-colors">
+          <h2 className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Procurement Report</h2>
+          <Button size="sm" onClick={() => downloadCSV(wid, 'procurement', procurementFrom, procurementTo)}>
             <Download size={13} /> CSV
-          </button>
+          </Button>
         </div>
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <DashboardWidget title="Total Orders" value={s?.total_orders ?? 0} subtitle="In period">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><ShoppingCart size={12} /> Purchase orders</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><ShoppingCart size={12} /> Purchase orders</div>
           </DashboardWidget>
           <DashboardWidget title="Total Value" value={fmtCurrency(s?.total_value ?? 0)} subtitle="Sum of all orders">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><DollarSign size={12} /> PO value</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><DollarSign size={12} /> PO value</div>
           </DashboardWidget>
           <DashboardWidget title="Pending" value={fmtCurrency(s?.pending ?? 0)} subtitle="Draft/Sent orders">
             <div className="flex items-center gap-1.5 text-xs text-yellow-400"><Clock size={12} /> Not yet received</div>
@@ -477,17 +452,17 @@ export default function ReportsPage() {
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Top Suppliers</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Top Suppliers</p>
             {supplierBars.length === 0 ? (
-              <p className="text-xs text-gray-600 text-center py-6">No supplier data</p>
+              <p className="text-xs text-center py-6" style={{ color: 'var(--color-text-muted)' }}>No supplier data</p>
             ) : (
               <div className="flex justify-center"><BarChart data={supplierBars} width={320} height={160} formatValue={(v) => fmtCurrency(v)} /></div>
             )}
           </div>
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">By Month</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>By Month</p>
             {monthBars.length === 0 ? (
-              <p className="text-xs text-gray-600 text-center py-6">No procurement data</p>
+              <p className="text-xs text-center py-6" style={{ color: 'var(--color-text-muted)' }}>No procurement data</p>
             ) : (
               <div className="flex justify-center"><BarChart data={monthBars} width={320} height={160} formatValue={(v) => fmtCurrency(v)} /></div>
             )}
@@ -495,25 +470,25 @@ export default function ReportsPage() {
         </div>
 
         <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-          <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Purchase Orders</p>
+          <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Purchase Orders</p>
           {orderList.length === 0 ? (
-            <p className="text-xs text-gray-600 text-center py-4">No purchase orders found</p>
+            <p className="text-xs text-center py-4" style={{ color: 'var(--color-text-muted)' }}>No purchase orders found</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+                <thead><tr className="text-left text-xs uppercase tracking-wide border-b" style={{ color: 'var(--color-text-muted)', borderColor: 'var(--color-glass-border)' }}>
                   <th className="pb-2 font-medium">Order #</th><th className="pb-2 font-medium">Supplier</th>
                   <th className="pb-2 font-medium">Status</th><th className="pb-2 font-medium text-right">Total</th>
                   <th className="pb-2 font-medium">Order Date</th><th className="pb-2 font-medium">Expected</th>
                 </tr></thead>
                 <tbody>{orderList.map((o: any) => (
-                  <tr key={o.id} className="border-b border-gray-800/50">
-                    <td className="py-2 text-gray-300 text-xs">{o.order_number}</td>
-                    <td className="py-2 text-xs text-gray-400">{o.supplier_name}</td>
+                  <tr key={o.id} className="border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+                    <td className="py-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>{o.order_number}</td>
+                    <td className="py-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>{o.supplier_name}</td>
                     <td className="py-2 text-xs"><span className="px-2 py-0.5 rounded-full text-[10px]" style={{ background: (STATUS_COLORS[o.status] ?? '#6b7280') + '20', color: STATUS_COLORS[o.status] ?? '#9ca3af' }}>{o.status}</span></td>
-                    <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(parseFloat(o.total))}</td>
-                    <td className="py-2 text-xs text-gray-500">{formatDate(o.order_date)}</td>
-                    <td className="py-2 text-xs text-gray-500">{formatDate(o.expected_date)}</td>
+                    <td className="py-2 text-right font-mono text-xs" style={{ color: 'var(--color-text-primary)' }}>{fmtCurrency(parseFloat(o.total))}</td>
+                    <td className="py-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>{formatDate(o.order_date)}</td>
+                    <td className="py-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>{formatDate(o.expected_date)}</td>
                   </tr>
                 ))}</tbody>
               </table>
@@ -525,16 +500,16 @@ export default function ReportsPage() {
   }
 
   function renderInventory() {
-    if (invLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading inventory...</div>
+    if (invLoading) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading inventory...</div>
 
     const inv = invData
 
     if (!inv || (inv.total_products === 0 && inv.total_stock === 0)) {
       return (
-        <div className="flex flex-col items-center justify-center h-full gap-4 text-gray-500">
+        <div className="flex flex-col items-center justify-center h-full gap-4" style={{ color: 'var(--color-text-muted)' }}>
           <Package size={48} strokeWidth={1} className="opacity-30" />
           <p className="text-sm font-medium">Inventory reporting coming soon</p>
-          <p className="text-xs text-gray-600">Start adding products and stock to see insights here.</p>
+          <p className="text-xs">Start adding products and stock to see insights here.</p>
         </div>
       )
     }
@@ -545,14 +520,14 @@ export default function ReportsPage() {
 
     return (
       <div className="p-6 space-y-6">
-        <h2 className="text-sm font-semibold text-gray-200">Inventory Report</h2>
+        <h2 className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Inventory Report</h2>
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <DashboardWidget title="Products" value={inv.total_products} subtitle="Total products">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Package size={12} /> Registered</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><Package size={12} /> Registered</div>
           </DashboardWidget>
           <DashboardWidget title="Total Stock" value={`${inv.total_stock} units`} subtitle="Across all items">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><TrendingUp size={12} /> In stock</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><TrendingUp size={12} /> In stock</div>
           </DashboardWidget>
           <DashboardWidget title="Low Stock" value={inv.low_stock_items} subtitle="Items &lt; 10 units">
             <div className={`flex items-center gap-1.5 text-xs ${inv.low_stock_items > 0 ? 'text-yellow-400' : 'text-emerald-400'}`}>
@@ -560,33 +535,33 @@ export default function ReportsPage() {
             </div>
           </DashboardWidget>
           <DashboardWidget title="Categories" value={inv.categories} subtitle="Product categories">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><BarChart3 size={12} /> Groups</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><BarChart3 size={12} /> Groups</div>
           </DashboardWidget>
         </div>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Products by Category</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Products by Category</p>
             {catBars.length === 0 ? (
-              <p className="text-xs text-gray-600 text-center py-6">No categories</p>
+              <p className="text-xs text-center py-6" style={{ color: 'var(--color-text-muted)' }}>No categories</p>
             ) : (
               <div className="flex justify-center"><BarChart data={catBars} width={320} height={160} /></div>
             )}
           </div>
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Recent Products</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Recent Products</p>
             {inv.recent_products.length === 0 ? (
-              <p className="text-xs text-gray-600 text-center py-6">No products yet</p>
+              <p className="text-xs text-center py-6" style={{ color: 'var(--color-text-muted)' }}>No products yet</p>
             ) : (
               <table className="w-full text-sm">
-                <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+                <thead><tr className="text-left text-xs uppercase tracking-wide border-b" style={{ color: 'var(--color-text-muted)', borderColor: 'var(--color-glass-border)' }}>
                   <th className="pb-2 font-medium">Name</th><th className="pb-2 font-medium">SKU</th><th className="pb-2 font-medium text-right">Price</th>
                 </tr></thead>
                 <tbody>{inv.recent_products.map((p) => (
-                  <tr key={p.id} className="border-b border-gray-800/50">
-                    <td className="py-2 text-gray-300 text-xs">{p.name}</td>
-                    <td className="py-2 text-xs text-gray-500">{p.sku ?? '-'}</td>
-                    <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(p.unit_price)}</td>
+                  <tr key={p.id} className="border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+                    <td className="py-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>{p.name}</td>
+                    <td className="py-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>{p.sku ?? '-'}</td>
+                    <td className="py-2 text-right font-mono text-xs" style={{ color: 'var(--color-text-primary)' }}>{fmtCurrency(p.unit_price)}</td>
                   </tr>
                 ))}</tbody>
               </table>
@@ -597,38 +572,36 @@ export default function ReportsPage() {
     )
   }
 
-  // ── CRM Pipeline ───────────────────────────────────────────────────────────
-
   function renderPipeline() {
-    if (pipeLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading pipeline data...</div>
+    if (pipeLoading) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading pipeline data...</div>
     const d = pipelineData?.data
     const f = funnelData?.data
-    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No pipeline data.</div>
+    if (!d) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>No pipeline data.</div>
     return (
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-3 gap-4">
           <DashboardWidget title="Avg Deal Cycle" value={`${d.avg_deal_cycle_days}d`} subtitle="Days from creation to won">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Clock size={12} /> Last {crmPeriod} days</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><Clock size={12} /> Last {crmPeriod} days</div>
           </DashboardWidget>
           <DashboardWidget title="Won Deals" value={d.won_deal_count} subtitle="In period">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Target size={12} /> Closed won</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><Target size={12} /> Closed won</div>
           </DashboardWidget>
           <DashboardWidget title="Velocity/Day" value={fmtCurrency(d.velocity_per_day)} subtitle="Revenue per day">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><TrendingUp size={12} /> Pipeline speed</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><TrendingUp size={12} /> Pipeline speed</div>
           </DashboardWidget>
         </div>
 
         {d.avg_days_by_stage && Object.keys(d.avg_days_by_stage).length > 0 && (
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Avg Days by Stage</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Avg Days by Stage</p>
             <div className="space-y-2">
               {Object.entries(d.avg_days_by_stage).map(([stage, days]) => (
                 <div key={stage} className="flex items-center gap-3">
-                  <span className="text-xs text-gray-400 w-40">{stage}</span>
-                  <div className="flex-1 bg-gray-800 rounded-full h-2">
-                    <div className="bg-indigo-500 h-2 rounded-full" style={{ width: `${Math.min(100, (days as number) / (d.avg_deal_cycle_days || 1) * 100)}%` }} />
+                  <span className="text-xs w-40" style={{ color: 'var(--color-text-secondary)' }}>{stage}</span>
+                  <div className="flex-1 rounded-full h-2" style={{ background: 'var(--color-bg-hover)' }}>
+                    <div className="h-2 rounded-full" style={{ width: `${Math.min(100, (days as number) / (d.avg_deal_cycle_days || 1) * 100)}%`, background: 'var(--color-accent)' }} />
                   </div>
-                  <span className="text-xs text-gray-300 w-12 text-right">{days as number}d</span>
+                  <span className="text-xs w-12 text-right" style={{ color: 'var(--color-text-secondary)' }}>{days as number}d</span>
                 </div>
               ))}
             </div>
@@ -637,24 +610,24 @@ export default function ReportsPage() {
 
         {f && (
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Funnel</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Funnel</p>
             <div className="space-y-2">
               {f.stages?.map((stage: any) => (
                 <div key={stage.stage_id} className="flex items-center gap-3">
-                  <span className="text-xs text-gray-400 w-36 truncate">{stage.stage_name}</span>
-                  <div className="flex-1 bg-gray-800 rounded-full h-3">
-                    <div className="bg-indigo-500 h-3 rounded-full" style={{ width: `${stage.deal_count > 0 ? Math.min(100, stage.deal_count) : 1}%` }} />
+                  <span className="text-xs w-36 truncate" style={{ color: 'var(--color-text-secondary)' }}>{stage.stage_name}</span>
+                  <div className="flex-1 rounded-full h-3" style={{ background: 'var(--color-bg-hover)' }}>
+                    <div className="h-3 rounded-full" style={{ width: `${stage.deal_count > 0 ? Math.min(100, stage.deal_count) : 1}%`, background: 'var(--color-accent)' }} />
                   </div>
-                  <span className="text-xs text-gray-300 w-16 text-right">{stage.deal_count}</span>
-                  <span className="text-xs text-gray-500 w-24 text-right font-mono">{fmtCurrency(stage.total_value)}</span>
+                  <span className="text-xs w-16 text-right" style={{ color: 'var(--color-text-secondary)' }}>{stage.deal_count}</span>
+                  <span className="text-xs w-24 text-right font-mono" style={{ color: 'var(--color-text-muted)' }}>{fmtCurrency(stage.total_value)}</span>
                 </div>
               ))}
-              <div className="flex items-center gap-3 pt-2 border-t border-gray-800">
+              <div className="flex items-center gap-3 pt-2 border-t" style={{ borderColor: 'var(--color-glass-border)' }}>
                 <span className="text-xs text-green-400 w-36">Won</span>
-                <span className="text-xs text-gray-300">{f.won}</span>
+                <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{f.won}</span>
                 <span className="text-xs text-red-400 ml-8">Lost</span>
-                <span className="text-xs text-gray-300">{f.lost}</span>
-                <span className="text-xs text-gray-500 ml-auto">Conversion: {f.conversion_rate}%</span>
+                <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{f.lost}</span>
+                <span className="text-xs ml-auto" style={{ color: 'var(--color-text-muted)' }}>Conversion: {f.conversion_rate}%</span>
               </div>
             </div>
           </div>
@@ -663,17 +636,15 @@ export default function ReportsPage() {
     )
   }
 
-  // ── CRM Revenue ───────────────────────────────────────────────────────────
-
   function renderRevenue() {
-    if (revLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading revenue...</div>
+    if (revLoading) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading revenue...</div>
     const d = revenueData?.data
-    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No revenue data.</div>
+    if (!d) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>No revenue data.</div>
     return (
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-4 gap-4">
           <DashboardWidget title="Revenue" value={fmtCurrency(d.total_revenue)} subtitle={`Last ${crmPeriod} days`} changePct={d.revenue_change_pct}>
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><TrendingUp size={12} /> Won deals</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><TrendingUp size={12} /> Won deals</div>
           </DashboardWidget>
           <DashboardWidget title="Won Deals" value={d.won_deals} subtitle="Closed won">
             <div className="flex items-center gap-1.5 text-xs text-green-400"><Target size={12} /> Won</div>
@@ -682,12 +653,12 @@ export default function ReportsPage() {
             <div className="flex items-center gap-1.5 text-xs text-red-400"><TrendingDown size={12} /> Lost</div>
           </DashboardWidget>
           <DashboardWidget title="Avg Deal Size" value={d.won_deals > 0 ? fmtCurrency(d.total_revenue / d.won_deals) : '$0'} subtitle="Per won deal">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Activity size={12} /> Average</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><Activity size={12} /> Average</div>
           </DashboardWidget>
         </div>
         {d.by_day && d.by_day.length > 0 && (
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Revenue by Day</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Revenue by Day</p>
             <div className="flex justify-center">
               <BarChart data={d.by_day.map((r: any) => ({ label: r.day.slice(5), value: parseFloat(r.revenue), color: '#34d399' }))} width={600} height={180} formatValue={(v) => fmtCurrency(v)} />
             </div>
@@ -697,12 +668,10 @@ export default function ReportsPage() {
     )
   }
 
-  // ── CRM Win/Loss ──────────────────────────────────────────────────────────
-
   function renderWinLoss() {
-    if (wlLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading win/loss...</div>
+    if (wlLoading) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading win/loss...</div>
     const d = winlossData?.data
-    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No win/loss data.</div>
+    if (!d) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>No win/loss data.</div>
     return (
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-4 gap-4">
@@ -716,21 +685,21 @@ export default function ReportsPage() {
             <div className="flex items-center gap-1.5 text-xs text-red-400"><TrendingDown size={12} /> Lost</div>
           </DashboardWidget>
           <DashboardWidget title="Deals Closed" value={`${d.won_count + d.lost_count}`} subtitle={`${d.won_count} won · ${d.lost_count} lost`}>
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Activity size={12} /> Total closed</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><Activity size={12} /> Total closed</div>
           </DashboardWidget>
         </div>
         {d.loss_reasons && d.loss_reasons.length > 0 && (
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Loss Reasons</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Loss Reasons</p>
             <div className="space-y-2">
               {d.loss_reasons.map((r: any) => (
                 <div key={r.loss_reason} className="flex items-center gap-3">
-                  <span className="text-xs text-gray-400 w-40 truncate">{r.loss_reason}</span>
-                  <div className="flex-1 bg-gray-800 rounded-full h-2">
+                  <span className="text-xs w-40 truncate" style={{ color: 'var(--color-text-secondary)' }}>{r.loss_reason}</span>
+                  <div className="flex-1 rounded-full h-2" style={{ background: 'var(--color-bg-hover)' }}>
                     <div className="bg-red-500 h-2 rounded-full" style={{ width: `${d.lost_count > 0 ? r.count / d.lost_count * 100 : 0}%` }} />
                   </div>
-                  <span className="text-xs text-gray-300 w-12 text-right">{r.count}</span>
-                  <span className="text-xs text-gray-500 w-24 text-right font-mono">{fmtCurrency(r.value)}</span>
+                  <span className="text-xs w-12 text-right" style={{ color: 'var(--color-text-secondary)' }}>{r.count}</span>
+                  <span className="text-xs w-24 text-right font-mono" style={{ color: 'var(--color-text-muted)' }}>{fmtCurrency(r.value)}</span>
                 </div>
               ))}
             </div>
@@ -740,27 +709,25 @@ export default function ReportsPage() {
     )
   }
 
-  // ── CRM Lead Sources ──────────────────────────────────────────────────────
-
   function renderLeadSources() {
-    if (lsLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading lead sources...</div>
+    if (lsLoading) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading lead sources...</div>
     const d = leadSourcesData?.data
-    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No lead source data.</div>
+    if (!d) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>No lead source data.</div>
     return (
       <div className="p-6 space-y-6">
         <DashboardWidget title="Total Leads" value={d.total_leads} subtitle="All sources" />
         {d.sources && d.sources.length > 0 && (
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
             <table className="w-full text-sm">
-              <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+              <thead><tr className="text-left text-xs uppercase tracking-wide border-b" style={{ color: 'var(--color-text-muted)', borderColor: 'var(--color-glass-border)' }}>
                 <th className="pb-2 font-medium">Source</th><th className="pb-2 font-medium text-right">Leads</th><th className="pb-2 font-medium text-right">%</th><th className="pb-2 font-medium text-right">Converted</th><th className="pb-2 font-medium text-right">Conv. Rate</th>
               </tr></thead>
               <tbody>{d.sources.map((s: any) => (
-                <tr key={s.source} className="border-b border-gray-800/50">
-                  <td className="py-2 text-gray-300 text-xs">{s.source}</td>
-                  <td className="py-2 text-right text-xs text-gray-200">{s.count}</td>
-                  <td className="py-2 text-right text-xs text-gray-500">{s.pct}%</td>
-                  <td className="py-2 text-right text-xs text-gray-200">{s.converted}</td>
+                <tr key={s.source} className="border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+                  <td className="py-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>{s.source}</td>
+                  <td className="py-2 text-right text-xs" style={{ color: 'var(--color-text-primary)' }}>{s.count}</td>
+                  <td className="py-2 text-right text-xs" style={{ color: 'var(--color-text-muted)' }}>{s.pct}%</td>
+                  <td className="py-2 text-right text-xs" style={{ color: 'var(--color-text-primary)' }}>{s.converted}</td>
                   <td className="py-2 text-right text-xs text-green-400">{s.conversion_rate}%</td>
                 </tr>
               ))}</tbody>
@@ -771,17 +738,15 @@ export default function ReportsPage() {
     )
   }
 
-  // ── Churn Risk ────────────────────────────────────────────────────────────
-
   function renderChurn() {
-    if (churnLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading churn data...</div>
+    if (churnLoading) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading churn data...</div>
     const d = churnData?.data
-    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No churn data.</div>
+    if (!d) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>No churn data.</div>
     return (
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-3 gap-4">
           <DashboardWidget title="Total Customers" value={d.total_customers} subtitle="All time">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Users size={12} /> Customer base</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><Users size={12} /> Customer base</div>
           </DashboardWidget>
           <DashboardWidget title="Active" value={d.active_customers} subtitle="Touched in period">
             <div className="flex items-center gap-1.5 text-xs text-green-400"><Activity size={12} /> Engaged</div>
@@ -792,18 +757,18 @@ export default function ReportsPage() {
         </div>
         {d.at_risk_contacts && d.at_risk_contacts.length > 0 && (
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">At-Risk Contacts</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>At-Risk Contacts</p>
             <table className="w-full text-sm">
-              <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+              <thead><tr className="text-left text-xs uppercase tracking-wide border-b" style={{ color: 'var(--color-text-muted)', borderColor: 'var(--color-glass-border)' }}>
                 <th className="pb-2 font-medium">Name</th><th className="pb-2 font-medium">Email</th><th className="pb-2 font-medium text-right">Score</th><th className="pb-2 font-medium">Last Touch</th><th className="pb-2 font-medium text-right">Value</th>
               </tr></thead>
               <tbody>{d.at_risk_contacts.map((c: any) => (
-                <tr key={c.id} className="border-b border-gray-800/50">
-                  <td className="py-2 text-gray-300 text-xs">{c.first_name} {c.last_name}</td>
-                  <td className="py-2 text-xs text-gray-500">{c.email}</td>
-                  <td className="py-2 text-right text-xs text-gray-200">{c.lead_score ?? '-'}</td>
-                  <td className="py-2 text-xs text-gray-500">{c.last_touched_at ? new Date(c.last_touched_at).toLocaleDateString() : 'Never'}</td>
-                  <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(c.deal_value ?? 0)}</td>
+                <tr key={c.id} className="border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+                  <td className="py-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>{c.first_name} {c.last_name}</td>
+                  <td className="py-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>{c.email}</td>
+                  <td className="py-2 text-right text-xs" style={{ color: 'var(--color-text-primary)' }}>{c.lead_score ?? '-'}</td>
+                  <td className="py-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>{c.last_touched_at ? new Date(c.last_touched_at).toLocaleDateString() : 'Never'}</td>
+                  <td className="py-2 text-right font-mono text-xs" style={{ color: 'var(--color-text-primary)' }}>{fmtCurrency(c.deal_value ?? 0)}</td>
                 </tr>
               ))}</tbody>
             </table>
@@ -813,43 +778,41 @@ export default function ReportsPage() {
     )
   }
 
-  // ── CLV ───────────────────────────────────────────────────────────────────
-
   function renderClv() {
-    if (clvLoading) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">Loading CLV data...</div>
+    if (clvLoading) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading CLV data...</div>
     const d = clvData?.data
     const cohort = cohortData?.data
-    if (!d) return <div className="flex items-center justify-center h-full text-gray-500 text-sm">No CLV data.</div>
+    if (!d) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>No CLV data.</div>
     return (
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-4 gap-4">
           <DashboardWidget title="Avg LTV" value={fmtCurrency(d.avg_ltv)} subtitle="Per customer with revenue">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Activity size={12} /> Lifetime value</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><Activity size={12} /> Lifetime value</div>
           </DashboardWidget>
           <DashboardWidget title="Max LTV" value={fmtCurrency(d.max_ltv)} subtitle="Highest value customer">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><TrendingUp size={12} /> Top performer</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><TrendingUp size={12} /> Top performer</div>
           </DashboardWidget>
           <DashboardWidget title="Total Revenue" value={fmtCurrency(d.total_revenue)} subtitle="All time won">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><DollarSign size={12} /> Closed won</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><DollarSign size={12} /> Closed won</div>
           </DashboardWidget>
           <DashboardWidget title="Rev/Contact" value={fmtCurrency(d.revenue_per_contact)} subtitle="Average across all">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Users size={12} /> Per contact</div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}><Users size={12} /> Per contact</div>
           </DashboardWidget>
         </div>
 
         {d.by_lifecycle_stage && d.by_lifecycle_stage.length > 0 && (
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">LTV by Lifecycle Stage</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>LTV by Lifecycle Stage</p>
             <table className="w-full text-sm">
-              <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+              <thead><tr className="text-left text-xs uppercase tracking-wide border-b" style={{ color: 'var(--color-text-muted)', borderColor: 'var(--color-glass-border)' }}>
                 <th className="pb-2 font-medium">Stage</th><th className="pb-2 font-medium text-right">Contacts</th><th className="pb-2 font-medium text-right">Avg LTV</th><th className="pb-2 font-medium text-right">Total Value</th>
               </tr></thead>
               <tbody>{d.by_lifecycle_stage.map((s: any) => (
-                <tr key={s.lifecycle_stage} className="border-b border-gray-800/50">
-                  <td className="py-2 text-gray-300 text-xs capitalize">{s.lifecycle_stage}</td>
-                  <td className="py-2 text-right text-xs text-gray-200">{s.count}</td>
-                  <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(parseFloat(s.avg_ltv))}</td>
-                  <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(parseFloat(s.total_value))}</td>
+                <tr key={s.lifecycle_stage} className="border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+                  <td className="py-2 text-xs capitalize" style={{ color: 'var(--color-text-secondary)' }}>{s.lifecycle_stage}</td>
+                  <td className="py-2 text-right text-xs" style={{ color: 'var(--color-text-primary)' }}>{s.count}</td>
+                  <td className="py-2 text-right font-mono text-xs" style={{ color: 'var(--color-text-primary)' }}>{fmtCurrency(parseFloat(s.avg_ltv))}</td>
+                  <td className="py-2 text-right font-mono text-xs" style={{ color: 'var(--color-text-primary)' }}>{fmtCurrency(parseFloat(s.total_value))}</td>
                 </tr>
               ))}</tbody>
             </table>
@@ -858,19 +821,19 @@ export default function ReportsPage() {
 
         {cohort && cohort.length > 0 && (
           <div className="rounded-lg border p-4" style={{ background: 'var(--color-bg-surface)', borderColor: 'var(--color-glass-border)' }}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">Monthly Cohorts (last 12)</p>
+            <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--color-text-muted)' }}>Monthly Cohorts (last 12)</p>
             <table className="w-full text-sm">
-              <thead><tr className="text-left text-xs text-gray-600 uppercase tracking-wide border-b border-gray-800">
+              <thead><tr className="text-left text-xs uppercase tracking-wide border-b" style={{ color: 'var(--color-text-muted)', borderColor: 'var(--color-glass-border)' }}>
                 <th className="pb-2 font-medium">Cohort</th><th className="pb-2 font-medium text-right">Acquired</th><th className="pb-2 font-medium text-right">Converted</th><th className="pb-2 font-medium text-right">Conv. Rate</th><th className="pb-2 font-medium text-right">Revenue</th><th className="pb-2 font-medium text-right">Rev/Contact</th>
               </tr></thead>
               <tbody>{cohort.map((c: any) => (
-                <tr key={c.cohort} className="border-b border-gray-800/50">
-                  <td className="py-2 text-gray-300 text-xs">{new Date(c.cohort).toLocaleDateString(undefined, { year: 'numeric', month: 'short' })}</td>
-                  <td className="py-2 text-right text-xs text-gray-200">{c.acquired}</td>
-                  <td className="py-2 text-right text-xs text-gray-200">{c.converted}</td>
+                <tr key={c.cohort} className="border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+                  <td className="py-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>{new Date(c.cohort).toLocaleDateString(undefined, { year: 'numeric', month: 'short' })}</td>
+                  <td className="py-2 text-right text-xs" style={{ color: 'var(--color-text-primary)' }}>{c.acquired}</td>
+                  <td className="py-2 text-right text-xs" style={{ color: 'var(--color-text-primary)' }}>{c.converted}</td>
                   <td className="py-2 text-right text-xs text-green-400">{c.conversion_rate}%</td>
-                  <td className="py-2 text-right font-mono text-xs text-gray-200">{fmtCurrency(c.revenue)}</td>
-                  <td className="py-2 text-right font-mono text-xs text-gray-500">{fmtCurrency(c.revenue_per_contact)}</td>
+                  <td className="py-2 text-right font-mono text-xs" style={{ color: 'var(--color-text-primary)' }}>{fmtCurrency(c.revenue)}</td>
+                  <td className="py-2 text-right font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>{fmtCurrency(c.revenue_per_contact)}</td>
                 </tr>
               ))}</tbody>
             </table>
@@ -880,15 +843,11 @@ export default function ReportsPage() {
     )
   }
 
-  // ─── Render ────────────────────────────────────────────────────────────────
-
   return (
-    <div className="flex flex-col h-full overflow-auto">
-      {/* Header */}
-      <div className="flex items-center gap-4 px-6 py-4 border-b border-gray-800 shrink-0">
-        <h1 className="text-base font-semibold text-gray-100">Reports &amp; Analytics</h1>
+    <div className="flex flex-col h-full overflow-auto" style={{ background: 'var(--color-bg-base)' }}>
+      <div className="flex items-center gap-4 px-6 py-4 border-b shrink-0" style={{ borderColor: 'var(--color-glass-border)' }}>
+        <h1 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>Reports &amp; Analytics</h1>
 
-        {/* Tab navigation */}
         <div className="flex gap-1 ml-8">
           {TABS.map((tab) => {
             const Icon = tab.icon
@@ -896,11 +855,11 @@ export default function ReportsPage() {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded transition-colors ${
-                  activeTab === tab.key
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-400 hover:text-gray-200'
-                }`}
+                className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded transition-colors`}
+                style={activeTab === tab.key
+                  ? { background: 'var(--color-accent)', color: '#fff' }
+                  : { color: 'var(--color-text-muted)' }
+                }
               >
                 <Icon size={13} />
                 {tab.label}
@@ -909,18 +868,17 @@ export default function ReportsPage() {
           })}
         </div>
 
-        {/* Period selector (overview / CRM reports) */}
         {(activeTab === 'overview') && (
           <div className="flex gap-1 ml-auto">
             {PERIODS.map(({ label, value }) => (
               <button
                 key={value}
                 onClick={() => setPeriod(value)}
-                className={`text-xs px-3 py-1 rounded transition-colors ${
-                  period === value
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-gray-800 text-gray-400 hover:text-gray-200'
-                }`}
+                className="text-xs px-3 py-1 rounded transition-colors"
+                style={period === value
+                  ? { background: 'var(--color-accent)', color: '#fff' }
+                  : { background: 'var(--color-bg-hover)', color: 'var(--color-text-muted)' }
+                }
               >
                 {label}
               </button>
@@ -937,11 +895,11 @@ export default function ReportsPage() {
               <button
                 key={value}
                 onClick={() => setCrmPeriod(value)}
-                className={`text-xs px-3 py-1 rounded transition-colors ${
-                  crmPeriod === value
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-gray-800 text-gray-400 hover:text-gray-200'
-                }`}
+                className="text-xs px-3 py-1 rounded transition-colors"
+                style={crmPeriod === value
+                  ? { background: 'var(--color-accent)', color: '#fff' }
+                  : { background: 'var(--color-bg-hover)', color: 'var(--color-text-muted)' }
+                }
               >
                 {label}
               </button>
@@ -950,16 +908,16 @@ export default function ReportsPage() {
         )}
         {activeTab === 'churn' && (
           <div className="flex gap-1 ml-auto items-center">
-            <span className="text-xs text-gray-500">Threshold:</span>
+            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Threshold:</span>
             {['30', '60', '90', '180'].map(v => (
               <button
                 key={v}
                 onClick={() => setChurnThreshold(v)}
-                className={`text-xs px-3 py-1 rounded transition-colors ${
-                  churnThreshold === v
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-gray-800 text-gray-400 hover:text-gray-200'
-                }`}
+                className="text-xs px-3 py-1 rounded transition-colors"
+                style={churnThreshold === v
+                  ? { background: 'var(--color-accent)', color: '#fff' }
+                  : { background: 'var(--color-bg-hover)', color: 'var(--color-text-muted)' }
+                }
               >
                 {v}d
               </button>
@@ -967,28 +925,26 @@ export default function ReportsPage() {
           </div>
         )}
 
-        {/* Date range pickers for expense/procurement tabs */}
         {activeTab === 'expenses' && (
           <div className="flex items-center gap-2 ml-auto">
             <input type="date" value={expenseFrom} onChange={(e) => setExpenseFrom(e.target.value)}
-              className="text-xs bg-gray-800 border border-gray-700 rounded px-2 py-1 text-gray-300" />
-            <span className="text-xs text-gray-600">to</span>
+              className="text-xs rounded px-2 py-1" style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
+            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>to</span>
             <input type="date" value={expenseTo} onChange={(e) => setExpenseTo(e.target.value)}
-              className="text-xs bg-gray-800 border border-gray-700 rounded px-2 py-1 text-gray-300" />
+              className="text-xs rounded px-2 py-1" style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
           </div>
         )}
         {activeTab === 'procurement' && (
           <div className="flex items-center gap-2 ml-auto">
             <input type="date" value={procurementFrom} onChange={(e) => setProcurementFrom(e.target.value)}
-              className="text-xs bg-gray-800 border border-gray-700 rounded px-2 py-1 text-gray-300" />
-            <span className="text-xs text-gray-600">to</span>
+              className="text-xs rounded px-2 py-1" style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
+            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>to</span>
             <input type="date" value={procurementTo} onChange={(e) => setProcurementTo(e.target.value)}
-              className="text-xs bg-gray-800 border border-gray-700 rounded px-2 py-1 text-gray-300" />
+              className="text-xs rounded px-2 py-1" style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
           </div>
         )}
       </div>
 
-      {/* Content */}
       <div className="flex-1 overflow-auto">
         {activeTab === 'overview' && renderOverview()}
         {activeTab === 'expenses' && renderExpenses()}

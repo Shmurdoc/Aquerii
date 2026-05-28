@@ -1,9 +1,21 @@
 import { io, Socket } from 'socket.io-client'
 import { useAuthStore } from '@/stores/authStore'
+import { useNotificationStore } from '@/stores/notificationStore'
+import type { AppNotification } from '@/stores/notificationStore'
 
 let socket: Socket | null = null
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null
 const MAX_BACKOFF = 30_000
+
+export interface SocketEventMap {
+  notification: (n: AppNotification) => void
+  'notification:read': (notificationId: string) => void
+  'room:joined': (data: { room: string }) => void
+  'room:left': (data: { room: string }) => void
+  connect: () => void
+  disconnect: (reason: string) => void
+  connect_error: (err: Error) => void
+}
 
 export function getSocket(): Socket {
   if (socket?.connected) return socket
@@ -30,9 +42,16 @@ export function getSocket(): Socket {
 
   socket.on('connect_error', (err) => {
     if (err.message === 'AUTH_REQUIRED' || err.message === 'AUTH_INVALID') {
-      // Token expired — refresh then reconnect
       refreshTokenAndReconnect()
     }
+  })
+
+  socket.on('notification', (n: AppNotification) => {
+    useNotificationStore.getState().addNotification(n)
+  })
+
+  socket.on('notification:read', (notificationId: string) => {
+    useNotificationStore.getState().markRead(notificationId)
   })
 
   return socket

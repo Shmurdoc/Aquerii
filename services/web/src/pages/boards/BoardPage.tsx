@@ -13,6 +13,9 @@ import CalendarView   from '@/components/board/CalendarView'
 import ExcalidrawView from '@/components/board/ExcalidrawView'
 import { Plus, Pencil, Trash2, Check, X, Columns3, GripVertical } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Modal } from '@/components/ui/Modal'
 
 export default function BoardPage() {
   const { boardId } = useParams<{ boardId: string }>()
@@ -65,7 +68,6 @@ export default function BoardPage() {
     onError: () => toast.error('Failed to delete group.'),
   })
 
-  // ── Column mutations ───────────────────────────────────────────
   const renameColumn = useMutation({
     mutationFn: ({ columnId, name }: { columnId: string; name: string }) =>
       api.patch(`/workspaces/${workspace!.id}/boards/${boardId}/columns/${columnId}`, { name }),
@@ -130,20 +132,22 @@ export default function BoardPage() {
         <div key={group.id} className="flex items-center gap-1 group/g">
           {editingGroupId === group.id ? (
             <>
-              <input
-                autoFocus
+              <Input
+                size="sm"
                 value={editingName}
                 onChange={e => setEditingName(e.target.value)}
                 onKeyDown={e => {
                   if (e.key === 'Enter') renameGroup.mutate({ groupId: group.id, name: editingName })
                   if (e.key === 'Escape') setEditingGroupId(null)
                 }}
-                className="text-xs bg-gray-800 border border-indigo-500 rounded px-2 py-0.5 text-white w-28 outline-none"
+                className="w-28"
               />
-              <button onClick={() => renameGroup.mutate({ groupId: group.id, name: editingName })}
-                className="text-green-400 hover:text-green-300"><Check size={11} /></button>
-              <button onClick={() => setEditingGroupId(null)}
-                className="text-gray-500 hover:text-gray-300"><X size={11} /></button>
+              <Button variant="ghost" size="sm" iconOnly onClick={() => renameGroup.mutate({ groupId: group.id, name: editingName })}>
+                <Check size={11} />
+              </Button>
+              <Button variant="ghost" size="sm" iconOnly onClick={() => setEditingGroupId(null)}>
+                <X size={11} />
+              </Button>
             </>
           ) : (
             <span
@@ -151,22 +155,34 @@ export default function BoardPage() {
               style={{ borderLeft: `3px solid ${group.color ?? '#6366f1'}` }}
             >
               {group.name}
-              <button onClick={() => { setEditingGroupId(group.id); setEditingName(group.name) }}
-                className="opacity-0 group-hover/g:opacity-100 ml-0.5 text-gray-500 hover:text-gray-300 transition-opacity">
+              <Button
+                variant="ghost"
+                size="sm"
+                iconOnly
+                onClick={() => { setEditingGroupId(group.id); setEditingName(group.name) }}
+                className="opacity-0 group-hover/g:opacity-100 ml-0.5 text-gray-500 hover:text-gray-300"
+              >
                 <Pencil size={9} />
-              </button>
+              </Button>
               {confirmDelGroup === group.id ? (
                 <>
-                  <button onClick={() => deleteGroup.mutate(group.id)}
-                    className="text-red-400 hover:text-red-300 text-[10px]">del?</button>
-                  <button onClick={() => setConfirmDelGroup(null)}
-                    className="text-gray-500 hover:text-gray-300"><X size={9} /></button>
+                  <Button variant="ghost" size="sm" onClick={() => deleteGroup.mutate(group.id)} className="text-red-400 text-[10px] h-auto px-1">
+                    del?
+                  </Button>
+                  <Button variant="ghost" size="sm" iconOnly onClick={() => setConfirmDelGroup(null)}>
+                    <X size={9} />
+                  </Button>
                 </>
               ) : (
-                <button onClick={() => setConfirmDelGroup(group.id)}
-                  className="opacity-0 group-hover/g:opacity-100 text-gray-500 hover:text-red-400 transition-opacity">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  iconOnly
+                  onClick={() => setConfirmDelGroup(group.id)}
+                  className="opacity-0 group-hover/g:opacity-100 text-gray-500 hover:text-red-400"
+                >
                   <Trash2 size={9} />
-                </button>
+                </Button>
               )}
             </span>
           )}
@@ -175,9 +191,9 @@ export default function BoardPage() {
 
       {addingGroup ? (
         <div className="flex items-center gap-1">
-          <input
+          <Input
+            size="sm"
             ref={newGroupRef}
-            autoFocus
             value={newGroupName}
             onChange={e => setNewGroupName(e.target.value)}
             placeholder="Group name"
@@ -185,20 +201,23 @@ export default function BoardPage() {
               if (e.key === 'Enter' && newGroupName.trim()) createGroup.mutate(newGroupName.trim())
               if (e.key === 'Escape') { setAddingGroup(false); setNewGroupName('') }
             }}
-            className="text-xs bg-gray-800 border border-indigo-500 rounded px-2 py-0.5 text-white w-28 outline-none placeholder-gray-600"
+            className="w-28"
           />
-          <button onClick={() => newGroupName.trim() && createGroup.mutate(newGroupName.trim())}
-            className="text-green-400 hover:text-green-300"><Check size={11} /></button>
-          <button onClick={() => { setAddingGroup(false); setNewGroupName('') }}
-            className="text-gray-500 hover:text-gray-300"><X size={11} /></button>
+          <Button variant="ghost" size="sm" iconOnly onClick={() => newGroupName.trim() && createGroup.mutate(newGroupName.trim())}>
+            <Check size={11} />
+          </Button>
+          <Button variant="ghost" size="sm" iconOnly onClick={() => { setAddingGroup(false); setNewGroupName('') }}>
+            <X size={11} />
+          </Button>
         </div>
       ) : (
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => setAddingGroup(true)}
-          className="flex items-center gap-1 text-xs text-gray-500 hover:text-indigo-400 transition-colors"
         >
           <Plus size={11} /> Add group
-        </button>
+        </Button>
       )}
     </div>
   )
@@ -214,79 +233,75 @@ export default function BoardPage() {
         {view === 'whiteboard' && <ExcalidrawView board={board} boardId={boardId!} />}
       </div>
 
-      {/* ── Column Management Modal ─────────────────────────────── */}
-      {showColumns && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-20" onClick={() => setShowColumns(false)}>
-          <div className="fixed inset-0 bg-black/60" aria-hidden="true" />
-          <div
-            className="relative z-10 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl w-full max-w-md max-h-[60vh] flex flex-col"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between px-5 py-3 border-b border-gray-800">
-              <div className="flex items-center gap-2">
-                <Columns3 size={15} className="text-indigo-400" />
-                <h2 className="text-sm font-semibold text-white">Manage Columns</h2>
-              </div>
-              <button onClick={() => setShowColumns(false)} className="text-gray-500 hover:text-gray-300">
-                <X size={16} />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto px-5 py-3 space-y-2">
-              {[...(board.columns ?? [])].sort((a, b) => a.position - b.position).map(col => (
-                <div key={col.id} className="flex items-center gap-2 group/col">
-                  <GripVertical size={13} className="text-gray-600 shrink-0" />
-                  {editingColId === col.id ? (
-                    <div className="flex items-center gap-1 flex-1">
-                      <input
-                        autoFocus
-                        value={editingColName}
-                        onChange={e => setEditingColName(e.target.value)}
-                        onKeyDown={e => {
-                          if (e.key === 'Enter') renameColumn.mutate({ columnId: col.id, name: editingColName })
-                          if (e.key === 'Escape') setEditingColId(null)
-                        }}
-                        className="flex-1 text-xs bg-gray-800 border border-indigo-500 rounded px-2 py-1 text-white outline-none"
-                      />
-                      <button onClick={() => renameColumn.mutate({ columnId: col.id, name: editingColName })}
-                        className="text-green-400 hover:text-green-300"><Check size={11} /></button>
-                      <button onClick={() => setEditingColId(null)}
-                        className="text-gray-500 hover:text-gray-300"><X size={11} /></button>
-                    </div>
-                  ) : (
-                    <>
-                      <span className="flex-1 text-xs text-gray-300 truncate">{col.name}</span>
-                      <span className="text-[10px] text-gray-600 uppercase">{col.type}</span>
-                      <button
-                        onClick={() => { setEditingColId(col.id); setEditingColName(col.name) }}
-                        className="opacity-0 group-hover/col:opacity-100 text-gray-500 hover:text-gray-300 transition-opacity"
-                      >
-                        <Pencil size={10} />
-                      </button>
-                      {!col.is_system && (
-                        <button
-                          onClick={() => { if (confirm('Delete this column?')) deleteColumn.mutate(col.id) }}
-                          className="opacity-0 group-hover/col:opacity-100 text-gray-500 hover:text-red-400 transition-opacity"
-                        >
-                          <Trash2 size={10} />
-                        </button>
-                      )}
-                    </>
-                  )}
+      <Modal
+        open={showColumns}
+        onClose={() => setShowColumns(false)}
+        title="Manage Columns"
+        size="md"
+      >
+        <div className="space-y-2">
+          {[...(board.columns ?? [])].sort((a, b) => a.position - b.position).map(col => (
+            <div key={col.id} className="flex items-center gap-2 group/col">
+              <GripVertical size={13} className="text-gray-600 shrink-0" />
+              {editingColId === col.id ? (
+                <div className="flex items-center gap-1 flex-1">
+                  <Input
+                    size="sm"
+                    value={editingColName}
+                    onChange={e => setEditingColName(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') renameColumn.mutate({ columnId: col.id, name: editingColName })
+                      if (e.key === 'Escape') setEditingColId(null)
+                    }}
+                    className="flex-1"
+                  />
+                  <Button variant="ghost" size="sm" iconOnly onClick={() => renameColumn.mutate({ columnId: col.id, name: editingColName })}>
+                    <Check size={11} />
+                  </Button>
+                  <Button variant="ghost" size="sm" iconOnly onClick={() => setEditingColId(null)}>
+                    <X size={11} />
+                  </Button>
                 </div>
-              ))}
+              ) : (
+                <>
+                  <span className="flex-1 text-xs text-gray-300 truncate">{col.name}</span>
+                  <span className="text-[10px] text-gray-600 uppercase">{col.type}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    iconOnly
+                    onClick={() => { setEditingColId(col.id); setEditingColName(col.name) }}
+                    className="opacity-0 group-hover/col:opacity-100"
+                  >
+                    <Pencil size={10} />
+                  </Button>
+                  {!col.is_system && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      iconOnly
+                      onClick={() => { if (confirm('Delete this column?')) deleteColumn.mutate(col.id) }}
+                      className="opacity-0 group-hover/col:opacity-100 text-gray-500 hover:text-red-400"
+                    >
+                      <Trash2 size={10} />
+                    </Button>
+                  )}
+                </>
+              )}
             </div>
-            <div className="px-5 py-3 border-t border-gray-800">
-              <button
-                onClick={() => addColumn.mutate()}
-                disabled={addColumn.isPending}
-                className="flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 disabled:opacity-40 transition-colors"
-              >
-                <Plus size={12} /> Add column
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
-      )}
+        <div className="mt-3 pt-3 border-t border-gray-800">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => addColumn.mutate()}
+            disabled={addColumn.isPending}
+          >
+            <Plus size={12} /> Add column
+          </Button>
+        </div>
+      </Modal>
     </div>
   )
 }

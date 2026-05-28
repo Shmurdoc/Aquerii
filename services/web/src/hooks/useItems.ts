@@ -21,18 +21,11 @@ export interface Item {
   assignees: Array<{ id: string; name: string; avatar_url: string | null }>
 }
 
-/**
- * Normalise a description value that may arrive from the API as either:
- *   - a Tiptap JSON object  → returned as-is
- *   - a plain string        → wrapped in a minimal Tiptap doc node
- *   - null / undefined      → returned as null
- */
 export function normalizeDescription(
   raw: string | Record<string, unknown> | null | undefined
 ): Record<string, unknown> | null {
   if (!raw) return null
   if (typeof raw === 'object') return raw
-  // Plain string — wrap so Tiptap can render it
   return {
     type: 'doc',
     content: [
@@ -48,7 +41,6 @@ export function useItems(boardId: string, groupId?: string) {
   const workspace = useAuthStore(s => s.workspace)
   const qc        = useQueryClient()
 
-  // Subscribe to realtime updates for this board
   useEffect(() => {
     const socket = getSocket()
     const room   = `board:${boardId}`
@@ -82,6 +74,14 @@ export function useItems(boardId: string, groupId?: string) {
   })
 }
 
+export function useItem(workspaceId: string, boardId: string, itemId: string) {
+  return useQuery({
+    queryKey: ['item', workspaceId, boardId, itemId],
+    queryFn: () => api.get(`/workspaces/${workspaceId}/boards/${boardId}/items/${itemId}`).then(r => r.data.data),
+    enabled: !!workspaceId && !!boardId && !!itemId,
+  })
+}
+
 export function useCreateItem(boardId: string) {
   const qc        = useQueryClient()
   const workspace = useAuthStore(s => s.workspace)
@@ -111,7 +111,6 @@ export function useMoveItem(boardId: string) {
         group_id: groupId, position,
       }),
     onMutate: async ({ itemId, groupId, position }) => {
-      // Optimistic update
       await qc.cancelQueries({ queryKey: ['items', boardId] })
       const prev = qc.getQueryData<Item[]>(['items', boardId])
       qc.setQueryData<Item[]>(['items', boardId], old =>

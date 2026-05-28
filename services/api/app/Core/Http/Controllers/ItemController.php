@@ -192,7 +192,49 @@ class ItemController extends Controller
         return response()->json(null, 204);
     }
 
-    // POST /workspaces/{workspace}/boards/{board}/items/{item}/subitems
+    /**
+     * My Day / Calendar — items with due_dates across all boards.
+     * ?scope=my (default) → assigned to current user or unassigned.
+     * ?scope=all         → every item with a due_date in the workspace.
+     * Ordered by due_date ascending.
+     */
+    public function myDay(Request $request, string $workspace): JsonResponse
+    {
+        $scope = $request->query('scope', 'my');
+        $userId = $request->user()->id;
+
+        $query = Item::with(['board:id,name,color', 'assignees:id'])
+            ->whereNull('parent_id')
+            ->whereNull('deleted_at')
+            ->whereNotNull('due_date')
+            ->whereHas('board', fn ($q) => $q->where('workspace_id', $workspace))
+            ->orderBy('due_date')
+            ->orderBy('position')
+            ->limit($scope === 'all' ? 500 : 100);
+
+        if ($scope === 'my') {
+            $query->where(function ($q) use ($userId) {
+                $q->whereHas('assignees', fn ($a) => $a->where('users.id', $userId))
+                  ->orWhereDoesntHave('assignees');
+            });
+        }
+
+        $items = $query->get();
+
+        $results = $items->map(fn (Item $item) => [
+            'id'         => $item->id,
+            'title'      => $item->title,
+            'priority'   => $item->priority,
+            'due_date'   => $item->due_date?->toDateString(),
+            'done'       => (bool) $item->status === 'done',
+            'board_id'   => $item->board_id,
+            'board_name' => $item->board?->name ?? 'Untitled Board',
+            'board_color'=> $item->board?->color,
+        ]);
+
+        return response()->json(['data' => $results]);
+    }
+
     public function storeSubitem(Request $request, string $workspace, string $board, string $item): JsonResponse
     {
         $parent = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useSlas, useCreateSla, useDeleteSla, useUpdateSla, useSlaBreaches, useSlaCompliance, TicketSla } from '@/lib/support'
-import { Plus, Loader2, Trash2, Pencil, X, Check, BarChart3 } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { Plus, Trash2, Pencil, X, Check, BarChart3 } from 'lucide-react'
+import { Button, Input, Select, Badge } from '@/components/ui'
 
 export default function SlaPage() {
   const workspace = useAuthStore(s => s.workspace)
@@ -44,89 +44,95 @@ export default function SlaPage() {
     setEditingId(null)
   }
 
+  const PRIORITY_OPTIONS = [
+    { value: 'low', label: 'Low' },
+    { value: 'normal', label: 'Normal' },
+    { value: 'high', label: 'High' },
+    { value: 'critical', label: 'Critical' },
+  ]
+
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-white">SLA Policies</h1>
-        <button onClick={() => setShowForm(v => !v)} className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+        <h1 className="text-sm font-semibold text-[var(--color-text-primary)]">SLA Policies</h1>
+        <Button size="sm" onClick={() => setShowForm(v => !v)}>
           <Plus size={12} /> New policy
-        </button>
+        </Button>
       </div>
 
-      {/* Compliance card */}
       {compliance && (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 flex items-center gap-4">
-          <BarChart3 size={24} className="text-indigo-400 shrink-0" />
+        <div className="bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-xl p-4 flex items-center gap-4">
+          <BarChart3 size={24} className="text-[var(--color-accent-text)] shrink-0" />
           <div className="flex-1">
-            <p className="text-sm font-medium text-white">SLA Compliance</p>
-            <p className="text-xs text-gray-500">{compliance.compliance_pct}% — {compliance.total_tickets - compliance.breached} of {compliance.total_tickets} tickets met SLA</p>
+            <p className="text-sm font-medium text-[var(--color-text-primary)]">SLA Compliance</p>
+            <p className="text-xs text-[var(--color-text-muted)]">{compliance.compliance_pct}% — {compliance.total_tickets - compliance.breached} of {compliance.total_tickets} tickets met SLA</p>
           </div>
-          <div className="text-2xl font-bold text-white">{compliance.compliance_pct}%</div>
+          <div className="text-2xl font-bold text-[var(--color-text-primary)]">{compliance.compliance_pct}%</div>
         </div>
       )}
 
       {showForm && (
-        <div className="bg-gray-900 border border-gray-700 rounded-xl p-4 space-y-3">
-          <input placeholder="Policy name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-indigo-500 placeholder-gray-600" />
-          <input placeholder="Description" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-indigo-500 placeholder-gray-600" />
+        <div className="bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-xl p-4 space-y-3">
+          <Input placeholder="Policy name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} containerClassName="!mb-0" />
+          <Input placeholder="Description" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} containerClassName="!mb-0" />
           <div className="flex items-center gap-3">
-            <select value={form.priority} onChange={e => setForm(f => ({ ...f, priority: e.target.value }))} className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white outline-none">
-              <option value="low">Low</option>
-              <option value="normal">Normal</option>
-              <option value="high">High</option>
-              <option value="critical">Critical</option>
-            </select>
-            <div className="flex items-center gap-1 text-xs text-gray-500">
+            <Select value={form.priority} onChange={e => setForm(f => ({ ...f, priority: e.target.value }))} size="sm" containerClassName="!mb-0 !w-28">
+              {PRIORITY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </Select>
+            <div className="flex items-center gap-1 text-xs text-[var(--color-text-muted)]">
               <span>Response:</span>
-              <input type="number" value={form.first_response_hours} onChange={e => setForm(f => ({ ...f, first_response_hours: Number(e.target.value) }))} className="w-14 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-white outline-none text-center" min={1} />
+              <input type="number" value={form.first_response_hours} onChange={e => setForm(f => ({ ...f, first_response_hours: Number(e.target.value) }))} className="w-14 bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1 text-sm text-[var(--color-text-primary)] outline-none text-center focus:border-[var(--color-accent)]" min={1} />
               <span>h</span>
             </div>
-            <div className="flex items-center gap-1 text-xs text-gray-500">
+            <div className="flex items-center gap-1 text-xs text-[var(--color-text-muted)]">
               <span>Resolution:</span>
-              <input type="number" value={form.resolution_hours} onChange={e => setForm(f => ({ ...f, resolution_hours: Number(e.target.value) }))} className="w-14 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-white outline-none text-center" min={1} />
+              <input type="number" value={form.resolution_hours} onChange={e => setForm(f => ({ ...f, resolution_hours: Number(e.target.value) }))} className="w-14 bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1 text-sm text-[var(--color-text-primary)] outline-none text-center focus:border-[var(--color-accent)]" min={1} />
               <span>h</span>
             </div>
           </div>
           <div className="flex justify-end gap-2">
-            <button onClick={() => setShowForm(false)} className="text-xs text-gray-500 hover:text-gray-300 px-3 py-1.5">Cancel</button>
-            <button onClick={handleCreate} disabled={!form.name.trim()} className="text-xs bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white px-3 py-1.5 rounded-lg transition-colors">Save</button>
+            <Button variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
+            <Button size="sm" onClick={handleCreate} disabled={!form.name.trim()} loading={createSla.isPending}>Save</Button>
           </div>
         </div>
       )}
 
       {isLoading ? (
-        <div className="flex justify-center py-10"><Loader2 size={20} className="animate-spin text-gray-500" /></div>
+        <div className="flex justify-center py-10"><span className="text-[var(--color-text-muted)] text-sm">Loading…</span></div>
       ) : slas.length === 0 ? (
-        <p className="text-sm text-gray-600">No SLA policies defined.</p>
+        <p className="text-sm text-[var(--color-text-muted)]">No SLA policies defined.</p>
       ) : (
         <div className="space-y-2">
           {slas.map(sla => (
-            <div key={sla.id} className="bg-gray-900 border border-gray-800 rounded-xl p-4">
+            <div key={sla.id} className="bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-xl p-4">
               {editingId === sla.id ? (
                 <div className="space-y-2">
-                  <input value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-white outline-none" />
+                  <Input value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} containerClassName="!mb-0" />
                   <div className="flex items-center gap-2 text-xs">
-                    <select value={editForm.priority} onChange={e => setEditForm(f => ({ ...f, priority: e.target.value }))} className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-white outline-none">
-                      <option value="low">Low</option><option value="normal">Normal</option><option value="high">High</option><option value="critical">Critical</option>
-                    </select>
-                    <input type="number" value={editForm.first_response_hours} onChange={e => setEditForm(f => ({ ...f, first_response_hours: Number(e.target.value) }))} className="w-12 bg-gray-800 border border-gray-700 rounded px-1 py-1 text-white outline-none text-center" min={1} />
-                    <span className="text-gray-500">h response</span>
-                    <input type="number" value={editForm.resolution_hours} onChange={e => setEditForm(f => ({ ...f, resolution_hours: Number(e.target.value) }))} className="w-12 bg-gray-800 border border-gray-700 rounded px-1 py-1 text-white outline-none text-center" min={1} />
-                    <span className="text-gray-500">h resolution</span>
-                    <button onClick={() => saveEdit(sla.id)} className="p-1 text-green-400 hover:text-green-300"><Check size={12} /></button>
-                    <button onClick={() => setEditingId(null)} className="p-1 text-gray-500 hover:text-gray-300"><X size={12} /></button>
+                    <Select value={editForm.priority} onChange={e => setEditForm(f => ({ ...f, priority: e.target.value }))} size="sm" containerClassName="!mb-0 !w-24">
+                      {PRIORITY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </Select>
+                    <input type="number" value={editForm.first_response_hours} onChange={e => setEditForm(f => ({ ...f, first_response_hours: Number(e.target.value) }))} className="w-12 bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-1 py-1 text-[var(--color-text-primary)] outline-none text-center focus:border-[var(--color-accent)]" min={1} />
+                    <span className="text-[var(--color-text-muted)]">h response</span>
+                    <input type="number" value={editForm.resolution_hours} onChange={e => setEditForm(f => ({ ...f, resolution_hours: Number(e.target.value) }))} className="w-12 bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-1 py-1 text-[var(--color-text-primary)] outline-none text-center focus:border-[var(--color-accent)]" min={1} />
+                    <span className="text-[var(--color-text-muted)]">h resolution</span>
+                    <button onClick={() => saveEdit(sla.id)} className="p-1 text-emerald-400 hover:text-emerald-300"><Check size={12} /></button>
+                    <button onClick={() => setEditingId(null)} className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"><X size={12} /></button>
                   </div>
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${sla.is_active ? 'bg-green-500' : 'bg-gray-600'}`} />
+                  <div className={`w-2 h-2 rounded-full ${sla.is_active ? 'bg-[var(--color-status-done)]' : 'bg-[var(--color-text-muted)]'}`} />
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-white">{sla.name}</p>
-                    <p className="text-xs text-gray-500">{sla.priority} · {sla.first_response_hours}h response · {sla.resolution_hours}h resolution</p>
+                    <p className="text-sm font-medium text-[var(--color-text-primary)]">{sla.name}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">{sla.priority} · {sla.first_response_hours}h response · {sla.resolution_hours}h resolution</p>
                   </div>
-                  <button onClick={() => startEdit(sla)} className="p-1 text-gray-600 hover:text-indigo-400 transition-colors"><Pencil size={12} /></button>
-                  <button onClick={() => deleteSla.mutate(sla.id)} className="p-1 text-gray-600 hover:text-red-400 transition-colors"><Trash2 size={12} /></button>
+                  <Button variant="ghost" size="sm" iconOnly onClick={() => startEdit(sla)} title="Edit">
+                    <Pencil size={12} />
+                  </Button>
+                  <Button variant="ghost" size="sm" iconOnly onClick={() => deleteSla.mutate(sla.id)} title="Delete">
+                    <Trash2 size={12} />
+                  </Button>
                 </div>
               )}
             </div>
@@ -134,19 +140,18 @@ export default function SlaPage() {
         </div>
       )}
 
-      {/* Breaches */}
       <div>
-        <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2"><BarChart3 size={13} /> Recent Breaches</h2>
+        <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2"><BarChart3 size={13} /> Recent Breaches</h2>
         {breaches.length === 0 ? (
-          <p className="text-xs text-gray-600">No breaches recorded.</p>
+          <p className="text-xs text-[var(--color-text-muted)]">No breaches recorded.</p>
         ) : (
           <div className="space-y-1">
             {breaches.slice(0, 10).map(b => (
-              <div key={b.id} className="bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 flex items-center gap-3 text-xs">
-                <span className="text-red-400 font-medium">{b.breach_type}</span>
-                {b.ticket && <span className="text-gray-300 flex-1 truncate">{b.ticket.subject}</span>}
-                {b.slaPolicy && <span className="text-gray-500">{b.slaPolicy.name}</span>}
-                <span className="text-gray-600 shrink-0">{new Date(b.breached_at).toLocaleString()}</span>
+              <div key={b.id} className="bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-lg px-4 py-2 flex items-center gap-3 text-xs">
+                <Badge variant="error">{b.breach_type}</Badge>
+                {b.ticket && <span className="text-[var(--color-text-secondary)] flex-1 truncate">{b.ticket.subject}</span>}
+                {b.slaPolicy && <span className="text-[var(--color-text-muted)]">{b.slaPolicy.name}</span>}
+                <span className="text-[var(--color-text-muted)] shrink-0">{new Date(b.breached_at).toLocaleString()}</span>
               </div>
             ))}
           </div>

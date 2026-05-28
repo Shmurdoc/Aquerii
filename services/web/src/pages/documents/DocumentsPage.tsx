@@ -18,13 +18,12 @@ import {
 import { format } from 'date-fns'
 import toast from 'react-hot-toast'
 import clsx from 'clsx'
+import { Button, Input } from '@/components/ui'
 
-// ── PaperlessFileDrawer (inline, lazy) ─────────────────────────────────────
 import PaperlessFileDrawer from '@/components/documents/PaperlessFileDrawer'
 
 type Tab = 'notes' | 'files'
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
 function humanSize(bytes?: number) {
   if (!bytes) return '—'
   if (bytes < 1024)       return `${bytes} B`
@@ -41,7 +40,6 @@ function fileIcon(name: string) {
   return '📎'
 }
 
-// ── Notes tab ───────────────────────────────────────────────────────────────
 function NotesTab() {
   const workspace = useAuthStore(s => s.workspace)
   const navigate  = useNavigate()
@@ -68,27 +66,23 @@ function NotesTab() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xs text-gray-500 uppercase tracking-wider font-medium">
+        <span className="text-xs uppercase tracking-wider font-medium" style={{ color: 'var(--color-text-muted)' }}>
           {docs.length} note{docs.length !== 1 ? 's' : ''}
         </span>
-        <button
-          onClick={() => createDoc.mutate()}
-          disabled={createDoc.isPending}
-          className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors"
-        >
+        <Button size="sm" onClick={() => createDoc.mutate()} disabled={createDoc.isPending}>
           {createDoc.isPending ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />}
           New Note
-        </button>
+        </Button>
       </div>
 
       {isLoading ? (
         <div className="space-y-2">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-11 bg-gray-800 rounded-lg animate-pulse" />
+            <div key={i} className="h-11 rounded-lg animate-pulse" style={{ background: 'var(--color-bg-hover)' }} />
           ))}
         </div>
       ) : docs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-gray-500">
+        <div className="flex flex-col items-center justify-center py-16" style={{ color: 'var(--color-text-muted)' }}>
           <FileText size={36} className="mb-3 opacity-30" />
           <p className="text-sm">No notes yet. Create one to get started.</p>
         </div>
@@ -98,14 +92,15 @@ function NotesTab() {
             <button
               key={doc.id}
               onClick={() => navigate(`/documents/${doc.id}`)}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-800 transition-colors text-left group"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left group"
+              style={{ color: 'var(--color-text-primary)' }}
             >
               <span className="text-base">{doc.icon ?? '📄'}</span>
-              <span className="flex-1 text-sm text-gray-200 group-hover:text-white truncate">
+              <span className="flex-1 text-sm truncate group-hover:opacity-80" style={{ color: 'var(--color-text-primary)' }}>
                 {doc.title}
               </span>
-              <ChevronRight size={14} className="text-gray-600 group-hover:text-gray-400 shrink-0" />
-              <span className="text-xs text-gray-600 shrink-0">
+              <ChevronRight size={14} className="shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+              <span className="text-xs shrink-0" style={{ color: 'var(--color-text-muted)' }}>
                 {format(new Date(doc.updated_at), 'MMM d')}
               </span>
             </button>
@@ -116,7 +111,6 @@ function NotesTab() {
   )
 }
 
-// ── Files tab (paperless-ngx) ────────────────────────────────────────────────
 function FilesTab() {
   const workspace = useAuthStore(s => s.workspace)
   const qc        = useQueryClient()
@@ -125,7 +119,6 @@ function FilesTab() {
   const [selectedDoc, setSelected]  = useState<PaperlessDocument | null>(null)
   const fileRef                     = useRef<HTMLInputElement>(null)
 
-  // Debounce search — simple approach: query key changes on Enter or clear
   const [activeSearch, setActiveSearch] = useState('')
 
   const { data, isLoading, isFetching } = useQuery({
@@ -164,11 +157,10 @@ function FilesTab() {
 
   return (
     <div>
-      {/* Toolbar */}
       <div className="flex items-center gap-2 mb-4">
-        {/* Search */}
         <div className="flex-1 relative">
-          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+            style={{ color: 'var(--color-text-muted)' }} />
           <input
             type="text"
             value={search}
@@ -176,50 +168,47 @@ function FilesTab() {
             onKeyDown={e => { if (e.key === 'Enter') setActiveSearch(search) }}
             onBlur={() => setActiveSearch(search)}
             placeholder="Search files…"
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-8 pr-3 py-1.5 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-colors"
+            className="w-full rounded-lg pl-8 pr-3 py-1.5 text-sm outline-none transition-colors"
+            style={{
+              background: 'var(--color-bg-input)',
+              border: '1px solid var(--color-glass-border)',
+              color: 'var(--color-text-primary)',
+            }}
           />
           {isFetching && (
-            <Loader2 size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 animate-spin" />
+            <Loader2 size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 animate-spin"
+              style={{ color: 'var(--color-text-muted)' }} />
           )}
         </div>
 
-        {/* Upload */}
         <input ref={fileRef} type="file" className="hidden" onChange={handleFileChange} />
-        <button
-          onClick={() => fileRef.current?.click()}
-          disabled={upload.isPending}
-          className="flex items-center gap-1.5 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors"
-        >
-          {upload.isPending
-            ? <Loader2 size={12} className="animate-spin" />
-            : <Upload size={12} />
-          }
+        <Button size="sm" variant="secondary" onClick={() => fileRef.current?.click()} disabled={upload.isPending}>
+          {upload.isPending ? <Loader2 size={12} className="animate-spin" /> : <Upload size={12} />}
           Upload
-        </button>
+        </Button>
       </div>
 
-      {/* Count */}
       {data && (
-        <p className="text-xs text-gray-500 mb-3">
+        <p className="text-xs mb-3" style={{ color: 'var(--color-text-muted)' }}>
           {data.count} file{data.count !== 1 ? 's' : ''}
           {activeSearch && ` matching "${activeSearch}"`}
         </p>
       )}
 
-      {/* File list */}
       {isLoading ? (
         <div className="space-y-2">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-14 bg-gray-800 rounded-lg animate-pulse" />
+            <div key={i} className="h-14 rounded-lg animate-pulse" style={{ background: 'var(--color-bg-hover)' }} />
           ))}
         </div>
       ) : docs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-gray-500">
+        <div className="flex flex-col items-center justify-center py-16" style={{ color: 'var(--color-text-muted)' }}>
           <File size={36} className="mb-3 opacity-30" />
           <p className="text-sm">No files found.</p>
           <button
             onClick={() => fileRef.current?.click()}
-            className="mt-3 text-xs text-indigo-400 hover:text-indigo-300"
+            className="mt-3 text-xs"
+            style={{ color: 'var(--color-accent-text)' }}
           >
             Upload your first file →
           </button>
@@ -232,10 +221,11 @@ function FilesTab() {
               onClick={() => setSelected(doc)}
               className={clsx(
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors group',
-                selectedDoc?.id === doc.id
-                  ? 'bg-indigo-600/20 border border-indigo-500/30'
-                  : 'hover:bg-gray-800 border border-transparent'
               )}
+              style={selectedDoc?.id === doc.id
+                ? { background: 'var(--color-accent-light)', border: '1px solid var(--color-accent)' }
+                : { border: '1px solid transparent' }
+              }
             >
               <span className="text-lg shrink-0">
                 <img
@@ -248,23 +238,23 @@ function FilesTab() {
               </span>
 
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-gray-200 truncate group-hover:text-white">
+                <p className="text-sm truncate" style={{ color: 'var(--color-text-primary)' }}>
                   {doc.title}
                 </p>
-                <p className="text-xs text-gray-500 truncate">{doc.original_filename}</p>
+                <p className="text-xs truncate" style={{ color: 'var(--color-text-muted)' }}>{doc.original_filename}</p>
               </div>
 
-              <span className="text-xs text-gray-600 shrink-0">
+              <span className="text-xs shrink-0" style={{ color: 'var(--color-text-muted)' }}>
                 {format(new Date(doc.created_at), 'MMM d, yyyy')}
               </span>
 
-              {/* Quick actions */}
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                 <a
                   href={downloadUrl(doc.id)}
                   download
                   onClick={e => e.stopPropagation()}
-                  className="p-1 rounded hover:bg-gray-700 text-gray-400 hover:text-white"
+                  className="p-1 rounded"
+                  style={{ color: 'var(--color-text-muted)' }}
                   title="Download"
                 >
                   <Download size={13} />
@@ -272,7 +262,8 @@ function FilesTab() {
                 <button
                   onClick={e => { e.stopPropagation(); remove.mutate(doc.id) }}
                   disabled={remove.isPending}
-                  className="p-1 rounded hover:bg-red-500/20 text-gray-400 hover:text-red-400"
+                  className="p-1 rounded"
+                  style={{ color: 'var(--color-text-muted)' }}
                   title="Delete"
                 >
                   <Trash2 size={13} />
@@ -283,7 +274,6 @@ function FilesTab() {
         </div>
       )}
 
-      {/* Detail drawer */}
       {selectedDoc && workspace && (
         <PaperlessFileDrawer
           doc={selectedDoc}
@@ -300,17 +290,14 @@ function FilesTab() {
   )
 }
 
-// ── Page shell ───────────────────────────────────────────────────────────────
 export default function DocumentsPage() {
   const [tab, setTab] = useState<Tab>('notes')
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="px-6 pt-5 pb-0 border-b border-gray-800">
-        <h1 className="text-lg font-semibold text-white mb-3">Documents</h1>
+      <div className="px-6 pt-5 pb-0 border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+        <h1 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>Documents</h1>
 
-        {/* Tabs */}
         <div className="flex gap-0">
           {(['notes', 'files'] as Tab[]).map((t) => (
             <button
@@ -318,10 +305,11 @@ export default function DocumentsPage() {
               onClick={() => setTab(t)}
               className={clsx(
                 'px-4 py-2 text-sm font-medium border-b-2 transition-colors capitalize',
-                tab === t
-                  ? 'border-indigo-500 text-white'
-                  : 'border-transparent text-gray-500 hover:text-gray-300'
               )}
+              style={tab === t
+                ? { borderColor: 'var(--color-accent)', color: 'var(--color-text-primary)' }
+                : { borderColor: 'transparent', color: 'var(--color-text-muted)' }
+              }
             >
               {t}
             </button>
@@ -329,8 +317,7 @@ export default function DocumentsPage() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-6" style={{ background: 'var(--color-bg-base)' }}>
         {tab === 'notes' ? <NotesTab /> : <FilesTab />}
       </div>
     </div>

@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Search, Plus, X } from 'lucide-react'
+import { Search, Plus } from 'lucide-react'
 import { usePurchaseOrders, useCreatePurchaseOrder } from '@/hooks/usePurchaseOrders'
 import { CreatePOPayload, POStatus, formatCurrency, formatDate } from '@/lib/erp'
 import StatusBadge from '@/components/erp/StatusBadge'
 import PurchaseOrderDrawer from '@/components/erp/PurchaseOrderDrawer'
 import LineItemsEditor, { LineItem } from '@/components/erp/LineItemsEditor'
+import { Button, Input, DataTable, type Column } from '@/components/ui'
 
 const STATUSES: Array<'' | POStatus> = ['', 'draft', 'sent', 'confirmed', 'received', 'cancelled']
 const today = new Date().toISOString().slice(0, 10)
@@ -44,56 +45,52 @@ function NewPOModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
       <form onSubmit={handleSubmit}
-        className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
-          <h2 className="font-semibold text-gray-100">New Purchase Order</h2>
-          <button type="button" onClick={onClose} className="text-gray-500 hover:text-gray-200" aria-label="Close"><X size={18} /></button>
+        className="bg-[var(--color-bg-deepest)] border border-[var(--color-glass-border)] rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--color-glass-border)]">
+          <h2 className="font-semibold text-[var(--color-text-primary)]">New Purchase Order</h2>
+          <button type="button" onClick={onClose} className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]" aria-label="Close"><Plus size={18} className="rotate-45" /></button>
         </div>
         <div className="p-5 flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Supplier Name *</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Supplier Name *</label>
               <input required value={form.supplier_name} onChange={(e) => setForm({ ...form, supplier_name: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]" />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Supplier Email</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Supplier Email</label>
               <input type="email" value={form.supplier_email} onChange={(e) => setForm({ ...form, supplier_email: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]" />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Currency</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Currency</label>
               <input value={form.currency} maxLength={3} onChange={(e) => setForm({ ...form, currency: e.target.value.toUpperCase() })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500 uppercase" />
+                className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)] uppercase" />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Order Date</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Order Date</label>
               <input type="date" value={form.order_date} onChange={(e) => setForm({ ...form, order_date: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]" />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Expected Date</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Expected Date</label>
               <input type="date" value={form.expected_date} onChange={(e) => setForm({ ...form, expected_date: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]" />
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-xs text-gray-500 uppercase tracking-wide">Line Items</label>
+            <label className="text-xs text-[var(--color-text-muted)] uppercase tracking-wide">Line Items</label>
             <LineItemsEditor items={items} onChange={setItems} quantityType="float" currency={form.currency} />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Notes</label>
+            <label className="text-xs text-[var(--color-text-muted)]">Notes</label>
             <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              rows={2} className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 resize-none focus:outline-none focus:border-indigo-500" />
+              rows={2} className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] resize-none focus:outline-none focus:border-[var(--color-accent)]" />
           </div>
         </div>
-        <div className="px-5 py-4 border-t border-gray-800 flex justify-end gap-2">
-          <button type="button" onClick={onClose}
-            className="text-xs px-3 py-1.5 rounded bg-gray-800 hover:bg-gray-700 text-gray-300">Cancel</button>
-          <button type="submit" disabled={create.isPending}
-            className="text-xs px-4 py-1.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50">
-            {create.isPending ? 'Creating…' : 'Create PO'}
-          </button>
+        <div className="px-5 py-4 border-t border-[var(--color-glass-border)] flex justify-end gap-2">
+          <Button variant="ghost" size="sm" onClick={onClose}>Cancel</Button>
+          <Button type="submit" size="sm" loading={create.isPending} disabled={create.isPending}>Create PO</Button>
         </div>
       </form>
     </div>
@@ -117,71 +114,86 @@ export default function PurchasingPage() {
     search: debouncedSearch || undefined,
   })
 
-  const selected = orders.find((o) => o.id === selectedId) ?? null
+  const selected = orders.find((o: any) => o.id === selectedId) ?? null
+
+  const columns: Column<any>[] = [
+    {
+      key: 'order_number',
+      header: 'Order #',
+      sortable: true,
+      render: (po: any) => <span className="text-[var(--color-accent-text)] font-mono text-xs">{po.order_number}</span>,
+    },
+    {
+      key: 'supplier_name',
+      header: 'Supplier',
+      sortable: true,
+      render: (po: any) => (
+        <div>
+          <p className="text-[var(--color-text-primary)]">{po.supplier_name}</p>
+          {po.supplier_email && <p className="text-[10px] text-[var(--color-text-muted)]">{po.supplier_email}</p>}
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (po: any) => <StatusBadge status={po.status} />,
+    },
+    {
+      key: 'order_date',
+      header: 'Order Date',
+      hideOnMobile: true,
+      render: (po: any) => <span className="text-xs text-[var(--color-text-muted)]">{formatDate(po.order_date)}</span>,
+    },
+    {
+      key: 'expected_date',
+      header: 'Expected',
+      hideOnMobile: true,
+      render: (po: any) => <span className="text-xs text-[var(--color-text-muted)]">{formatDate(po.expected_date)}</span>,
+    },
+    {
+      key: 'total',
+      header: 'Total',
+      sortable: true,
+      className: 'text-right',
+      render: (po: any) => <span className="font-mono text-[var(--color-text-primary)]">{formatCurrency(po.total, po.currency)}</span>,
+    },
+  ]
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-800">
-        <h1 className="text-base font-semibold text-gray-100 mr-2">Purchase Orders</h1>
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-[var(--color-glass-border)] shrink-0">
+        <h1 className="text-base font-semibold text-[var(--color-text-primary)] mr-2">Purchase Orders</h1>
         <div className="flex gap-1">
           {STATUSES.map((s) => (
             <button key={s} onClick={() => setStatusFilter(s)}
-              className={`text-xs px-3 py-1 rounded ${statusFilter === s ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-gray-200'}`}>
+              className={`text-xs px-3 py-1 rounded transition-colors ${statusFilter === s ? 'bg-[var(--color-accent)] text-white' : 'bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)]'}`}>
               {s === '' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1)}
             </button>
           ))}
         </div>
         <div className="flex-1" />
         <div className="relative">
-          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)}
+          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
+          <Input value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Search POs…"
-            className="bg-gray-800 border border-gray-700 rounded pl-8 pr-3 py-1.5 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-indigo-500 w-48" />
+            containerClassName="!mb-0"
+            className="!pl-8 !w-48" />
         </div>
-        <button onClick={() => setShowNew(true)}
-          className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white">
-          <Plus size={13} />New PO
-        </button>
+        <Button size="sm" onClick={() => setShowNew(true)}>
+          <Plus size={13} /> New PO
+        </Button>
       </div>
 
       <div className="flex-1 overflow-auto">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-40 text-gray-500 text-sm">Loading…</div>
-        ) : orders.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-40 gap-2">
-            <p className="text-gray-500 text-sm">No purchase orders found</p>
-            <button onClick={() => setShowNew(true)} className="text-xs text-indigo-400 hover:text-indigo-300">Create your first PO</button>
-          </div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-800 text-left text-xs text-gray-500 uppercase tracking-wide">
-                <th className="px-6 py-3 font-medium">Order #</th>
-                <th className="px-4 py-3 font-medium">Supplier</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium">Order Date</th>
-                <th className="px-4 py-3 font-medium">Expected</th>
-                <th className="px-4 py-3 font-medium text-right">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((po) => (
-                <tr key={po.id} onClick={() => setSelectedId(po.id)}
-                  className={`border-b border-gray-800/60 hover:bg-gray-800/40 cursor-pointer transition-colors ${selectedId === po.id ? 'bg-gray-800/60' : ''}`}>
-                  <td className="px-6 py-3 text-indigo-300 font-mono text-xs">{po.order_number}</td>
-                  <td className="px-4 py-3">
-                    <p className="text-gray-200">{po.supplier_name}</p>
-                    {po.supplier_email && <p className="text-gray-500 text-xs">{po.supplier_email}</p>}
-                  </td>
-                  <td className="px-4 py-3"><StatusBadge status={po.status} /></td>
-                  <td className="px-4 py-3 text-gray-400 text-xs">{formatDate(po.order_date)}</td>
-                  <td className="px-4 py-3 text-gray-400 text-xs">{formatDate(po.expected_date)}</td>
-                  <td className="px-4 py-3 text-right font-mono text-gray-200">{formatCurrency(po.total, po.currency)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <DataTable
+          columns={columns}
+          data={orders}
+          keyExtractor={(o: any) => o.id}
+          isLoading={isLoading}
+          emptyTitle="No purchase orders found"
+          emptyDescription="Create your first purchase order to get started."
+        />
       </div>
 
       {selected && (

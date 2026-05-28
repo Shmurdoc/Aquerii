@@ -183,13 +183,12 @@ export default function CalendarView({ board, items, boardId }: Props) {
         </div>
       </div>
 
-      {selected && (
-        <ItemDetailModal
-          item={selected}
-          boardId={boardId}
-          onClose={() => setSelected(null)}
-        />
-      )}
+      <ItemDetailModal
+        itemId={selected?.id ?? ''}
+        boardId={boardId}
+        open={!!selected}
+        onClose={() => setSelected(null)}
+      />
     </>
   )
 }

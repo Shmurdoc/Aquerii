@@ -4,7 +4,7 @@
 
 @layer base {
   html { @apply antialiased; }
-  body { @apply text-gray-100; background: var(--color-bg-deepest); }
+  body { color: var(--color-text-primary); background: var(--color-bg-deepest); }
   * { @apply box-border; }
 }
 
@@ -70,6 +70,32 @@
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-out:    cubic-bezier(0.0, 0.0, 0.2, 1);
   --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* ── Light theme ──────────────────────────────────────────────────── */
+.light-theme {
+  --color-bg-deepest:  #f0f2f5;
+  --color-bg-base:     #ffffff;
+  --color-bg-surface:  rgba(255, 255, 255, 0.85);
+  --color-bg-elevated: #ffffff;
+  --color-bg-hover:    rgba(0, 0, 0, 0.04);
+  --color-bg-active:   rgba(0, 0, 0, 0.08);
+  --color-bg-input:    #ffffff;
+
+  --color-glass-border:       rgba(0, 0, 0, 0.08);
+  --color-glass-border-hover: rgba(0, 0, 0, 0.15);
+  --color-glass-bg:           rgba(255, 255, 255, 0.75);
+  --color-glass-bg-strong:    rgba(255, 255, 255, 0.92);
+
+  --color-text-primary:   #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-muted:     #9ca3af;
+
+  --color-accent-text: #6d28d9;
+
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:   0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg:   0 10px 30px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.08);
 }
 
 /* Custom scrollbar */

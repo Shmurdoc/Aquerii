@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutGrid, FileText, Users, Settings, Bell,
-  Inbox, Search, Wallet, Zap, ChevronLeft, ChevronRight, BarChart2, UserCheck, Video, Sparkles,
+  Inbox, Search, Wallet, Zap, ChevronLeft, ChevronRight, BarChart2,
+  UserCheck, Video, Sparkles, Sun, Moon, HeadphonesIcon, Megaphone, Mail, CalendarDays,
   type LucideIcon,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { useThemeStore } from '@/stores/themeStore'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { usePermission } from '@/hooks/usePermission'
 import { PermissionGate } from '@/components/shared/PermissionGate'
@@ -19,18 +21,53 @@ interface NavItem {
   permission?: string
 }
 
-const NAV: NavItem[] = [
-  { to: '/dashboard',  icon: LayoutGrid, label: 'Dashboard'  },
-  { to: '/inbox',      icon: Inbox,      label: 'Inbox'      },
-  { to: '/meetings',   icon: Video,      label: 'Meetings',   permission: 'meetings.*' },
-  { to: '/employees',  icon: UserCheck,  label: 'Employees',  permission: 'employees.*' },
-  { to: '/boards',     icon: LayoutGrid, label: 'Boards'     },
-  { to: '/documents',  icon: FileText,   label: 'Documents'  },
-  { to: '/crm',        icon: Users,      label: 'CRM',        permission: 'crm.*' },
-  { to: '/ai/chat',    icon: Sparkles,   label: 'AI Chat'    },
-  { to: '/erp',        icon: Wallet,     label: 'ERP',        permission: 'invoices.*' },
-  { to: '/automation', icon: Zap,        label: 'Automation' },
-  { to: '/reports',    icon: BarChart2,  label: 'Reports',    permission: 'reports.*' },
+interface NavSection {
+  label: string
+  items: NavItem[]
+}
+
+const SECTIONS: NavSection[] = [
+  {
+    label: 'Workspace',
+    items: [
+      { to: '/my-day',    icon: Sun,          label: 'My Day'    },
+      { to: '/calendar',  icon: CalendarDays, label: 'Calendar'  },
+      { to: '/dashboard', icon: LayoutGrid,   label: 'Dashboard'  },
+      { to: '/boards',    icon: LayoutGrid, label: 'Boards'     },
+      { to: '/documents', icon: FileText,   label: 'Documents'  },
+    ],
+  },
+  {
+    label: 'CRM',
+    items: [
+      { to: '/crm', icon: Users, label: 'CRM', permission: 'crm.*' },
+    ],
+  },
+  {
+    label: 'Communication',
+    items: [
+      { to: '/inbox',    icon: Inbox,    label: 'Inbox'    },
+      { to: '/meetings', icon: Video,    label: 'Meetings', permission: 'meetings.*' },
+      { to: '/email',    icon: Mail,     label: 'Email'    },
+      { to: '/ai/chat',  icon: Sparkles, label: 'AI Chat'  },
+    ],
+  },
+  {
+    label: 'ERP',
+    items: [
+      { to: '/erp', icon: Wallet, label: 'ERP', permission: 'invoices.*' },
+    ],
+  },
+  {
+    label: 'Admin',
+    items: [
+      { to: '/automation', icon: Zap,        label: 'Automation' },
+      { to: '/reports',    icon: BarChart2,  label: 'Reports',   permission: 'reports.*' },
+      { to: '/support',    icon: HeadphonesIcon, label: 'Support'  },
+      { to: '/marketing',  icon: Megaphone,  label: 'Marketing'  },
+      { to: '/employees',  icon: UserCheck,  label: 'Employees', permission: 'employees.*' },
+    ],
+  },
 ]
 
 const STORAGE_KEY = 'sidebar:collapsed'
@@ -43,6 +80,8 @@ export default function NavRail({ onCmdOpen }: Props) {
   const user        = useAuthStore(s => s.user)
   const workspace   = useAuthStore(s => s.workspace)
   const unreadCount = useNotificationStore(s => s.unreadCount)
+  const theme       = useThemeStore(s => s.theme)
+  const toggleTheme = useThemeStore(s => s.toggleTheme)
   const navigate    = useNavigate()
 
   const [collapsed, setCollapsed] = useState<boolean>(() => {
@@ -55,6 +94,21 @@ export default function NavRail({ onCmdOpen }: Props) {
 
   const expanded = !collapsed
 
+  const labelStyle: React.CSSProperties = {
+    opacity: expanded ? 1 : 0,
+    width: expanded ? 'auto' : 0,
+    overflow: 'hidden',
+    transition: 'opacity var(--duration-200) var(--ease-out), width var(--duration-300) var(--ease-spring)',
+    whiteSpace: 'nowrap',
+  }
+
+  const sectionLabelStyle: React.CSSProperties = {
+    opacity: expanded ? 1 : 0,
+    overflow: 'hidden',
+    transition: 'opacity var(--duration-200) var(--ease-out)',
+    whiteSpace: 'nowrap',
+  }
+
   return (
     <aside
       aria-label="Main navigation"
@@ -66,7 +120,6 @@ export default function NavRail({ onCmdOpen }: Props) {
       }}
       className="flex flex-col shrink-0 z-10 overflow-hidden"
     >
-      {/* Workspace avatar / name */}
       <button
         className="flex items-center gap-2.5 px-3 py-3 mb-1 hover:bg-[var(--color-bg-hover)] rounded-none transition-colors w-full text-left"
         aria-label={workspace?.name ?? 'Aquerii'}
@@ -86,21 +139,11 @@ export default function NavRail({ onCmdOpen }: Props) {
             shape="rounded"
           />
         )}
-        <span
-          className="text-sm font-semibold text-[var(--color-text-primary)] truncate"
-          style={{
-            opacity: expanded ? 1 : 0,
-            width: expanded ? 'auto' : 0,
-            overflow: 'hidden',
-            transition: 'opacity var(--duration-200) var(--ease-out), width var(--duration-300) var(--ease-spring)',
-            whiteSpace: 'nowrap',
-          }}
-        >
+        <span className="text-sm font-semibold text-[var(--color-text-primary)] truncate" style={labelStyle}>
           {workspace?.name ?? 'Aquerii'}
         </span>
       </button>
 
-      {/* Search */}
       <button
         onClick={onCmdOpen}
         title="Search (⌘K)"
@@ -108,70 +151,60 @@ export default function NavRail({ onCmdOpen }: Props) {
         className="mx-1.5 mb-1 h-9 flex items-center gap-2.5 px-2 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors"
       >
         <Search size={16} className="flex-shrink-0" />
-        <span
-          className="text-sm truncate"
-          style={{
-            opacity: expanded ? 1 : 0,
-            width: expanded ? 'auto' : 0,
-            overflow: 'hidden',
-            transition: 'opacity var(--duration-200) var(--ease-out), width var(--duration-300) var(--ease-spring)',
-            whiteSpace: 'nowrap',
-          }}
-        >
+        <span className="text-sm truncate" style={labelStyle}>
           Search…
         </span>
       </button>
 
-      {/* Main nav */}
-      <nav className="flex-1 flex flex-col gap-0.5 px-1.5 mt-1 overflow-y-auto" aria-label="App sections">
-        {NAV.map(({ to, icon: Icon, label, permission }) => (
-          <PermissionGate key={to} permission={permission ?? ''} fallback={null}>
-            <NavLink
-              to={to}
-              aria-label={label}
-              title={collapsed ? label : undefined}
-              className={({ isActive }) =>
-                clsx(
-                  'relative flex items-center gap-2.5 px-2 h-9 rounded-lg transition-colors',
-                  isActive
-                    ? 'bg-[var(--color-accent-light)] text-[var(--color-accent-text)]'
-                    : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)]'
-                )
-              }
+      <nav className="flex-1 flex flex-col gap-1 px-1.5 mt-1 overflow-y-auto" aria-label="App sections">
+        {SECTIONS.map((section) => (
+          <div key={section.label} className="flex flex-col gap-0.5">
+            <span
+              className="text-[10px] font-semibold uppercase tracking-widest text-muted px-2 py-1"
+              style={sectionLabelStyle}
             >
-              {({ isActive }) => (
-                <>
-                  <Icon size={16} aria-hidden="true" className="flex-shrink-0" />
-                  <span
-                    className="text-sm font-medium truncate"
-                    style={{
-                      opacity: expanded ? 1 : 0,
-                      width: expanded ? 'auto' : 0,
-                      overflow: 'hidden',
-                      transition: 'opacity var(--duration-200) var(--ease-out), width var(--duration-300) var(--ease-spring)',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {label}
-                  </span>
-                  {isActive && <span className="sr-only">(current)</span>}
-                  {to === '/inbox' && unreadCount > 0 && (
-                    <span
-                      className="absolute bg-red-500 text-white text-[9px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none"
-                      style={{ top: 4, left: collapsed ? 20 : 20 }}
-                      aria-label={`${unreadCount} unread`}
-                    >
-                      {unreadCount > 9 ? '9+' : unreadCount}
-                    </span>
+              {section.label}
+            </span>
+            {section.items.map(({ to, icon: Icon, label, permission }) => (
+              <PermissionGate key={to} permission={permission ?? ''} fallback={null}>
+                <NavLink
+                  to={to}
+                  aria-label={label}
+                  title={collapsed ? label : undefined}
+                  className={({ isActive }) =>
+                    clsx(
+                      'relative flex items-center gap-2.5 px-2 h-9 rounded-lg transition-colors',
+                      isActive
+                        ? 'bg-[var(--color-accent-light)] text-[var(--color-accent-text)]'
+                        : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)]'
+                    )
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <Icon size={16} aria-hidden="true" className="flex-shrink-0" />
+                      <span className="text-sm font-medium truncate" style={labelStyle}>
+                        {label}
+                      </span>
+                      {isActive && <span className="sr-only">(current)</span>}
+                      {to === '/inbox' && unreadCount > 0 && (
+                        <span
+                          className="absolute bg-red-500 text-white text-[9px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none"
+                          style={{ top: 4, left: collapsed ? 20 : 20 }}
+                          aria-label={`${unreadCount} unread`}
+                        >
+                          {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                      )}
+                    </>
                   )}
-                </>
-              )}
-            </NavLink>
-          </PermissionGate>
+                </NavLink>
+              </PermissionGate>
+            ))}
+          </div>
         ))}
       </nav>
 
-      {/* Bottom: settings + user + collapse toggle */}
       <div className="flex flex-col gap-0.5 px-1.5 pb-2 mt-2">
         <PermissionGate permission="settings.*">
           <NavLink
@@ -190,16 +223,7 @@ export default function NavRail({ onCmdOpen }: Props) {
             {({ isActive }) => (
               <>
                 <Settings size={16} className="flex-shrink-0" aria-hidden="true" />
-                <span
-                  className="text-sm font-medium truncate"
-                  style={{
-                    opacity: expanded ? 1 : 0,
-                    width: expanded ? 'auto' : 0,
-                    overflow: 'hidden',
-                    transition: 'opacity var(--duration-200) var(--ease-out), width var(--duration-300) var(--ease-spring)',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
+                <span className="text-sm font-medium truncate" style={labelStyle}>
                   Settings
                 </span>
               </>
@@ -207,7 +231,6 @@ export default function NavRail({ onCmdOpen }: Props) {
           </NavLink>
         </PermissionGate>
 
-        {/* User profile */}
         <button
           onClick={() => navigate('/settings/profile')}
           title={collapsed ? (user?.name ?? 'Profile') : undefined}
@@ -221,21 +244,26 @@ export default function NavRail({ onCmdOpen }: Props) {
               {user?.name?.[0] ?? 'U'}
             </div>
           )}
-          <span
-            className="text-sm truncate"
-            style={{
-              opacity: expanded ? 1 : 0,
-              width: expanded ? 'auto' : 0,
-              overflow: 'hidden',
-              transition: 'opacity var(--duration-200) var(--ease-out), width var(--duration-300) var(--ease-spring)',
-              whiteSpace: 'nowrap',
-            }}
-          >
+          <span className="text-sm truncate" style={labelStyle}>
             {user?.name ?? 'Profile'}
           </span>
         </button>
 
-        {/* Collapse toggle */}
+        <button
+          onClick={toggleTheme}
+          title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          className="flex items-center gap-2.5 px-2 h-9 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors w-full"
+        >
+          {theme === 'dark'
+            ? <Sun size={16} className="flex-shrink-0" aria-hidden="true" />
+            : <Moon size={16} className="flex-shrink-0" aria-hidden="true" />
+          }
+          <span className="text-sm truncate" style={labelStyle}>
+            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          </span>
+        </button>
+
         <button
           onClick={() => setCollapsed(v => !v)}
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -246,16 +274,7 @@ export default function NavRail({ onCmdOpen }: Props) {
             ? <ChevronRight size={16} className="flex-shrink-0" aria-hidden="true" />
             : <ChevronLeft  size={16} className="flex-shrink-0" aria-hidden="true" />
           }
-          <span
-            className="text-sm truncate"
-            style={{
-              opacity: expanded ? 1 : 0,
-              width: expanded ? 'auto' : 0,
-              overflow: 'hidden',
-              transition: 'opacity var(--duration-200) var(--ease-out), width var(--duration-300) var(--ease-spring)',
-              whiteSpace: 'nowrap',
-            }}
-          >
+          <span className="text-sm truncate" style={labelStyle}>
             Collapse
           </span>
         </button>

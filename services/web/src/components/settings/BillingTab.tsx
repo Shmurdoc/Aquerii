@@ -4,6 +4,8 @@ import { useBilling, useCreateCheckout, useCreatePortal, useCancelSubscription }
 import { PLANS, type PlanId } from '@/lib/settings'
 import UsageMeter from '@/components/subscription/UsageMeter'
 import { Check, CreditCard, XCircle, Zap, Shield, TrendingUp, Sparkles, ExternalLink, ArrowRight, HelpCircle, ChevronRight } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
+import { Badge } from '@/components/ui/Badge'
 
 const STRIPE_PRICE_IDS: Record<string, string> = {
   starter:  'price_starter_monthly',
@@ -35,17 +37,17 @@ function PlanCard({ plan, isCurrent, currentPlan, onUpgrade, onContactSales, isL
       }`}
     >
       {plan.popular && !isCurrent && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-accent text-white shadow-lg">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+          <Badge variant="primary" size="sm">
             <Zap size={10} /> Most Popular
-          </span>
+          </Badge>
         </div>
       )}
       {isCurrent && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-lg">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+          <Badge variant="success" size="sm">
             <Sparkles size={10} /> Current Plan
-          </span>
+          </Badge>
         </div>
       )}
 
@@ -84,20 +86,17 @@ function PlanCard({ plan, isCurrent, currentPlan, onUpgrade, onContactSales, isL
             Current Plan
           </span>
         ) : isEnterprise ? (
-          <button onClick={onContactSales}
-            className="text-xs text-center py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors flex items-center justify-center gap-1.5">
+          <Button variant="secondary" size="sm" fullWidth onClick={onContactSales}>
             <HelpCircle size={12} /> Contact Sales
-          </button>
+          </Button>
         ) : isDowngrade ? (
-          <button onClick={() => onUpgrade(plan.id)} disabled={isLoading}
-            className="text-xs text-center py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors disabled:opacity-50">
-            {isLoading ? 'Processing...' : 'Downgrade'}
-          </button>
+          <Button variant="secondary" size="sm" fullWidth onClick={() => onUpgrade(plan.id)} disabled={isLoading} loading={isLoading}>
+            Downgrade
+          </Button>
         ) : (
-          <button onClick={() => onUpgrade(plan.id)} disabled={isLoading}
-            className="text-xs text-center py-2 rounded-lg bg-accent hover:bg-accent/90 text-white font-medium transition-all disabled:opacity-50 shadow-lg shadow-accent/20 flex items-center justify-center gap-1.5">
-            {isLoading ? 'Redirecting...' : <>Upgrade <ArrowRight size={12} /></>}
-          </button>
+          <Button variant="primary" size="sm" fullWidth onClick={() => onUpgrade(plan.id)} disabled={isLoading} loading={isLoading}>
+            Upgrade <ArrowRight size={12} />
+          </Button>
         )}
       </div>
     </div>
@@ -146,13 +145,11 @@ export default function BillingTab() {
 
   return (
     <div className="max-w-5xl">
-      {/* ── Header ── */}
       <div className="mb-8">
         <h2 className="text-lg font-semibold text-gray-100">Subscription</h2>
         <p className="text-xs text-gray-500 mt-1">Manage your plan, monitor usage, and view billing history.</p>
       </div>
 
-      {/* ── Current Plan Hero ── */}
       <div className="relative overflow-hidden rounded-xl border border-gray-700/50 bg-gradient-to-br from-gray-800/60 via-gray-800/30 to-gray-900/60 p-6 mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -167,27 +164,21 @@ export default function BillingTab() {
               <div className="flex items-center gap-2 mt-1">
                 {billing ? (
                   <>
-                    <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                      billing.status === 'active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                      billing.status === 'trialing' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
-                      billing.status === 'past_due' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                      'bg-gray-500/10 text-gray-400 border border-gray-500/20'
-                    }`}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${
-                        billing.status === 'active' ? 'bg-emerald-400' :
-                        billing.status === 'trialing' ? 'bg-blue-400' :
-                        billing.status === 'past_due' ? 'bg-amber-400' :
-                        'bg-gray-400'
-                      }`} />
+                    <Badge variant={
+                      billing.status === 'active' ? 'success' :
+                      billing.status === 'trialing' ? 'info' :
+                      billing.status === 'past_due' ? 'warning' :
+                      'default'
+                    } size="sm" dot>
                       {billing.status === 'active' ? 'Active' :
                        billing.status === 'trialing' ? 'Trial' :
                        billing.status === 'past_due' ? 'Past Due' :
                        billing.status === 'none' ? 'No Subscription' : billing.status}
-                    </span>
+                    </Badge>
                     {billing.cancel_at_period_end && (
-                      <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                      <Badge variant="warning" size="sm">
                         Cancels at period end
-                      </span>
+                      </Badge>
                     )}
                   </>
                 ) : (
@@ -199,15 +190,13 @@ export default function BillingTab() {
           <div className="flex items-center gap-2">
             {billing && billing.status !== 'none' && billing.status !== 'free' && (
               <>
-                <button onClick={handlePortal}
-                  className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors">
+                <Button variant="secondary" size="sm" onClick={handlePortal} loading={portal.isPending}>
                   <CreditCard size={13} /> Billing Portal
-                </button>
+                </Button>
                 {!billing.cancel_at_period_end && (
-                  <button onClick={handleCancel} disabled={cancelSub.isPending}
-                    className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg bg-gray-700/50 hover:bg-red-900/30 text-gray-400 hover:text-red-400 transition-colors disabled:opacity-50">
-                    <XCircle size={13} /> {cancelSub.isPending ? '...' : 'Cancel'}
-                  </button>
+                  <Button variant="danger" size="sm" onClick={handleCancel} disabled={cancelSub.isPending} loading={cancelSub.isPending}>
+                    <XCircle size={13} /> Cancel
+                  </Button>
                 )}
               </>
             )}
@@ -220,13 +209,12 @@ export default function BillingTab() {
           </div>
         </div>
 
-        {/* Usage meters */}
         {billing && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-700/30">
             <UsageMeter
               label="Storage"
               used={billing.storage_used_bytes}
-              limit={limits?.max_storage_bytes ?? limits?.storage ?? 100 * 1024 * 1024}
+              limit={limits?.max_storage_bytes ?? 100 * 1024 * 1024}
               unit="bytes"
             />
             <UsageMeter
@@ -243,7 +231,6 @@ export default function BillingTab() {
         )}
       </div>
 
-      {/* ── Billing Toggle & Plan Grid ── */}
       <div id="plans" className="mb-4 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-gray-200">Compare Plans</h3>
         <div className="flex items-center gap-2 bg-gray-800/60 rounded-lg p-0.5 border border-gray-700/50">
@@ -273,7 +260,6 @@ export default function BillingTab() {
         ))}
       </div>
 
-      {/* ── Enterprise CTA ── */}
       {currentPlan !== 'enterprise' && (
         <div className="mt-8 relative overflow-hidden rounded-xl border border-gray-700/50 bg-gradient-to-r from-gray-800/40 via-gray-800/20 to-gray-800/40 p-6">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/5 via-transparent to-transparent" />
@@ -287,15 +273,13 @@ export default function BillingTab() {
                 <p className="text-xs text-gray-500 mt-0.5">Enterprise plans with custom pricing, dedicated support, and on-premise options.</p>
               </div>
             </div>
-            <a href="mailto:sales@aquerii.com?subject=Enterprise Inquiry"
-              className="flex items-center gap-2 text-xs px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors whitespace-nowrap">
+            <Button variant="secondary" size="sm" href="mailto:sales@aquerii.com?subject=Enterprise Inquiry">
               Talk to Sales <ExternalLink size={12} />
-            </a>
+            </Button>
           </div>
         </div>
       )}
 
-      {/* ── Features comparison callout ── */}
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           { icon: Shield, label: 'Secure & Compliant', desc: 'Enterprise-grade security with encryption at rest and in transit.' },

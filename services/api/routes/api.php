@@ -141,6 +141,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::apiResource('boards', BoardController::class)->except(['index'])->middleware('idempotent');
         Route::get('boards', [BoardController::class, 'index']);
 
+        // My Day — aggregate view across all boards
+        Route::get('my-day', [ItemController::class, 'myDay']);
+
         Route::prefix('boards/{board}')->group(function () {
             Route::apiResource('columns', BoardColumnController::class)->middleware('idempotent');
             Route::apiResource('groups', BoardGroupController::class)->middleware('idempotent');

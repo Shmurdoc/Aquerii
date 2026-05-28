@@ -4,6 +4,7 @@ import { useMeetings, useCreateMeeting, useUpdateMeeting, useDeleteMeeting, useU
 import { Meeting, CreateMeetingPayload, MeetingStatus, MeetingProvider } from '@/lib/meetings'
 import { useAuthStore } from '@/stores/authStore'
 import clsx from 'clsx'
+import { Button, Input } from '@/components/ui'
 
 const STATUSES: MeetingStatus[] = ['scheduled', 'ongoing', 'completed', 'cancelled']
 
@@ -35,8 +36,6 @@ function formatDuration(start: string, end: string) {
   if (m < 60) return `${m}m`
   return `${Math.floor(m / 60)}h ${m % 60}m`
 }
-
-// ─── New Meeting Modal ─────────────────────────────────────────────────────────
 
 function emptyForm(): Partial<CreateMeetingPayload> {
   const now = new Date()
@@ -80,44 +79,50 @@ function NewMeetingModal({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto flex flex-col"
+        className="rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto flex flex-col"
+        style={{ background: 'var(--color-bg-base)', border: '1px solid var(--color-glass-border)' }}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
-          <h2 className="font-semibold text-gray-100">New Meeting</h2>
-          <button type="button" onClick={onClose} className="text-gray-500 hover:text-gray-200"><X size={18} /></button>
+        <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+          <h2 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>New Meeting</h2>
+          <button type="button" onClick={onClose} style={{ color: 'var(--color-text-muted)' }}><X size={18} /></button>
         </div>
 
         <div className="p-5 flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Title *</label>
+            <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Title *</label>
             <input required value={form.title ?? ''} onChange={e => setForm({ ...form, title: e.target.value })}
-              className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+              className="rounded px-2 py-1.5 text-sm outline-none"
+              style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Description</label>
+            <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Description</label>
             <textarea value={form.description ?? ''} onChange={e => setForm({ ...form, description: e.target.value })}
-              rows={2} className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 resize-none focus:outline-none focus:border-indigo-500" />
+              rows={2} className="rounded px-2 py-1.5 text-sm resize-none outline-none"
+              style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Starts *</label>
+              <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Starts *</label>
               <input required type="datetime-local" value={form.starts_at ?? ''} onChange={e => setForm({ ...form, starts_at: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="rounded px-2 py-1.5 text-sm outline-none"
+                style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Ends *</label>
+              <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Ends *</label>
               <input required type="datetime-local" value={form.ends_at ?? ''} onChange={e => setForm({ ...form, ends_at: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="rounded px-2 py-1.5 text-sm outline-none"
+                style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Provider</label>
+              <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Provider</label>
               <select value={form.provider ?? 'zoom'} onChange={e => setForm({ ...form, provider: e.target.value as MeetingProvider })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500">
+                className="rounded px-2 py-1.5 text-sm outline-none"
+                style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }}>
                 <option value="zoom">Zoom</option>
                 <option value="teams">Microsoft Teams</option>
                 <option value="google">Google Meet</option>
@@ -125,35 +130,38 @@ function NewMeetingModal({ onClose }: { onClose: () => void }) {
               </select>
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Location</label>
+              <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Location</label>
               <input value={form.location ?? ''} onChange={e => setForm({ ...form, location: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="rounded px-2 py-1.5 text-sm outline-none"
+                style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
             </div>
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Meeting URL</label>
+            <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Meeting URL</label>
             <input type="url" value={form.meeting_url ?? ''} onChange={e => setForm({ ...form, meeting_url: e.target.value })}
-              className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+              className="rounded px-2 py-1.5 text-sm outline-none"
+              style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Attendees</label>
+            <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Attendees</label>
             <div className="flex gap-2">
               <input value={attendeeInput} onChange={e => setAttendeeInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addAttendee())}
                 placeholder="Enter email and press Enter"
-                className="flex-1 bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-indigo-500" />
-              <button type="button" onClick={addAttendee}
-                className="text-xs px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 text-gray-300">Add</button>
+                className="flex-1 rounded px-2 py-1.5 text-sm outline-none"
+                style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
+              <Button size="sm" type="button" onClick={addAttendee}>Add</Button>
             </div>
             {(form.attendees ?? []).length > 0 && (
               <div className="mt-1 flex flex-wrap gap-1.5">
                 {(form.attendees ?? []).map((a, i) => (
-                  <span key={i} className="flex items-center gap-1 text-xs bg-gray-800 rounded px-2 py-0.5 text-gray-300">
+                  <span key={i} className="flex items-center gap-1 text-xs rounded px-2 py-0.5"
+                    style={{ background: 'var(--color-bg-hover)', color: 'var(--color-text-secondary)' }}>
                     {a.email}
                     <button type="button" onClick={() => setForm(f => ({ ...f, attendees: (f.attendees ?? []).filter((_, j) => j !== i) }))}
-                      className="text-gray-600 hover:text-gray-300"><X size={12} /></button>
+                      className="hover:opacity-70" style={{ color: 'var(--color-text-muted)' }}><X size={12} /></button>
                   </span>
                 ))}
               </div>
@@ -161,20 +169,16 @@ function NewMeetingModal({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <div className="px-5 py-4 border-t border-gray-800 flex justify-end gap-2">
-          <button type="button" onClick={onClose}
-            className="text-xs px-3 py-1.5 rounded bg-gray-800 hover:bg-gray-700 text-gray-300">Cancel</button>
-          <button type="submit" disabled={create.isPending}
-            className="text-xs px-4 py-1.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50">
+        <div className="px-5 py-4 border-t flex justify-end gap-2" style={{ borderColor: 'var(--color-glass-border)' }}>
+          <Button size="sm" variant="ghost" type="button" onClick={onClose}>Cancel</Button>
+          <Button size="sm" type="submit" disabled={create.isPending}>
             {create.isPending ? 'Creating…' : 'Create Meeting'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
   )
 }
-
-// ─── Detail Panel ─────────────────────────────────────────────────────────────
 
 function MeetingDetail({ meeting, onClose }: { meeting: Meeting; onClose: () => void }) {
   const user = useAuthStore(s => s.user)
@@ -194,72 +198,73 @@ function MeetingDetail({ meeting, onClose }: { meeting: Meeting; onClose: () => 
   }
 
   return (
-    <div className="w-96 border-l border-gray-800 bg-gray-900/60 overflow-y-auto flex flex-col shrink-0">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
-        <h2 className="text-sm font-semibold text-gray-100">Meeting Details</h2>
-        <button onClick={onClose} className="text-gray-500 hover:text-gray-200"><X size={16} /></button>
+    <div className="w-96 border-l overflow-y-auto flex flex-col shrink-0"
+      style={{ borderColor: 'var(--color-glass-border)', background: 'var(--color-bg-base)' }}>
+      <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+        <h2 className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Meeting Details</h2>
+        <button onClick={onClose} style={{ color: 'var(--color-text-muted)' }}><X size={16} /></button>
       </div>
 
       <div className="p-5 flex flex-col gap-4">
         <div>
-          <h3 className="text-base font-semibold text-gray-100">{meeting.title}</h3>
+          <h3 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>{meeting.title}</h3>
           <div className="flex items-center gap-2 mt-2">
             <span className={clsx('text-[10px] font-medium px-2 py-0.5 rounded-full', STATUS_LABEL[meeting.status].classes)}>
               {STATUS_LABEL[meeting.status].label}
             </span>
-            <span className="text-[10px] text-gray-500">{meeting.provider.toUpperCase()}</span>
+            <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>{meeting.provider.toUpperCase()}</span>
           </div>
         </div>
 
         {meeting.description && (
-          <p className="text-xs text-gray-400 leading-relaxed">{meeting.description}</p>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{meeting.description}</p>
         )}
 
-        <div className="flex flex-col gap-2 text-xs text-gray-400">
+        <div className="flex flex-col gap-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
           <div className="flex items-center gap-2">
-            <Calendar size={13} className="text-gray-500 shrink-0" />
+            <Calendar size={13} className="shrink-0" style={{ color: 'var(--color-text-muted)' }} />
             {formatDate(meeting.starts_at)}
           </div>
           <div className="flex items-center gap-2">
-            <Clock size={13} className="text-gray-500 shrink-0" />
+            <Clock size={13} className="shrink-0" style={{ color: 'var(--color-text-muted)' }} />
             {formatTime(meeting.starts_at)} – {formatTime(meeting.ends_at)}
-            <span className="text-gray-600">({formatDuration(meeting.starts_at, meeting.ends_at)})</span>
+            <span style={{ color: 'var(--color-text-muted)' }}>({formatDuration(meeting.starts_at, meeting.ends_at)})</span>
           </div>
           {meeting.location && (
             <div className="flex items-center gap-2">
-              <MapPin size={13} className="text-gray-500 shrink-0" />
+              <MapPin size={13} className="shrink-0" style={{ color: 'var(--color-text-muted)' }} />
               {meeting.location}
             </div>
           )}
           {meeting.meeting_url && (
             <div className="flex items-center gap-2">
-              <Link size={13} className="text-gray-500 shrink-0" />
+              <Link size={13} className="shrink-0" style={{ color: 'var(--color-text-muted)' }} />
               <a href={meeting.meeting_url} target="_blank" rel="noopener noreferrer"
-                className="text-indigo-400 hover:text-indigo-300 truncate">{meeting.meeting_url}</a>
+                className="truncate" style={{ color: 'var(--color-accent-text)' }}>{meeting.meeting_url}</a>
             </div>
           )}
         </div>
 
         {meeting.organizer && (
-          <div className="flex items-center gap-2 text-xs text-gray-400">
-            <Users size={13} className="text-gray-500 shrink-0" />
+          <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+            <Users size={13} className="shrink-0" style={{ color: 'var(--color-text-muted)' }} />
             Organized by {meeting.organizer.name}
           </div>
         )}
 
-        {/* RSVP */}
         {myAttendance && !isPast && meeting.status === 'scheduled' && (
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs text-gray-500">Your RSVP</span>
+            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Your RSVP</span>
             <div className="flex gap-2">
               {(['accepted', 'tentative', 'declined'] as const).map(s => (
                 <button key={s} onClick={() => handleRsvp(s)} disabled={updateAttendance.isPending}
                   className={clsx(
                     'text-xs px-3 py-1 rounded transition-colors',
-                    myAttendance.status === s
-                      ? s === 'accepted' ? 'bg-green-600 text-white' : s === 'tentative' ? 'bg-yellow-600 text-white' : 'bg-red-600 text-white'
-                      : 'bg-gray-800 text-gray-400 hover:text-gray-200'
-                  )}>
+                  )}
+                  style={myAttendance.status === s
+                    ? s === 'accepted' ? { background: '#16a34a', color: '#fff' } : s === 'tentative' ? { background: '#ca8a04', color: '#fff' } : { background: '#dc2626', color: '#fff' }
+                    : { background: 'var(--color-bg-hover)', color: 'var(--color-text-secondary)' }
+                  }>
                   {s === 'accepted' ? 'Yes' : s === 'tentative' ? 'Maybe' : 'No'}
                 </button>
               ))}
@@ -267,50 +272,44 @@ function MeetingDetail({ meeting, onClose }: { meeting: Meeting; onClose: () => 
           </div>
         )}
 
-        {/* Attendees */}
         {meeting.attendees && meeting.attendees.length > 0 && (
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs text-gray-500">
+            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
               Attendees ({meeting.attendees.length})
             </span>
             <div className="flex flex-col gap-1">
               {meeting.attendees.map(a => (
-                <div key={a.id} className="flex items-center justify-between text-xs text-gray-400 py-1">
+                <div key={a.id} className="flex items-center justify-between text-xs py-1" style={{ color: 'var(--color-text-secondary)' }}>
                   <div className="flex items-center gap-2">
-                    {a.status === 'accepted' ? <Check size={12} className="text-green-500" />
-                      : a.status === 'declined' ? <Minus size={12} className="text-red-500" />
-                      : <Clock size={12} className="text-gray-600" />}
+                    {a.status === 'accepted' ? <Check size={12} style={{ color: 'var(--color-status-success)' }} />
+                      : a.status === 'declined' ? <Minus size={12} style={{ color: 'var(--color-status-blocked)' }} />
+                      : <Clock size={12} style={{ color: 'var(--color-text-muted)' }} />}
                     <span>{a.name || a.email}</span>
-                    {a.name && <span className="text-gray-600">{a.email}</span>}
+                    {a.name && <span style={{ color: 'var(--color-text-muted)' }}>{a.email}</span>}
                   </div>
-                  {!a.required && <span className="text-[10px] text-gray-600">optional</span>}
+                  {!a.required && <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>optional</span>}
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* Actions */}
         {!isPast && (
-          <div className="flex gap-2 pt-2 border-t border-gray-800">
+          <div className="flex gap-2 pt-2 border-t" style={{ borderColor: 'var(--color-glass-border)' }}>
             {meeting.status === 'scheduled' && (
-              <button onClick={() => handleStatusChange('cancelled')} disabled={deleteMeeting.isPending}
-                className="text-xs px-3 py-1.5 rounded bg-red-600/20 hover:bg-red-600/40 text-red-400 transition-colors">
+              <Button size="sm" variant="ghost" onClick={() => handleStatusChange('cancelled')} disabled={deleteMeeting.isPending}>
                 Cancel Meeting
-              </button>
+              </Button>
             )}
-            <button onClick={() => { deleteMeeting.mutate(meeting.id); onClose() }} disabled={deleteMeeting.isPending}
-              className="text-xs px-3 py-1.5 rounded bg-gray-800 hover:bg-gray-700 text-gray-400 transition-colors ml-auto">
+            <Button size="sm" variant="ghost" onClick={() => { deleteMeeting.mutate(meeting.id); onClose() }} disabled={deleteMeeting.isPending} className="!ml-auto">
               Delete
-            </button>
+            </Button>
           </div>
         )}
       </div>
     </div>
   )
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function MeetingsPage() {
   const [statusFilter, setStatusFilter] = useState('')
@@ -325,18 +324,20 @@ export default function MeetingsPage() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Toolbar */}
-      <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-800 shrink-0">
-        <Video size={16} className="text-gray-500" />
-        <h1 className="text-base font-semibold text-gray-100 mr-2">Meetings</h1>
+      <div className="flex items-center gap-3 px-6 py-4 border-b shrink-0" style={{ borderColor: 'var(--color-glass-border)' }}>
+        <Video size={16} style={{ color: 'var(--color-text-muted)' }} />
+        <h1 className="text-base font-semibold mr-2" style={{ color: 'var(--color-text-primary)' }}>Meetings</h1>
 
         <div className="flex gap-1">
           {['', ...STATUSES].map(s => (
             <button key={s} onClick={() => setStatusFilter(s)}
               className={clsx(
                 'text-xs px-3 py-1 rounded transition-colors',
-                statusFilter === s ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-gray-200'
-              )}>
+              )}
+              style={statusFilter === s
+                ? { background: 'var(--color-accent)', color: '#fff' }
+                : { background: 'var(--color-bg-hover)', color: 'var(--color-text-muted)' }
+              }>
               {s === '' ? 'All' : STATUS_LABEL[s as MeetingStatus].label}
             </button>
           ))}
@@ -344,24 +345,21 @@ export default function MeetingsPage() {
 
         <div className="flex-1" />
 
-        <button onClick={() => setShowNew(true)}
-          className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white">
+        <Button size="sm" onClick={() => setShowNew(true)}>
           <Plus size={13} />
           New Meeting
-        </button>
+        </Button>
       </div>
 
-      {/* Content */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Meeting list */}
         <div className="flex-1 overflow-y-auto">
           {isLoading ? (
-            <div className="flex items-center justify-center h-40 text-gray-500 text-sm">Loading…</div>
+            <div className="flex items-center justify-center h-40 text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading…</div>
           ) : meetings.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-40 gap-2">
-              <Video size={24} className="text-gray-700" />
-              <p className="text-gray-500 text-sm">No meetings found</p>
-              <button onClick={() => setShowNew(true)} className="text-xs text-indigo-400 hover:text-indigo-300">Schedule your first meeting</button>
+              <Video size={24} className="opacity-50" />
+              <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>No meetings found</p>
+              <button onClick={() => setShowNew(true)} className="text-xs" style={{ color: 'var(--color-accent-text)' }}>Schedule your first meeting</button>
             </div>
           ) : (
             <div className="p-4 flex flex-col gap-2">
@@ -369,20 +367,24 @@ export default function MeetingsPage() {
                 <button
                   key={m.id}
                   onClick={() => setSelectedId(m.id)}
-                  className={clsx(
-                    'w-full text-left bg-gray-900 border rounded-xl p-4 transition-colors hover:border-indigo-500/40',
-                    selectedId === m.id ? 'border-indigo-500/60' : 'border-gray-800'
-                  )}
+                  className="w-full text-left rounded-xl p-4 transition-colors"
+                  style={{
+                    background: 'var(--color-bg-surface)',
+                    border: selectedId === m.id
+                      ? '1px solid var(--color-accent)'
+                      : '1px solid var(--color-glass-border)',
+                  }}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-gray-800 flex items-center justify-center text-[11px] font-bold text-gray-400 shrink-0">
+                        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold shrink-0"
+                          style={{ background: 'var(--color-bg-hover)', color: 'var(--color-text-secondary)' }}>
                           {PROVIDER_ICONS[m.provider]}
                         </div>
-                        <h3 className="text-sm font-medium text-gray-100 truncate">{m.title}</h3>
+                        <h3 className="text-sm font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{m.title}</h3>
                       </div>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-3 mt-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
                         <span className="flex items-center gap-1">
                           <Calendar size={11} />
                           {formatDate(m.starts_at)}
@@ -391,18 +393,19 @@ export default function MeetingsPage() {
                           <Clock size={11} />
                           {formatTime(m.starts_at)}
                         </span>
-                        <span className="text-gray-600">{formatDuration(m.starts_at, m.ends_at)}</span>
+                        <span style={{ color: 'var(--color-text-muted)' }}>{formatDuration(m.starts_at, m.ends_at)}</span>
                       </div>
                       {m.attendees && m.attendees.length > 0 && (
-                        <div className="flex items-center gap-1 mt-1.5 text-xs text-gray-600">
+                        <div className="flex items-center gap-1 mt-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}>
                           <Users size={11} />
                           {m.attendees.length} attendee{m.attendees.length !== 1 ? 's' : ''}
-                          <span className="text-gray-700">·</span>
+                          <span className="mx-1" style={{ color: 'var(--color-glass-border)' }}>·</span>
                           {m.attendees.filter(a => a.status === 'accepted').length} accepted
                         </div>
                       )}
                     </div>
-                    <span className={clsx('text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0', STATUS_LABEL[m.status].classes)}>
+                    <span className={clsx('text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0', STATUS_LABEL[m.status].classes)}
+                      style={{ background: `var(--color-bg-hover)` }}>
                       {STATUS_LABEL[m.status].label}
                     </span>
                   </div>
@@ -412,13 +415,11 @@ export default function MeetingsPage() {
           )}
         </div>
 
-        {/* Detail panel */}
         {selected && (
           <MeetingDetail meeting={selected} onClose={() => setSelectedId(null)} />
         )}
       </div>
 
-      {/* New Meeting Modal */}
       {showNew && <NewMeetingModal onClose={() => setShowNew(false)} />}
     </div>
   )

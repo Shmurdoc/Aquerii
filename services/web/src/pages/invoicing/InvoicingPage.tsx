@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Search, Plus, X } from 'lucide-react'
+import { Search, Plus } from 'lucide-react'
 import { useInvoices, useCreateInvoice } from '@/hooks/useInvoices'
 import { CreateInvoicePayload, formatCurrency, formatDate } from '@/lib/erp'
 import StatusBadge from '@/components/erp/StatusBadge'
 import InvoiceDrawer from '@/components/erp/InvoiceDrawer'
 import LineItemsEditor, { LineItem } from '@/components/erp/LineItemsEditor'
+import { Button, Input, DataTable, type Column } from '@/components/ui'
 
 const STATUSES = ['', 'draft', 'sent', 'paid', 'overdue', 'cancelled']
-
-// ─── New Invoice Form (inline modal) ─────────────────────────────────────────
 
 interface NewFormState {
   invoice_number: string
@@ -68,54 +67,54 @@ function NewInvoiceModal({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col"
+        className="bg-[var(--color-bg-deepest)] border border-[var(--color-glass-border)] rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col"
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
-          <h2 className="font-semibold text-gray-100">New Invoice</h2>
-          <button type="button" onClick={onClose} className="text-gray-500 hover:text-gray-200" aria-label="Close"><X size={18} /></button>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--color-glass-border)]">
+          <h2 className="font-semibold text-[var(--color-text-primary)]">New Invoice</h2>
+          <button type="button" onClick={onClose} className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]" aria-label="Close"><Plus size={18} className="rotate-45" /></button>
         </div>
 
         <div className="p-5 flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Invoice # *</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Invoice # *</label>
               <input required value={form.invoice_number} onChange={(e) => setForm({ ...form, invoice_number: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]" />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Currency</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Currency</label>
               <input value={form.currency} maxLength={3} onChange={(e) => setForm({ ...form, currency: e.target.value.toUpperCase() })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500 uppercase" />
+                className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)] uppercase" />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Customer Name *</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Customer Name *</label>
               <input required value={form.customer_name} onChange={(e) => setForm({ ...form, customer_name: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]" />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Customer Email</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Customer Email</label>
               <input type="email" value={form.customer_email} onChange={(e) => setForm({ ...form, customer_email: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]" />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Issue Date *</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Issue Date *</label>
               <input required type="date" value={form.issue_date} onChange={(e) => setForm({ ...form, issue_date: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]" />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Due Date *</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Due Date *</label>
               <input required type="date" value={form.due_date} onChange={(e) => setForm({ ...form, due_date: e.target.value })}
-                className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 focus:outline-none focus:border-indigo-500" />
+                className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]" />
             </div>
             <div className="col-span-2 flex flex-col gap-1">
-              <label className="text-xs text-gray-500">Billing Address</label>
+              <label className="text-xs text-[var(--color-text-muted)]">Billing Address</label>
               <textarea value={form.billing_address} onChange={(e) => setForm({ ...form, billing_address: e.target.value })}
-                rows={2} className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 resize-none focus:outline-none focus:border-indigo-500" />
+                rows={2} className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] resize-none focus:outline-none focus:border-[var(--color-accent)]" />
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-xs text-gray-500 uppercase tracking-wide">Line Items *</label>
+            <label className="text-xs text-[var(--color-text-muted)] uppercase tracking-wide">Line Items *</label>
             <LineItemsEditor
               items={form.items}
               onChange={(items) => setForm({ ...form, items })}
@@ -125,28 +124,22 @@ function NewInvoiceModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Notes</label>
+            <label className="text-xs text-[var(--color-text-muted)]">Notes</label>
             <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              rows={2} className="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-100 resize-none focus:outline-none focus:border-indigo-500" />
+              rows={2} className="bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded px-2 py-1.5 text-sm text-[var(--color-text-primary)] resize-none focus:outline-none focus:border-[var(--color-accent)]" />
           </div>
         </div>
 
-        <div className="px-5 py-4 border-t border-gray-800 flex justify-end gap-2">
-          <button type="button" onClick={onClose}
-            className="text-xs px-3 py-1.5 rounded bg-gray-800 hover:bg-gray-700 text-gray-300">
-            Cancel
-          </button>
-          <button type="submit" disabled={create.isPending}
-            className="text-xs px-4 py-1.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50">
-            {create.isPending ? 'Creating…' : 'Create Invoice'}
-          </button>
+        <div className="px-5 py-4 border-t border-[var(--color-glass-border)] flex justify-end gap-2">
+          <Button variant="ghost" size="sm" onClick={onClose}>Cancel</Button>
+          <Button type="submit" size="sm" loading={create.isPending} disabled={create.isPending}>
+            Create Invoice
+          </Button>
         </div>
       </form>
     </div>
   )
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function InvoicingPage() {
   const [statusFilter, setStatusFilter] = useState('')
@@ -155,7 +148,6 @@ export default function InvoicingPage() {
   const [showNew, setShowNew]           = useState(false)
   const [selectedId, setSelectedId]     = useState<string | null>(null)
 
-  // debounce search 350ms
   useEffect(() => {
     const t = setTimeout(() => setDebounced(search), 350)
     return () => clearTimeout(t)
@@ -166,21 +158,63 @@ export default function InvoicingPage() {
     search: debouncedSearch || undefined,
   })
 
-  const selected = invoices.find((i) => i.id === selectedId) ?? null
+  const selected = invoices.find((i: any) => i.id === selectedId) ?? null
+
+  const columns: Column<any>[] = [
+    {
+      key: 'invoice_number',
+      header: 'Invoice #',
+      sortable: true,
+      render: (inv: any) => <span className="text-[var(--color-accent-text)] font-mono text-xs">{inv.invoice_number}</span>,
+    },
+    {
+      key: 'customer_name',
+      header: 'Customer',
+      sortable: true,
+      render: (inv: any) => (
+        <div>
+          <p className="text-[var(--color-text-primary)]">{inv.customer_name}</p>
+          {inv.customer_email && <p className="text-[10px] text-[var(--color-text-muted)]">{inv.customer_email}</p>}
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (inv: any) => <StatusBadge status={inv.status} />,
+    },
+    {
+      key: 'issue_date',
+      header: 'Issue Date',
+      hideOnMobile: true,
+      render: (inv: any) => <span className="text-xs text-[var(--color-text-muted)]">{formatDate(inv.issue_date)}</span>,
+    },
+    {
+      key: 'due_date',
+      header: 'Due Date',
+      hideOnMobile: true,
+      render: (inv: any) => <span className="text-xs text-[var(--color-text-muted)]">{formatDate(inv.due_date)}</span>,
+    },
+    {
+      key: 'total',
+      header: 'Total',
+      sortable: true,
+      className: 'text-right',
+      render: (inv: any) => <span className="font-mono text-[var(--color-text-primary)]">{formatCurrency(inv.total, inv.currency)}</span>,
+    },
+  ]
 
   return (
     <div className="flex flex-col h-full">
-      {/* Toolbar */}
-      <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-800">
-        <h1 className="text-base font-semibold text-gray-100 mr-2">Invoices</h1>
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-[var(--color-glass-border)] shrink-0">
+        <h1 className="text-base font-semibold text-[var(--color-text-primary)] mr-2">Invoices</h1>
 
-        {/* Status filter tabs */}
         <div className="flex gap-1">
           {STATUSES.map((s) => (
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
-              className={`text-xs px-3 py-1 rounded ${statusFilter === s ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-gray-200'}`}
+              className={`text-xs px-3 py-1 rounded transition-colors ${statusFilter === s ? 'bg-[var(--color-accent)] text-white' : 'bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)]'}`}
             >
               {s === '' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1)}
             </button>
@@ -189,71 +223,33 @@ export default function InvoicingPage() {
 
         <div className="flex-1" />
 
-        {/* Search */}
         <div className="relative">
-          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500" />
-          <input
+          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
+          <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search invoices…"
-            className="bg-gray-800 border border-gray-700 rounded pl-8 pr-3 py-1.5 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-indigo-500 w-52"
+            containerClassName="!mb-0"
+            className="!pl-8 !w-52"
           />
         </div>
 
-        <button
-          onClick={() => setShowNew(true)}
-          className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white"
-        >
-          <Plus size={13} />
-          New Invoice
-        </button>
+        <Button size="sm" onClick={() => setShowNew(true)}>
+          <Plus size={13} /> New Invoice
+        </Button>
       </div>
 
-      {/* Table */}
       <div className="flex-1 overflow-auto">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-40 text-gray-500 text-sm">Loading…</div>
-        ) : invoices.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-40 gap-2">
-            <p className="text-gray-500 text-sm">No invoices found</p>
-            <button onClick={() => setShowNew(true)} className="text-xs text-indigo-400 hover:text-indigo-300">Create your first invoice</button>
-          </div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-800 text-left text-xs text-gray-500 uppercase tracking-wide">
-                <th className="px-6 py-3 font-medium">Invoice #</th>
-                <th className="px-4 py-3 font-medium">Customer</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium">Issue Date</th>
-                <th className="px-4 py-3 font-medium">Due Date</th>
-                <th className="px-4 py-3 font-medium text-right">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {invoices.map((inv) => (
-                <tr
-                  key={inv.id}
-                  onClick={() => setSelectedId(inv.id)}
-                  className={`border-b border-gray-800/60 hover:bg-gray-800/40 cursor-pointer transition-colors ${selectedId === inv.id ? 'bg-gray-800/60' : ''}`}
-                >
-                  <td className="px-6 py-3 text-indigo-300 font-mono text-xs">{inv.invoice_number}</td>
-                  <td className="px-4 py-3">
-                    <p className="text-gray-200">{inv.customer_name}</p>
-                    {inv.customer_email && <p className="text-gray-500 text-xs">{inv.customer_email}</p>}
-                  </td>
-                  <td className="px-4 py-3"><StatusBadge status={inv.status} /></td>
-                  <td className="px-4 py-3 text-gray-400 text-xs">{formatDate(inv.issue_date)}</td>
-                  <td className="px-4 py-3 text-gray-400 text-xs">{formatDate(inv.due_date)}</td>
-                  <td className="px-4 py-3 text-right font-mono text-gray-200">{formatCurrency(inv.total, inv.currency)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <DataTable
+          columns={columns}
+          data={invoices}
+          keyExtractor={(inv: any) => inv.id}
+          isLoading={isLoading}
+          emptyTitle="No invoices found"
+          emptyDescription="Create your first invoice to get started."
+        />
       </div>
 
-      {/* Drawer */}
       {selected && (
         <InvoiceDrawer
           invoice={selected}
@@ -262,7 +258,6 @@ export default function InvoicingPage() {
         />
       )}
 
-      {/* New Invoice Modal */}
       {showNew && <NewInvoiceModal onClose={() => setShowNew(false)} />}
     </div>
   )

@@ -23,6 +23,7 @@ import clsx from 'clsx'
 import AccountSetupModal from '@/components/email/AccountSetupModal'
 import ComposeModal from '@/components/email/ComposeModal'
 import ThreadView from '@/components/email/ThreadView'
+import { Button, Input } from '@/components/ui'
 
 type Folder = 'unread' | 'read' | 'archived' | 'all'
 
@@ -70,26 +71,24 @@ export default function EmailPage() {
 
   const hasAccounts = accounts.length > 0
 
-  // Small UX improvement: when there's no account and user clicks Compose, open setup instead of disabling silently
   const handleComposeClick = () => {
     if (!hasAccounts) setShowSetup(true)
     else setShowCompose(true)
   }
 
   return (
-    <div className="flex h-full overflow-hidden">
+    <div className="flex h-full overflow-hidden" style={{ background: 'var(--color-bg-deepest)' }}>
       {/* Left sidebar */}
-      <div className="w-52 bg-gray-900 border-r border-gray-800 flex flex-col shrink-0">
-        <div className="p-3 border-b border-gray-800">
-          <button
-            onClick={handleComposeClick}
-            className="w-full flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors"
-          >
+      <div
+        className="w-52 flex flex-col shrink-0 border-r"
+        style={{ background: 'var(--color-bg-base)', borderColor: 'var(--color-glass-border)' }}
+      >
+        <div className="p-3 border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+          <Button size="sm" onClick={handleComposeClick} className="!w-full !justify-center">
             <Plus size={14} /> Compose
-          </button>
+          </Button>
         </div>
 
-        {/* Folders */}
         <nav className="flex-1 p-2 space-y-0.5">
           {([
             ['unread',   'Unread',   Inbox],
@@ -102,9 +101,10 @@ export default function EmailPage() {
               className={clsx(
                 'w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors',
                 folder === key
-                  ? 'bg-indigo-600/20 text-indigo-300'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  ? 'text-[var(--color-accent-text)]'
+                  : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-hover)]',
               )}
+              style={folder === key ? { background: 'var(--color-accent-light)' } : undefined}
             >
               <Icon size={14} />
               {label}
@@ -112,20 +112,25 @@ export default function EmailPage() {
           ))}
         </nav>
 
-        {/* Accounts */}
-        <div className="p-3 border-t border-gray-800">
-          <p className="text-xs text-gray-600 font-medium mb-1.5 uppercase tracking-wide">Accounts</p>
+        <div className="p-3 border-t" style={{ borderColor: 'var(--color-glass-border)' }}>
+          <p className="text-xs font-medium mb-1.5 uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Accounts</p>
           {loadingAccounts ? (
-            <Loader2 size={13} className="animate-spin text-gray-600" />
+            <Loader2 size={13} className="animate-spin" style={{ color: 'var(--color-text-muted)' }} />
           ) : accounts.length === 0 ? (
-            <p className="text-xs text-gray-600">No accounts</p>
+            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>No accounts</p>
           ) : (
             <div className="space-y-0.5">
               <button
                 onClick={() => setSelectedAccount('all')}
                 className={clsx('w-full text-left text-xs px-2 py-1 rounded transition-colors',
-                  selectedAccount === 'all' ? 'text-white bg-gray-800' : 'text-gray-500 hover:text-gray-300'
+                  selectedAccount === 'all'
+                    ? 'font-medium'
+                    : 'hover:bg-[var(--color-bg-hover)]'
                 )}
+                style={selectedAccount === 'all'
+                  ? { color: 'var(--color-text-primary)', background: 'var(--color-bg-hover)' }
+                  : { color: 'var(--color-text-muted)' }
+                }
               >
                 All accounts
               </button>
@@ -134,13 +139,17 @@ export default function EmailPage() {
                   key={a.id}
                   onClick={() => setSelectedAccount(a.id)}
                   className={clsx('w-full text-left text-xs px-2 py-1 rounded truncate transition-colors',
-                    selectedAccount === a.id ? 'text-white bg-gray-800' : 'text-gray-500 hover:text-gray-300'
+                    selectedAccount === a.id ? 'font-medium' : 'hover:bg-[var(--color-bg-hover)]'
                   )}
+                  style={selectedAccount === a.id
+                    ? { color: 'var(--color-text-primary)', background: 'var(--color-bg-hover)' }
+                    : { color: 'var(--color-text-muted)' }
+                  }
                   title={a.email_address}
                 >
                   {a.name}
                   {a.status === 'error' && (
-                    <span className="ml-1 text-red-400">!</span>
+                    <span className="ml-1" style={{ color: 'var(--color-status-blocked)' }}>!</span>
                   )}
                 </button>
               ))}
@@ -148,7 +157,8 @@ export default function EmailPage() {
           )}
           <button
             onClick={() => setShowSetup(true)}
-            className="mt-2 w-full flex items-center gap-1 text-xs text-gray-600 hover:text-gray-400 transition-colors"
+            className="mt-2 w-full flex items-center gap-1 text-xs transition-colors"
+            style={{ color: 'var(--color-text-muted)' }}
           >
             <Settings2 size={11} /> Add account
           </button>
@@ -156,34 +166,43 @@ export default function EmailPage() {
       </div>
 
       {/* Thread list */}
-      <div className="w-72 bg-gray-900 border-r border-gray-800 flex flex-col shrink-0">
-        <div className="p-3 border-b border-gray-800 flex items-center gap-2">
+      <div
+        className="w-72 flex flex-col shrink-0 border-r"
+        style={{ background: 'var(--color-bg-base)', borderColor: 'var(--color-glass-border)' }}
+      >
+        <div className="p-3 border-b flex items-center gap-2" style={{ borderColor: 'var(--color-glass-border)' }}>
           <div className="flex-1 relative">
-            <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-600" />
+            <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-text-muted)' }} />
             <input
               type="text"
               placeholder="Search…"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-gray-300 placeholder-gray-600 focus:outline-none focus:border-indigo-500"
+              className="w-full rounded-lg pl-8 pr-3 py-1.5 text-xs outline-none"
+              style={{
+                background: 'var(--color-bg-input)',
+                border: '1px solid var(--color-glass-border)',
+                color: 'var(--color-text-primary)',
+              }}
             />
           </div>
           <button
             onClick={() => refetch()}
-            className="p-1.5 rounded hover:bg-gray-800 text-gray-500 hover:text-white transition-colors"
+            className="p-1.5 rounded transition-colors"
+            style={{ color: 'var(--color-text-muted)' }}
             title="Refresh"
           >
             <RefreshCw size={13} />
           </button>
         </div>
 
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto" style={{ background: 'var(--color-bg-base)' }}>
           {loadingThreads ? (
             <div className="flex items-center justify-center h-32">
-              <Loader2 size={20} className="animate-spin text-gray-600" />
+              <Loader2 size={20} className="animate-spin" style={{ color: 'var(--color-text-muted)' }} />
             </div>
           ) : threads.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-32 text-gray-600 gap-2">
+            <div className="flex flex-col items-center justify-center h-32 gap-2" style={{ color: 'var(--color-text-muted)' }}>
               <Mail size={24} />
               <p className="text-xs">{hasAccounts ? 'No messages' : 'Add an account to get started'}</p>
             </div>
@@ -203,7 +222,7 @@ export default function EmailPage() {
       </div>
 
       {/* Thread view */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden" style={{ background: 'var(--color-bg-base)' }}>
         {selectedId ? (
           <ThreadView
             workspaceId={wid}
@@ -212,14 +231,13 @@ export default function EmailPage() {
             onClose={() => setSelectedId(null)}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-gray-700 gap-3">
-            <Mail size={40} />
+          <div className="flex flex-col items-center justify-center h-full gap-3" style={{ color: 'var(--color-text-muted)' }}>
+            <Mail size={40} className="opacity-40" />
             <p className="text-sm">Select a message to read</p>
           </div>
         )}
       </div>
 
-      {/* Modals */}
       {showSetup && (
         <AccountSetupModal
           workspaceId={wid}
@@ -236,8 +254,6 @@ export default function EmailPage() {
     </div>
   )
 }
-
-// ── Thread list item ──────────────────────────────────────────────────────────
 
 function ThreadListItem({
   thread,
@@ -256,50 +272,55 @@ function ThreadListItem({
     <div
       onClick={onClick}
       className={clsx(
-        'group px-3 py-3 border-b border-gray-800 cursor-pointer transition-colors',
-        selected ? 'bg-indigo-600/10 border-l-2 border-l-indigo-500' : 'hover:bg-gray-800/50',
-        thread.status === 'unread' && !selected && 'bg-gray-900'
+        'group px-3 py-3 cursor-pointer transition-colors'
       )}
+      style={{
+        borderBottom: '1px solid var(--color-glass-border)',
+        background: selected
+          ? 'var(--color-accent-light)'
+          : thread.status === 'unread'
+            ? 'var(--color-bg-surface)'
+            : undefined,
+        borderLeft: selected ? '2px solid var(--color-accent)' : undefined,
+      }}
     >
       <div className="flex items-start gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-1 mb-0.5">
-            <p className={clsx(
-              'text-xs truncate',
-              thread.status === 'unread' ? 'text-white font-semibold' : 'text-gray-400'
-            )}>
+            <p
+              className={clsx('text-xs truncate', thread.status === 'unread' && 'font-semibold')}
+              style={{ color: thread.status === 'unread' ? 'var(--color-text-primary)' : 'var(--color-text-secondary)' }}
+            >
               {thread.emails?.[0]?.from_name || thread.emails?.[0]?.from_address || '—'}
             </p>
             {thread.last_message_at && (
-              <span className="text-[10px] text-gray-600 shrink-0">
+              <span className="text-[10px] shrink-0" style={{ color: 'var(--color-text-muted)' }}>
                 {formatDistanceToNow(new Date(thread.last_message_at), { addSuffix: true })}
               </span>
             )}
           </div>
-          <p className={clsx(
-            'text-xs truncate',
-            thread.status === 'unread' ? 'text-gray-200' : 'text-gray-500'
-          )}>
+          <p
+            className="text-xs truncate"
+            style={{ color: thread.status === 'unread' ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}
+          >
             {thread.subject}
           </p>
         </div>
       </div>
 
-      {/* Hover actions */}
       <div className="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
           onClick={e => { e.stopPropagation(); onStar() }}
-          className={clsx(
-            'p-0.5 rounded transition-colors',
-            thread.is_starred ? 'text-yellow-400' : 'text-gray-600 hover:text-yellow-400'
-          )}
+          className={clsx('p-0.5 rounded transition-colors', thread.is_starred ? 'text-yellow-400' : 'hover:text-yellow-400')}
+          style={{ color: thread.is_starred ? undefined : 'var(--color-text-muted)' }}
           title="Star"
         >
           <Star size={11} fill={thread.is_starred ? 'currentColor' : 'none'} />
         </button>
         <button
           onClick={e => { e.stopPropagation(); onArchive() }}
-          className="p-0.5 rounded text-gray-600 hover:text-gray-400 transition-colors"
+          className="p-0.5 rounded transition-colors hover:text-gray-400"
+          style={{ color: 'var(--color-text-muted)' }}
           title="Archive"
         >
           <Archive size={11} />

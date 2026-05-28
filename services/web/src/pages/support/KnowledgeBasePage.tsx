@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useKnowledgeBase, useCreateKbArticle, useDeleteKbArticle, useVoteKbArticle, KnowledgeBaseArticle } from '@/lib/support'
-import { Search, Plus, Loader2, ThumbsUp, ThumbsDown, Trash2, BookOpen } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { Search, Plus, ThumbsUp, ThumbsDown, Trash2, BookOpen } from 'lucide-react'
+import { Button, Input, Badge } from '@/components/ui'
 
 export default function KnowledgeBasePage() {
   const workspace = useAuthStore(s => s.workspace)
@@ -34,41 +34,40 @@ export default function KnowledgeBasePage() {
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center gap-3">
-        <h1 className="text-lg font-semibold text-white flex-1">Knowledge Base</h1>
+        <h1 className="text-sm font-semibold text-[var(--color-text-primary)] flex-1">Knowledge Base</h1>
         <div className="relative">
-          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search articles…" className="bg-gray-800 border border-gray-700 rounded-lg pl-8 pr-3 py-1.5 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-52" />
+          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" />
+          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search articles…" containerClassName="!mb-0" className="!pl-8 !w-52" />
         </div>
-        <input value={category} onChange={e => setCategory(e.target.value)} placeholder="Filter category" className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-36" />
-        <button onClick={() => setShowForm(v => !v)} className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+        <Input value={category} onChange={e => setCategory(e.target.value)} placeholder="Filter category" containerClassName="!mb-0 !w-36" />
+        <Button size="sm" onClick={() => setShowForm(v => !v)}>
           <Plus size={12} /> New article
-        </button>
+        </Button>
       </div>
 
       {showForm && (
-        <div className="bg-gray-900 border border-gray-700 rounded-xl p-4 space-y-3">
-          <input placeholder="Title" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-indigo-500 placeholder-gray-600" />
-          <textarea placeholder="Content (Markdown supported)" value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} rows={6} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-indigo-500 placeholder-gray-600 resize-none font-mono" />
+        <div className="bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-xl p-4 space-y-3">
+          <Input placeholder="Title" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} containerClassName="!mb-0" />
+          <textarea placeholder="Content (Markdown supported)" value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} rows={6}
+            className="w-full bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded-lg px-3 py-1.5 text-sm text-[var(--color-text-primary)] outline-none focus:ring-1 focus:ring-[var(--color-accent)] placeholder-[var(--color-text-muted)] resize-none font-mono" />
           <div className="flex items-center gap-3">
-            <input placeholder="Category" value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-indigo-500 placeholder-gray-600" />
-            <label className="flex items-center gap-2 text-xs text-gray-400">
-              <input type="checkbox" checked={form.is_published} onChange={e => setForm(f => ({ ...f, is_published: e.target.checked }))} className="rounded" />
+            <Input placeholder="Category" value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} containerClassName="!mb-0 flex-1" />
+            <label className="flex items-center gap-2 text-xs text-[var(--color-text-secondary)]">
+              <input type="checkbox" checked={form.is_published} onChange={e => setForm(f => ({ ...f, is_published: e.target.checked }))} className="accent-[var(--color-accent)]" />
               Published
             </label>
           </div>
           <div className="flex justify-end gap-2">
-            <button onClick={() => setShowForm(false)} className="text-xs text-gray-500 hover:text-gray-300 px-3 py-1.5">Cancel</button>
-            <button onClick={handleCreate} disabled={!form.title.trim()} className="text-xs bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white px-3 py-1.5 rounded-lg transition-colors">
-              Create article
-            </button>
+            <Button variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
+            <Button size="sm" onClick={handleCreate} disabled={!form.title.trim()} loading={createArticle.isPending}>Create article</Button>
           </div>
         </div>
       )}
 
       {isLoading ? (
-        <div className="flex justify-center py-10"><Loader2 size={20} className="animate-spin text-gray-500" /></div>
+        <div className="flex justify-center py-10"><span className="text-[var(--color-text-muted)] text-sm">Loading…</span></div>
       ) : articles.length === 0 ? (
-        <div className="flex flex-col items-center py-16 text-gray-600">
+        <div className="flex flex-col items-center py-16 text-[var(--color-text-muted)]">
           <BookOpen size={32} className="mb-2 opacity-40" />
           <p className="text-sm">No articles yet.</p>
         </div>
@@ -89,30 +88,36 @@ function ArticleCard({ article, onDelete }: { article: KnowledgeBaseArticle; onD
   const vote = useVoteKbArticle(workspace?.id, article.id)
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-      <div className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-gray-800/50 transition-colors" onClick={() => setExpanded(v => !v)}>
-        <BookOpen size={16} className="text-indigo-400 mt-0.5 shrink-0" />
+    <div className="bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-xl overflow-hidden">
+      <div className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-[var(--color-bg-hover)] transition-colors" onClick={() => setExpanded(v => !v)}>
+        <BookOpen size={16} className="text-[var(--color-accent-text)] mt-0.5 shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-medium text-white truncate">{article.title}</h3>
-            {article.category && <span className="text-[10px] text-gray-500 bg-gray-800 px-1.5 py-0.5 rounded">{article.category}</span>}
-            {!article.is_published && <span className="text-[10px] text-yellow-500 bg-yellow-900/30 px-1.5 py-0.5 rounded">Draft</span>}
+            <h3 className="text-sm font-medium text-[var(--color-text-primary)] truncate">{article.title}</h3>
+            {article.category && <Badge variant="default">{article.category}</Badge>}
+            {!article.is_published && <Badge variant="warning">Draft</Badge>}
           </div>
-          <div className="flex items-center gap-3 mt-1 text-[10px] text-gray-600">
+          <div className="flex items-center gap-3 mt-1 text-[10px] text-[var(--color-text-muted)]">
             <span>{article.views} views</span>
             <span className="flex items-center gap-1"><ThumbsUp size={9} /> {article.helpful_count}</span>
             <span className="flex items-center gap-1"><ThumbsDown size={9} /> {article.not_helpful_count}</span>
             {article.author && <span>By {article.author.name}</span>}
           </div>
         </div>
-        <button onClick={e => { e.stopPropagation(); onDelete() }} className="p-1 text-gray-600 hover:text-red-400 transition-colors shrink-0"><Trash2 size={13} /></button>
+        <Button variant="ghost" size="sm" iconOnly onClick={e => { e.stopPropagation(); onDelete() }} title="Delete">
+          <Trash2 size={13} />
+        </Button>
       </div>
       {expanded && (
-        <div className="border-t border-gray-800 px-4 py-3 space-y-3">
-          <p className="text-sm text-gray-400 whitespace-pre-wrap">{article.content}</p>
-          <div className="flex items-center gap-2 border-t border-gray-800 pt-2">
-            <button onClick={() => vote.mutate(true)} className="flex items-center gap-1 text-xs text-gray-500 hover:text-green-400 transition-colors"><ThumbsUp size={11} /> Helpful</button>
-            <button onClick={() => vote.mutate(false)} className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-400 transition-colors"><ThumbsDown size={11} /> Not helpful</button>
+        <div className="border-t border-[var(--color-glass-border)] px-4 py-3 space-y-3">
+          <p className="text-sm text-[var(--color-text-secondary)] whitespace-pre-wrap">{article.content}</p>
+          <div className="flex items-center gap-2 border-t border-[var(--color-glass-border)] pt-2">
+            <Button variant="ghost" size="sm" onClick={() => vote.mutate(true)}>
+              <ThumbsUp size={11} /> Helpful
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => vote.mutate(false)}>
+              <ThumbsDown size={11} /> Not helpful
+            </Button>
           </div>
         </div>
       )}

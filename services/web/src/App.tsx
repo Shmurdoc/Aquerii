@@ -55,6 +55,8 @@ import AutomationPage  from '@/pages/automation/AutomationPage'
 import ReportsPage      from '@/pages/reports/ReportsPage'
 import AIChatPage       from '@/pages/ai/AIChatPage'
 import EmailPage        from '@/pages/email/EmailPage'
+import MyDayPage        from '@/pages/my-day/MyDayPage'
+import CalendarPage     from '@/pages/calendar/CalendarPage'
 import NotFoundPage      from '@/pages/NotFoundPage'
 
 export default function App() {
@@ -139,6 +141,8 @@ export default function App() {
             <Route path="/erp/inventory"   element={<InventoryPage />} />
             <Route path="/erp/accounting"  element={<AccountingPage />} />
           </Route>
+          <Route path="/my-day"        element={<MyDayPage />} />
+          <Route path="/calendar"      element={<CalendarPage />} />
           <Route path="/automation"    element={<AutomationPage />} />
           <Route path="/reports"       element={<ReportsPage />} />
           <Route path="/ai/chat"       element={<AIChatPage />} />

@@ -3,6 +3,7 @@ import { useNotificationStore } from '@/stores/notificationStore'
 import { formatDistanceToNow } from 'date-fns'
 import { BellOff, CheckCheck } from 'lucide-react'
 import clsx from 'clsx'
+import { Button } from '@/components/ui'
 
 export default function InboxPage() {
   const { markRead, markAllRead } = useNotifications()
@@ -11,30 +12,25 @@ export default function InboxPage() {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800 shrink-0">
+      <div className="flex items-center justify-between shrink-0 px-6 py-4 border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
         <div>
-          <h1 className="text-base font-semibold text-gray-100">Inbox</h1>
+          <h1 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>Inbox</h1>
           {unread.length > 0 && (
-            <p className="text-xs text-gray-500 mt-0.5">{unread.length} unread</p>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{unread.length} unread</p>
           )}
         </div>
         {unread.length > 0 && (
-          <button
-            onClick={() => markAllRead()}
-            className="flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
-          >
+          <Button size="sm" variant="ghost" onClick={() => markAllRead()}>
             <CheckCheck size={13} />
             Mark all read
-          </button>
+          </Button>
         )}
       </div>
 
-      {/* List */}
-      <div className="flex-1 overflow-y-auto divide-y divide-gray-800">
+      <div className="flex-1 overflow-y-auto" style={{ borderColor: 'var(--color-glass-border)' }}>
         {notifications.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-64 text-gray-600 gap-3">
-            <BellOff size={32} className="text-gray-700" />
+          <div className="flex flex-col items-center justify-center h-64 gap-3" style={{ color: 'var(--color-text-muted)' }}>
+            <BellOff size={32} className="opacity-50" />
             <p className="text-sm">You're all caught up</p>
           </div>
         )}
@@ -46,19 +42,21 @@ export default function InboxPage() {
             onClick={() => { if (!n.read_at) markRead(n.id) }}
             onKeyDown={e => { if (e.key === 'Enter' && !n.read_at) markRead(n.id) }}
             className={clsx(
-              'px-6 py-4 cursor-pointer hover:bg-gray-900 transition-colors',
-              !n.read_at && 'bg-indigo-950/20'
+              'px-6 py-4 cursor-pointer transition-colors',
             )}
+            style={{
+              background: !n.read_at ? 'var(--color-accent-subtle)' : undefined,
+            }}
           >
             <div className="flex items-start gap-3">
               {!n.read_at && (
-                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0" />
+                <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: 'var(--color-accent)' }} />
               )}
               <div className={clsx('flex-1 min-w-0', n.read_at && 'pl-[18px]')}>
-                <p className="text-sm text-gray-200 leading-snug">
+                <p className="text-sm leading-snug" style={{ color: 'var(--color-text-primary)' }}>
                   {(n.data as { message?: string }).message ?? n.type}
                 </p>
-                <p className="text-xs text-gray-600 mt-1">
+                <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
                   {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
                 </p>
               </div>
