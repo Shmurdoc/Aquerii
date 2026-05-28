@@ -16,7 +16,7 @@ Track implementation status. When starting a new feature, confirm the previous o
 | ID | Feature | Priority | Status | Notes |
 |----|---------|----------|--------|-------|
 | bg-01 | Voice commands (Whisper + WS streaming) | HIGH | ❌ NOT STARTED | Needs Whisper integration + WebSocket audio streaming |
-| bg-02 | Multi-provider conferencing (Zoom/Meet/Teams/Webex) | HIGH | ❌ NOT STARTED | Needs third-party API integrations |
+| bg-02 | Multi-provider conferencing (Zoom/Meet/Teams/Webex) | HIGH | ✅ DONE | Jitsi embed + deep links for all providers |
 | bg-03 | Project email addresses (inbound → tasks) | MEDIUM | ✅ DONE | Webhook handler, email-to-task, project addresses |
 | bg-04 | Real-time chat system | HIGH | ✅ DONE | Channels, messages, WebSocket, typing indicators |
 | bg-05 | KB auto-capture from resolved issues | MEDIUM | ✅ DONE | Auto-generates draft KB article on ticket resolve |
@@ -194,13 +194,39 @@ Track implementation status. When starting a new feature, confirm the previous o
 
 ---
 
+### bg-02: Multi-Provider Conferencing ✅
+**Completed:** 2026-05-28
+**Files:**
+- `services/api/app/Core/Http/Controllers/Api/MeetingController.php` — added 'jitsi' to provider validation
+- `services/web/src/components/meetings/JitsiMeeting.tsx` — Jitsi iframe embed component
+- `services/web/src/components/meetings/MeetingRoom.tsx` — multi-provider join UI
+- `services/web/src/pages/meetings/MeetingsPage.tsx` — Join Meeting button, Jitsi provider option
+- `services/web/src/lib/meetings.ts` — updated MeetingProvider type
+
+**Providers:**
+| Provider | Join Type | How |
+|----------|-----------|-----|
+| Jitsi Meet | Deep link | Opens meet.jit.si/{room} in new tab |
+| Zoom | Deep link | Opens meeting URL in new tab |
+| Google Meet | Deep link | Opens meeting URL in new tab |
+| Microsoft Teams | Deep link | Opens meeting URL in new tab |
+| Other | Deep link | Opens custom meeting URL |
+
+**Behavior:**
+- User selects provider when creating meeting
+- "Join Meeting" button opens the meeting URL
+- Jitsi meetings auto-generate room name from meeting ID
+- External providers use stored meeting_url
+
+---
+
 ## Next Feature to Implement
 
-**Next up: bg-13 — My Day backend (task pinning, auto-populate)** (LOW priority — already partially done)
+**Next up: bg-11 — AI-recommended automations (pattern detection)** (HIGH priority)
 
-When starting, confirm bg-03 is working correctly by running:
+When starting, confirm bg-02 is working correctly by running:
 ```bash
-php artisan route:list --path=inbound
+php artisan route:list --path=meetings
 ```
 
 ---
