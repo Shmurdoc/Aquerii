@@ -21,7 +21,7 @@ Track implementation status. When starting a new feature, confirm the previous o
 | bg-04 | Real-time chat system | HIGH | ✅ DONE | Channels, messages, WebSocket, typing indicators |
 | bg-05 | KB auto-capture from resolved issues | MEDIUM | ✅ DONE | Auto-generates draft KB article on ticket resolve |
 | bg-06 | Offline sync (conflict resolution) | HIGH | ✅ DONE | Version tracking, conflict detection, resolution UI |
-| bg-07 | Sentiment/burnout detection | HIGH | ❌ NOT STARTED | ML-based sentiment analysis on team activity |
+| bg-07 | Sentiment/burnout detection | HIGH | ✅ DONE | 5-factor scoring, daily metrics, risk dashboard |
 | bg-08 | Predictive project management (ML) | VERY HIGH | ❌ NOT STARTED | ML models for deadline prediction, risk scoring |
 | bg-09 | Digital twin / what-if simulation | VERY HIGH | ❌ NOT STARTED | Simulation engine for project scenarios |
 | bg-10 | Meeting effectiveness + OKR cascade | HIGH | ❌ NOT STARTED | Meeting scoring + OKR alignment tracking |
@@ -145,13 +145,40 @@ Track implementation status. When starting a new feature, confirm the previous o
 
 ---
 
+### bg-07: Sentiment/Burnout Detection ✅
+**Completed:** 2026-05-28
+**Files:**
+- `services/api/database/migrations/2026_05_28_000079_create_team_activity_metrics_table.php` — daily metrics + burnout scores
+- `services/api/app/Core/Models/TeamActivityMetric.php` — daily activity metrics model
+- `services/api/app/Core/Models/BurnoutScore.php` — burnout risk score model
+- `services/api/app/Core/Jobs/BurnoutDetector.php` — collects metrics, calculates 5-factor risk score
+- `services/api/app/Core/Http/Controllers/Api/SentimentController.php` — team overview, member metrics, refresh
+- `services/web/src/components/sentiment/BurnoutWidget.tsx` — dashboard widget with risk distribution
+- `services/web/src/pages/DashboardPage.tsx` — integrated BurnoutWidget
+
+**API:**
+- `GET /api/workspaces/{id}/sentiment/team` — team overview with scores + summary
+- `GET /api/workspaces/{id}/sentiment/member/{userId}` — member's daily metrics + score
+- `POST /api/workspaces/{id}/sentiment/refresh` — trigger recalculation
+
+**Scoring (0-100):**
+- Overdue tasks (0-25): avg overdue × 8
+- Work hours (0-25): hours over 8 × 5
+- After hours (0-20): late night × 8 + weekend × 5
+- Negative sentiment (0-20): abs(negative_ratio) × 25
+- Low completion (0-10): 10 if <50%, 5 if <70%
+
+**Risk levels:** low (0-29), medium (30-49), high (50-69), critical (70+)
+
+---
+
 ## Next Feature to Implement
 
-**Next up: bg-07 — Sentiment/burnout detection** (HIGH priority)
+**Next up: bg-03 — Project email addresses (inbound → tasks)** (MEDIUM priority)
 
-When starting, confirm bg-06 is working correctly by running:
+When starting, confirm bg-07 is working correctly by running:
 ```bash
-php artisan route:list --path=sync/conflicts
+php artisan route:list --path=sentiment
 ```
 
 ---
