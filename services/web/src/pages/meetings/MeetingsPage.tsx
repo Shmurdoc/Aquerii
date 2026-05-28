@@ -12,6 +12,7 @@ const PROVIDER_ICONS: Record<MeetingProvider, string> = {
   zoom: 'Z',
   teams: 'T',
   google: 'G',
+  jitsi: '📹',
   other: 'V',
 }
 
@@ -126,6 +127,7 @@ function NewMeetingModal({ onClose }: { onClose: () => void }) {
                 <option value="zoom">Zoom</option>
                 <option value="teams">Microsoft Teams</option>
                 <option value="google">Google Meet</option>
+                <option value="jitsi">Jitsi Meet (Built-in)</option>
                 <option value="other">Other</option>
               </select>
             </div>
@@ -182,19 +184,27 @@ function NewMeetingModal({ onClose }: { onClose: () => void }) {
 
 function MeetingDetail({ meeting, onClose }: { meeting: Meeting; onClose: () => void }) {
   const user = useAuthStore(s => s.user)
-  const deleteMeeting = useDeleteMeeting()
-  const updateMeeting = useUpdateMeeting()
   const updateAttendance = useUpdateAttendance()
+  const deleteMeeting = useDeleteMeeting()
 
   const myAttendance = meeting.attendees?.find(a => a.email === user?.email)
   const isPast = new Date(meeting.ends_at) < new Date()
 
-  async function handleStatusChange(status: MeetingStatus) {
-    await updateMeeting.mutateAsync({ id: meeting.id, payload: { status } })
+  function handleRsvp(status: 'accepted' | 'tentative' | 'declined') {
+    updateAttendance.mutate({ id: meeting.id, status })
   }
 
-  async function handleRsvp(status: 'accepted' | 'declined' | 'tentative') {
-    await updateAttendance.mutateAsync({ id: meeting.id, status })
+  function handleStatusChange(status: MeetingStatus) {
+    deleteMeeting.mutate(meeting.id)
+  }
+
+  function handleJoin() {
+    if (meeting.provider === 'jitsi') {
+      const roomName = `aquerii-${meeting.id}`
+      window.open(`https://meet.jit.si/${roomName}`, '_blank')
+    } else if (meeting.meeting_url) {
+      window.open(meeting.meeting_url, '_blank')
+    }
   }
 
   return (
@@ -297,9 +307,14 @@ function MeetingDetail({ meeting, onClose }: { meeting: Meeting; onClose: () => 
         {!isPast && (
           <div className="flex gap-2 pt-2 border-t" style={{ borderColor: 'var(--color-glass-border)' }}>
             {meeting.status === 'scheduled' && (
-              <Button size="sm" variant="ghost" onClick={() => handleStatusChange('cancelled')} disabled={deleteMeeting.isPending}>
-                Cancel Meeting
-              </Button>
+              <>
+                <Button size="sm" onClick={handleJoin} className="gap-2">
+                  <Video size={13} /> Join Meeting
+                </Button>
+                <Button size="sm" variant="ghost" onClick={() => handleStatusChange('cancelled')} disabled={deleteMeeting.isPending}>
+                  Cancel
+                </Button>
+              </>
             )}
             <Button size="sm" variant="ghost" onClick={() => { deleteMeeting.mutate(meeting.id); onClose() }} disabled={deleteMeeting.isPending} className="!ml-auto">
               Delete

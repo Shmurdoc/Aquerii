@@ -50,7 +50,7 @@ class MeetingController extends Controller
             'meeting_url' => 'nullable|url|max:500',
             'starts_at' => 'required|date',
             'ends_at' => 'required|date|after:starts_at',
-            'provider' => 'nullable|string|in:zoom,teams,google,other',
+            'provider' => 'nullable|string|in:zoom,teams,google,jitsi,other',
             'recurrence_rule' => 'nullable|string|max:255',
             'settings' => 'nullable|array',
             'attendees' => 'nullable|array',

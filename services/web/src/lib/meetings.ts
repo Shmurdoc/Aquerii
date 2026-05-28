@@ -9,7 +9,7 @@ function wid(): string {
 
 export type MeetingStatus = 'scheduled' | 'ongoing' | 'completed' | 'cancelled'
 export type AttendeeStatus = 'pending' | 'accepted' | 'declined' | 'tentative'
-export type MeetingProvider = 'zoom' | 'teams' | 'google' | 'other'
+export type MeetingProvider = 'zoom' | 'teams' | 'google' | 'jitsi' | 'other'
 
 export interface MeetingAttendee {
   id: string
