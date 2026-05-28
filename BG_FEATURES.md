@@ -17,7 +17,7 @@ Track implementation status. When starting a new feature, confirm the previous o
 |----|---------|----------|--------|-------|
 | bg-01 | Voice commands (Whisper + WS streaming) | HIGH | ❌ NOT STARTED | Needs Whisper integration + WebSocket audio streaming |
 | bg-02 | Multi-provider conferencing (Zoom/Meet/Teams/Webex) | HIGH | ❌ NOT STARTED | Needs third-party API integrations |
-| bg-03 | Project email addresses (inbound → tasks) | MEDIUM | ❌ NOT STARTED | Needs email parsing + auto-task creation |
+| bg-03 | Project email addresses (inbound → tasks) | MEDIUM | ✅ DONE | Webhook handler, email-to-task, project addresses |
 | bg-04 | Real-time chat system | HIGH | ✅ DONE | Channels, messages, WebSocket, typing indicators |
 | bg-05 | KB auto-capture from resolved issues | MEDIUM | ✅ DONE | Auto-generates draft KB article on ticket resolve |
 | bg-06 | Offline sync (conflict resolution) | HIGH | ✅ DONE | Version tracking, conflict detection, resolution UI |
@@ -172,13 +172,35 @@ Track implementation status. When starting a new feature, confirm the previous o
 
 ---
 
+### bg-03: Project Email Addresses (Inbound → Tasks) ✅
+**Completed:** 2026-05-28
+**Files:**
+- `services/api/database/migrations/2026_05_28_000080_create_inbound_email_tables.php` — project_email_addresses + inbound_emails
+- `services/api/app/Modules/Email/Models/ProjectEmailAddress.php` — project email model
+- `services/api/app/Modules/Email/Models/InboundEmail.php` — inbound email record
+- `services/api/app/Modules/Email/Http/Controllers/InboundEmailController.php` — webhook handler
+- `services/api/app/Modules/Email/Http/Controllers/ProjectEmailAddressController.php` — CRUD
+
+**API:**
+- `POST /api/email/inbound` — webhook endpoint (Mailgun/SendGrid/Postmark compatible)
+- `GET/POST/PATCH/DELETE /api/workspaces/{id}/email/project-addresses` — manage addresses
+
+**Behavior:**
+- Auto-generates unique inbound address per workspace (e.g., `tasks-abc123@inbound.aquerii.app`)
+- Parses multipart form (Mailgun) and JSON (SendGrid/Postmark) webhook payloads
+- Creates tasks from inbound emails with subject, body, from metadata
+- Links created task back to inbound email record
+- Supports target board routing per address
+
+---
+
 ## Next Feature to Implement
 
-**Next up: bg-03 — Project email addresses (inbound → tasks)** (MEDIUM priority)
+**Next up: bg-13 — My Day backend (task pinning, auto-populate)** (LOW priority — already partially done)
 
-When starting, confirm bg-07 is working correctly by running:
+When starting, confirm bg-03 is working correctly by running:
 ```bash
-php artisan route:list --path=sentiment
+php artisan route:list --path=inbound
 ```
 
 ---
