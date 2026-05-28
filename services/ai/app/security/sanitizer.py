@@ -3,7 +3,6 @@ Prompt injection detection and PII stripping.
 Referenced in SECURITY.md §4.
 """
 import re
-from typing import Optional
 
 # PII patterns
 _PII_PATTERNS = [
