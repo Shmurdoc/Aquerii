@@ -73,7 +73,7 @@ describe('authStore', () => {
 
     const raw = sessionStorage.getItem('aquerii-auth')
     const parsed = JSON.parse(raw!)
-    expect(Object.keys(parsed.state)).toEqual(['token', 'user', 'workspace'])
+    expect(Object.keys(parsed.state)).toEqual(['token', 'user', 'workspace', 'role'])
   })
 
   it('persisted data round-trips through sessionStorage', () => {

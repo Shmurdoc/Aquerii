@@ -94,6 +94,7 @@ describe('api response interceptor', () => {
     const handlers = (api.interceptors.response as any).handlers
     const error = {
       response: { status: 401, data: { error: { code: 'UNAUTHORIZED' } } },
+      config: { url: '/api/test' },
     }
 
     try {
