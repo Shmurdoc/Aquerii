@@ -1,0 +1,9 @@
+node_modules/
+vendor/
+.env
+.phpunit.cache/
+dist/
+coverage/
+storage/
+.DS_Store
+Thumbs.db

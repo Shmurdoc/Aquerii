@@ -74,7 +74,7 @@ jobs:
           cache: pip
       - run: pip install ruff mypy
       - run: ruff check app
-      - run: mypy app --ignore-missing-imports --exclude "app/rag/"
+      - run: mypy app --ignore-missing-imports --explicit-package-bases
 
 # ════════════════════════════════════════════════════════════════
 # STAGE 2 — Unit Tests

@@ -3,6 +3,7 @@ import type { Socket, Server } from 'socket.io'
 import * as Y from 'yjs'
 import * as awarenessProtocol from 'y-protocols/awareness'
 import * as syncProtocol from 'y-protocols/sync'
+import * as encoding from 'lib0/encoding'
 import { logger } from '../index'
 
 // In-memory doc store (per process); Redis pub/sub syncs across instances
@@ -38,9 +39,9 @@ export function registerDocumentHandlers(
     }
 
     // Send current doc state to new subscriber
-    const syncMsg = Buffer.from(
-      syncProtocol.encodeSyncStep1(Y.encodeStateVector(doc))
-    )
+    const encoder = encoding.createEncoder()
+    syncProtocol.writeSyncStep1(encoder, doc)
+    const syncMsg = Buffer.from(encoding.toUint8Array(encoder))
     socket.emit('doc:sync', { docId, message: syncMsg })
 
     logger.debug({ docId, userId: socket.data.userId }, 'doc:subscribe')
