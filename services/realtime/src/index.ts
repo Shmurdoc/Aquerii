@@ -14,6 +14,7 @@ import { PresenceManager } from './presence/PresenceManager'
 import { YDocManager } from './ydoc/YDocManager'
 import { EventBroadcaster } from './events/EventBroadcaster'
 import { registerCatchupHandler } from './handlers/catchupHandler'
+import { registerChatHandler } from './handlers/chatHandler'
 import { connectedClients, messagesTotal, createMetricsServer } from './metrics'
 
 // ── Zod schemas for socket event payloads ─────────────────────────────────────
@@ -121,6 +122,9 @@ async function bootstrap(): Promise<void> {
 
     // Register room join/leave, presence typing, and disconnect handlers
     registerCatchupHandler(socket, user, roomManager, presenceManager, broadcaster)
+
+    // Register chat handlers
+    registerChatHandler(socket, user)
 
     // ── Presence heartbeat ──────────────────────────────────────────────────
     // Refresh presence TTL whenever the client pings (every ~25s per Socket.IO default).

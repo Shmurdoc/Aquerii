@@ -7,6 +7,7 @@ use App\Modules\Admin\Providers\AdminServiceProvider;
 use App\Modules\AI\Providers\AIServiceProvider;
 use App\Modules\Automation\Providers\AutomationServiceProvider;
 use App\Modules\Billing\Providers\BillingServiceProvider;
+use App\Modules\Chat\Providers\ChatServiceProvider;
 use App\Modules\CRM\Providers\CrmServiceProvider;
 use App\Modules\Documents\Providers\DocumentsServiceProvider;
 use App\Modules\Email\Providers\EmailServiceProvider;
@@ -35,6 +36,7 @@ class ModuleServiceProvider extends ServiceProvider
         $this->registerIf('MODULE_PURCHASING', PurchasingServiceProvider::class);
         $this->registerIf('MODULE_SALES', SalesServiceProvider::class);
         $this->registerIf('MODULE_SUPPORT', SupportServiceProvider::class);
+        $this->registerIf('MODULE_CHAT', ChatServiceProvider::class);
         $this->registerIf('MODULE_MARKETING', MarketingServiceProvider::class);
     }
 

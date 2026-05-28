@@ -4,6 +4,7 @@ import {
   LayoutGrid, FileText, Users, Settings, Bell,
   Inbox, Search, Wallet, Zap, ChevronLeft, ChevronRight, BarChart2,
   UserCheck, Video, Sparkles, Sun, Moon, HeadphonesIcon, Megaphone, Mail, CalendarDays,
+  MessageSquare,
   type LucideIcon,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
@@ -47,6 +48,7 @@ const SECTIONS: NavSection[] = [
     label: 'Communication',
     items: [
       { to: '/inbox',    icon: Inbox,    label: 'Inbox'    },
+      { to: '/chat',     icon: MessageSquare, label: 'Chat'     },
       { to: '/meetings', icon: Video,    label: 'Meetings', permission: 'meetings.*' },
       { to: '/email',    icon: Mail,     label: 'Email'    },
       { to: '/ai/chat',  icon: Sparkles, label: 'AI Chat'  },

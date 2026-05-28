@@ -54,6 +54,7 @@ import NotificationsTab from '@/components/settings/NotificationsTab'
 import AutomationPage  from '@/pages/automation/AutomationPage'
 import ReportsPage      from '@/pages/reports/ReportsPage'
 import AIChatPage       from '@/pages/ai/AIChatPage'
+import ChatPage         from '@/pages/chat/ChatPage'
 import EmailPage        from '@/pages/email/EmailPage'
 import MyDayPage        from '@/pages/my-day/MyDayPage'
 import CalendarPage     from '@/pages/calendar/CalendarPage'
@@ -146,6 +147,7 @@ export default function App() {
           <Route path="/automation"    element={<AutomationPage />} />
           <Route path="/reports"       element={<ReportsPage />} />
           <Route path="/ai/chat"       element={<AIChatPage />} />
+          <Route path="/chat"          element={<ChatPage />} />
           <Route path="/email"         element={<EmailPage />} />
           <Route path="/settings"        element={<SettingsPage />}>
             <Route index element={<GeneralTab />} />
