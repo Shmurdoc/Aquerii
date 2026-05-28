@@ -19,7 +19,7 @@ Track implementation status. When starting a new feature, confirm the previous o
 | bg-02 | Multi-provider conferencing (Zoom/Meet/Teams/Webex) | HIGH | ❌ NOT STARTED | Needs third-party API integrations |
 | bg-03 | Project email addresses (inbound → tasks) | MEDIUM | ❌ NOT STARTED | Needs email parsing + auto-task creation |
 | bg-04 | Real-time chat system | HIGH | ❌ NOT STARTED | User-to-user chat (AI chat exists, this is different) |
-| bg-05 | KB auto-capture from resolved issues | MEDIUM | ❌ NOT STARTED | Auto-generate KB articles from resolved tickets |
+| bg-05 | KB auto-capture from resolved issues | MEDIUM | ✅ DONE | Auto-generates draft KB article on ticket resolve |
 | bg-06 | Offline sync (conflict resolution) | HIGH | 🔧 PARTIAL | `MutationQueue.ts` exists, needs conflict resolution logic |
 | bg-07 | Sentiment/burnout detection | HIGH | ❌ NOT STARTED | ML-based sentiment analysis on team activity |
 | bg-08 | Predictive project management (ML) | VERY HIGH | ❌ NOT STARTED | ML models for deadline prediction, risk scoring |
@@ -64,13 +64,36 @@ Track implementation status. When starting a new feature, confirm the previous o
 
 ---
 
+### bg-05: KB Auto-Capture from Resolved Issues ✅
+**Completed:** 2026-05-28
+**Files:**
+- `services/api/database/migrations/2026_05_28_000076_add_ticket_id_to_support_kb_articles.php` — adds `ticket_id` FK
+- `services/api/app/Modules/Support/Events/TicketResolved.php` — event dispatched on resolve
+- `services/api/app/Modules/Support/Listeners/GenerateKbFromTicket.php` — builds KB article from ticket data
+- `services/api/app/Modules/Support/Providers/SupportServiceProvider.php` — registers event listener
+- `services/api/app/Modules/Support/Http/Controllers/TicketController.php` — dispatches event on resolve
+- `services/api/app/Modules/Support/Models/KnowledgeBaseArticle.php` — added `ticket_id` + `ticket()` relationship
+- `services/web/src/lib/support.ts` — added `ticket_id` to interface
+- `services/web/src/pages/support/KnowledgeBasePage.tsx` — shows "From ticket" badge
+
+**Behavior:** When a ticket status changes to `resolved`, a draft KB article is auto-generated with:
+- Title from ticket subject
+- Content from description + resolution_summary + conversation history
+- Category derived from channel/source
+- Tags carried from ticket
+- `is_published = false` (draft for review)
+
+**Verified:** Routes registered, TypeScript compiles.
+
+---
+
 ## Next Feature to Implement
 
-**Next up: bg-05 — KB auto-capture from resolved issues** (MEDIUM priority)
+**Next up: bg-04 — Real-time chat system** (HIGH priority)
 
-When starting, confirm bg-12 is working correctly by running:
+When starting, confirm bg-05 is working correctly by running:
 ```bash
-docker compose exec api php artisan route:list --path=capacity
+php artisan route:list --path=support
 ```
 
 ---
