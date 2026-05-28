@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import ProfileTab from './ProfileTab'
 import TeamTab from './TeamTab'
 import BillingTab from './BillingTab'
 import SecurityTab from './SecurityTab'
 import NotificationsTab from './NotificationsTab'
 
 const TABS = [
-  { key: 'profile',      label: 'Profile' },
   { key: 'team',         label: 'Team' },
   { key: 'billing',      label: 'Billing' },
   { key: 'security',     label: 'Security' },
@@ -14,7 +12,7 @@ const TABS = [
 ] as const
 
 export default function SettingsPage() {
-  const [active, setActive] = useState('profile')
+  const [active, setActive] = useState('team')
 
   return (
     <div className="p-6">
@@ -36,7 +34,6 @@ export default function SettingsPage() {
         ))}
       </div>
 
-      {active === 'profile'      && <ProfileTab />}
       {active === 'team'         && <TeamTab />}
       {active === 'billing'      && <BillingTab />}
       {active === 'security'     && <SecurityTab />}

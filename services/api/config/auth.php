@@ -1,56 +1,36 @@
 <?php
 
-use App\Core\Models\User;
-use App\Modules\Admin\Models\SuperAdmin;
-
 return [
 
     'defaults' => [
-        'guard' => 'web',
+        'guard'     => 'web',
         'passwords' => 'users',
     ],
 
     'guards' => [
         'web' => [
-            'driver' => 'session',
+            'driver'   => 'session',
             'provider' => 'users',
         ],
 
         'api' => [
-            'driver' => 'sanctum',
+            'driver'   => 'sanctum',
             'provider' => 'users',
-        ],
-
-        'super_admins' => [
-            'driver' => 'session',
-            'provider' => 'super_admins',
         ],
     ],
 
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => User::class,
-        ],
-
-        'super_admins' => [
-            'driver' => 'eloquent',
-            'model' => SuperAdmin::class,
+            'model'  => App\Models\User::class,
         ],
     ],
 
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-
-        'super_admins' => [
-            'provider' => 'super_admins',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
+            'table'    => 'password_reset_tokens',
+            'expire'   => 60,
             'throttle' => 60,
         ],
     ],

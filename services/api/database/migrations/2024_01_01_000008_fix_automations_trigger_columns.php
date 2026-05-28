@@ -9,10 +9,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('automations', function (Blueprint $table) {
-            if (! Schema::hasColumn('automations', 'trigger_type')) {
+            if (!Schema::hasColumn('automations', 'trigger_type')) {
                 $table->string('trigger_type')->default('')->after('name');
             }
-            if (! Schema::hasColumn('automations', 'trigger_config')) {
+            if (!Schema::hasColumn('automations', 'trigger_config')) {
                 $table->json('trigger_config')->nullable()->after('trigger_type');
             }
         });

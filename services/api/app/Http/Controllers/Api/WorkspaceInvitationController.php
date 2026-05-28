@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Core\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use App\Mail\WorkspaceInvite;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;

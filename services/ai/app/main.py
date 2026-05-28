@@ -3,17 +3,15 @@ from contextlib import asynccontextmanager
 
 import structlog
 import redis.asyncio as aioredis
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
-from fastapi.responses import Response
 
 from app.core.config import settings
 from app.core.otel import setup_otel
 from app.middleware.credit_meter import CreditMeterMiddleware
-from app.routers import health, tasks, documents, crm, chat, rag, email
+from app.routers import health, tasks, documents, crm, chat, rag
 from app.routers import ai_routes
-from app.security.auth import verify_internal_token
 
 logger = structlog.get_logger()
 
@@ -60,12 +58,7 @@ class _LazyCreditMeter(CreditMeterMiddleware):
 app.add_middleware(_LazyCreditMeter, redis_client=None)  # type: ignore[arg-type]
 
 # Prometheus metrics on /metrics
-_instrumentator = Instrumentator().instrument(app)
-
-@app.get("/metrics")
-async def metrics(dep=Depends(verify_internal_token)):
-    from prometheus_client import generate_latest, REGISTRY
-    return Response(content=generate_latest(REGISTRY).decode("utf-8"), media_type="text/plain")
+Instrumentator().instrument(app).expose(app)
 
 # Routers
 app.include_router(health.router)
@@ -73,6 +66,5 @@ app.include_router(tasks.router,       prefix="/tasks",      tags=["tasks"])
 app.include_router(documents.router,   prefix="/documents",  tags=["documents"])
 app.include_router(crm.router,         prefix="/crm",        tags=["crm"])
 app.include_router(chat.router,        prefix="/chat",        tags=["chat"])
-app.include_router(rag.router,         prefix="/rag",        tags=["rag"])
-app.include_router(email.router,       prefix="/email",      tags=["email"])
-app.include_router(ai_routes.router,                         tags=["ai"])
+app.include_router(rag.router,         prefix="/rag",         tags=["rag"])
+app.include_router(ai_routes.router,                          tags=["ai"])

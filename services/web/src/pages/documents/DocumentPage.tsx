@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
@@ -14,7 +14,6 @@ export default function DocumentPage() {
   const workspace   = useAuthStore(s => s.workspace)
   const ydoc        = useMemo(() => new Y.Doc(), [docId])
   const synced      = useRef(false)
-  const [titleDraft, setTitleDraft] = useState<string | null>(null)
 
   // Load document metadata
   const { data: doc } = useQuery({
@@ -29,11 +28,6 @@ export default function DocumentPage() {
   const saveDoc = useMutation({
     mutationFn: (content: unknown) =>
       api.patch(`/workspaces/${workspace!.id}/documents/${docId}`, { content }),
-  })
-
-  const saveTitle = useMutation({
-    mutationFn: (title: string) =>
-      api.patch(`/workspaces/${workspace!.id}/documents/${docId}`, { title }),
   })
 
   // Y.js socket collaboration
@@ -95,31 +89,11 @@ export default function DocumentPage() {
     )
   }
 
-  const currentTitle = titleDraft !== null ? titleDraft : (doc.title ?? '')
-
   return (
     <div className="flex flex-col h-full bg-gray-950">
       {/* Doc header */}
       <div className="px-8 py-4 border-b border-gray-800">
-        <input
-          value={currentTitle}
-          onChange={e => setTitleDraft(e.target.value)}
-          onFocus={() => setTitleDraft(doc.title ?? '')}
-          onBlur={() => {
-            if (titleDraft !== null && titleDraft.trim() && titleDraft !== doc.title) {
-              saveTitle.mutate(titleDraft.trim())
-            }
-            setTitleDraft(null)
-          }}
-          onKeyDown={e => {
-            if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
-            if (e.key === 'Escape') { setTitleDraft(null); (e.target as HTMLInputElement).blur() }
-          }}
-          className="text-xl font-semibold text-white bg-transparent border-none outline-none w-full
-                     hover:bg-gray-800/40 focus:bg-gray-800/40 rounded px-1 -mx-1 transition-colors
-                     placeholder-gray-600"
-          placeholder="Untitled"
-        />
+        <h1 className="text-xl font-semibold text-white">{doc.title}</h1>
       </div>
 
       {/* Editor */}

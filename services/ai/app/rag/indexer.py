@@ -1,19 +1,22 @@
+"""
+Per-workspace ChromaDB indexer.
+Indexes items and documents as embeddings for semantic search.
+"""
 from typing import Optional
 import chromadb
+import google.generativeai as genai
 from app.core.config import settings
-from app.core.providers import generate_embedding
 
 
 def get_chroma_client() -> chromadb.AsyncHttpClient:
-    headers = {"X-Chroma-Token": settings.CHROMADB_AUTH_TOKEN} if settings.CHROMADB_AUTH_TOKEN else {}
     return chromadb.AsyncHttpClient(
         host=settings.CHROMA_HOST,
         port=settings.CHROMA_PORT,
-        headers=headers,
     )
 
 
 def collection_name(workspace_id: str) -> str:
+    """Each workspace gets its own ChromaDB collection."""
     return f'workspace_{workspace_id.replace("-", "_")}'
 
 
@@ -26,12 +29,24 @@ async def get_or_create_collection(workspace_id: str) -> chromadb.Collection:
     )
 
 
+async def embed_text(text: str) -> list[float]:
+    """Generate embedding using Gemini text-embedding model."""
+    genai.configure(api_key=settings.GEMINI_API_KEY)
+    result = genai.embed_content(
+        model='models/text-embedding-004',
+        content=text,
+        task_type='retrieval_document',
+    )
+    return result['embedding']
+
+
 async def index_item(workspace_id: str, item_id: str, title: str, description: str = '') -> None:
+    """Index an item (task/card) into the workspace collection."""
     text = f'{title}\n{description}'.strip()
     if not text:
         return
 
-    embedding = generate_embedding(text)
+    embedding = await embed_text(text)
     collection = await get_or_create_collection(workspace_id)
     await collection.upsert(
         ids=[f'item:{item_id}'],
@@ -40,19 +55,14 @@ async def index_item(workspace_id: str, item_id: str, title: str, description: s
         metadatas=[{'type': 'item', 'item_id': item_id, 'workspace_id': workspace_id}],
     )
 
-    if settings.FAISS_ENABLED:
-        from app.rag.faiss_indexer import get_faiss_manager
-        fm = get_faiss_manager()
-        fm.add_item(workspace_id, item_id, title, description,
-                    metadata={'type': 'item', 'item_id': item_id, 'workspace_id': workspace_id})
-
 
 async def index_document(workspace_id: str, doc_id: str, title: str, content_text: str = '') -> None:
-    text = f'{title}\n{content_text}'.strip()[:8000]
+    """Index a document into the workspace collection."""
+    text = f'{title}\n{content_text}'.strip()[:8000]  # truncate to avoid token limits
     if not text:
         return
 
-    embedding = generate_embedding(text)
+    embedding = await embed_text(text)
     collection = await get_or_create_collection(workspace_id)
     await collection.upsert(
         ids=[f'doc:{doc_id}'],
@@ -61,16 +71,10 @@ async def index_document(workspace_id: str, doc_id: str, title: str, content_tex
         metadatas=[{'type': 'document', 'doc_id': doc_id, 'workspace_id': workspace_id}],
     )
 
-    if settings.FAISS_ENABLED:
-        from app.rag.faiss_indexer import get_faiss_manager
-        fm = get_faiss_manager()
-        fm.add_document(workspace_id, doc_id, title, content_text,
-                        metadata={'type': 'document', 'doc_id': doc_id, 'workspace_id': workspace_id})
 
-
-async def search(workspace_id: str, query: str, n_results: int = 5,
-                 filter_type: Optional[str] = None) -> list[dict]:
-    query_embedding = generate_embedding(query)
+async def search(workspace_id: str, query: str, n_results: int = 5, filter_type: Optional[str] = None) -> list[dict]:
+    """Semantic search within a workspace."""
+    query_embedding = await embed_text(query)
     collection = await get_or_create_collection(workspace_id)
 
     where = {'type': filter_type} if filter_type else None
@@ -88,62 +92,16 @@ async def search(workspace_id: str, query: str, n_results: int = 5,
                 'id':       doc_id,
                 'document': results['documents'][0][i],
                 'metadata': results['metadatas'][0][i],
-                'score':    1 - results['distances'][0][i],
+                'score':    1 - results['distances'][0][i],  # cosine → similarity
             })
     return output
-
-
-async def hybrid_search(workspace_id: str, query: str, top_k: int = 5,
-                        filter_type: Optional[str] = None) -> list[dict]:
-    chroma_results = await search(workspace_id, query, n_results=top_k * 2, filter_type=filter_type)
-
-    if settings.FAISS_ENABLED:
-        from app.rag.faiss_indexer import get_faiss_manager
-        fm = get_faiss_manager()
-        faiss_results = fm.search(workspace_id, query, k=top_k * 2)
-    else:
-        faiss_results = []
-
-    if not faiss_results:
-        return chroma_results[:top_k]
-
-    if not chroma_results:
-        return faiss_results[:top_k]
-
-    seen_ids = set()
-    merged = []
-
-    for r in faiss_results + chroma_results:
-        rid = r['id']
-        if rid not in seen_ids:
-            seen_ids.add(rid)
-            merged.append(r)
-
-    merged.sort(key=lambda x: x['score'], reverse=True)
-    return merged[:top_k]
-
-
-async def rebuild_faiss(workspace_id: str) -> None:
-    if not settings.FAISS_ENABLED:
-        return
-    from app.rag.faiss_indexer import get_faiss_manager
-    fm = get_faiss_manager()
-    fm.sync_from_chromadb(workspace_id)
 
 
 async def delete_item(workspace_id: str, item_id: str) -> None:
     collection = await get_or_create_collection(workspace_id)
     await collection.delete(ids=[f'item:{item_id}'])
 
-    if settings.FAISS_ENABLED:
-        from app.rag.faiss_indexer import get_faiss_manager
-        get_faiss_manager().delete_item(workspace_id, item_id)
-
 
 async def delete_workspace_collection(workspace_id: str) -> None:
     client = get_chroma_client()
     await client.delete_collection(collection_name(workspace_id))
-
-    if settings.FAISS_ENABLED:
-        from app.rag.faiss_indexer import get_faiss_manager
-        get_faiss_manager().delete_workspace(workspace_id)

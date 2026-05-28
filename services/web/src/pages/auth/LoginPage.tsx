@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
 import toast from 'react-hot-toast'
+import { Button, Input, Checkbox } from '@/components/ui'
 
 const schema = z.object({
   email:    z.string().email('Invalid email'),
@@ -25,7 +26,7 @@ export default function LoginPage() {
     mutationFn: (data: FormData) => api.post('/auth/login', data),
     onSuccess: (res) => {
       const { user, token, workspace, mfa_required } = res.data.data
-      if (mfa_required) return // form will reveal MFA field
+      if (mfa_required) return
       setAuth(token, user, workspace)
       navigate('/boards')
     },
@@ -38,48 +39,41 @@ export default function LoginPage() {
     <form onSubmit={handleSubmit((d) => mutation.mutate(d))} className="space-y-4">
       <h2 className="text-xl font-semibold text-white">Sign in</h2>
 
-      <div>
-        <label className="block text-sm text-gray-400 mb-1">Email</label>
-        <input
-          {...register('email')}
-          type="email"
-          autoComplete="email"
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-        {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
-      </div>
+      <Input
+        label="Email"
+        type="email"
+        autoComplete="email"
+        error={errors.email?.message}
+        {...register('email')}
+      />
 
-      <div>
-        <label className="block text-sm text-gray-400 mb-1">Password</label>
-        <input
-          {...register('password')}
-          type="password"
-          autoComplete="current-password"
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-        {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>}
-      </div>
+      <Input
+        label="Password"
+        type="password"
+        autoComplete="current-password"
+        error={errors.password?.message}
+        {...register('password')}
+      />
+
+      <Checkbox label="Remember me" />
 
       {mutation.data?.data?.data?.mfa_required && (
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">MFA Code</label>
-          <input
-            {...register('mfa_code')}
-            type="text"
-            maxLength={6}
-            inputMode="numeric"
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+        <Input
+          label="MFA Code"
+          maxLength={6}
+          inputMode="numeric"
+          {...register('mfa_code')}
+        />
       )}
 
-      <button
+      <Button
         type="submit"
-        disabled={mutation.isPending}
-        className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-medium py-2 rounded-lg text-sm transition-colors"
+        variant="primary"
+        loading={mutation.isPending}
+        className="w-full"
       >
-        {mutation.isPending ? 'Signing in…' : 'Sign in'}
-      </button>
+        {mutation.isPending ? 'Signing in\u2026' : 'Sign in'}
+      </Button>
 
       <p className="text-center text-sm text-gray-500">
         No account?{' '}

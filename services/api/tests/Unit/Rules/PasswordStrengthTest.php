@@ -1,6 +1,6 @@
 <?php
 
-use App\Core\Rules\PasswordStrength;
+use App\Rules\PasswordStrength;
 
 /**
  * Helper: run the rule and return first failure message, or null if valid.
@@ -8,11 +8,10 @@ use App\Core\Rules\PasswordStrength;
 function validatePassword(string $password): ?string
 {
     $errors = [];
-    $rule = new PasswordStrength;
+    $rule   = new PasswordStrength();
     $rule->validate('password', $password, function (string $msg) use (&$errors) {
         $errors[] = $msg;
     });
-
     return $errors[0] ?? null;
 }
 

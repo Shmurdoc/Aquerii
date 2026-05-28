@@ -36,7 +36,6 @@ export class RoomManager {
 
     // Track per-room member set in Redis (union of all socket instances)
     await this.redis.sadd(`room_members:${room}`, payload.sub)
-    await this.redis.expire(`room_members:${room}`, 86400) // 24hr TTL, reset on each join
   }
 
   async leave(
@@ -82,7 +81,6 @@ export class RoomManager {
     socket.data.rooms.add(room)
     if (socket.data.user?.sub) {
       await this.redis.sadd(`room_members:${room}`, socket.data.user.sub)
-      await this.redis.expire(`room_members:${room}`, 86400) // 24hr TTL, reset on each join
     }
 
     socket.to(room).emit('room:member_joined', {

@@ -12,10 +12,8 @@ class Settings(BaseSettings):
     INTERNAL_API_KEY: str = ""
 
     # AI Providers
-    OPENAI_API_KEY: str = ""
     GEMINI_API_KEY: str = ""
     ANTHROPIC_API_KEY: str = ""
-    AI_PROVIDER_PREFERENCE: str = "openai"  # openai, anthropic, gemini
 
     # Redis
     REDIS_URL: str = "redis://redis:6379/0"
@@ -29,7 +27,6 @@ class Settings(BaseSettings):
     # ChromaDB
     CHROMA_HOST: str = "chromadb"
     CHROMA_PORT: int = 8000
-    CHROMADB_AUTH_TOKEN: str = ""
     # Aliases expected by rag/indexer.py (maps to CHROMA_*)
     CHROMADB_HOST: str = "chromadb"
     CHROMADB_PORT: int = 8000
@@ -37,16 +34,6 @@ class Settings(BaseSettings):
     # OTel
     OTEL_EXPORTER_OTLP_ENDPOINT: str = "http://otel-collector:4317"
     OTEL_SERVICE_NAME: str = "aquerii-ai"
-
-    # FAISS / RAG
-    FAISS_STORAGE_PATH: str = "/data/faiss"
-    FAISS_ENABLED: bool = True
-    RERANKER_MODEL: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
-    RERANKER_TOP_K: int = 5
-    RERANKER_SCORE_THRESHOLD: float = 0.1
-    RAG_HYBRID_SEARCH: bool = True
-    RAG_FAISS_K: int = 30
-    RAG_CHROMA_K: int = 30
 
     # Credit limits (per request type)
     CREDIT_COST_TASK_ASSIST: int = 1

@@ -6,7 +6,6 @@ import { Server } from 'socket.io'
 import { createAdapter } from '@socket.io/redis-adapter'
 import { Redis } from 'ioredis'
 import pino from 'pino'
-import { z } from 'zod'
 
 import { verifySanctumToken } from './auth/sanctum'
 import { RoomManager } from './rooms/RoomManager'
@@ -15,23 +14,6 @@ import { YDocManager } from './ydoc/YDocManager'
 import { EventBroadcaster } from './events/EventBroadcaster'
 import { registerCatchupHandler } from './handlers/catchupHandler'
 import { connectedClients, messagesTotal, createMetricsServer } from './metrics'
-
-// ── Zod schemas for socket event payloads ─────────────────────────────────────
-const DocUpdateSchema = z.object({
-  docId:  z.string().uuid(),
-  update: z.string().min(1),
-  room:   z.string().min(1),
-})
-
-const DocSyncSchema = z.object({
-  docId:       z.string().uuid(),
-  stateVector: z.string().min(1),
-})
-
-const DocAwarenessSchema = z.object({
-  docId:  z.string().uuid(),
-  update: z.string().min(1),
-})
 
 // ── Logger (exported so legacy modules can import it) ─────────────────────────
 export const logger = pino({ level: process.env.LOG_LEVEL ?? 'info' })
@@ -48,7 +30,7 @@ async function bootstrap(): Promise<void> {
   // ── Redis connections ────────────────────────────────────────────────────
   // socket.io-redis-adapter requires separate pub/sub clients.
   // A third client is used for all other Redis operations.
-  const pubClient    = new Redis(REDIS_URL).on('error', (e: Error) => logger.error(e, 'Redis pub error'))
+  const pubClient    = new Redis(REDIS_URL).on('error', (e) => logger.error(e, 'Redis pub error'))
   const subClient    = pubClient.duplicate()
   const redisClient  = pubClient.duplicate()
 
@@ -122,29 +104,8 @@ async function bootstrap(): Promise<void> {
     // Register room join/leave, presence typing, and disconnect handlers
     registerCatchupHandler(socket, user, roomManager, presenceManager, broadcaster)
 
-    // ── Presence heartbeat ──────────────────────────────────────────────────
-    // Refresh presence TTL whenever the client pings (every ~25s per Socket.IO default).
-    // This keeps presence alive for active connections and lets it expire naturally
-    // within ~1hr of silent disconnect (presence TTL = 3600s in PresenceManager).
-    socket.on('ping', async () => {
-      const rooms: Set<string> = socket.data.rooms || new Set()
-      for (const room of rooms) {
-        try {
-          await presenceManager.heartbeat(user.sub, room)
-        } catch {
-          // non-fatal
-        }
-      }
-    })
-
     // ── Y.js document sync ──────────────────────────────────────────────────
-    socket.on('doc:update', async (raw: unknown) => {
-      const parsed = DocUpdateSchema.safeParse(raw)
-      if (!parsed.success) {
-        socket.emit('error', { event: 'doc:update', issues: parsed.error.issues })
-        return
-      }
-      const data = parsed.data
+    socket.on('doc:update', async (data: { docId: string; update: string; room: string }) => {
       try {
         const update = Buffer.from(data.update, 'base64')
         await ydocManager.applyUpdate(data.docId, update, socket, data.room)
@@ -154,13 +115,7 @@ async function bootstrap(): Promise<void> {
       }
     })
 
-    socket.on('doc:sync', async (raw: unknown) => {
-      const parsed = DocSyncSchema.safeParse(raw)
-      if (!parsed.success) {
-        socket.emit('error', { event: 'doc:sync', issues: parsed.error.issues })
-        return
-      }
-      const data = parsed.data
+    socket.on('doc:sync', async (data: { docId: string; stateVector: string }) => {
       try {
         const stateVector = Buffer.from(data.stateVector, 'base64')
         const update = await ydocManager.getUpdate(data.docId, stateVector)
@@ -175,13 +130,8 @@ async function bootstrap(): Promise<void> {
     })
 
     // Relay Y.js awareness updates (cursor positions etc.) without server processing
-    socket.on('doc:awareness', (raw: unknown) => {
-      const parsed = DocAwarenessSchema.safeParse(raw)
-      if (!parsed.success) {
-        socket.emit('error', { event: 'doc:awareness', issues: parsed.error.issues })
-        return
-      }
-      socket.to(`doc:${parsed.data.docId}`).emit('doc:awareness', parsed.data)
+    socket.on('doc:awareness', (data: { docId: string; update: string }) => {
+      socket.to(`doc:${data.docId}`).emit('doc:awareness', data)
       messagesTotal.inc({ event: 'doc:awareness' })
     })
 

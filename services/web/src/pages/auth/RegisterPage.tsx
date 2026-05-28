@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
 import toast from 'react-hot-toast'
+import { Button, Input } from '@/components/ui'
 
 const schema = z.object({
   name:           z.string().min(1, 'Name is required').max(255),
@@ -19,12 +20,21 @@ const schema = z.object({
 })
 type FormData = z.infer<typeof schema>
 
+function passwordStrength(pw: string): string {
+  if (pw.length < 8) return ''
+  if (pw.length >= 12 && /[A-Z]/.test(pw) && /[0-9]/.test(pw) && /[^A-Za-z0-9]/.test(pw)) return 'Strong'
+  if (pw.length >= 8 && /[A-Z]/.test(pw) && /[0-9]/.test(pw)) return 'Medium'
+  return 'Weak'
+}
+
 export default function RegisterPage() {
   const navigate = useNavigate()
   const setAuth  = useAuthStore(s => s.setAuth)
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
+
+  const password = watch('password')
 
   const mutation = useMutation({
     mutationFn: (data: FormData) => api.post('/auth/register', data),
@@ -51,30 +61,37 @@ export default function RegisterPage() {
     { name: 'password_confirmation', label: 'Confirm password', type: 'password', autocomplete: 'new-password' },
   ]
 
+  const strength = passwordStrength(password ?? '')
+
   return (
     <form onSubmit={handleSubmit((d) => mutation.mutate(d))} className="space-y-4">
       <h2 className="text-xl font-semibold text-white">Create account</h2>
 
       {fields.map(f => (
-        <div key={f.name}>
-          <label className="block text-sm text-gray-400 mb-1">{f.label}</label>
-          <input
-            {...register(f.name)}
-            type={f.type}
-            autoComplete={f.autocomplete}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          {errors[f.name] && <p className="text-red-400 text-xs mt-1">{errors[f.name]?.message}</p>}
-        </div>
+        <Input
+          key={f.name}
+          label={f.label}
+          type={f.type}
+          autoComplete={f.autocomplete}
+          error={errors[f.name]?.message}
+          {...register(f.name)}
+        />
       ))}
 
-      <button
+      {password && strength && (
+        <p className={`text-xs ${strength === 'Strong' ? 'text-green-400' : strength === 'Medium' ? 'text-yellow-400' : 'text-red-400'}`}>
+          Password strength: {strength}
+        </p>
+      )}
+
+      <Button
         type="submit"
-        disabled={mutation.isPending}
-        className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-medium py-2 rounded-lg text-sm transition-colors"
+        variant="primary"
+        loading={mutation.isPending}
+        className="w-full"
       >
-        {mutation.isPending ? 'Creating account…' : 'Create account'}
-      </button>
+        {mutation.isPending ? 'Creating account\u2026' : 'Create account'}
+      </Button>
 
       <p className="text-center text-sm text-gray-500">
         Already have an account?{' '}

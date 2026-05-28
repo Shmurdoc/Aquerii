@@ -13,11 +13,10 @@ export function useDocuments() {
 }
 
 export function useDocument(docId: string) {
-  const workspace = useAuthStore((s) => s.workspace)
   return useQuery({
     queryKey: ['document', docId],
-    queryFn: () => api.get(`/workspaces/${workspace!.id}/documents/${docId}`).then((r) => r.data.data),
-    enabled: !!docId && !!workspace,
+    queryFn: () => api.get(`/documents/${docId}`).then((r) => r.data.data),
+    enabled: !!docId,
   })
 }
 

@@ -70,7 +70,7 @@ class WorkspaceController extends Controller
         $members = DB::table('workspace_members')
             ->join('users', 'users.id', '=', 'workspace_members.user_id')
             ->where('workspace_members.workspace_id', $workspace->id)
-            ->select('workspace_members.role', 'workspace_members.joined_at', 'users.id', 'users.name', 'users.email', 'users.avatar_url')
+            ->select('workspace_members.*', 'users.name', 'users.email', 'users.avatar_url')
             ->get();
 
         return response()->json(['data' => $members]);

@@ -14,15 +14,8 @@ class ItemController extends Controller
 {
     public function __construct(private ItemService $itemService) {}
 
-    private function resolveBoard(string $workspace, string $boardId): Board
-    {
-        return Board::where('workspace_id', $workspace)->findOrFail($boardId);
-    }
-
     public function index(Request $request, string $workspace, string $board): JsonResponse
     {
-        $this->resolveBoard($workspace, $board);
-
         $query = Item::with(['assignees:id,name,avatar_url', 'subitems:id,title,status,group_id'])
             ->where('board_id', $board)
             ->whereNull('parent_id')
@@ -82,8 +75,6 @@ class ItemController extends Controller
 
     public function show(Request $request, string $workspace, string $board, string $item): JsonResponse
     {
-        $this->resolveBoard($workspace, $board);
-
         $item = Item::with(['assignees', 'comments', 'files', 'subitems'])
             ->where('board_id', $board)
             ->whereNull('deleted_at')
@@ -94,8 +85,6 @@ class ItemController extends Controller
 
     public function update(Request $request, string $workspace, string $board, string $item): JsonResponse
     {
-        $this->resolveBoard($workspace, $board);
-
         $itemModel = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);
 
         $data = $request->validate([
@@ -121,8 +110,6 @@ class ItemController extends Controller
 
     public function destroy(Request $request, string $workspace, string $board, string $item): JsonResponse
     {
-        $this->resolveBoard($workspace, $board);
-
         $itemModel = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);
         $this->itemService->delete($itemModel, $request->user()->id);
         return response()->json(null, 204);
@@ -130,8 +117,6 @@ class ItemController extends Controller
 
     public function activity(Request $request, string $workspace, string $board, string $item): JsonResponse
     {
-        $this->resolveBoard($workspace, $board);
-
         $log = DB::table('activity_log')
             ->where('entity_type', 'item')
             ->where('entity_id', $item)
@@ -144,16 +129,12 @@ class ItemController extends Controller
 
     public function subitems(Request $request, string $workspace, string $board, string $item): JsonResponse
     {
-        $this->resolveBoard($workspace, $board);
-
         $subs = Item::where('parent_id', $item)->whereNull('deleted_at')->orderBy('position')->get();
         return response()->json(['data' => $subs]);
     }
 
     public function duplicate(Request $request, string $workspace, string $board, string $item): JsonResponse
     {
-        $this->resolveBoard($workspace, $board);
-
         $original = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);
 
         $copy = $this->itemService->create(
@@ -168,8 +149,6 @@ class ItemController extends Controller
 
     public function move(Request $request, string $workspace, string $board, string $item): JsonResponse
     {
-        $this->resolveBoard($workspace, $board);
-
         $data = $request->validate([
             'group_id'  => 'required|uuid|exists:board_groups,id',
             'position'  => 'nullable|numeric',
@@ -183,8 +162,6 @@ class ItemController extends Controller
 
     public function storeSubitem(Request $request, string $workspace, string $board, string $item): JsonResponse
     {
-        $this->resolveBoard($workspace, $board);
-
         $parent = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);
 
         $data = $request->validate([
@@ -207,8 +184,6 @@ class ItemController extends Controller
 
     public function addAssignee(Request $request, string $workspace, string $board, string $item): JsonResponse
     {
-        $this->resolveBoard($workspace, $board);
-
         $request->validate(['user_id' => 'required|uuid|exists:users,id']);
 
         $itemModel = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);
@@ -227,8 +202,6 @@ class ItemController extends Controller
 
     public function removeAssignee(Request $request, string $workspace, string $board, string $item, string $userId): JsonResponse
     {
-        $this->resolveBoard($workspace, $board);
-
         $itemModel = Item::where('board_id', $board)->whereNull('deleted_at')->findOrFail($item);
         $itemModel->assignees()->detach($userId);
 

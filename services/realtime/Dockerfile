@@ -5,12 +5,12 @@ RUN apk add --no-cache curl
 # ── Dependencies ──────────────────────────────────────────────
 FROM base AS deps
 COPY package*.json ./
-RUN if [ -f package-lock.json ]; then npm ci --omit=dev; else npm install --legacy-peer-deps; fi
+RUN npm ci --omit=dev
 
 # ── Build ─────────────────────────────────────────────────────
 FROM base AS build
 COPY package*.json ./
-RUN if [ -f package-lock.json ]; then npm ci; else npm install --legacy-peer-deps; fi
+RUN npm ci
 COPY . .
 RUN npm run build
 

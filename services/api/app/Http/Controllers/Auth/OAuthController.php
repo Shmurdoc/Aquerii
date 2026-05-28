@@ -9,7 +9,6 @@ use App\Models\Workspace;
 use App\Models\WorkspaceMember;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
@@ -43,13 +42,14 @@ class OAuthController extends Controller
 
             if ($oauth) {
                 $oauth->update([
-                    'access_token'  => Crypt::encryptString($social->token),
-                    'refresh_token' => $social->refreshToken ? Crypt::encryptString($social->refreshToken) : null,
+                    'access_token'  => $social->token,
+                    'refresh_token' => $social->refreshToken,
                     'expires_at'    => $social->expiresIn ? now()->addSeconds($social->expiresIn) : null,
                 ]);
                 return [$oauth->user, false];
             }
 
+            // Find or create user by email
             $user  = User::firstOrCreate(
                 ['email' => $social->getEmail()],
                 [
@@ -63,11 +63,12 @@ class OAuthController extends Controller
                 'user_id'       => $user->id,
                 'provider'      => $provider,
                 'provider_id'   => $social->getId(),
-                'access_token'  => Crypt::encryptString($social->token),
-                'refresh_token' => $social->refreshToken ? Crypt::encryptString($social->refreshToken) : null,
+                'access_token'  => $social->token,
+                'refresh_token' => $social->refreshToken,
                 'expires_at'    => $social->expiresIn ? now()->addSeconds($social->expiresIn) : null,
             ]);
 
+            // Auto-create workspace for brand-new users
             $isNew = $user->wasRecentlyCreated;
             if ($isNew) {
                 $slug      = Str::slug($user->name) . '-' . Str::lower(Str::random(5));

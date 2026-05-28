@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
-RUN if [ -f package-lock.json ]; then npm ci --frozen-lockfile; else npm install --legacy-peer-deps; fi
+RUN npm ci --frozen-lockfile
 
 COPY . .
 
@@ -46,26 +46,7 @@ server {
 }
 EOF
 
-# Override main nginx.conf to remove 'user' directive (incompatible with non-root) and set pid path
-COPY <<'EOF' /etc/nginx/nginx.conf
-pid /run/nginx.pid;
-worker_processes auto;
-
-events {
-    worker_connections 1024;
-}
-
-http {
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
-    sendfile on;
-    keepalive_timeout 65;
-    include /etc/nginx/conf.d/*.conf;
-}
-EOF
-
-RUN chown -R appuser:appgroup /usr/share/nginx/html /var/cache/nginx /var/run /run /var/log/nginx \
-    && touch /run/nginx.pid && chown appuser:appgroup /run/nginx.pid
+RUN chown -R appuser:appgroup /usr/share/nginx/html /var/cache/nginx /var/run /var/log/nginx
 
 USER appuser
 EXPOSE 80

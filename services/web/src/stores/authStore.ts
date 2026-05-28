@@ -14,15 +14,12 @@ interface Workspace {
   name: string
   slug: string
   plan: string
-  logo_url?: string | null
-  color?: string | null
 }
 
 interface AuthState {
   token: string | null
   user: User | null
   workspace: Workspace | null
-  role: string | null
   setAuth: (token: string, user: User, workspace: Workspace) => void
   setUser: (user: User) => void
   setWorkspace: (workspace: Workspace) => void
@@ -35,7 +32,6 @@ export const useAuthStore = create<AuthState>()(
       token:     null,
       user:      null,
       workspace: null,
-      role:      null,
 
       setAuth: (token, user, workspace) => set({ token, user, workspace }),
       setUser: (user) => set({ user }),
@@ -49,7 +45,6 @@ export const useAuthStore = create<AuthState>()(
         token:     state.token,
         user:      state.user,
         workspace: state.workspace,
-        role:      state.role,
       }),
     }
   )

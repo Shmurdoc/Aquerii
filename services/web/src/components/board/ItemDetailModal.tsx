@@ -2,25 +2,11 @@ import { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
-import { useUpdateItem } from '@/hooks/useItems'
 import type { Item } from '@/hooks/useItems'
 import { format } from 'date-fns'
-import { X, Calendar, User, Flag, Paperclip, MessageSquare, GitBranch, Trash2, Plus, FileText, ExternalLink } from 'lucide-react'
+import { X, Calendar, User, Flag, Paperclip, MessageSquare, GitBranch, Trash2, Plus } from 'lucide-react'
 import clsx from 'clsx'
 import toast from 'react-hot-toast'
-
-/** Extract a plain-text string from a description that may be a Tiptap JSON doc or raw string. */
-function descriptionToText(raw: Item['description']): string {
-  if (!raw) return ''
-  if (typeof raw === 'string') return raw
-  // Tiptap doc: extract text nodes recursively
-  function extract(node: Record<string, unknown>): string {
-    if (node.type === 'text') return (node.text as string) ?? ''
-    const children = (node.content as Record<string, unknown>[] | undefined) ?? []
-    return children.map(extract).join('')
-  }
-  return extract(raw)
-}
 
 const PRIORITY_OPTIONS = ['critical', 'high', 'medium', 'low']
 const PRIORITY_COLOR: Record<string, string> = {
@@ -34,19 +20,17 @@ interface Props {
   item: Item
   boardId: string
   onClose: () => void
-  onDeleted?: () => void
 }
 
-export default function ItemDetailModal({ item, boardId, onClose, onDeleted }: Props) {
+export default function ItemDetailModal({ item, boardId, onClose }: Props) {
   const workspace = useAuthStore(s => s.workspace)
   const qc        = useQueryClient()
 
   const [title,       setTitle]       = useState(item.title)
-  const [description, setDescription] = useState(descriptionToText(item.description))
+  const [description, setDescription] = useState(item.description ?? '')
   const [dueDate,     setDueDate]     = useState(item.due_date ?? '')
   const [priority,    setPriority]    = useState(item.priority ?? '')
   const [comment,     setComment]     = useState('')
-  const [confirmDel,  setConfirmDel]  = useState(false)
   const titleRef = useRef<HTMLTextAreaElement>(null)
 
   // Auto-grow title
@@ -77,13 +61,15 @@ export default function ItemDetailModal({ item, boardId, onClose, onDeleted }: P
     enabled: !!workspace,
   })
 
-  // Update item field — uses shared hook for consistent cache invalidation
-  const updateItemMutation = useUpdateItem(boardId)
-  const updateItem = {
-    mutate: (patch: Record<string, unknown>) =>
-      updateItemMutation.mutate({ itemId: item.id, data: { ...patch, expected_version: item.version } }),
-    isPending: updateItemMutation.isPending,
-  }
+  // Update item field
+  const updateItem = useMutation({
+    mutationFn: (patch: Record<string, unknown>) =>
+      api.patch(`/workspaces/${workspace!.id}/boards/${boardId}/items/${item.id}`, patch),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['items', boardId] })
+    },
+    onError: () => toast.error('Failed to update item.'),
+  })
 
   // Add comment
   const addComment = useMutation({
@@ -117,18 +103,6 @@ export default function ItemDetailModal({ item, boardId, onClose, onDeleted }: P
     onError:   () => toast.error('Failed to upload file.'),
   })
 
-  // Delete item
-  const deleteItem = useMutation({
-    mutationFn: () =>
-      api.delete(`/workspaces/${workspace!.id}/boards/${boardId}/items/${item.id}`),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['items', boardId] })
-      toast.success('Item deleted.')
-      onDeleted ? onDeleted() : onClose()
-    },
-    onError: () => toast.error('Failed to delete item.'),
-  })
-
   const handleTitleBlur = () => {
     if (title.trim() && title !== item.title) {
       updateItem.mutate({ title: title.trim() })
@@ -156,7 +130,7 @@ export default function ItemDetailModal({ item, boardId, onClose, onDeleted }: P
             className="flex-1 bg-transparent text-lg font-semibold text-white resize-none focus:outline-none placeholder-gray-600 leading-snug"
             placeholder="Item title…"
           />
-          <button onClick={onClose} aria-label="Close" className="text-gray-500 hover:text-gray-300 mt-0.5">
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-300 mt-0.5">
             <X size={18} />
           </button>
         </div>
@@ -312,38 +286,8 @@ export default function ItemDetailModal({ item, boardId, onClose, onDeleted }: P
               />
             </div>
 
-            {/* Linked Documents */}
-            <LinkedDocuments itemId={item.id} workspaceId={workspace!.id} />
             {/* Assignees */}
             <AssigneeSelector itemId={item.id} boardId={boardId} workspaceId={workspace!.id} current={item.assignees ?? []} />
-
-            {/* Delete item */}
-            <div className="pt-2 border-t border-gray-800">
-              {confirmDel ? (
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => deleteItem.mutate()}
-                    disabled={deleteItem.isPending}
-                    className="flex-1 text-xs py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-lg transition-colors disabled:opacity-40"
-                  >
-                    {deleteItem.isPending ? 'Deleting…' : 'Confirm delete'}
-                  </button>
-                  <button
-                    onClick={() => setConfirmDel(false)}
-                    className="flex-1 text-xs py-1.5 bg-gray-800 text-gray-400 hover:text-white rounded-lg transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => setConfirmDel(true)}
-                  className="w-full flex items-center justify-center gap-1.5 text-xs py-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                >
-                  <Trash2 size={11} /> Delete item
-                </button>
-              )}
-            </div>
           </div>
         </div>
       </div>
@@ -433,74 +377,6 @@ function SubItems({ itemId, boardId, workspaceId }: { itemId: string; boardId: s
           >
             <Plus size={14} />
           </button>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ── Linked Documents ───────────────────────────────────────────────────────────
-function LinkedDocuments({ itemId, workspaceId }: { itemId: string; workspaceId: string }) {
-  const qc = useQueryClient()
-
-  const { data: documents = [] } = useQuery({
-    queryKey: ['item-documents', itemId],
-    queryFn: async () => {
-      const res = await api.get(`/workspaces/${workspaceId}/items/${itemId}/documents`)
-      return res.data.data
-    },
-    enabled: !!workspaceId,
-  })
-
-  const { data: deals = [] } = useQuery({
-    queryKey: ['item-deals', itemId],
-    queryFn: async () => {
-      const res = await api.get(`/workspaces/${workspaceId}/items/${itemId}/deals`)
-      return res.data.data
-    },
-    enabled: !!workspaceId,
-  })
-
-  const unlinkDocument = useMutation({
-    mutationFn: (docId: string) =>
-      api.delete(`/workspaces/${workspaceId}/items/${itemId}/documents/${docId}`),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['item-documents', itemId] }),
-    onError: () => toast.error('Failed to unlink document.'),
-  })
-
-  return (
-    <div>
-      <label className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-1 mb-1.5">
-        <FileText size={10} /> Documents
-      </label>
-      {documents.length === 0 && deals.length === 0 ? (
-        <p className="text-xs text-gray-600">None linked.</p>
-      ) : (
-        <div className="space-y-1">
-          {documents.map((d: any) => (
-            <div key={d.id} className="flex items-center gap-1 group">
-              <FileText size={10} className="text-gray-500 flex-shrink-0" />
-              <span className="text-xs text-indigo-400 truncate flex-1">{d.title ?? d.filename ?? 'Untitled'}</span>
-              <button
-                onClick={() => unlinkDocument.mutate(d.id)}
-                className="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-400 transition-opacity"
-                title="Unlink"
-              >
-                <X size={10} />
-              </button>
-            </div>
-          ))}
-          {deals.length > 0 && (
-            <>
-              <div className="text-[10px] text-gray-600 font-medium pt-1">Linked Deals</div>
-              {deals.map((d: any) => (
-                <div key={d.id} className="flex items-center gap-1">
-                  <ExternalLink size={10} className="text-blue-500 flex-shrink-0" />
-                  <span className="text-xs text-blue-400 truncate flex-1">{d.name}</span>
-                </div>
-              ))}
-            </>
-          )}
         </div>
       )}
     </div>

@@ -1,8 +1,8 @@
 <?php
 
-use Monolog\Handler\NullHandler;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\SyslogUdpHandler;
+use Monolog\Handlers\NullHandler;
+use Monolog\Handlers\StreamHandler;
+use Monolog\Handlers\SyslogUdpHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
 
 return [

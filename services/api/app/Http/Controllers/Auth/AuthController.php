@@ -126,22 +126,6 @@ class AuthController extends Controller
 
     public function disableMfa(Request $request): JsonResponse
     {
-        $request->validate([
-            'code' => 'required_without:password|string|size:6',
-            'password' => 'required_without:code|string',
-        ]);
-
-        if ($request->has('password')) {
-            if (!Hash::check($request->input('password'), $request->user()->password)) {
-                return response()->json(['error' => ['code' => 'INVALID_PASSWORD', 'message' => 'Invalid password.']], 422);
-            }
-        } elseif ($request->has('code')) {
-            $ok = $this->authService->verifyMfaCode($request->user(), $request->input('code'));
-            if (!$ok) {
-                return response()->json(['error' => ['code' => 'MFA_INVALID', 'message' => 'Invalid MFA code.']], 422);
-            }
-        }
-
         $this->authService->disableMfa($request->user());
         return response()->json(['data' => ['message' => 'MFA disabled.']]);
     }
