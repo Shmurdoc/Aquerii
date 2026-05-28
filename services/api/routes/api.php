@@ -350,6 +350,15 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::get('sentiment/team', [\App\Core\Http\Controllers\Api\SentimentController::class, 'teamOverview']);
             Route::get('sentiment/member/{userId}', [\App\Core\Http\Controllers\Api\SentimentController::class, 'memberMetrics']);
             Route::post('sentiment/refresh', [\App\Core\Http\Controllers\Api\SentimentController::class, 'refresh'])->middleware('idempotent');
+
+            // Project email addresses (management)
+            Route::get('email/project-addresses', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'index']);
+            Route::post('email/project-addresses', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'store'])->middleware('idempotent');
+            Route::patch('email/project-addresses/{address}', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'update'])->middleware('idempotent');
+            Route::delete('email/project-addresses/{address}', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'destroy']);
         });
     });
+
+    // Inbound email webhook (no auth — verified by webhook signature)
+    Route::post('email/inbound', [\App\Modules\Email\Http\Controllers\InboundEmailController::class, 'handleInbound']);
 });
