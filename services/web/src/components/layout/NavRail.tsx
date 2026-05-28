@@ -4,7 +4,7 @@ import {
   LayoutGrid, FileText, Users, Settings, Bell,
   Inbox, Search, Wallet, Zap, ChevronLeft, ChevronRight, BarChart2,
   UserCheck, Video, Sparkles, Sun, Moon, HeadphonesIcon, Megaphone, Mail, CalendarDays,
-  MessageSquare,
+  MessageSquare, GitBranch,
   type LucideIcon,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
@@ -64,6 +64,7 @@ const SECTIONS: NavSection[] = [
     label: 'Admin',
     items: [
       { to: '/automation', icon: Zap,        label: 'Automation' },
+      { to: '/scenarios',  icon: GitBranch,  label: 'Scenarios' },
       { to: '/reports',    icon: BarChart2,  label: 'Reports',   permission: 'reports.*' },
       { to: '/support',    icon: HeadphonesIcon, label: 'Support'  },
       { to: '/marketing',  icon: Megaphone,  label: 'Marketing'  },

@@ -15,6 +15,7 @@
 | bg-06 | Offline sync with conflict resolution | ✅ DONE | ConflictResolver.tsx, SyncStatus.tsx, MutationQueue.ts |
 | bg-07 | Sentiment/burnout detection | ✅ DONE | BurnoutDetector.php, BurnoutWidget.tsx |
 | bg-08 | Predictive project management (ML) | ✅ DONE | predictions.py, AIController.php |
+| bg-09 | Digital twin / what-if simulation | ✅ DONE | ScenarioController.php, ScenariosPage.tsx |
 | bg-10 | Meeting effectiveness + OKR cascade | ✅ DONE | GoalController.php, MeetingOutcomeController.php |
 | bg-12 | Team capacity backend | ✅ DONE | TeamCapacityController.php, CapacityTab |
 | bg-13 | My Day backend | ✅ DONE | MyDayPage.tsx, useMyDayTasks.ts |
@@ -26,7 +27,6 @@
 | ID | Feature | Priority | Complexity | Est. Time |
 |----|---------|----------|------------|-----------|
 | bg-01 | Voice commands (Whisper + WS streaming) | HIGH | HIGH | 2-3 weeks |
-| bg-09 | Digital twin / what-if simulation | VERY HIGH | VERY HIGH | 4-6 weeks |
 | bg-11 | AI-recommended automations | HIGH | MEDIUM | 1-2 weeks |
 | bg-14 | Plugin system & marketplace | HIGH | HIGH | 3-4 weeks |
 | bg-15 | Field-level permissions + SCIM 2.0 | HIGH | HIGH | 2-3 weeks |

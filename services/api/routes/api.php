@@ -359,6 +359,13 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::post('meetings/{meeting}/outcome', [\App\Core\Http\Controllers\Api\MeetingOutcomeController::class, 'store'])->middleware('idempotent');
             Route::get('meetings/{meeting}/outcome', [\App\Core\Http\Controllers\Api\MeetingOutcomeController::class, 'show']);
 
+            // Scenarios (digital twin / what-if)
+            Route::apiResource('scenarios', \App\Core\Http\Controllers\Api\ScenarioController::class)->middleware('idempotent');
+            Route::post('scenarios/{scenario}/adjustments', [\App\Core\Http\Controllers\Api\ScenarioController::class, 'addAdjustment'])->middleware('idempotent');
+            Route::delete('scenarios/{scenario}/adjustments/{adjustment}', [\App\Core\Http\Controllers\Api\ScenarioController::class, 'removeAdjustment']);
+            Route::post('scenarios/{scenario}/simulate', [\App\Core\Http\Controllers\Api\ScenarioController::class, 'simulate'])->middleware('idempotent');
+            Route::post('scenarios/compare', [\App\Core\Http\Controllers\Api\ScenarioController::class, 'compare'])->middleware('idempotent');
+
             // Project email addresses (management)
             Route::get('email/project-addresses', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'index']);
             Route::post('email/project-addresses', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'store'])->middleware('idempotent');

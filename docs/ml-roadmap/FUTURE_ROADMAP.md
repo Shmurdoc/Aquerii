@@ -1,20 +1,27 @@
-# Future ML Roadmap — Predictive Project Management
+# Future ML Roadmap — Predictive Project Management + Digital Twin
 
-**Status:** FUTURE — Not implemented yet  
+**Status:** PARTIALLY IMPLEMENTED — Phase 1 done, Phase 2+3 future  
 **Created:** 2026-05-29  
-**Depends on:** 6+ months of historical data accumulation
+**Last Updated:** 2026-05-29
 
 ---
 
 ## Current Implementation (Phase 1 — Rule-Based)
 
-Already implemented in bg-08:
-
+### bg-08: Predictive Project Management ✅
 | Feature | Status | Method |
 |---------|--------|--------|
 | Task duration estimation | ✅ DONE | Rule-based (priority multiplier) |
 | Delay risk scoring | ✅ DONE | Rule-based (progress vs time) |
 | OKR progress forecasting | ✅ DONE | Rule-based (linear extrapolation) |
+
+### bg-09: Digital Twin / What-If Simulation ✅
+| Feature | Status | Method |
+|---------|--------|--------|
+| Scenario snapshots | ✅ DONE | Capture project state |
+| What-if adjustments | ✅ DONE | Rule-based (delay, resource, scope, deadline) |
+| Simulation results | ✅ DONE | Projected timeline, risk, workload |
+| Scenario comparison | ✅ DONE | Side-by-side view |
 
 **These work immediately without any training data.**
 
