@@ -22,7 +22,7 @@ Track implementation status. When starting a new feature, confirm the previous o
 | bg-05 | KB auto-capture from resolved issues | MEDIUM | ✅ DONE | Auto-generates draft KB article on ticket resolve |
 | bg-06 | Offline sync (conflict resolution) | HIGH | ✅ DONE | Version tracking, conflict detection, resolution UI |
 | bg-07 | Sentiment/burnout detection | HIGH | ✅ DONE | 5-factor scoring, daily metrics, risk dashboard |
-| bg-08 | Predictive project management (ML) | VERY HIGH | ❌ NOT STARTED | ML models for deadline prediction, risk scoring |
+| bg-08 | Predictive project management (ML) | VERY HIGH | ✅ DONE | Rule-based predictions + ML roadmap |
 | bg-09 | Digital twin / what-if simulation | VERY HIGH | ❌ NOT STARTED | Simulation engine for project scenarios |
 | bg-10 | Meeting effectiveness + OKR cascade | HIGH | ✅ DONE | Effectiveness scoring, goals/key results, meeting outcomes |
 | bg-11 | AI-recommended automations (pattern detection) | HIGH | ❌ NOT STARTED | AI suggests automations based on usage patterns |
@@ -245,13 +245,34 @@ Track implementation status. When starting a new feature, confirm the previous o
 
 ---
 
+### bg-08: Predictive Project Management ✅
+**Completed:** 2026-05-29
+**Files:**
+- `services/ai/app/routers/predictions.py` — rule-based prediction endpoints
+- `services/ai/app/main.py` — registered predictions router
+- `services/api/app/Modules/AI/Http/Controllers/AIController.php` — proxy methods
+- `services/api/routes/modules/ai.php` — added prediction routes
+- `docs/ml-roadmap/FUTURE_ROADMAP.md` — Phase 2 (ML) + Phase 3 (Advanced)
+- `docs/ml-roadmap/IMPLEMENTATION_CHECKLIST.md` — full implementation checklist
+
+**API:**
+- `POST /api/ai/predictions/task-duration` — estimate task hours
+- `POST /api/ai/predictions/delay-risk` — project delay risk score
+- `POST /api/ai/predictions/okr-progress` — OKR completion forecast
+
+**Phase 1 (Now):** Rule-based predictions, works immediately  
+**Phase 2 (Future):** ML models (requires 6+ months data)  
+**Phase 3 (Optional):** Advanced ML (requires 1+ year data)
+
+---
+
 ## Next Feature to Implement
 
 **Next up: bg-11 — AI-recommended automations (pattern detection)** (HIGH priority)
 
-When starting, confirm bg-10 is working correctly by running:
+When starting, confirm bg-08 is working correctly by running:
 ```bash
-php artisan route:list --path=goals
+php artisan route:list --path=predictions
 ```
 
 ---
