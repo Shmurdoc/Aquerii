@@ -8,6 +8,7 @@ import { KpiCard } from '@/components/dashboard/KpiCard'
 import { MyTasksWidget } from '@/components/dashboard/MyTasksWidget'
 import { ActivityFeed, type Activity } from '@/components/dashboard/ActivityFeed'
 import { QuickActions } from '@/components/dashboard/QuickActions'
+import { BurnoutWidget } from '@/components/sentiment/BurnoutWidget'
 import {
   CheckSquare,
   AlertCircle,
@@ -232,6 +233,12 @@ export default function DashboardPage() {
         <div>
           <QuickActions />
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <ErrorBoundary fallback={<WidgetErrorFallback label="team sentiment" />}>
+          <BurnoutWidget />
+        </ErrorBoundary>
       </div>
     </div>
   )

@@ -345,6 +345,11 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::get('sync/conflicts', [\App\Core\Http\Controllers\Api\OfflineSyncController::class, 'conflicts']);
             Route::patch('sync/conflicts/{conflict}', [\App\Core\Http\Controllers\Api\OfflineSyncController::class, 'resolve'])->middleware('idempotent');
             Route::post('sync/conflicts/resolve-all', [\App\Core\Http\Controllers\Api\OfflineSyncController::class, 'resolveAll'])->middleware('idempotent');
+
+            // Sentiment / burnout detection
+            Route::get('sentiment/team', [\App\Core\Http\Controllers\Api\SentimentController::class, 'teamOverview']);
+            Route::get('sentiment/member/{userId}', [\App\Core\Http\Controllers\Api\SentimentController::class, 'memberMetrics']);
+            Route::post('sentiment/refresh', [\App\Core\Http\Controllers\Api\SentimentController::class, 'refresh'])->middleware('idempotent');
         });
     });
 });
