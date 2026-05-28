@@ -2,6 +2,7 @@
 
 namespace App\Modules\Support\Http\Controllers;
 
+use App\Modules\Support\Events\TicketResolved;
 use App\Modules\Support\Models\Ticket;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -75,6 +76,11 @@ class TicketController extends Controller
         }
 
         $ticket->update($data);
+
+        // Dispatch KB auto-capture when ticket is resolved
+        if (isset($data['status']) && $data['status'] === 'resolved') {
+            TicketResolved::dispatch($ticket->fresh());
+        }
 
         return response()->json(['data' => $ticket->fresh()]);
     }

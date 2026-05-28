@@ -14,7 +14,7 @@ class KnowledgeBaseArticle extends Model
     protected $table = 'support_kb_articles';
 
     protected $fillable = [
-        'workspace_id', 'title', 'content', 'category',
+        'workspace_id', 'ticket_id', 'title', 'content', 'category',
         'tags', 'is_published', 'views', 'helpful_count',
         'not_helpful_count', 'author_id',
     ];
@@ -30,5 +30,10 @@ class KnowledgeBaseArticle extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class, 'ticket_id');
     }
 }

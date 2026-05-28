@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useKnowledgeBase, useCreateKbArticle, useDeleteKbArticle, useVoteKbArticle, KnowledgeBaseArticle } from '@/lib/support'
-import { Search, Plus, ThumbsUp, ThumbsDown, Trash2, BookOpen } from 'lucide-react'
+import { Search, Plus, ThumbsUp, ThumbsDown, Trash2, BookOpen, Ticket } from 'lucide-react'
 import { Button, Input, Badge } from '@/components/ui'
 
 export default function KnowledgeBasePage() {
@@ -96,6 +96,11 @@ function ArticleCard({ article, onDelete }: { article: KnowledgeBaseArticle; onD
             <h3 className="text-sm font-medium text-[var(--color-text-primary)] truncate">{article.title}</h3>
             {article.category && <Badge variant="default">{article.category}</Badge>}
             {!article.is_published && <Badge variant="warning">Draft</Badge>}
+            {article.ticket_id && (
+              <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400">
+                <Ticket size={9} /> From ticket
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-3 mt-1 text-[10px] text-[var(--color-text-muted)]">
             <span>{article.views} views</span>

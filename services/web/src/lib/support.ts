@@ -65,6 +65,7 @@ export interface SlaBreach {
 export interface KnowledgeBaseArticle {
   id: string
   workspace_id: string
+  ticket_id?: string | null
   title: string
   content: string
   category: string | null
