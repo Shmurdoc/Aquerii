@@ -340,6 +340,11 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
                 Route::get('receipts/{id}/pdf', [DocumentPdfController::class, 'receipt']);
                 Route::get('credit-notes/{id}/pdf', [DocumentPdfController::class, 'creditNote']);
             });
+
+            // Offline sync
+            Route::get('sync/conflicts', [\App\Core\Http\Controllers\Api\OfflineSyncController::class, 'conflicts']);
+            Route::patch('sync/conflicts/{conflict}', [\App\Core\Http\Controllers\Api\OfflineSyncController::class, 'resolve'])->middleware('idempotent');
+            Route::post('sync/conflicts/resolve-all', [\App\Core\Http\Controllers\Api\OfflineSyncController::class, 'resolveAll'])->middleware('idempotent');
         });
     });
 });

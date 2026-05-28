@@ -4,6 +4,8 @@ import { Menu, X } from 'lucide-react'
 import NavRail      from '@/components/layout/NavRail'
 import ContextPanel from '@/components/layout/ContextPanel'
 import CommandPalette from '@/components/layout/CommandPalette'
+import { ConflictResolver } from '@/components/sync/ConflictResolver'
+import { SyncStatus } from '@/components/sync/SyncStatus'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
 
@@ -96,6 +98,8 @@ export default function AppLayout() {
       </main>
 
       {cmdOpen && <CommandPalette onClose={() => setCmdOpen(false)} />}
+      <ConflictResolver />
+      <SyncStatus />
     </div>
   )
 }
