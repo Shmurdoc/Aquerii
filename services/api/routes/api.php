@@ -351,6 +351,14 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::get('sentiment/member/{userId}', [\App\Core\Http\Controllers\Api\SentimentController::class, 'memberMetrics']);
             Route::post('sentiment/refresh', [\App\Core\Http\Controllers\Api\SentimentController::class, 'refresh'])->middleware('idempotent');
 
+            // Goals / OKRs
+            Route::apiResource('goals', \App\Core\Http\Controllers\Api\GoalController::class)->middleware('idempotent');
+
+            // Meeting outcomes
+            Route::get('meeting-outcomes', [\App\Core\Http\Controllers\Api\MeetingOutcomeController::class, 'index']);
+            Route::post('meetings/{meeting}/outcome', [\App\Core\Http\Controllers\Api\MeetingOutcomeController::class, 'store'])->middleware('idempotent');
+            Route::get('meetings/{meeting}/outcome', [\App\Core\Http\Controllers\Api\MeetingOutcomeController::class, 'show']);
+
             // Project email addresses (management)
             Route::get('email/project-addresses', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'index']);
             Route::post('email/project-addresses', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'store'])->middleware('idempotent');

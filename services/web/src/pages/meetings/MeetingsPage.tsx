@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Plus, X, Video, MapPin, Link, Calendar, Clock, Users, Check, Minus } from 'lucide-react'
+import { Plus, X, Video, MapPin, Link, Calendar, Clock, Users, Check, Minus, Star } from 'lucide-react'
 import { useMeetings, useCreateMeeting, useUpdateMeeting, useDeleteMeeting, useUpdateAttendance } from '@/hooks/useMeetings'
 import { Meeting, CreateMeetingPayload, MeetingStatus, MeetingProvider } from '@/lib/meetings'
 import { useAuthStore } from '@/stores/authStore'
+import { api } from '@/lib/api'
 import clsx from 'clsx'
 import { Button, Input } from '@/components/ui'
 
@@ -186,6 +187,10 @@ function MeetingDetail({ meeting, onClose }: { meeting: Meeting; onClose: () => 
   const user = useAuthStore(s => s.user)
   const updateAttendance = useUpdateAttendance()
   const deleteMeeting = useDeleteMeeting()
+  const [effectiveness, setEffectiveness] = useState<number | null>(null)
+  const [decisions, setDecisions] = useState('')
+  const [actionItems, setActionItems] = useState('')
+  const [savingOutcome, setSavingOutcome] = useState(false)
 
   const myAttendance = meeting.attendees?.find(a => a.email === user?.email)
   const isPast = new Date(meeting.ends_at) < new Date()
@@ -205,6 +210,22 @@ function MeetingDetail({ meeting, onClose }: { meeting: Meeting; onClose: () => 
     } else if (meeting.meeting_url) {
       window.open(meeting.meeting_url, '_blank')
     }
+  }
+
+  async function handleSaveOutcome() {
+    if (!effectiveness) return
+    setSavingOutcome(true)
+    try {
+      const workspace = useAuthStore.getState().workspace
+      await api.post(`/workspaces/${workspace?.id}/meetings/${meeting.id}/outcome`, {
+        effectiveness_score: effectiveness,
+        decisions: decisions ? decisions.split('\n').filter(Boolean) : [],
+        action_items: actionItems ? actionItems.split('\n').filter(Boolean).map(text => ({ text })) : [],
+      })
+    } catch {
+      // non-fatal
+    }
+    setSavingOutcome(false)
   }
 
   return (
@@ -319,6 +340,57 @@ function MeetingDetail({ meeting, onClose }: { meeting: Meeting; onClose: () => 
             <Button size="sm" variant="ghost" onClick={() => { deleteMeeting.mutate(meeting.id); onClose() }} disabled={deleteMeeting.isPending} className="!ml-auto">
               Delete
             </Button>
+          </div>
+        )}
+
+        {/* Effectiveness scoring for past meetings */}
+        {isPast && meeting.status === 'completed' && (
+          <div className="pt-3 border-t space-y-3" style={{ borderColor: 'var(--color-glass-border)' }}>
+            <p className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>Meeting Effectiveness</p>
+            <div className="flex gap-1">
+              {[1, 2, 3, 4, 5].map(star => (
+                <button key={star} onClick={() => setEffectiveness(star)} className="transition-colors">
+                  <Star
+                    size={20}
+                    className={clsx(
+                      effectiveness && star <= effectiveness
+                        ? 'text-yellow-400 fill-yellow-400'
+                        : 'text-gray-600',
+                    )}
+                  />
+                </button>
+              ))}
+            </div>
+
+            {effectiveness && (
+              <div className="space-y-2">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>Decisions made</label>
+                  <textarea
+                    value={decisions}
+                    onChange={e => setDecisions(e.target.value)}
+                    placeholder="One decision per line"
+                    rows={2}
+                    className="rounded px-2 py-1.5 text-xs resize-none outline-none"
+                    style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>Action items</label>
+                  <textarea
+                    value={actionItems}
+                    onChange={e => setActionItems(e.target.value)}
+                    placeholder="One action item per line"
+                    rows={2}
+                    className="rounded px-2 py-1.5 text-xs resize-none outline-none"
+                    style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }}
+                  />
+                </div>
+                <Button size="sm" onClick={handleSaveOutcome} disabled={savingOutcome}>
+                  {savingOutcome ? 'Saving…' : 'Save Outcome'}
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </div>
