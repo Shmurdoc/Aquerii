@@ -335,6 +335,18 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::delete('plugins/{plugin}/uninstall', [\App\Core\Http\Controllers\Api\PluginController::class, 'uninstall']);
             Route::post('plugins/{plugin}/toggle', [\App\Core\Http\Controllers\Api\PluginController::class, 'toggle'])->middleware('idempotent');
             Route::patch('plugins/{plugin}/settings', [\App\Core\Http\Controllers\Api\PluginController::class, 'updateSettings'])->middleware('idempotent');
+
+            // Field-level permissions
+            Route::get('field-permissions', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'index']);
+            Route::post('field-permissions', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'store'])->middleware('idempotent');
+            Route::delete('field-permissions/{permission}', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'destroy']);
+            Route::post('field-permissions/bulk', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'bulkUpdate'])->middleware('idempotent');
+
+            // SCIM 2.0 provisioning
+            Route::get('scim/tokens', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokens']);
+            Route::post('scim/tokens', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokenCreate'])->middleware('idempotent');
+            Route::delete('scim/tokens/{token}', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokenRevoke']);
+            Route::post('scim/users', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimUsersProvision'])->middleware('idempotent');
             Route::post('anomaly-detection', [AIController::class, 'anomalyDetection']);
         });
 
