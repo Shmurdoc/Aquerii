@@ -29,7 +29,7 @@ Track implementation status. When starting a new feature, confirm the previous o
 | bg-12 | Team capacity backend (workload model) | MEDIUM | ✅ DONE | Migration + Controller + Frontend Capacity tab |
 | bg-13 | My Day backend (task pinning, auto-populate) | LOW | ✅ DONE | `MyDayPage.tsx` + `useMyDayTasks` hook + `GET /my-day` API |
 | bg-14 | Plugin system & marketplace | HIGH | ✅ DONE | Plugin registry, install/configure, hook execution |
-| bg-15 | Field-level permissions + SCIM 2.0 | HIGH | ❌ NOT STARTED | Granular field permissions + SCIM provisioning |
+| bg-15 | Field-level permissions + SCIM 2.0 | HIGH | ✅ DONE | Field permissions, SCIM tokens, user provisioning |
 
 ---
 
@@ -345,14 +345,51 @@ Track implementation status. When starting a new feature, confirm the previous o
 
 ---
 
-## Next Feature to Implement
+### bg-15: Field-Level Permissions + SCIM 2.0 ✅
+**Completed:** 2026-05-29
+**Files:**
+- `services/api/database/migrations/2026_05_29_000085_create_field_permissions_table.php` — field_permissions + scim_tokens
+- `services/api/app/Core/Models/FieldPermission.php` — field permission model with access checking
+- `services/api/app/Core/Models/ScimToken.php` — SCIM token model with generation/verification
+- `services/api/app/Core/Http/Controllers/Api/FieldPermissionController.php` — CRUD + SCIM endpoints
+- `docs/future-features/bg-01-voice-commands/README.md` — voice commands roadmap
 
-**Next up: bg-15 — Field-level permissions + SCIM 2.0** (HIGH priority)
+**API:**
+- `GET/POST/DELETE /api/workspaces/{id}/field-permissions` — CRUD
+- `POST /api/workspaces/{id}/field-permissions/bulk` — bulk update
+- `GET/POST/DELETE /api/workspaces/{id}/scim/tokens` — token management
+- `POST /api/workspaces/{id}/scim/users` — SCIM user provisioning
 
-When starting, confirm bg-14 is working correctly by running:
-```bash
-php artisan route:list --path=plugins
-```
+**Features:**
+- Field-level access control per role (owner, admin, member, viewer)
+- Permissions: read, write, hidden
+- SCIM 2.0 token-based authentication
+- SCIM user provisioning endpoint
+
+---
+
+## Summary — All bg-01 to bg-15 Features
+
+| ID | Feature | Status |
+|----|---------|--------|
+| bg-01 | Voice commands (Whisper + WS streaming) | 📋 FUTURE |
+| bg-02 | Multi-provider conferencing | ✅ DONE |
+| bg-03 | Project email addresses | ✅ DONE |
+| bg-04 | Real-time chat system | ✅ DONE |
+| bg-05 | KB auto-capture from resolved issues | ✅ DONE |
+| bg-06 | Offline sync with conflict resolution | ✅ DONE |
+| bg-07 | Sentiment/burnout detection | ✅ DONE |
+| bg-08 | Predictive project management | ✅ DONE |
+| bg-09 | Digital twin / what-if simulation | ✅ DONE |
+| bg-10 | Meeting effectiveness + OKR cascade | ✅ DONE |
+| bg-11 | AI-recommended automations | ✅ DONE |
+| bg-12 | Team capacity backend | ✅ DONE |
+| bg-13 | My Day backend | ✅ DONE (pre-existing) |
+| bg-14 | Plugin system & marketplace | ✅ DONE |
+| bg-15 | Field-level permissions + SCIM 2.0 | ✅ DONE |
+
+**Completed: 14/15 features**  
+**Future: 1/15 features (bg-01)**
 
 ---
 
