@@ -321,6 +321,12 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::post('next-action', [AIController::class, 'nextAction']);
             Route::post('email-compose', [AIController::class, 'emailCompose']);
             Route::post('data-clean', [AIController::class, 'dataClean']);
+
+            // AI-recommended automations (pattern detection)
+            Route::get('automation-recommendations', [\App\Modules\Automation\Http\Controllers\RecommendationController::class, 'index']);
+            Route::post('automation-recommendations/refresh', [\App\Modules\Automation\Http\Controllers\RecommendationController::class, 'refresh'])->middleware('idempotent');
+            Route::post('automation-recommendations/{recommendation}/accept', [\App\Modules\Automation\Http\Controllers\RecommendationController::class, 'accept'])->middleware('idempotent');
+            Route::post('automation-recommendations/{recommendation}/dismiss', [\App\Modules\Automation\Http\Controllers\RecommendationController::class, 'dismiss'])->middleware('idempotent');
             Route::post('anomaly-detection', [AIController::class, 'anomalyDetection']);
         });
 
