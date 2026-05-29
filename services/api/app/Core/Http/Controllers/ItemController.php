@@ -263,7 +263,7 @@ class ItemController extends Controller
             ->select('id', 'title', 'board_id', 'status', 'created_at');
 
         if ($search = $request->query('search')) {
-            $query->where('title', 'ilike', "%{$search}%");
+            $query->where('title', 'ilike', "%{$this->escapeLike($search)}%");
         }
 
         $items = $query->orderBy('updated_at', 'desc')->limit(50)->get();

@@ -122,7 +122,7 @@ class WebhookController extends Controller
                 'processor' => 'stripe',
                 'processor_event_id' => $sub->id,
                 'event_type' => 'subscription_upsert',
-                'payload' => json_encode($sub),
+                'payload' => json_encode(method_exists($sub, 'toArray') ? $sub->toArray() : $sub),
                 'processed_at' => now(),
             ]);
         });

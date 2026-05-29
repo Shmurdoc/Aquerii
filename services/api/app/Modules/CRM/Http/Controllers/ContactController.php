@@ -41,10 +41,10 @@ class ContactController extends Controller
         }
         if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {
-                $q->where('first_name', 'ilike', "%{$search}%")
-                    ->orWhere('last_name', 'ilike', "%{$search}%")
-                    ->orWhere('email', 'ilike', "%{$search}%")
-                    ->orWhere('phone', 'ilike', "%{$search}%");
+                $q->where('first_name', 'ilike', "%{$this->escapeLike($search)}%")
+                    ->orWhere('last_name', 'ilike', "%{$this->escapeLike($search)}%")
+                    ->orWhere('email', 'ilike', "%{$this->escapeLike($search)}%")
+                    ->orWhere('phone', 'ilike', "%{$this->escapeLike($search)}%");
             });
         }
         if ($request->boolean('stale_days')) {

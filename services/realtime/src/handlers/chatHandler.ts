@@ -11,6 +11,7 @@ const ChatMessageSchema = z.object({
   channelId: z.string().uuid(),
   body:      z.string().min(1).max(10000),
   replyTo:   z.string().uuid().optional(),
+  tempId:    z.string().optional(),
 })
 
 const ChatTypingSchema = z.object({
@@ -33,7 +34,7 @@ export function registerChatHandler(
       return
     }
 
-    const { channelId, body, replyTo } = parsed.data
+    const { channelId, body, replyTo, tempId } = parsed.data
 
     try {
       // Persist message via API
@@ -64,7 +65,7 @@ export function registerChatHandler(
 
       // Also emit back to sender for confirmation
       socket.emit('chat:message:sent', {
-        tempId: raw.tempId,
+        tempId,
         id: message.id,
         channelId,
         createdAt: message.created_at,

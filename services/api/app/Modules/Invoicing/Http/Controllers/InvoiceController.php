@@ -20,8 +20,8 @@ class InvoiceController extends Controller
 
         if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {
-                $q->where('invoice_number', 'ilike', "%{$search}%")
-                    ->orWhere('customer_name', 'ilike', "%{$search}%");
+                $q->where('invoice_number', 'ilike', "%{$this->escapeLike($search)}%")
+                    ->orWhere('customer_name', 'ilike', "%{$this->escapeLike($search)}%");
             });
         }
 

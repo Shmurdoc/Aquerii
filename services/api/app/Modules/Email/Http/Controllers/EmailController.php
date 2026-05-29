@@ -89,7 +89,7 @@ class EmailController extends Controller
             $query->where('email_account_id', $request->account_id);
         }
         if ($search = $request->search) {
-            $query->where('subject', 'like', "%{$search}%");
+            $query->where('subject', 'like', "%{$this->escapeLike($search)}%");
         }
 
         $threads = $query->orderByDesc('last_message_at')->paginate(50);

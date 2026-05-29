@@ -3,6 +3,7 @@ Shared authentication dependency for internal service-to-service calls.
 The Laravel API service sends: Authorization: Bearer <AI_INTERNAL_TOKEN>
 which must match settings.INTERNAL_API_KEY on the Python side.
 """
+import hmac
 from fastapi import Header, HTTPException, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
@@ -30,5 +31,5 @@ def verify_internal_token(
     elif x_internal_secret:
         token = x_internal_secret
 
-    if not token or token != settings.INTERNAL_SECRET:
+    if not token or not hmac.compare_digest(token, settings.INTERNAL_SECRET or ""):
         raise HTTPException(status_code=403, detail={"code": "FORBIDDEN", "message": "Forbidden"})

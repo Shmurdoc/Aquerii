@@ -256,7 +256,7 @@ class WorkspaceController extends Controller
             return response()->json(['data' => []]);
         }
 
-        $like = "%{$q}%";
+        $like = "%{$this->escapeLike($q)}%";
 
         // Items
         $items = Item::whereHas('board', fn ($bq) => $bq->where('workspace_id', $workspace))

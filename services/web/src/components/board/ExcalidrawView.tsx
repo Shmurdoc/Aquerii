@@ -1,12 +1,9 @@
 import { lazy, Suspense, useCallback, useRef, useEffect } from 'react'
-import type { ExcalidrawElement } from '@excalidraw/excalidraw/types/element/types'
-import type { AppState, BinaryFiles } from '@excalidraw/excalidraw/types/types'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import type { Board } from '@/hooks/useBoards'
 
-// Lazy-load the heavy Excalidraw bundle — keeps initial SPA chunk small
-const Excalidraw = lazy(() =>
+const ExcalidrawLazy = lazy(() =>
   import('@excalidraw/excalidraw').then((mod) => ({ default: mod.Excalidraw }))
 )
 
@@ -15,32 +12,18 @@ interface Props {
   boardId: string
 }
 
-interface CanvasState {
-  elements: readonly ExcalidrawElement[]
-  appState: Partial<AppState>
-  files: BinaryFiles
-}
-
 const SAVE_DEBOUNCE_MS = 1500
 
-/**
- * Whiteboard view powered by Excalidraw.
- *
- * Canvas state is persisted as JSONB in boards.excalidraw_state via
- * PATCH /api/workspaces/:wid/boards/:bid { excalidraw_state: {...} }.
- * Changes are debounced 1.5 s to avoid hammering the API on every stroke.
- */
 export default function ExcalidrawView({ board, boardId }: Props) {
   const queryClient = useQueryClient()
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Load persisted canvas state from the board object (already fetched by BoardPage)
-  const initialData = useRef<CanvasState | null>(
-    (board.excalidraw_state as unknown as CanvasState) ?? null
+  const initialData = useRef<unknown>(
+    (board.excalidraw_state as unknown) ?? null
   )
 
   const { mutate: saveCanvas } = useMutation({
-    mutationFn: (state: CanvasState) =>
+    mutationFn: (state: unknown) =>
       api.patch(`/workspaces/${board.workspace_id}/boards/${boardId}`, {
         excalidraw_state: state,
       }),
@@ -50,17 +33,16 @@ export default function ExcalidrawView({ board, boardId }: Props) {
   })
 
   const handleChange = useCallback(
-    (elements: readonly ExcalidrawElement[], appState: AppState, files: BinaryFiles) => {
+    (elements: readonly unknown[], appState: Record<string, unknown>, files: Record<string, unknown>) => {
       if (saveTimer.current) clearTimeout(saveTimer.current)
       saveTimer.current = setTimeout(() => {
         saveCanvas({
-          elements: elements as ExcalidrawElement[],
+          elements,
           appState: {
-            // Only persist the subset of appState that matters for restoration
-          viewBackgroundColor: appState.viewBackgroundColor,
+          viewBackgroundColor: appState.viewBackgroundColor as string | undefined,
           zoom: appState.zoom,
-          scrollX: appState.scrollX,
-          scrollY: appState.scrollY,
+          scrollX: appState.scrollX as number | undefined,
+          scrollY: appState.scrollY as number | undefined,
           },
           files,
         })
@@ -69,8 +51,19 @@ export default function ExcalidrawView({ board, boardId }: Props) {
     [saveCanvas]
   )
 
-  // Cleanup debounce timer on unmount
   useEffect(() => () => { if (saveTimer.current) clearTimeout(saveTimer.current) }, [])
+
+  const excalidrawProps = {
+    initialData: initialData.current,
+    onChange: handleChange,
+    theme: 'dark' as const,
+    UIOptions: {
+      canvasActions: {
+        export: { saveFileToDisk: true },
+        loadScene: true,
+      },
+    },
+  }
 
   return (
     <div className="w-full h-full bg-gray-950">
@@ -81,17 +74,7 @@ export default function ExcalidrawView({ board, boardId }: Props) {
           </div>
         }
       >
-        <Excalidraw
-          initialData={initialData.current ?? undefined}
-          onChange={handleChange}
-          theme="dark"
-          UIOptions={{
-            canvasActions: {
-              export: { saveFileToDisk: true },
-              loadScene: true,
-            },
-          }}
-        />
+        <ExcalidrawLazy {...excalidrawProps as any} />
       </Suspense>
     </div>
   )

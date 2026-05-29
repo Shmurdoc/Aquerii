@@ -1,5 +1,8 @@
 import http from 'http'
 import { register, collectDefaultMetrics, Counter, Gauge } from 'prom-client'
+import pino from 'pino'
+
+const logger = pino({ level: process.env.LOG_LEVEL ?? 'info' })
 
 collectDefaultMetrics({ prefix: 'aquerii_realtime_' })
 
@@ -30,7 +33,7 @@ export function createMetricsServer(port = 9102): http.Server {
     }
   })
   server.listen(port, () => {
-    console.log(`Metrics server listening on :${port}`)
+    logger.info({ port }, 'Metrics server listening')
   })
   return server
 }

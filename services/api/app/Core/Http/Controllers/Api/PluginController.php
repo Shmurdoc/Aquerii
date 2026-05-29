@@ -20,8 +20,8 @@ class PluginController extends Controller
 
         if ($request->search) {
             $query->where(function ($q) use ($request) {
-                $q->where('name', 'ilike', "%{$request->search}%")
-                  ->orWhere('description', 'ilike', "%{$request->search}%");
+                $q->where('name', 'ilike', "%{$this->escapeLike($request->search)}%")
+                  ->orWhere('description', 'ilike', "%{$this->escapeLike($request->search)}%");
             });
         }
 

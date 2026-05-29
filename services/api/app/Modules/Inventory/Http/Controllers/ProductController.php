@@ -17,9 +17,9 @@ class ProductController extends Controller
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('sku', 'like', "%{$search}%")
-                    ->orWhere('barcode', 'like', "%{$search}%");
+                $q->where('name', 'like', "%{$this->escapeLike($search)}%")
+                    ->orWhere('sku', 'like', "%{$this->escapeLike($search)}%")
+                    ->orWhere('barcode', 'like', "%{$this->escapeLike($search)}%");
             });
         }
 

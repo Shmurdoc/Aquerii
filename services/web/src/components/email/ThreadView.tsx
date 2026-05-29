@@ -8,6 +8,7 @@ import {
 import { format } from 'date-fns'
 import toast from 'react-hot-toast'
 import clsx from 'clsx'
+import DOMPurify from 'dompurify'
 import { Button } from '@/components/ui'
 
 interface Props {
@@ -135,7 +136,7 @@ export default function ThreadView({ workspaceId, threadId, accounts, onClose }:
                     <div
                       className="prose prose-invert prose-sm max-w-none"
                       style={{ color: 'var(--color-text-secondary)' }}
-                      dangerouslySetInnerHTML={{ __html: email.body_html }}
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(email.body_html) }}
                     />
                   ) : (
                     <p className="text-sm whitespace-pre-wrap" style={{ color: 'var(--color-text-secondary)' }}>{email.body_text ?? '(no content)'}</p>

@@ -33,11 +33,11 @@ export function getSocket(): Socket {
   })
 
   socket.on('connect', () => {
-    console.debug('[realtime] connected', socket?.id)
+    if (import.meta.env.DEV) console.debug('[realtime] connected', socket?.id)
   })
 
   socket.on('disconnect', (reason) => {
-    console.debug('[realtime] disconnected', reason)
+    if (import.meta.env.DEV) console.debug('[realtime] disconnected', reason)
   })
 
   socket.on('connect_error', (err) => {

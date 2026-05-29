@@ -33,7 +33,7 @@ class DealController extends Controller
             $query->where('owner_id', $ownerId);
         }
         if ($search = $request->query('search')) {
-            $query->where('title', 'ilike', "%{$search}%");
+            $query->where('title', 'ilike', "%{$this->escapeLike($search)}%");
         }
 
         $deals = $query->orderBy('position')->paginate(50);

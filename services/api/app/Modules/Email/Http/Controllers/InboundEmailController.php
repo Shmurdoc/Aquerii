@@ -20,6 +20,14 @@ class InboundEmailController extends Controller
      */
     public function handleInbound(Request $request): JsonResponse
     {
+        // Verify webhook signature before processing
+        if (! $this->verifyWebhookSignature($request)) {
+            Log::warning('Inbound email webhook signature verification failed', [
+                'ip' => $request->ip(),
+            ]);
+            return response()->json(['error' => 'Invalid signature'], 401);
+        }
+
         // Extract email data from webhook payload
         $data = $this->parseWebhookPayload($request);
 
@@ -58,6 +66,104 @@ class InboundEmailController extends Controller
         $this->processInboundEmail($inboundEmail, $projectEmail);
 
         return response()->json(['message' => 'Processed']);
+    }
+
+    private function verifyWebhookSignature(Request $request): bool
+    {
+        $provider = $this->detectWebhookProvider($request);
+
+        return match ($provider) {
+            'mailgun' => $this->verifyMailgunSignature($request),
+            'sendgrid' => $this->verifySendGridSignature($request),
+            'postmark' => $this->verifyPostmarkSignature($request),
+            default => false,
+        };
+    }
+
+    private function detectWebhookProvider(Request $request): string
+    {
+        $contentType = $request->header('Content-Type', '');
+
+        if (str_contains($contentType, 'multipart/form-data') || $request->has('sender')) {
+            return 'mailgun';
+        }
+
+        if ($request->header('X-Twilio-Email-Event-Webhook-Signature')) {
+            return 'sendgrid';
+        }
+
+        if ($request->header('X-Postmark-Signature')) {
+            return 'postmark';
+        }
+
+        return 'unknown';
+    }
+
+    private function verifyMailgunSignature(Request $request): bool
+    {
+        $token = config('services.mailgun.webhook_signing_key');
+        if (! $token) {
+            Log::warning('Mailgun webhook signing key not configured');
+            return false;
+        }
+
+        $timestamp = $request->input('timestamp');
+        $tokenInput = $request->input('token');
+
+        if (! $timestamp || ! $tokenInput) {
+            return false;
+        }
+
+        if (abs(time() - (int) $timestamp) > 300) {
+            return false;
+        }
+
+        $signature = hash_hmac('sha256', "{$timestamp}{$token}", $token);
+        return hash_equals($signature, $request->input('signature', ''));
+    }
+
+    private function verifySendGridSignature(Request $request): bool
+    {
+        $publicKey = config('services.sendgrid.webhook_signing_key');
+        if (! $publicKey) {
+            Log::warning('SendGrid webhook signing key not configured');
+            return false;
+        }
+
+        $signature = $request->header('X-Twilio-Email-Event-Webhook-Signature');
+        $timestamp = $request->header('X-Twilio-Email-Event-Webhook-Timestamp');
+
+        if (! $signature || ! $timestamp) {
+            return false;
+        }
+
+        if (abs(time() - (int) $timestamp) > 300) {
+            return false;
+        }
+
+        $payload = $timestamp . $request->getContent();
+        $signedSignature = '';
+        openssl_sign($payload, $signedSignature, $publicKey, OPENSSL_ALGO_SHA256);
+        $expectedSignature = base64_encode($signedSignature);
+
+        return hash_equals($expectedSignature, $signature);
+    }
+
+    private function verifyPostmarkSignature(Request $request): bool
+    {
+        $token = config('services.postmark.webhook_signing_key');
+        if (! $token) {
+            Log::warning('Postmark webhook signing key not configured');
+            return false;
+        }
+
+        $signature = $request->header('X-Postmark-Signature');
+        if (! $signature) {
+            return false;
+        }
+
+        $hmac = hash_hmac('sha256', $request->getContent(), $token);
+        return hash_equals($hmac, $signature);
     }
 
     private function parseWebhookPayload(Request $request): ?array

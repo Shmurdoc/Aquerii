@@ -20,9 +20,9 @@ class ScannedDocumentController extends Controller
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('original_filename', 'like', "%{$search}%")
-                    ->orWhere('ocr_text', 'like', "%{$search}%");
+                $q->where('title', 'like', "%{$this->escapeLike($search)}%")
+                    ->orWhere('original_filename', 'like', "%{$this->escapeLike($search)}%")
+                    ->orWhere('ocr_text', 'like', "%{$this->escapeLike($search)}%");
             });
         }
 
@@ -41,7 +41,7 @@ class ScannedDocumentController extends Controller
     public function store(Request $request, Workspace $workspace): JsonResponse
     {
         $request->validate([
-            'file' => 'required|file|max:102400',
+            'file' => 'required|file|max:102400|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,jpg,jpeg,png,gif,tiff,bmp,webp',
             'title' => 'nullable|string|max:255',
         ]);
 

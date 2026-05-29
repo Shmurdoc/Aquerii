@@ -24,9 +24,9 @@ class SalesOrderController extends Controller
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
-                $q->where('order_number', 'like', "%{$search}%")
-                    ->orWhere('customer_name', 'like', "%{$search}%")
-                    ->orWhere('customer_email', 'like', "%{$search}%");
+                $q->where('order_number', 'like', "%{$this->escapeLike($search)}%")
+                    ->orWhere('customer_name', 'like', "%{$this->escapeLike($search)}%")
+                    ->orWhere('customer_email', 'like', "%{$this->escapeLike($search)}%");
             });
         }
 

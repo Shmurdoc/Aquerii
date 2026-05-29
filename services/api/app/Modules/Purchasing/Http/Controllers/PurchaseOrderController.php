@@ -24,8 +24,8 @@ class PurchaseOrderController extends Controller
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
-                $q->where('order_number', 'like', "%{$search}%")
-                    ->orWhere('supplier_name', 'like', "%{$search}%");
+                $q->where('order_number', 'like', "%{$this->escapeLike($search)}%")
+                    ->orWhere('supplier_name', 'like', "%{$this->escapeLike($search)}%");
             });
         }
 

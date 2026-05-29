@@ -111,7 +111,7 @@ class EmployeeController extends Controller
 
     public function attendanceHistory(Request $request, string $workspaceId)
     {
-        $userId = $request->query('user_id', $request->user()->id);
+        $userId = $request->user()->id;
         $days = (int) $request->query('days', 30);
 
         $logs = DB::table('attendance_logs')
@@ -131,9 +131,6 @@ class EmployeeController extends Controller
             ->join('users', 'leave_requests.user_id', '=', 'users.id')
             ->select('leave_requests.*', 'users.name as user_name', 'users.email as user_email');
 
-        if ($request->query('user_id')) {
-            $query->where('leave_requests.user_id', $request->query('user_id'));
-        }
         if ($request->query('status')) {
             $query->where('leave_requests.status', $request->query('status'));
         }
@@ -199,9 +196,6 @@ class EmployeeController extends Controller
             ->join('users', 'expense_claims.user_id', '=', 'users.id')
             ->select('expense_claims.*', 'users.name as user_name', 'users.email as user_email');
 
-        if ($request->query('user_id')) {
-            $query->where('expense_claims.user_id', $request->query('user_id'));
-        }
         if ($request->query('status')) {
             $query->where('expense_claims.status', $request->query('status'));
         }
@@ -271,7 +265,7 @@ class EmployeeController extends Controller
 
     public function leaveBalance(Request $request, string $workspaceId)
     {
-        $userId = $request->query('user_id', $request->user()->id);
+        $userId = $request->user()->id;
 
         $used = DB::table('leave_requests')
             ->where('workspace_id', $workspaceId)

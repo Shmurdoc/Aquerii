@@ -508,8 +508,8 @@ export default function ReportsPage() {
       return (
         <div className="flex flex-col items-center justify-center h-full gap-4" style={{ color: 'var(--color-text-muted)' }}>
           <Package size={48} strokeWidth={1} className="opacity-30" />
-          <p className="text-sm font-medium">Inventory reporting coming soon</p>
-          <p className="text-xs">Start adding products and stock to see insights here.</p>
+          <p className="text-sm font-medium">No inventory data yet</p>
+          <p className="text-xs">Add products and stock items to see inventory insights here.</p>
         </div>
       )
     }

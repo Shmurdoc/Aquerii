@@ -5,7 +5,7 @@ namespace App\Modules\Support\Http\Controllers;
 use App\Modules\Support\Models\KnowledgeBaseArticle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use App\Core\Http\Controllers\Controller;
 
 class KnowledgeBaseController extends Controller
 {
@@ -15,8 +15,8 @@ class KnowledgeBaseController extends Controller
             ->when(! $request->include_draft, fn ($q) => $q->where('is_published', true))
             ->when($request->category, fn ($q, $v) => $q->where('category', $v))
             ->when($request->search, fn ($q, $v) => $q->where(function ($sq) use ($v) {
-                $sq->where('title', 'ilike', "%{$v}%")
-                    ->orWhere('content', 'ilike', "%{$v}%");
+                $sq->where('title', 'ilike', "%{$this->escapeLike($v)}%")
+                    ->orWhere('content', 'ilike', "%{$this->escapeLike($v)}%");
             }))
             ->with('author:id,name')
             ->orderBy('views', 'desc')

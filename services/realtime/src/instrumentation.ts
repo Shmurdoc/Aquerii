@@ -20,7 +20,6 @@ const sdk = new NodeSDK({
 })
 
 sdk.start()
-console.log('OpenTelemetry SDK started for aquerii-realtime')
 
 process.on('SIGTERM', () => {
   sdk.shutdown().catch(console.error)

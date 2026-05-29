@@ -14,7 +14,7 @@ class ProductController extends Controller
     {
         $products = CrmProduct::where('workspace_id', $workspace->id)
             ->when($request->category, fn ($q, $v) => $q->where('category', $v))
-            ->when($request->search, fn ($q, $v) => $q->where('name', 'ilike', "%{$v}%"))
+            ->when($request->search, fn ($q, $v) => $q->where('name', 'ilike', "%{$this->escapeLike($v)}%"))
             ->when($request->boolean('active_only'), fn ($q) => $q->where('is_active', true))
             ->with('creator:id,name')
             ->orderBy('name')

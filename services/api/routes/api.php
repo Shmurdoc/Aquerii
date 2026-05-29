@@ -400,6 +400,8 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         });
     });
 
-    // Inbound email webhook (no auth — verified by webhook signature)
-    Route::post('email/inbound', [\App\Modules\Email\Http\Controllers\InboundEmailController::class, 'handleInbound']);
 });
+
+// ── Inbound email webhook (no auth — verified by webhook signature) ──────────
+Route::post('email/inbound', [\App\Modules\Email\Http\Controllers\InboundEmailController::class, 'handleInbound'])
+    ->middleware('throttle:30,1');
