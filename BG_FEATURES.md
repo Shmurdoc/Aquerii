@@ -25,7 +25,7 @@ Track implementation status. When starting a new feature, confirm the previous o
 | bg-08 | Predictive project management (ML) | VERY HIGH | ✅ DONE | Rule-based predictions + ML roadmap |
 | bg-09 | Digital twin / what-if simulation | VERY HIGH | ✅ DONE | Scenario planner, what-if adjustments, simulation |
 | bg-10 | Meeting effectiveness + OKR cascade | HIGH | ✅ DONE | Effectiveness scoring, goals/key results, meeting outcomes |
-| bg-11 | AI-recommended automations (pattern detection) | HIGH | ❌ NOT STARTED | AI suggests automations based on usage patterns |
+| bg-11 | AI-recommended automations (pattern detection) | HIGH | ✅ DONE | Pattern detection, recommendations, auto-create rules |
 | bg-12 | Team capacity backend (workload model) | MEDIUM | ✅ DONE | Migration + Controller + Frontend Capacity tab |
 | bg-13 | My Day backend (task pinning, auto-populate) | LOW | ✅ DONE | `MyDayPage.tsx` + `useMyDayTasks` hook + `GET /my-day` API |
 | bg-14 | Plugin system & marketplace | HIGH | ❌ NOT STARTED | Plugin architecture + marketplace UI |
@@ -293,13 +293,36 @@ Track implementation status. When starting a new feature, confirm the previous o
 
 ---
 
+### bg-11: AI-Recommended Automations ✅
+**Completed:** 2026-05-29
+**Files:**
+- `services/api/database/migrations/2026_05_29_000083_create_automation_recommendations_table.php` — recommendations table
+- `services/api/app/Modules/Automation/Models/AutomationRecommendation.php` — recommendation model
+- `services/api/app/Modules/Automation/Services/PatternDetector.php` — pattern detection logic
+- `services/api/app/Modules/Automation/Http/Controllers/RecommendationController.php` — CRUD + refresh
+- `services/web/src/pages/automation/AutomationPage.tsx` — added Recommendations tab
+
+**API:**
+- `GET /api/workspaces/{id}/automation-recommendations` — list pending recommendations
+- `POST /api/workspaces/{id}/automation-recommendations/refresh` — scan patterns
+- `POST /api/workspaces/{id}/automation-recommendations/{id}/accept` — create automation
+- `POST /api/workspaces/{id}/automation-recommendations/{id}/dismiss` — dismiss
+
+**Pattern detection:**
+- Frequent status changes → suggest auto-update
+- Overdue tasks → suggest notifications
+- Boards without automations → suggest adding rules
+- Stale items → suggest archiving
+
+---
+
 ## Next Feature to Implement
 
-**Next up: bg-11 — AI-recommended automations (pattern detection)** (HIGH priority)
+**Next up: bg-14 — Plugin system & marketplace** (HIGH priority)
 
-When starting, confirm bg-09 is working correctly by running:
+When starting, confirm bg-11 is working correctly by running:
 ```bash
-php artisan route:list --path=scenarios
+php artisan route:list --path=recommendations
 ```
 
 ---
