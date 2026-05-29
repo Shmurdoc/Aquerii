@@ -93,9 +93,12 @@ class SyncStripePlans extends Command
 
         foreach ($existing->data as $product) {
             if (($product->metadata[$metadataKey] ?? null) === $plan->value) {
+                $monthlyPrice = $plan->monthlyPriceCents() / 100;
+                $currency = $this->option('currency');
+
                 return $this->stripe->products->update($product->id, [
                     'name' => "Aquerii {$plan->label()}",
-                    'description' => "Aquerii {$plan->label()} plan — {$plan->monthlyPriceCents() / 100} {$this->option('currency')}/mo",
+                    'description' => "Aquerii {$plan->label()} plan — {$monthlyPrice} {$currency}/mo",
                 ]);
             }
         }
