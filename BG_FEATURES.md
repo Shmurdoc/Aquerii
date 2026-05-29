@@ -28,7 +28,7 @@ Track implementation status. When starting a new feature, confirm the previous o
 | bg-11 | AI-recommended automations (pattern detection) | HIGH | ✅ DONE | Pattern detection, recommendations, auto-create rules |
 | bg-12 | Team capacity backend (workload model) | MEDIUM | ✅ DONE | Migration + Controller + Frontend Capacity tab |
 | bg-13 | My Day backend (task pinning, auto-populate) | LOW | ✅ DONE | `MyDayPage.tsx` + `useMyDayTasks` hook + `GET /my-day` API |
-| bg-14 | Plugin system & marketplace | HIGH | ❌ NOT STARTED | Plugin architecture + marketplace UI |
+| bg-14 | Plugin system & marketplace | HIGH | ✅ DONE | Plugin registry, install/configure, hook execution |
 | bg-15 | Field-level permissions + SCIM 2.0 | HIGH | ❌ NOT STARTED | Granular field permissions + SCIM provisioning |
 
 ---
@@ -316,13 +316,42 @@ Track implementation status. When starting a new feature, confirm the previous o
 
 ---
 
+### bg-14: Plugin System & Marketplace ✅
+**Completed:** 2026-05-29
+**Files:**
+- `services/api/database/migrations/2026_05_29_000084_create_plugins_tables.php` — plugins, installations, hook logs
+- `services/api/app/Core/Models/Plugin.php` — plugin registry model
+- `services/api/app/Core/Models/PluginInstallation.php` — workspace installation model
+- `services/api/app/Core/Models/PluginHookLog.php` — execution audit log
+- `services/api/app/Core/Services/PluginEngine.php` — hook execution engine
+- `services/api/app/Core/Http/Controllers/Api/PluginController.php` — marketplace + CRUD
+- `services/web/src/pages/plugins/MarketplacePage.tsx` — marketplace UI
+
+**API:**
+- `GET /api/workspaces/{id}/plugins/marketplace` — browse plugins
+- `GET /api/workspaces/{id}/plugins/installed` — list installed
+- `POST /api/workspaces/{id}/plugins/{id}/install` — install plugin
+- `DELETE /api/workspaces/{id}/plugins/{id}/uninstall` — uninstall
+- `POST /api/workspaces/{id}/plugins/{id}/toggle` — enable/disable
+- `PATCH /api/workspaces/{id}/plugins/{id}/settings` — update config
+
+**Features:**
+- Plugin marketplace with search + category filter
+- Install/uninstall per workspace
+- Enable/disable toggle
+- Per-workspace settings configuration
+- Hook execution engine for plugin extensibility
+- Execution audit log
+
+---
+
 ## Next Feature to Implement
 
-**Next up: bg-14 — Plugin system & marketplace** (HIGH priority)
+**Next up: bg-15 — Field-level permissions + SCIM 2.0** (HIGH priority)
 
-When starting, confirm bg-11 is working correctly by running:
+When starting, confirm bg-14 is working correctly by running:
 ```bash
-php artisan route:list --path=recommendations
+php artisan route:list --path=plugins
 ```
 
 ---
