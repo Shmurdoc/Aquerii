@@ -56,6 +56,7 @@ import ReportsPage      from '@/pages/reports/ReportsPage'
 import AIChatPage       from '@/pages/ai/AIChatPage'
 import ChatPage         from '@/pages/chat/ChatPage'
 import ScenariosPage    from '@/pages/scenarios/ScenariosPage'
+import MarketplacePage  from '@/pages/plugins/MarketplacePage'
 import EmailPage        from '@/pages/email/EmailPage'
 import MyDayPage        from '@/pages/my-day/MyDayPage'
 import CalendarPage     from '@/pages/calendar/CalendarPage'
@@ -150,6 +151,7 @@ export default function App() {
           <Route path="/ai/chat"       element={<AIChatPage />} />
           <Route path="/chat"          element={<ChatPage />} />
           <Route path="/scenarios"     element={<ScenariosPage />} />
+          <Route path="/plugins"       element={<MarketplacePage />} />
           <Route path="/email"         element={<EmailPage />} />
           <Route path="/settings"        element={<SettingsPage />}>
             <Route index element={<GeneralTab />} />

@@ -327,6 +327,14 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::post('automation-recommendations/refresh', [\App\Modules\Automation\Http\Controllers\RecommendationController::class, 'refresh'])->middleware('idempotent');
             Route::post('automation-recommendations/{recommendation}/accept', [\App\Modules\Automation\Http\Controllers\RecommendationController::class, 'accept'])->middleware('idempotent');
             Route::post('automation-recommendations/{recommendation}/dismiss', [\App\Modules\Automation\Http\Controllers\RecommendationController::class, 'dismiss'])->middleware('idempotent');
+
+            // Plugin marketplace
+            Route::get('plugins/marketplace', [\App\Core\Http\Controllers\Api\PluginController::class, 'marketplace']);
+            Route::get('plugins/installed', [\App\Core\Http\Controllers\Api\PluginController::class, 'installed']);
+            Route::post('plugins/{plugin}/install', [\App\Core\Http\Controllers\Api\PluginController::class, 'install'])->middleware('idempotent');
+            Route::delete('plugins/{plugin}/uninstall', [\App\Core\Http\Controllers\Api\PluginController::class, 'uninstall']);
+            Route::post('plugins/{plugin}/toggle', [\App\Core\Http\Controllers\Api\PluginController::class, 'toggle'])->middleware('idempotent');
+            Route::patch('plugins/{plugin}/settings', [\App\Core\Http\Controllers\Api\PluginController::class, 'updateSettings'])->middleware('idempotent');
             Route::post('anomaly-detection', [AIController::class, 'anomalyDetection']);
         });
 
