@@ -81,4 +81,9 @@ class JobCard extends Model
     {
         return $this->hasMany(JobCardAttachment::class, 'job_card_id');
     }
+
+    public function materials(): HasMany
+    {
+        return $this->hasMany(JobCardMaterial::class, 'job_card_id');
+    }
 }

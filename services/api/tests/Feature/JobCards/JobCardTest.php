@@ -127,3 +127,86 @@ it('rejects cross-workspace access', function () {
     $response = $this->getJson("/api/workspaces/{$otherWorkspace->id}/job-cards/{$card->id}");
     $response->assertStatus(404);
 });
+
+// ─── Task / Checklist tests (JOB-12) ────────────────────────────────────────
+
+it('adds a task to a job card', function () {
+    $card = JobCard::factory()->create(['workspace_id' => $this->workspace->id]);
+    $response = $this->postJson(
+        "/api/workspaces/{$this->workspace->id}/job-cards/{$card->id}/tasks",
+        ['description' => 'Wear safety harness', 'category' => 'safety']
+    );
+    $response->assertStatus(201)
+        ->assertJsonPath('data.description', 'Wear safety harness')
+        ->assertJsonPath('data.category', 'safety');
+});
+
+it('toggles a task', function () {
+    $card = JobCard::factory()->create(['workspace_id' => $this->workspace->id]);
+    $task = $card->tasks()->create(['description' => 'Test voltage', 'position' => 0]);
+    $response = $this->patchJson("/api/workspaces/{$this->workspace->id}/job-cards/{$card->id}/tasks/{$task->id}", [
+        'is_checked' => true,
+    ]);
+    $response->assertStatus(200)
+        ->assertJsonPath('data.is_checked', true);
+});
+
+it('deletes a task', function () {
+    $card = JobCard::factory()->create(['workspace_id' => $this->workspace->id]);
+    $task = $card->tasks()->create(['description' => 'Remove debris', 'position' => 0]);
+    $response = $this->deleteJson("/api/workspaces/{$this->workspace->id}/job-cards/{$card->id}/tasks/{$task->id}");
+    $response->assertStatus(200)
+        ->assertJsonPath('data.deleted', true);
+});
+
+// ─── Materials tests (JOB-10) ───────────────────────────────────────────────
+
+it('adds material to a job card', function () {
+    $card = JobCard::factory()->create(['workspace_id' => $this->workspace->id]);
+    $response = $this->postJson(
+        "/api/workspaces/{$this->workspace->id}/job-cards/{$card->id}/materials",
+        ['name' => 'Steel pipe', 'quantity' => 5, 'unit_price' => 150.00, 'unit' => 'm']
+    );
+    $response->assertStatus(201)
+        ->assertJsonPath('data.name', 'Steel pipe');
+});
+
+it('lists materials on a job card', function () {
+    $card = JobCard::factory()->create(['workspace_id' => $this->workspace->id]);
+    $card->materials()->create(['name' => 'Cement', 'quantity' => 10, 'unit_price' => 85, 'total' => 850, 'created_by' => $this->user->id]);
+    $response = $this->getJson("/api/workspaces/{$this->workspace->id}/job-cards/{$card->id}/materials");
+    $response->assertStatus(200)
+        ->assertJsonCount(1, 'data');
+});
+
+it('deletes a material', function () {
+    $card = JobCard::factory()->create(['workspace_id' => $this->workspace->id]);
+    $material = $card->materials()->create(['name' => 'Nails', 'quantity' => 1, 'unit_price' => 50, 'total' => 50, 'created_by' => $this->user->id]);
+    $response = $this->deleteJson("/api/workspaces/{$this->workspace->id}/job-cards/{$card->id}/materials/{$material->id}");
+    $response->assertStatus(200)
+        ->assertJsonPath('data.deleted', true);
+});
+
+// ─── Time / Labour tests (JOB-11) ───────────────────────────────────────────
+
+it('starts a timer on a job card', function () {
+    $card = JobCard::factory()->create(['workspace_id' => $this->workspace->id]);
+    $response = $this->postJson("/api/workspaces/{$this->workspace->id}/job-cards/{$card->id}/timer/start");
+    $response->assertStatus(201)
+        ->assertJsonPath('data.user_id', $this->user->id);
+});
+
+it('stops a timer on a job card', function () {
+    $card = JobCard::factory()->create(['workspace_id' => $this->workspace->id]);
+    $card->timeEntries()->create(['user_id' => $this->user->id, 'started_at' => now()->subHour()]);
+    $response = $this->postJson("/api/workspaces/{$this->workspace->id}/job-cards/{$card->id}/timer/stop");
+    $response->assertStatus(200);
+});
+
+it('lists time entries', function () {
+    $card = JobCard::factory()->create(['workspace_id' => $this->workspace->id]);
+    $card->timeEntries()->create(['user_id' => $this->user->id, 'started_at' => now()->subHour(), 'ended_at' => now(), 'duration_minutes' => 60]);
+    $response = $this->getJson("/api/workspaces/{$this->workspace->id}/job-cards/{$card->id}/time-entries");
+    $response->assertStatus(200)
+        ->assertJsonCount(1, 'data');
+});

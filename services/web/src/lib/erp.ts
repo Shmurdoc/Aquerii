@@ -657,6 +657,81 @@ export const erpJobCards = {
     const res = await api.post(`/workspaces/${wid()}/job-cards/${id}/reject`, { rejection_reason })
     return unwrap<JobCard>(res)
   },
+
+  // Materials (JOB-10)
+  materials: {
+    list: async (cardId: string): Promise<JobCardMaterial[]> => {
+      const res = await api.get(`/workspaces/${wid()}/job-cards/${cardId}/materials`)
+      return res.data?.data ?? []
+    },
+    add: async (cardId: string, payload: { name: string; quantity: number; unit_price: number; unit?: string; supplier?: string; notes?: string }): Promise<JobCardMaterial> => {
+      const res = await api.post(`/workspaces/${wid()}/job-cards/${cardId}/materials`, payload)
+      return res.data?.data
+    },
+    delete: async (cardId: string, materialId: string): Promise<void> => {
+      await api.delete(`/workspaces/${wid()}/job-cards/${cardId}/materials/${materialId}`)
+    },
+  },
+
+  // Tasks / Checklist (JOB-12)
+  tasks: {
+    add: async (cardId: string, payload: { description: string; category?: string }): Promise<JobCardTask> => {
+      const res = await api.post(`/workspaces/${wid()}/job-cards/${cardId}/tasks`, payload)
+      return res.data?.data
+    },
+    toggle: async (cardId: string, taskId: string, is_checked: boolean): Promise<JobCardTask> => {
+      const res = await api.patch(`/workspaces/${wid()}/job-cards/${cardId}/tasks/${taskId}`, { is_checked })
+      return res.data?.data
+    },
+    remove: async (cardId: string, taskId: string): Promise<void> => {
+      await api.delete(`/workspaces/${wid()}/job-cards/${cardId}/tasks/${taskId}`)
+    },
+  },
+
+  // Time / Labour (JOB-11)
+  timer: {
+    start: async (cardId: string): Promise<JobCardTimeEntry> => {
+      const res = await api.post(`/workspaces/${wid()}/job-cards/${cardId}/timer/start`)
+      return res.data?.data
+    },
+    stop: async (cardId: string): Promise<JobCardTimeEntry> => {
+      const res = await api.post(`/workspaces/${wid()}/job-cards/${cardId}/timer/stop`)
+      return res.data?.data
+    },
+    entries: async (cardId: string): Promise<JobCardTimeEntry[]> => {
+      const res = await api.get(`/workspaces/${wid()}/job-cards/${cardId}/time-entries`)
+      return res.data?.data ?? []
+    },
+  },
+
+  // Attachments / Photo (JOB-09)
+  attachments: {
+    upload: async (cardId: string, file: File, category = 'photo'): Promise<JobCardAttachment> => {
+      const form = new FormData()
+      form.append('file', file)
+      form.append('category', category)
+      const res = await api.post(`/workspaces/${wid()}/job-cards/${cardId}/attachments`, form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      return res.data?.data
+    },
+    delete: async (cardId: string, attachmentId: string): Promise<void> => {
+      await api.delete(`/workspaces/${wid()}/job-cards/${cardId}/attachments/${attachmentId}`)
+    },
+  },
+}
+
+export interface JobCardMaterial {
+  id: string
+  job_card_id: string
+  name: string
+  unit: string | null
+  quantity: number
+  unit_price: number
+  total: number
+  supplier: string | null
+  notes: string | null
+  created_by: string
 }
 
 // ─── Formatting helpers ───────────────────────────────────────────────────────

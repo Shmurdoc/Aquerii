@@ -5,9 +5,14 @@ namespace App\Modules\JobCards\Http\Controllers;
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
 use App\Modules\JobCards\Models\JobCard;
+use App\Modules\JobCards\Models\JobCardAttachment;
+use App\Modules\JobCards\Models\JobCardMaterial;
+use App\Modules\JobCards\Models\JobCardTask;
 use App\Modules\JobCards\Models\JobCardTemplate;
+use App\Modules\JobCards\Models\JobCardTimeEntry;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class JobCardController extends Controller
 {
@@ -92,7 +97,7 @@ class JobCardController extends Controller
     public function show(Workspace $workspace, JobCard $jobCard): JsonResponse
     {
         abort_if($jobCard->workspace_id !== $workspace->id, 404);
-        $jobCard->load(['assignedTo', 'createdBy', 'signedOffBy', 'tasks', 'timeEntries.user', 'attachments']);
+        $jobCard->load(['assignedTo', 'createdBy', 'signedOffBy', 'tasks', 'timeEntries.user', 'attachments', 'materials']);
 
         return response()->json(['data' => $jobCard]);
     }
@@ -205,5 +210,195 @@ class JobCardController extends Controller
         ]);
 
         return response()->json(['data' => $template], 201);
+    }
+
+    // ─── Attachments / Photo Capture (JOB-09) ─────────────────────────────
+
+    public function uploadAttachment(Request $request, Workspace $workspace, JobCard $jobCard): JsonResponse
+    {
+        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+
+        $validated = $request->validate([
+            'file' => 'required|file|max:10240|mimes:jpg,jpeg,png,gif,webp,bmp,pdf',
+            'category' => 'sometimes|string|in:photo,document,signature,other',
+        ]);
+
+        $file = $request->file('file');
+        $path = $file->store("job-cards/{$jobCard->id}", 'public');
+
+        $attachment = JobCardAttachment::create([
+            'job_card_id' => $jobCard->id,
+            'filename' => $file->getClientOriginalName(),
+            'filepath' => $path,
+            'mime_type' => $file->getMimeType(),
+            'file_size' => $file->getSize(),
+            'category' => $validated['category'] ?? 'photo',
+            'uploaded_by' => $request->user()->id,
+        ]);
+
+        return response()->json(['data' => $attachment], 201);
+    }
+
+    public function deleteAttachment(Workspace $workspace, JobCard $jobCard, JobCardAttachment $attachment): JsonResponse
+    {
+        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+        abort_if($attachment->job_card_id !== $jobCard->id, 404);
+
+        Storage::disk('public')->delete($attachment->filepath);
+        $attachment->delete();
+
+        return response()->json(['data' => ['deleted' => true]]);
+    }
+
+    // ─── Task / Checklist Management (JOB-12) ──────────────────────────────
+
+    public function addTask(Request $request, Workspace $workspace, JobCard $jobCard): JsonResponse
+    {
+        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+
+        $validated = $request->validate([
+            'description' => 'required|string|max:500',
+            'category' => 'sometimes|string|in:general,safety,quality,other',
+        ]);
+
+        $position = $jobCard->tasks()->max('position') + 1;
+
+        $task = $jobCard->tasks()->create([
+            'description' => $validated['description'],
+            'category' => $validated['category'] ?? 'general',
+            'position' => $position,
+        ]);
+
+        return response()->json(['data' => $task], 201);
+    }
+
+    public function updateTask(Request $request, Workspace $workspace, JobCard $jobCard, JobCardTask $task): JsonResponse
+    {
+        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+        abort_if($task->job_card_id !== $jobCard->id, 404);
+
+        $validated = $request->validate([
+            'is_checked' => 'sometimes|boolean',
+            'description' => 'sometimes|string|max:500',
+        ]);
+
+        if (isset($validated['is_checked'])) {
+            $validated['completed_by'] = $validated['is_checked'] ? $request->user()->id : null;
+            $validated['completed_at'] = $validated['is_checked'] ? now() : null;
+        }
+
+        $task->update($validated);
+
+        return response()->json(['data' => $task->fresh()]);
+    }
+
+    public function deleteTask(Workspace $workspace, JobCard $jobCard, JobCardTask $task): JsonResponse
+    {
+        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+        abort_if($task->job_card_id !== $jobCard->id, 404);
+
+        $task->delete();
+
+        return response()->json(['data' => ['deleted' => true]]);
+    }
+
+    // ─── Materials Tracking (JOB-10) ───────────────────────────────────────
+
+    public function materials(Request $request, Workspace $workspace, JobCard $jobCard): JsonResponse
+    {
+        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+
+        $materials = $jobCard->materials()->orderBy('created_at')->get();
+
+        return response()->json(['data' => $materials]);
+    }
+
+    public function addMaterial(Request $request, Workspace $workspace, JobCard $jobCard): JsonResponse
+    {
+        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'unit' => 'nullable|string|max:50',
+            'quantity' => 'required|numeric|min:0.01',
+            'unit_price' => 'required|numeric|min:0',
+            'supplier' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
+        ]);
+
+        $total = $validated['quantity'] * $validated['unit_price'];
+
+        $material = JobCardMaterial::create([
+            'job_card_id' => $jobCard->id,
+            'name' => $validated['name'],
+            'unit' => $validated['unit'] ?? null,
+            'quantity' => $validated['quantity'],
+            'unit_price' => $validated['unit_price'],
+            'total' => $total,
+            'supplier' => $validated['supplier'] ?? null,
+            'notes' => $validated['notes'] ?? null,
+            'created_by' => $request->user()->id,
+        ]);
+
+        return response()->json(['data' => $material], 201);
+    }
+
+    public function deleteMaterial(Workspace $workspace, JobCard $jobCard, JobCardMaterial $material): JsonResponse
+    {
+        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+        abort_if($material->job_card_id !== $jobCard->id, 404);
+
+        $material->delete();
+
+        return response()->json(['data' => ['deleted' => true]]);
+    }
+
+    // ─── Labour / Time Tracking (JOB-11) ───────────────────────────────────
+
+    public function startTimer(Request $request, Workspace $workspace, JobCard $jobCard): JsonResponse
+    {
+        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+
+        $active = $jobCard->timeEntries()->whereNull('ended_at')->where('user_id', $request->user()->id)->first();
+        if ($active) {
+            return response()->json(['data' => $active, 'message' => 'Timer already running'], 200);
+        }
+
+        $entry = JobCardTimeEntry::create([
+            'job_card_id' => $jobCard->id,
+            'user_id' => $request->user()->id,
+            'started_at' => now(),
+        ]);
+
+        return response()->json(['data' => $entry], 201);
+    }
+
+    public function stopTimer(Request $request, Workspace $workspace, JobCard $jobCard): JsonResponse
+    {
+        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+
+        $entry = $jobCard->timeEntries()
+            ->whereNull('ended_at')
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        $endedAt = now();
+        $duration = $entry->started_at->diffInMinutes($endedAt);
+
+        $entry->update([
+            'ended_at' => $endedAt,
+            'duration_minutes' => $duration,
+        ]);
+
+        return response()->json(['data' => $entry->fresh()]);
+    }
+
+    public function timeEntries(Request $request, Workspace $workspace, JobCard $jobCard): JsonResponse
+    {
+        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+
+        $entries = $jobCard->timeEntries()->with('user')->orderBy('started_at', 'desc')->get();
+
+        return response()->json(['data' => $entries]);
     }
 }
