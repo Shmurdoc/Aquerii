@@ -4,6 +4,7 @@ namespace App\Core\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 
 class OAuthAccount extends Model
 {
@@ -12,8 +13,8 @@ class OAuthAccount extends Model
     protected $table = 'oauth_accounts';
 
     protected $fillable = [
-        'user_id', 'provider', 'provider_user_id',
-        'access_token', 'refresh_token', 'token_expires_at',
+        'user_id', 'provider', 'provider_id',
+        'access_token', 'refresh_token', 'expires_at',
     ];
 
     protected $hidden = ['access_token', 'refresh_token'];
@@ -21,8 +22,27 @@ class OAuthAccount extends Model
     protected function casts(): array
     {
         return [
-            'token_expires_at' => 'datetime',
+            'expires_at' => 'datetime',
         ];
+    }
+
+    public function decryptedAccessToken(): ?string
+    {
+        if (! $this->access_token) {
+            return null;
+        }
+
+        try {
+            return Crypt::decryptString($this->access_token);
+        } catch (\Throwable) {
+            try {
+                // Backward compatibility for tokens encrypted via encrypt().
+                return (string) Crypt::decrypt($this->access_token);
+            } catch (\Throwable) {
+                // Backward compatibility for plaintext tokens from older records.
+                return $this->access_token;
+            }
+        }
     }
 
     public function user()

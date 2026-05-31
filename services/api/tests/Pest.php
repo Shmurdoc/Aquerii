@@ -2,4 +2,8 @@
 
 use Tests\TestCase;
 
-uses(TestCase::class)->in('Feature', 'Unit');
+uses(TestCase::class)
+    ->beforeEach(function () {
+        config(['scout.queue' => false]);
+    })
+    ->in('Feature', 'Unit');

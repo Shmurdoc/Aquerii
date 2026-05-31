@@ -57,9 +57,14 @@ return new class extends Migration
 
             $table->foreign('channel_id')->references('id')->on('chat_channels')->cascadeOnDelete();
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->foreign('reply_to')->references('id')->on('chat_messages')->nullOnDelete();
             $table->index('channel_id');
             $table->index(['channel_id', 'created_at']);
+        });
+
+        // Self-referencing FK must be added separately (PostgreSQL requires
+        // the referenced unique constraint to already exist).
+        Schema::table('chat_messages', function (Blueprint $table) {
+            $table->foreign('reply_to')->references('id')->on('chat_messages')->nullOnDelete();
         });
     }
 

@@ -204,27 +204,42 @@ export default function DashboardPage() {
 
   return (
     <div className="p-6 space-y-6 overflow-auto h-full">
-      <div className="animate-slide-up space-y-1">
-        <h1
-          className="text-xl font-semibold"
-          style={{ color: 'var(--color-text-primary)' }}
-        >
-          Welcome back, {user?.name?.split(' ')[0] ?? 'there'}
-        </h1>
-        <p style={{ color: 'var(--color-text-muted)' }} className="text-sm">
-          Here&apos;s what&apos;s happening in {workspace?.name ?? 'your workspace'} today
-        </p>
+      {/* Hero Header with Gradient */}
+      <div className="relative overflow-hidden rounded-2xl p-6" style={{
+        background: 'linear-gradient(135deg, var(--color-accent) 0%, rgba(124, 58, 237, 0.3) 100%)',
+      }}>
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
+        <div className="relative z-10 animate-slide-up">
+          <h1 className="text-2xl font-bold text-white mb-1">
+            Welcome back, {user?.name?.split(' ')[0] ?? 'there'} 👋
+          </h1>
+          <p className="text-white/70 text-sm">
+            Here&apos;s what&apos;s happening in {workspace?.name ?? 'your workspace'} today
+          </p>
+        </div>
+        {/* Floating decorative elements */}
+        <div className="absolute top-4 right-4 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+        <div className="absolute bottom-4 right-20 w-20 h-20 bg-white/5 rounded-full blur-xl" />
       </div>
 
-      <ErrorBoundary fallback={<WidgetErrorFallback label="metrics" />}>
-        <KpiRow />
-      </ErrorBoundary>
+      {/* KPI Cards with stagger animation */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <ErrorBoundary fallback={<WidgetErrorFallback label="metrics" />}>
+            <KpiRow />
+          </ErrorBoundary>
+        </div>
+      </div>
 
-      <ErrorBoundary fallback={<WidgetErrorFallback label="tasks" />}>
-        <MyTasksWidget />
-      </ErrorBoundary>
+      {/* My Tasks Widget */}
+      <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <ErrorBoundary fallback={<WidgetErrorFallback label="tasks" />}>
+          <MyTasksWidget />
+        </ErrorBoundary>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      {/* Activity Feed + Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
         <div className="lg:col-span-2">
           <ErrorBoundary fallback={<WidgetErrorFallback label="activity feed" />}>
             <ActivityFeedWrapper />
@@ -235,7 +250,8 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* Team Sentiment */}
+      <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
         <ErrorBoundary fallback={<WidgetErrorFallback label="team sentiment" />}>
           <BurnoutWidget />
         </ErrorBoundary>

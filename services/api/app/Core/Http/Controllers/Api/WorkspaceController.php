@@ -3,11 +3,15 @@
 namespace App\Core\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
+use App\Core\Mail\WorkspaceInvitation;
 use App\Core\Models\Workspace;
+use App\Core\Models\WorkspaceMember;
 use App\Core\Services\Auth0Service;
 use App\Core\Services\UsageService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -253,44 +257,98 @@ class WorkspaceController extends Controller
     {
         $q = trim($request->query('q', ''));
         if (strlen($q) < 2) {
-            return response()->json(['data' => []]);
+            return response()->json(['data' => [], 'sections' => []]);
         }
 
         $like = "%{$this->escapeLike($q)}%";
+        $records = $this->searchRecords($workspace, $like);
+        $modules = $this->searchModuleCommands($q);
+        $actions = $this->searchActionCommands($q, $workspace);
+        $templates = $this->searchTemplates($workspace, $like);
+        $reports = $this->searchReports($q, $workspace);
+        $recent = $this->recentEntities($workspace, $q);
 
-        // Items
-        $items = Item::whereHas('board', fn ($bq) => $bq->where('workspace_id', $workspace))
-            ->whereNull('parent_id')
-            ->whereNull('deleted_at')
-            ->where('title', 'ilike', $like)
-            ->select('id', 'title', 'board_id', 'status')
-            ->limit(10)
-            ->get()
-            ->map(fn ($i) => array_merge($i->toArray(), ['type' => 'item']));
+        $sections = collect([
+            ['key' => 'records', 'label' => 'Records', 'items' => $records],
+            ['key' => 'modules', 'label' => 'Modules', 'items' => $modules],
+            ['key' => 'actions', 'label' => 'Actions', 'items' => $actions],
+            ['key' => 'templates', 'label' => 'Templates', 'items' => $templates],
+            ['key' => 'reports', 'label' => 'Reports', 'items' => $reports],
+            ['key' => 'recent', 'label' => 'Recent Activity', 'items' => $recent],
+        ])->map(fn (array $section) => [
+            'key' => $section['key'],
+            'label' => $section['label'],
+            'items' => $section['items']->values()->all(),
+        ])->filter(fn (array $section) => count($section['items']) > 0)->values();
 
-        // Boards
-        $boards = Board::where('workspace_id', $workspace)
-            ->whereNull('deleted_at')
-            ->where('name', 'ilike', $like)
-            ->select('id', 'name as title', 'type')
-            ->limit(5)
-            ->get()
-            ->map(fn ($b) => array_merge($b->toArray(), ['type' => 'board']));
+        $flat = $sections->flatMap(fn (array $section) => $section['items'])->values();
 
-        // CRM deals (if table exists)
-        $deals = collect();
+        return response()->json([
+            'data' => $flat,
+            'sections' => $sections,
+        ]);
+    }
+
+    private function searchRecords(string $workspace, string $like): Collection
+    {
+        $results = collect();
+
+        if (DB::getSchemaBuilder()->hasTable('items') && DB::getSchemaBuilder()->hasTable('boards')) {
+            $items = DB::table('items')
+                ->join('boards', 'boards.id', '=', 'items.board_id')
+                ->where('boards.workspace_id', $workspace)
+                ->whereNull('items.deleted_at')
+                ->whereNull('items.parent_id')
+                ->where('items.title', 'ilike', $like)
+                ->select('items.id', 'items.title', 'items.board_id')
+                ->limit(10)
+                ->get()
+                ->map(fn ($i) => [
+                    'id' => (string) $i->id,
+                    'title' => $i->title,
+                    'subtitle' => 'Board item',
+                    'type' => 'item',
+                    'to' => '/boards',
+                ]);
+            $results = $results->concat($items);
+        }
+
+        if (DB::getSchemaBuilder()->hasTable('boards')) {
+            $boards = DB::table('boards')
+                ->where('workspace_id', $workspace)
+                ->whereNull('deleted_at')
+                ->where('name', 'ilike', $like)
+                ->select('id', 'name')
+                ->limit(8)
+                ->get()
+                ->map(fn ($b) => [
+                    'id' => (string) $b->id,
+                    'title' => $b->name,
+                    'subtitle' => 'Board',
+                    'type' => 'board',
+                    'to' => '/boards/'.$b->id,
+                ]);
+            $results = $results->concat($boards);
+        }
+
         if (DB::getSchemaBuilder()->hasTable('crm_deals')) {
             $deals = DB::table('crm_deals')
                 ->where('workspace_id', $workspace)
                 ->whereNull('deleted_at')
                 ->where('title', 'ilike', $like)
-                ->select('id', 'title', DB::raw("'deal' as type"))
-                ->limit(5)
-                ->get();
+                ->select('id', 'title')
+                ->limit(8)
+                ->get()
+                ->map(fn ($d) => [
+                    'id' => (string) $d->id,
+                    'title' => $d->title,
+                    'subtitle' => 'CRM deal',
+                    'type' => 'deal',
+                    'to' => '/crm',
+                ]);
+            $results = $results->concat($deals);
         }
 
-        // CRM contacts (if table exists)
-        $contacts = collect();
         if (DB::getSchemaBuilder()->hasTable('crm_contacts')) {
             $contacts = DB::table('crm_contacts')
                 ->where('workspace_id', $workspace)
@@ -300,14 +358,221 @@ class WorkspaceController extends Controller
                         ->orWhere('last_name', 'ilike', $like)
                         ->orWhere('email', 'ilike', $like);
                 })
-                ->selectRaw("id, CONCAT(COALESCE(first_name,''), ' ', COALESCE(last_name,'')) as title, 'contact' as type")
-                ->limit(5)
-                ->get();
+                ->selectRaw("id, CONCAT(COALESCE(first_name,''), ' ', COALESCE(last_name,'')) as full_name, email")
+                ->limit(8)
+                ->get()
+                ->map(fn ($c) => [
+                    'id' => (string) $c->id,
+                    'title' => trim((string) $c->full_name) !== '' ? trim((string) $c->full_name) : ($c->email ?? 'Contact'),
+                    'subtitle' => $c->email ? 'Contact · '.$c->email : 'Contact',
+                    'type' => 'contact',
+                    'to' => '/crm',
+                ]);
+            $results = $results->concat($contacts);
         }
 
-        $results = $items->concat($boards)->concat($deals)->concat($contacts)->values();
+        if (DB::getSchemaBuilder()->hasTable('crm_companies')) {
+            $companies = DB::table('crm_companies')
+                ->where('workspace_id', $workspace)
+                ->whereNull('deleted_at')
+                ->where('name', 'ilike', $like)
+                ->select('id', 'name', 'entity_type')
+                ->limit(8)
+                ->get()
+                ->map(fn ($c) => [
+                    'id' => (string) $c->id,
+                    'title' => $c->name,
+                    'subtitle' => 'Company · '.($c->entity_type ?? 'customer'),
+                    'type' => 'company',
+                    'to' => '/crm',
+                ]);
+            $results = $results->concat($companies);
+        }
 
-        return response()->json(['data' => $results]);
+        if (DB::getSchemaBuilder()->hasTable('documents')) {
+            $docs = DB::table('documents')
+                ->where('workspace_id', $workspace)
+                ->whereNull('deleted_at')
+                ->where('title', 'ilike', $like)
+                ->select('id', 'title')
+                ->limit(8)
+                ->get()
+                ->map(fn ($d) => [
+                    'id' => (string) $d->id,
+                    'title' => $d->title,
+                    'subtitle' => 'Document',
+                    'type' => 'document',
+                    'to' => '/documents/'.$d->id,
+                ]);
+            $results = $results->concat($docs);
+        }
+
+        return $results->take(30)->values();
+    }
+
+    private function searchModuleCommands(string $q): Collection
+    {
+        $modules = collect([
+            ['id' => 'module-dashboard', 'title' => 'Dashboard', 'subtitle' => 'Workspace overview', 'type' => 'module', 'to' => '/dashboard'],
+            ['id' => 'module-boards', 'title' => 'Boards', 'subtitle' => 'Projects and task delivery', 'type' => 'module', 'to' => '/boards'],
+            ['id' => 'module-crm', 'title' => 'CRM', 'subtitle' => 'Leads, contacts, deals, companies', 'type' => 'module', 'to' => '/crm'],
+            ['id' => 'module-documents', 'title' => 'Documents', 'subtitle' => 'Files, docs, and attachments', 'type' => 'module', 'to' => '/documents'],
+            ['id' => 'module-email', 'title' => 'Email', 'subtitle' => 'Threads, outbound, and inbound', 'type' => 'module', 'to' => '/email'],
+            ['id' => 'module-support', 'title' => 'Support', 'subtitle' => 'Tickets and SLA operations', 'type' => 'module', 'to' => '/support'],
+            ['id' => 'module-marketing', 'title' => 'Marketing', 'subtitle' => 'Campaigns, segments, templates', 'type' => 'module', 'to' => '/marketing'],
+            ['id' => 'module-reports', 'title' => 'Reports', 'subtitle' => 'KPIs and analytics', 'type' => 'module', 'to' => '/reports'],
+            ['id' => 'module-automation', 'title' => 'Automation', 'subtitle' => 'Automation rules and runs', 'type' => 'module', 'to' => '/automation'],
+            ['id' => 'module-settings', 'title' => 'Settings', 'subtitle' => 'Workspace and controls', 'type' => 'module', 'to' => '/settings'],
+        ]);
+
+        $needle = mb_strtolower($q);
+
+        return $modules
+            ->filter(fn (array $m) => str_contains(mb_strtolower($m['title'].' '.$m['subtitle']), $needle))
+            ->take(10)
+            ->values();
+    }
+
+    private function searchActionCommands(string $q, string $workspace): Collection
+    {
+        $actions = collect([
+            ['id' => 'action-new-board', 'title' => 'Create New Board', 'subtitle' => 'Start a delivery board', 'type' => 'action', 'to' => '/boards/new'],
+            ['id' => 'action-new-deal', 'title' => 'Create New Deal', 'subtitle' => 'Add opportunity in CRM', 'type' => 'action', 'to' => '/crm/deals/new'],
+            ['id' => 'action-new-contact', 'title' => 'Create New Contact', 'subtitle' => 'Add a CRM contact', 'type' => 'action', 'to' => '/crm/contacts/new'],
+            ['id' => 'action-new-document', 'title' => 'Create New Document', 'subtitle' => 'Open document editor', 'type' => 'action', 'to' => '/documents/new'],
+            ['id' => 'action-new-automation', 'title' => 'Create New Automation', 'subtitle' => 'Build workflow automation', 'type' => 'action', 'to' => '/automation/new'],
+            ['id' => 'action-invite-member', 'title' => 'Invite Workspace Member', 'subtitle' => 'Add admin/member/viewer', 'type' => 'action', 'to' => '/settings/members'],
+            ['id' => 'action-view-audit', 'title' => 'Open Audit Logs', 'subtitle' => 'Review sensitive activity', 'type' => 'action', 'to' => '/settings/security'],
+            ['id' => 'action-scim-tokens', 'title' => 'Manage SCIM Tokens', 'subtitle' => 'Enterprise provisioning controls', 'type' => 'action', 'to' => '/settings/security'],
+        ]);
+
+        $needle = mb_strtolower($q);
+
+        return $actions
+            ->filter(fn (array $m) => str_contains(mb_strtolower($m['title'].' '.$m['subtitle']), $needle))
+            ->take(10)
+            ->values();
+    }
+
+    private function searchTemplates(string $workspace, string $like): Collection
+    {
+        $results = collect();
+
+        if (DB::getSchemaBuilder()->hasTable('automation_templates')) {
+            $automationTemplates = DB::table('automation_templates')
+                ->where(function ($q) use ($like) {
+                    $q->where('name', 'ilike', $like)
+                        ->orWhere('description', 'ilike', $like)
+                        ->orWhere('category', 'ilike', $like);
+                })
+                ->select('id', 'name', 'category')
+                ->limit(10)
+                ->get()
+                ->map(fn ($tpl) => [
+                    'id' => (string) $tpl->id,
+                    'title' => $tpl->name,
+                    'subtitle' => 'Automation template'.($tpl->category ? ' · '.$tpl->category : ''),
+                    'type' => 'template',
+                    'to' => '/automation',
+                ]);
+            $results = $results->concat($automationTemplates);
+        }
+
+        if (DB::getSchemaBuilder()->hasTable('email_templates')) {
+            $emailTemplates = DB::table('email_templates')
+                ->where('workspace_id', $workspace)
+                ->where(function ($q) use ($like) {
+                    $q->where('name', 'ilike', $like)
+                        ->orWhere('subject', 'ilike', $like);
+                })
+                ->select('id', 'name', 'subject')
+                ->limit(10)
+                ->get()
+                ->map(fn ($tpl) => [
+                    'id' => (string) $tpl->id,
+                    'title' => $tpl->name,
+                    'subtitle' => 'Email template'.($tpl->subject ? ' · '.$tpl->subject : ''),
+                    'type' => 'template',
+                    'to' => '/marketing/email-templates',
+                ]);
+            $results = $results->concat($emailTemplates);
+        }
+
+        return $results->take(20)->values();
+    }
+
+    private function searchReports(string $q, string $workspace): Collection
+    {
+        $catalog = collect([
+            ['id' => 'report-dashboard', 'title' => 'Executive Dashboard', 'subtitle' => 'Cross-module KPI summary', 'type' => 'report', 'to' => '/reports'],
+            ['id' => 'report-crm-revenue', 'title' => 'CRM Revenue Report', 'subtitle' => 'Pipeline and won-deal trends', 'type' => 'report', 'to' => '/reports'],
+            ['id' => 'report-sales-forecast', 'title' => 'Sales Forecast', 'subtitle' => 'Forecast and attainment', 'type' => 'report', 'to' => '/reports'],
+            ['id' => 'report-support-sla', 'title' => 'Support SLA Report', 'subtitle' => 'Ticket SLA performance', 'type' => 'report', 'to' => '/reports'],
+            ['id' => 'report-automation-runs', 'title' => 'Automation Runs', 'subtitle' => 'Run history and failures', 'type' => 'report', 'to' => '/automation'],
+        ]);
+
+        $needle = mb_strtolower($q);
+
+        return $catalog
+            ->filter(fn (array $r) => str_contains(mb_strtolower($r['title'].' '.$r['subtitle']), $needle))
+            ->take(10)
+            ->values();
+    }
+
+    private function recentEntities(string $workspace, string $q): Collection
+    {
+        $needle = mb_strtolower($q);
+        $results = collect();
+
+        if (DB::getSchemaBuilder()->hasTable('items') && DB::getSchemaBuilder()->hasTable('boards')) {
+            $items = DB::table('items')
+                ->join('boards', 'boards.id', '=', 'items.board_id')
+                ->where('boards.workspace_id', $workspace)
+                ->whereNull('items.deleted_at')
+                ->select('items.id', 'items.title', 'items.updated_at')
+                ->orderByDesc('items.updated_at')
+                ->limit(10)
+                ->get()
+                ->map(fn ($i) => [
+                    'id' => (string) $i->id,
+                    'title' => $i->title,
+                    'subtitle' => 'Recent board activity',
+                    'type' => 'recent',
+                    'to' => '/boards',
+                    '_sort' => $i->updated_at,
+                ]);
+            $results = $results->concat($items);
+        }
+
+        if (DB::getSchemaBuilder()->hasTable('crm_deals')) {
+            $deals = DB::table('crm_deals')
+                ->where('workspace_id', $workspace)
+                ->whereNull('deleted_at')
+                ->select('id', 'title', 'updated_at')
+                ->orderByDesc('updated_at')
+                ->limit(10)
+                ->get()
+                ->map(fn ($d) => [
+                    'id' => (string) $d->id,
+                    'title' => $d->title,
+                    'subtitle' => 'Recent CRM activity',
+                    'type' => 'recent',
+                    'to' => '/crm',
+                    '_sort' => $d->updated_at,
+                ]);
+            $results = $results->concat($deals);
+        }
+
+        return $results
+            ->filter(fn (array $item) => str_contains(mb_strtolower($item['title'].' '.$item['subtitle']), $needle))
+            ->sortByDesc('_sort')
+            ->take(10)
+            ->map(function (array $item) {
+                unset($item['_sort']);
+
+                return $item;
+            })
+            ->values();
     }
 
     private function uniqueSlug(string $name): string

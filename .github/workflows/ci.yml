@@ -173,7 +173,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm install
-      - run: npx vitest run --reporter=verbose 2>&1 || echo "No tests found, skipping"
+      - run: npx vitest run --reporter=verbose
 
   test-web:
     name: Web Unit Tests
@@ -189,7 +189,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm install --legacy-peer-deps
       - run: npm install --save-dev jsdom @testing-library/jest-dom
-      - run: npx vitest run --reporter=verbose 2>&1 || echo "Some test failures, continuing"
+      - run: npx vitest run --reporter=verbose
 
   test-python:
     name: Python Unit Tests
@@ -205,7 +205,99 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
       - run: pip install -r requirements.txt pytest pytest-asyncio pytest-cov fakeredis
-      - run: pytest tests/test_crm_endpoints.py --cov=app --cov-report=xml -v 2>&1 || echo "Pre-existing test failures, ignoring"
+      - run: pytest tests/test_crm_endpoints.py --cov=app --cov-report=xml -v
+
+  test-php-scim-security:
+    name: PHP SCIM & Security Tests
+    runs-on: ubuntu-latest
+    needs: [lint-php]
+    services:
+      postgres:
+        image: postgres:15.6
+        env:
+          POSTGRES_DB: aquerii_test
+          POSTGRES_USER: aquerii_app
+          POSTGRES_PASSWORD: secret
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7.2-alpine
+        ports: ["6379:6379"]
+        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 5
+    defaults:
+      run:
+        working-directory: services/api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: pdo, pgsql, redis, zip, bcmath, intl
+          coverage: none
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: services/api/vendor
+          key: composer-${{ hashFiles('services/api/composer.lock') }}
+
+      - run: composer install --prefer-dist --no-scripts --no-progress
+
+      - name: Prepare test env
+        run: |
+          cp .env.example .env.testing
+          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env.testing
+          sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env.testing
+          sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env.testing
+          sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
+          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env.testing
+          sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env.testing
+          sed -i "s|CACHE_DRIVER=.*|CACHE_DRIVER=array|" .env.testing || echo "CACHE_DRIVER=array" >> .env.testing
+          mkdir -p bootstrap/cache
+          mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
+          php artisan key:generate --env=testing --quiet
+
+      - name: Run migrations
+        run: php artisan migrate --env=testing
+
+      - name: Run SCIM/security test set
+        run: php artisan test tests/Feature/Security/ScimAndFieldPermissionsTest.php tests/Feature/Security/ReadinessControlPlaneTest.php tests/Feature/Security/RealWorldReadinessTest.php tests/Unit/Scenario/ScenarioSimulationTest.php --env=testing
+
+  endpoint-audit-static:
+    name: Endpoint Audit (Static)
+    runs-on: ubuntu-latest
+    needs: [lint-php, lint-python]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: pdo, pgsql
+          coverage: none
+
+      - name: Install API deps for route inventory
+        working-directory: services/api
+        run: |
+          composer install --prefer-dist --no-scripts --no-progress
+          mkdir -p bootstrap/cache
+
+      - name: Run static endpoint audit
+        run: python services/tests/python/system_hardening_audit.py --repo-root . --output-json services/tests/python/endpoint-audit-report.json
+
+      - name: Upload endpoint audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: endpoint-audit-report
+          path: services/tests/python/endpoint-audit-report.json
 
 # ════════════════════════════════════════════════════════════════
 # STAGE 3 — Security Scan
@@ -214,7 +306,7 @@ jobs:
   sast:
     name: SAST — Semgrep
     runs-on: ubuntu-latest
-    needs: [test-php, test-node, test-web, test-python]
+    needs: [test-php, test-node, test-web, test-python, test-php-scim-security, endpoint-audit-static]
     steps:
       - uses: actions/checkout@v4
 
@@ -222,17 +314,15 @@ jobs:
         uses: semgrep/semgrep-action@v1
         with:
           config: p/default
-          auditOn: pull_request
 
   secrets-scan:
     name: Secrets — Gitleaks
     runs-on: ubuntu-latest
-    needs: [test-php, test-node, test-web, test-python]
+    needs: [test-php, test-node, test-web, test-python, test-php-scim-security, endpoint-audit-static]
     steps:
       - uses: actions/checkout@v4
 
       - uses: gitleaks/gitleaks-action@v2
-        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_CONFIG: .gitleaks.toml
@@ -240,7 +330,7 @@ jobs:
   dependency-scan:
     name: Dependency Scan
     runs-on: ubuntu-latest
-    needs: [test-php, test-node, test-web, test-python]
+    needs: [test-php, test-node, test-web, test-python, test-php-scim-security, endpoint-audit-static]
     steps:
       - uses: actions/checkout@v4
 
@@ -390,7 +480,6 @@ jobs:
     name: E2E Tests (Chromium)
     runs-on: ubuntu-latest
     needs: [docker-build]
-    continue-on-error: true
     services:
       postgres:
         image: postgres:15.6
@@ -461,7 +550,6 @@ jobs:
     name: k6 Load Test (smoke)
     runs-on: ubuntu-latest
     needs: [docker-build]
-    continue-on-error: true
     services:
       postgres:
         image: postgres:15.6
@@ -528,7 +616,6 @@ jobs:
     name: Lighthouse CI
     runs-on: ubuntu-latest
     needs: [docker-build]
-    continue-on-error: true
     defaults:
       run:
         working-directory: services/web

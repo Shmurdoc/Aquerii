@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List
-from app.core.providers import generate_json
+from app.core import providers
 from app.security.auth import verify_internal_token
 from app.security.sanitizer import sanitize
 
@@ -51,7 +51,7 @@ async def score_deal(body: DealScoreRequest):
         prompt += f"Context: {sanitize(body.custom_context)}\n"
 
     try:
-        data = await generate_json(prompt, system=SYSTEM, model="gpt-4o-mini")
+        data = await providers.generate_json(prompt, system=SYSTEM, model="gpt-4o-mini")
         return DealScoreResponse(**data)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc
@@ -103,7 +103,7 @@ async def deal_summary(body: DealSummaryRequest):
         prompt += f"Notes: {sanitize(body.notes)}\n"
 
     try:
-        data = await generate_json(prompt, system=DEAL_SUMMARY_SYSTEM)
+        data = await providers.generate_json(prompt, system=DEAL_SUMMARY_SYSTEM)
         return DealSummaryResponse(**data)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc
@@ -155,8 +155,14 @@ async def churn_risk(body: ChurnRiskRequest):
         prompt += f"Context: {sanitize(body.custom_context)}\n"
 
     try:
-        data = await generate_json(prompt, system=CHURN_SYSTEM)
-        return ChurnRiskResponse(**data)
+        data = await providers.generate_json(prompt, system=CHURN_SYSTEM)
+        normalized = {
+            "risk_score": int(data.get("risk_score", data.get("score", 50))),
+            "risk_level": str(data.get("risk_level", "medium")),
+            "reasoning": str(data.get("reasoning", data.get("summary", "No reasoning provided."))),
+            "suggested_actions": data.get("suggested_actions") or data.get("key_points") or ["Review account health"],
+        }
+        return ChurnRiskResponse(**normalized)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc
 
@@ -205,7 +211,7 @@ async def next_action(body: NextActionRequest):
         prompt += f"Context: {sanitize(body.custom_context)}\n"
 
     try:
-        data = await generate_json(prompt, system=NEXT_ACTION_SYSTEM)
+        data = await providers.generate_json(prompt, system=NEXT_ACTION_SYSTEM)
         return NextActionResponse(**data)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc
@@ -245,7 +251,7 @@ async def email_compose(body: EmailComposeRequest):
         prompt += f"Context: {sanitize(body.custom_context)}\n"
 
     try:
-        data = await generate_json(prompt, system=EMAIL_COMPOSE_SYSTEM)
+        data = await providers.generate_json(prompt, system=EMAIL_COMPOSE_SYSTEM)
         return EmailComposeResponse(**data)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc
@@ -275,7 +281,7 @@ async def data_clean(body: DataCleanRequest):
     prompt = f"Dataset type: {sanitize(body.dataset_type)}\n\nData:\n{body.data[:12000]}"
 
     try:
-        data = await generate_json(prompt, system=DATA_CLEAN_SYSTEM)
+        data = await providers.generate_json(prompt, system=DATA_CLEAN_SYSTEM)
         return DataCleanResponse(**data)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc
@@ -305,7 +311,11 @@ async def anomaly_detection(body: AnomalyDetectionRequest):
     prompt = f"Data type: {sanitize(body.data_type)}\n\nData:\n{body.data[:12000]}"
 
     try:
-        data = await generate_json(prompt, system=ANOMALY_SYSTEM)
-        return AnomalyDetectionResponse(**data)
+        data = await providers.generate_json(prompt, system=ANOMALY_SYSTEM)
+        normalized = {
+            "anomalies": data.get("anomalies") or data.get("key_points") or [],
+            "risk_level": str(data.get("risk_level", "low")),
+        }
+        return AnomalyDetectionResponse(**normalized)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"AI_PROVIDER_ERROR: {exc}") from exc

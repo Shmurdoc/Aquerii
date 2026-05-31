@@ -54,13 +54,30 @@ class ScimToken extends Model
     {
         $hash = hash('sha256', $token);
 
-        return static::where('token_hash', $hash)
+        $model = static::where('token_hash', $hash)
             ->where('is_active', true)
             ->first();
+
+        if (! $model) {
+            return null;
+        }
+
+        $model->forceFill(['last_used_at' => now()])->save();
+
+        return $model;
     }
 
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    public function hasScope(string $requiredScope): bool
+    {
+        $scopes = collect(explode(',', (string) $this->scope))
+            ->map(fn (string $scope) => trim(strtolower($scope)))
+            ->filter();
+
+        return $scopes->contains($requiredScope);
     }
 }

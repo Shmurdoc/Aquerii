@@ -1,7 +1,8 @@
 import json
 from fastapi import APIRouter, HTTPException, Request, Depends
-from pydantic import BaseModel
-from app.core.providers import generate_text, generate_json
+from pydantic import BaseModel, Field
+import google.generativeai as genai
+from app.core.config import settings
 from app.security.sanitizer import sanitize, PromptInjectionError
 from app.security.auth import verify_internal_token
 
@@ -10,19 +11,19 @@ router = APIRouter(dependencies=[Depends(verify_internal_token)])
 
 class TaskDescriptionRequest(BaseModel):
     workspace_id: str
-    title: str
+    title: str = Field(min_length=1)
     context: str = ''
 
 
 class DocumentGenerateRequest(BaseModel):
     workspace_id: str
-    prompt: str
+    prompt: str = Field(min_length=1)
     style: str = 'professional'
 
 
 class AutomationGenerateRequest(BaseModel):
     workspace_id: str
-    description: str
+    description: str = Field(min_length=1)
 
 
 class FlowchartRequest(BaseModel):
@@ -42,6 +43,11 @@ def _injection_error() -> HTTPException:
     )
 
 
+def _gemini(model: str = "gemini-1.5-flash"):
+    genai.configure(api_key=settings.GEMINI_API_KEY)
+    return genai.GenerativeModel(model)
+
+
 @router.post('/ai/task/generate-description')
 async def generate_task_description(req: TaskDescriptionRequest):
     try:
@@ -57,7 +63,7 @@ async def generate_task_description(req: TaskDescriptionRequest):
         "Write 2-3 sentences describing what this task involves, the expected outcome, "
         "and any important considerations. Be specific and actionable."
     )
-    description = await generate_text(prompt)
+    description = (_gemini().generate_content(prompt).text or "").strip()
     return {'data': {'description': description}}
 
 
@@ -74,7 +80,7 @@ async def generate_document(req: DocumentGenerateRequest):
         "Format the response as clean markdown with proper headings, sections, and content.\n\n"
         f"User request: {prompt_text}"
     )
-    content = await generate_text(system, max_tokens=4096)
+    content = (_gemini().generate_content(system).text or "").strip()
     return {'data': {'content': content, 'format': 'markdown'}}
 
 
@@ -102,7 +108,15 @@ async def generate_automation(req: AutomationGenerateRequest):
         '}'
     )
     try:
-        data = await generate_json(prompt, model="gpt-4o-mini")
+        model = _gemini()
+        raw = model.generate_content(prompt).text or ""
+        text = raw.strip()
+        if text.startswith('```'):
+            parts = text.split('```')
+            text = parts[1] if len(parts) > 1 else text
+            if text.startswith('json'):
+                text = text[4:]
+        data = json.loads(text.strip())
         return {'data': data}
     except json.JSONDecodeError:
         raise HTTPException(

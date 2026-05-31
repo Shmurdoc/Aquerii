@@ -1,29 +1,25 @@
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 import logging
 
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-try:
-    from sentence_transformers import CrossEncoder
+_model: Optional[object] = None
 
-    _model: Optional[CrossEncoder] = None
-
-    def _get_model() -> CrossEncoder:
-        global _model
-        if _model is None:
+def _get_model():
+    global _model
+    if _model is None:
+        try:
+            from sentence_transformers import CrossEncoder
             model_name = settings.RERANKER_MODEL
             logger.info("Loading reranker model: %s", model_name)
             _model = CrossEncoder(model_name)
-        return _model
+        except ImportError:
+            raise RuntimeError("sentence-transformers not installed")
+    return _model
 
-    RERANKER_AVAILABLE = True
-except ImportError:
-    RERANKER_AVAILABLE = False
-
-    def _get_model():
-        raise RuntimeError("sentence-transformers not installed")
+RERANKER_AVAILABLE = True
 
 
 def rerank(

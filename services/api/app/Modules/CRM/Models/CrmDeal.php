@@ -16,7 +16,7 @@ class CrmDeal extends Model
 
     protected $fillable = [
         'workspace_id', 'pipeline_id', 'stage_id', 'contact_id', 'company_id',
-        'linked_item_id', 'owner_id', 'title', 'value', 'currency', 'probability',
+        'linked_item_id', 'owner_id', 'created_by', 'title', 'value', 'currency', 'probability',
         'expected_close_date', 'won_at', 'lost_at', 'notes', 'custom_fields',
         'loss_reason', 'loss_details', 'forecast_category', 'discount_amount',
         'discount_type', 'competitors', 'last_activity_at', 'stage_history',

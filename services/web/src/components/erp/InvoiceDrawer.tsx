@@ -1,15 +1,16 @@
 /**
  * InvoiceDrawer — right-side panel for a single invoice.
- * Covers: view, status change (header-only update), delete.
- * Note: backend update does NOT accept item changes — items are frozen after creation.
+ * Covers: view, status change, payment tracking, PDF generation, delete.
  */
 
 import { useState } from 'react'
-import { X, Trash2, ChevronDown } from 'lucide-react'
+import { X, Trash2, ChevronDown, Download, CreditCard } from 'lucide-react'
 import { Invoice, UpdateInvoicePayload, formatCurrency, formatDate } from '@/lib/erp'
 import { useUpdateInvoice, useDeleteInvoice } from '@/hooks/useInvoices'
+import { api } from '@/lib/api'
 import StatusBadge from '@/components/erp/StatusBadge'
 import LineItemsEditor, { LineItem } from '@/components/erp/LineItemsEditor'
+import toast from 'react-hot-toast'
 
 const INVOICE_STATUSES = ['draft', 'sent', 'paid', 'overdue', 'cancelled']
 
@@ -52,6 +53,39 @@ export default function InvoiceDrawer({ invoice, onClose, onDeleted }: Props) {
   async function handleDelete() {
     await deleteMutation.mutateAsync(invoice.id)
     onDeleted()
+  }
+
+  async function handleDownloadPdf() {
+    try {
+      const response = await api.get(`/workspaces/${invoice.workspace_id}/invoices/${invoice.id}/pdf`, {
+        responseType: 'blob'
+      })
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `${invoice.invoice_number}.pdf`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+      toast.success('PDF downloaded.')
+    } catch {
+      toast.error('Failed to download PDF.')
+    }
+  }
+
+  async function handleRecordPayment() {
+    try {
+      await api.post(`/workspaces/${invoice.workspace_id}/invoices/${invoice.id}/payments`, {
+        amount: invoice.total,
+        payment_method: 'cash',
+        payment_date: new Date().toISOString().slice(0, 10),
+      })
+      await updateMutation.mutateAsync({ id: invoice.id, payload: { ...form, status: 'paid' } })
+      toast.success('Payment recorded.')
+    } catch {
+      toast.error('Failed to record payment.')
+    }
   }
 
   return (
@@ -203,7 +237,7 @@ export default function InvoiceDrawer({ invoice, onClose, onDeleted }: Props) {
 
       {/* Footer */}
       <div className="px-5 py-4 border-t border-gray-800 flex items-center justify-between">
-        {/* Delete */}
+        {/* Left side - Delete */}
         {!confirmDelete ? (
           <button
             onClick={() => setConfirmDelete(true)}
@@ -231,24 +265,47 @@ export default function InvoiceDrawer({ invoice, onClose, onDeleted }: Props) {
           </div>
         )}
 
-        {/* Save / Cancel */}
-        {editing && (
-          <div className="flex items-center gap-2">
+        {/* Right side - Actions */}
+        <div className="flex items-center gap-2">
+          {/* Download PDF */}
+          <button
+            onClick={handleDownloadPdf}
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded bg-gray-800 hover:bg-gray-700 text-gray-300"
+          >
+            <Download size={13} />
+            PDF
+          </button>
+
+          {/* Record Payment (only for unpaid invoices) */}
+          {invoice.status !== 'paid' && invoice.status !== 'cancelled' && (
             <button
-              onClick={() => setEditing(false)}
-              className="text-xs px-3 py-1.5 rounded bg-gray-800 hover:bg-gray-700 text-gray-300"
+              onClick={handleRecordPayment}
+              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white"
             >
-              Cancel
+              <CreditCard size={13} />
+              Record Payment
             </button>
-            <button
-              onClick={handleSave}
-              disabled={updateMutation.isPending}
-              className="text-xs px-4 py-1.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50"
-            >
-              {updateMutation.isPending ? 'Saving…' : 'Save'}
-            </button>
-          </div>
-        )}
+          )}
+
+          {/* Save / Cancel */}
+          {editing && (
+            <>
+              <button
+                onClick={() => setEditing(false)}
+                className="text-xs px-3 py-1.5 rounded bg-gray-800 hover:bg-gray-700 text-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={updateMutation.isPending}
+                className="text-xs px-4 py-1.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50"
+              >
+                {updateMutation.isPending ? 'Saving…' : 'Save'}
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

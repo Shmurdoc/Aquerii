@@ -58,6 +58,6 @@ class User extends Authenticatable
 
     public function oauthAccounts()
     {
-        return $this->hasMany(OauthAccount::class);
+        return $this->hasMany(OAuthAccount::class);
     }
 }

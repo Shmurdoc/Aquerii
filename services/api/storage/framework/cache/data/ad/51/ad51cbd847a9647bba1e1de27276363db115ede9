@@ -1,0 +1,1 @@
+1780187891a:3:{s:12:"payload_hash";s:64:"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945";s:8:"response";a:1:{s:5:"error";a:2:{s:4:"code";s:14:"EMAIL_MISMATCH";s:7:"message";s:54:"This invitation was sent to a different email address.";}}s:11:"status_code";i:403;}

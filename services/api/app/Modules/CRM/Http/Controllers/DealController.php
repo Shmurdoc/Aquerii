@@ -62,6 +62,7 @@ class DealController extends Controller
         $deal = CrmDeal::create(array_merge($validated, [
             'workspace_id' => $workspace->id,
             'owner_id' => $request->user()->id,
+            'created_by' => $request->user()->id,
             'title' => $validated['title'],
             'currency' => $validated['currency'] ?? 'USD',
             'position' => $maxPos + 65536,

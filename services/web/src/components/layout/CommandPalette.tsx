@@ -5,7 +5,7 @@ import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
 import {
   LayoutGrid, CheckSquare, FileText, User, DollarSign, Building2,
-  Target, TicketCheck, Mail, Video, UserCheck, Search, Clock,
+  Target, TicketCheck, Mail, Video, UserCheck, Search, Clock, Wand2, ShieldCheck, BarChart3,
   type LucideIcon,
 } from 'lucide-react'
 import clsx from 'clsx'
@@ -22,6 +22,12 @@ const ENTITY_ICONS: Record<string, LucideIcon> = {
   email: Mail,
   meeting: Video,
   employee: UserCheck,
+  module: LayoutGrid,
+  action: Wand2,
+  template: FileText,
+  report: BarChart3,
+  recent: Clock,
+  security: ShieldCheck,
 }
 
 const STATIC_COMMANDS = [
@@ -56,6 +62,7 @@ interface SearchResult {
   title: string
   type: string
   subtitle?: string
+  to?: string
 }
 
 interface ActionItem {
@@ -114,8 +121,15 @@ export default function CommandPalette({ onClose, onOpenItem }: Props) {
   })
 
   const handleResultClick = useCallback(
-    (r: { id: string; title: string; type: string }) => {
+    (r: { id: string; title: string; type: string; to?: string }) => {
       saveRecentItem(r)
+
+      if (r.to) {
+        navigate(r.to)
+        onClose()
+        return
+      }
+
       switch (r.type) {
         case 'board':
           navigate(`/boards/${r.id}`)
@@ -146,6 +160,21 @@ export default function CommandPalette({ onClose, onOpenItem }: Props) {
           break
         case 'employee':
           navigate(`/employees?id=${r.id}`)
+          break
+        case 'module':
+          navigate('/dashboard')
+          break
+        case 'action':
+          navigate('/dashboard')
+          break
+        case 'template':
+          navigate('/automation')
+          break
+        case 'report':
+          navigate('/reports')
+          break
+        case 'recent':
+          navigate('/dashboard')
           break
         default:
           break

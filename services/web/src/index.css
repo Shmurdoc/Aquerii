@@ -142,3 +142,196 @@ button, a, [role="button"] {
 .animate-slide-up  { animation: slideUp  var(--duration-200) var(--ease-spring); }
 .animate-fade-in   { animation: fadeIn   var(--duration-150) var(--ease-out); }
 .animate-scale-in  { animation: scaleIn  var(--duration-200) var(--ease-spring); }
+
+/* ── Mobile Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Hide sidebar on mobile, show bottom nav */
+  .sidebar-desktop { display: none; }
+  .bottom-nav { display: flex; }
+  
+  /* Reduce padding on mobile */
+  .page-container { padding: 0.5rem; }
+  
+  /* Stack cards vertically */
+  .card-grid { grid-template-columns: 1fr; }
+  
+  /* Full-width modals on mobile */
+  .modal-container { 
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+}
+
+@media (min-width: 769px) {
+  /* Show sidebar on desktop */
+  .sidebar-desktop { display: flex; }
+  .bottom-nav { display: none; }
+}
+
+/* Touch-friendly targets (44px minimum) */
+@media (pointer: coarse) {
+  button, a, [role="button"], input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Safe area for notched phones */
+@supports (padding: env(safe-area-inset-top)) {
+  .safe-area-top { padding-top: env(safe-area-inset-top); }
+  .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+/* ── Cinematic Animations ──────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(124, 58, 237, 0.6); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-up {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.3s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+.animate-scale-up {
+  animation: scale-up 0.2s ease-out;
+}
+
+/* ── Glass Morphism Effects ────────────────────────────────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Gradient Text ────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-accent), #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Hover Effects ────────────────────────────────────────────── */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Status Indicators ────────────────────────────────────────── */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse-glow 2s infinite;
+}
+
+.status-online { background: #10b981; }
+.status-busy { background: #f59e0b; }
+.status-offline { background: #6b7280; }
+
+/* ── Progress Bars ────────────────────────────────────────────── */
+.progress-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-accent), #a78bfa);
+  animation: progressFill 1.2s ease-out forwards;
+}
+
+/* ── Card Variants ────────────────────────────────────────────── */
+.card-interactive {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Focus States ─────────────────────────────────────────────── */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent), 0 0 0 4px rgba(124, 58, 237, 0.3);
+}
+
+/* ── Reduced Motion ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -2,12 +2,15 @@
 
 namespace Tests;
 
+use App\Core\Models\User;
+use Closure;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -15,9 +18,26 @@ abstract class TestCase extends BaseTestCase
         refreshDatabase as protected baseRefreshDatabase;
     }
 
+    private ?Closure $userCreatingCallback = null;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        // FORCE ROW LEVEL SECURITY is enabled on users with a WITH CHECK policy
+        // requiring id = current_setting('app.current_user_id').  Test factories
+        // insert users without an active HTTP request, so the middleware never
+        // sets this variable — causing every factory->create() to fail.
+        //
+        // We register a creating listener that sets the session variable to the
+        // new user's UUID before the INSERT runs.  The listener is cleaned up in
+        // tearDown() to avoid listener accumulation across tests.
+        $this->userCreatingCallback = function ($user) {
+            if (DB::getDriverName() === 'pgsql' && $user->id) {
+                DB::select("SELECT set_config('app.current_user_id', ?, true)", [(string) $user->id]);
+            }
+        };
+        User::creating($this->userCreatingCallback);
 
         // Clear file cache between tests to prevent rate-limit state and
         // idempotency keys from leaking between test runs.
@@ -30,6 +50,16 @@ abstract class TestCase extends BaseTestCase
 
     protected function tearDown(): void
     {
+        if ($this->userCreatingCallback) {
+            // Flush registered model event listeners to avoid accumulating
+            // anonymous creating callbacks across tests in the same process.
+            User::flushEventListeners();
+            // HasUuids is registered via static::creating during boot(),
+            // which already ran.  Flushing listeners doesn't remove the
+            // trait's observer — on the NEXT test setUp(), HasUuids will
+            // fire before our new listener because boot() ran at class load.
+        }
+
         parent::tearDown();
     }
 

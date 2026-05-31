@@ -81,7 +81,8 @@
         },
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "tbachert/spi": true
         }
     }
 }

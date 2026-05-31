@@ -3,25 +3,31 @@
 namespace App\Core\Http\Controllers\Auth;
 
 use App\Core\Http\Controllers\Controller;
-use App\Core\Models\OauthAccount;
+use App\Core\Models\OAuthAccount;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class OAuthController extends Controller
 {
-    private const PROVIDERS = ['google', 'github'];
+    private const PROVIDERS = ['google', 'github', 'microsoft'];
 
     public function redirect(Request $request, string $provider): RedirectResponse
     {
         $this->validateProvider($provider);
 
-        return Socialite::driver($provider)->stateless()->redirect();
+        $driver = Socialite::driver($provider);
+        if (method_exists($driver, 'stateless')) {
+            $driver = $driver->stateless();
+        }
+
+        return $driver->redirect();
     }
 
     public function callback(Request $request, string $provider): RedirectResponse
@@ -35,20 +41,25 @@ class OAuthController extends Controller
         }
 
         try {
-            $social = Socialite::driver($provider)->stateless()->user();
+            $driver = Socialite::driver($provider);
+            if (method_exists($driver, 'stateless')) {
+                $driver = $driver->stateless();
+            }
+
+            $social = $driver->user();
         } catch (\Throwable $e) {
             return redirect($this->frontendUrl('/login?error=oauth_failed'));
         }
 
         [$user, $isNew] = DB::transaction(function () use ($social, $provider) {
-            $oauth = OauthAccount::where('provider', $provider)
+            $oauth = OAuthAccount::where('provider', $provider)
                 ->where('provider_id', $social->getId())
                 ->first();
 
             if ($oauth) {
                 $oauth->update([
-                    'access_token' => encrypt($social->token),
-                    'refresh_token' => $social->refreshToken ? encrypt($social->refreshToken) : null,
+                    'access_token' => Crypt::encryptString($social->token),
+                    'refresh_token' => $social->refreshToken ? Crypt::encryptString($social->refreshToken) : null,
                     'expires_at' => $social->expiresIn ? now()->addSeconds($social->expiresIn) : null,
                 ]);
 
@@ -64,12 +75,12 @@ class OAuthController extends Controller
                 ]
             );
 
-            OauthAccount::create([
+            OAuthAccount::create([
                 'user_id' => $user->id,
                 'provider' => $provider,
                 'provider_id' => $social->getId(),
-                'access_token' => encrypt($social->token),
-                'refresh_token' => $social->refreshToken ? encrypt($social->refreshToken) : null,
+                'access_token' => Crypt::encryptString($social->token),
+                'refresh_token' => $social->refreshToken ? Crypt::encryptString($social->refreshToken) : null,
                 'expires_at' => $social->expiresIn ? now()->addSeconds($social->expiresIn) : null,
             ]);
 

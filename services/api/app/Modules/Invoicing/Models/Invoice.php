@@ -22,7 +22,7 @@ class Invoice extends Model
         'workspace_id', 'invoice_number', 'status', 'currency',
         'subtotal', 'tax_total', 'total',
         'customer_id', 'customer_name', 'customer_email', 'billing_address',
-        'issue_date', 'due_date', 'paid_at', 'notes', 'created_by',
+        'issue_date', 'due_date', 'paid_at', 'posted_at', 'reversed_at', 'reversal_reason', 'notes', 'created_by',
     ];
 
     public function casts(): array
@@ -34,6 +34,8 @@ class Invoice extends Model
             'issue_date' => 'date',
             'due_date' => 'date',
             'paid_at' => 'datetime',
+            'posted_at' => 'datetime',
+            'reversed_at' => 'datetime',
         ];
     }
 

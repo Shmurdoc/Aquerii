@@ -2,8 +2,12 @@
 
 namespace App\Core\Http\Controllers;
 
-abstract class Controller
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Routing\Controller as BaseController;
+
+abstract class Controller extends BaseController
 {
+    use AuthorizesRequests;
     /**
      * Escape LIKE wildcard characters to prevent injection.
      * User-supplied search strings should be passed through this

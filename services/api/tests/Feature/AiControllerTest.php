@@ -3,6 +3,7 @@
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
+use App\Core\Models\FeatureFlag;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
@@ -12,7 +13,7 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->workspace = Workspace::factory()->create([
         'owner_id' => $this->user->id,
-        'plan' => 'free',
+        'plan' => 'starter',
     ]);
     WorkspaceMember::factory()->create([
         'workspace_id' => $this->workspace->id,
@@ -20,6 +21,7 @@ beforeEach(function () {
         'role' => 'owner',
     ]);
     Sanctum::actingAs($this->user);
+    FeatureFlag::updateOrCreate(['key' => 'module.ai'], ['enabled' => true]);
     Redis::del("ai_credits:{$this->workspace->id}");
 });
 

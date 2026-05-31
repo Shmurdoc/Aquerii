@@ -21,7 +21,6 @@ return new class extends Migration
             $table->jsonb('merged_data')->nullable(); // if resolution is 'merged'
             $table->text('resolution_notes')->nullable();
             $table->timestampTz('resolved_at')->nullable();
-            $table->timestampTz('created_at');
             $table->timestampsTz();
 
             $table->foreign('workspace_id')->references('id')->on('workspaces')->cascadeOnDelete();

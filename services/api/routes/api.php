@@ -179,6 +179,43 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::patch('notifications/{id}/read', [NotificationController::class, 'markRead']);
         Route::post('notifications/read-all', [NotificationController::class, 'markAllRead']);
 
+        // Reports
+        Route::get('reports/dashboard', [\App\Core\Http\Controllers\Api\ReportController::class, 'dashboard']);
+        Route::get('reports/invoices', [\App\Core\Http\Controllers\Api\ReportController::class, 'invoices']);
+        Route::get('reports/expenses', [\App\Core\Http\Controllers\Api\ReportController::class, 'expenses']);
+        Route::get('reports/procurement', [\App\Core\Http\Controllers\Api\ReportController::class, 'procurement']);
+        Route::get('reports/inventory', [\App\Core\Http\Controllers\Api\ReportController::class, 'inventory']);
+        Route::get('reports/export/{type}', [\App\Core\Http\Controllers\Api\ReportController::class, 'export']);
+
+        // Scheduled report delivery (workspace admin)
+        Route::get('reports/schedules', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'index'])->middleware('workspace.role:owner,admin');
+        Route::post('reports/schedules', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'store'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::patch('reports/schedules/{schedule}', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'update'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::delete('reports/schedules/{schedule}', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'destroy'])->middleware('workspace.role:owner,admin');
+        Route::post('reports/schedules/{schedule}/run-now', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'runNow'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::get('reports/schedules/exceptions', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'exceptions'])->middleware('workspace.role:owner,admin');
+
+        // Integration reliability control plane (workspace admin)
+        Route::get('integrations/webhook-events', [\App\Core\Http\Controllers\Api\IntegrationReliabilityController::class, 'index'])->middleware('workspace.role:owner,admin');
+        Route::post('integrations/webhook-events/{event}/retry', [\App\Core\Http\Controllers\Api\IntegrationReliabilityController::class, 'retry'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::post('integrations/webhook-events/{event}/replay-now', [\App\Core\Http\Controllers\Api\IntegrationReliabilityController::class, 'replayNow'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+
+        // Audit logs (workspace admin)
+        Route::get('audit-logs', [\App\Core\Http\Controllers\Api\AuditLogController::class, 'index'])->middleware('workspace.role:owner,admin');
+
+        // Field-level permissions (workspace admin)
+        Route::get('field-permissions', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'index'])->middleware('workspace.role:owner,admin');
+        Route::post('field-permissions', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'store'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::delete('field-permissions/{permission}', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'destroy'])->middleware('workspace.role:owner,admin');
+        Route::post('field-permissions/bulk', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'bulkUpdate'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+
+        // SCIM token management (workspace admin)
+        Route::get('scim/tokens', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokens'])->middleware('workspace.role:owner,admin');
+        Route::post('scim/tokens', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokenCreate'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::delete('scim/tokens/{token}', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokenRevoke'])->middleware('workspace.role:owner,admin');
+        // Legacy bootstrap path kept for compatibility with existing clients.
+        Route::post('scim/users', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimUsersProvision'])->middleware('idempotent');
+
         // CRM (basic: free tier; pipelines: gated)
         Route::get('crm/pipelines', [PipelineController::class, 'index']);
         Route::post('crm/pipelines', [PipelineController::class, 'store'])->middleware('idempotent');
@@ -336,17 +373,6 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::post('plugins/{plugin}/toggle', [\App\Core\Http\Controllers\Api\PluginController::class, 'toggle'])->middleware('idempotent');
             Route::patch('plugins/{plugin}/settings', [\App\Core\Http\Controllers\Api\PluginController::class, 'updateSettings'])->middleware('idempotent');
 
-            // Field-level permissions
-            Route::get('field-permissions', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'index']);
-            Route::post('field-permissions', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'store'])->middleware('idempotent');
-            Route::delete('field-permissions/{permission}', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'destroy']);
-            Route::post('field-permissions/bulk', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'bulkUpdate'])->middleware('idempotent');
-
-            // SCIM 2.0 provisioning
-            Route::get('scim/tokens', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokens']);
-            Route::post('scim/tokens', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokenCreate'])->middleware('idempotent');
-            Route::delete('scim/tokens/{token}', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokenRevoke']);
-            Route::post('scim/users', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimUsersProvision'])->middleware('idempotent');
             Route::post('anomaly-detection', [AIController::class, 'anomalyDetection']);
         });
 
@@ -357,6 +383,13 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::post('invoices/{invoice}/payments', [InvoiceWorkflowController::class, 'recordPayment'])->middleware('idempotent');
             Route::patch('invoices/{invoice}/status', [InvoiceWorkflowController::class, 'updateStatus'])->middleware('idempotent');
             Route::post('sales/orders/{so}/convert-to-invoice', [InvoiceWorkflowController::class, 'convertToInvoice'])->middleware('idempotent');
+
+            // Financial approval controls (invoices)
+            Route::get('finance/invoice-approvals', [\App\Core\Http\Controllers\Api\FinancialApprovalController::class, 'index'])->middleware('workspace.role:owner,admin');
+            Route::post('finance/invoices/{invoice}/submit-approval', [\App\Core\Http\Controllers\Api\FinancialApprovalController::class, 'submitInvoice'])->middleware('idempotent');
+            Route::post('finance/invoice-approvals/{approval}/approve', [\App\Core\Http\Controllers\Api\FinancialApprovalController::class, 'approveInvoice'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+            Route::post('finance/invoice-approvals/{approval}/reject', [\App\Core\Http\Controllers\Api\FinancialApprovalController::class, 'rejectInvoice'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+            Route::post('finance/invoices/{invoice}/reverse', [\App\Core\Http\Controllers\Api\FinancialApprovalController::class, 'reversePostedInvoice'])->middleware(['idempotent', 'workspace.role:owner,admin']);
 
             Route::prefix('documents')->group(function () {
                 Route::get('quotes/{id}/pdf', [DocumentPdfController::class, 'quote']);
@@ -405,3 +438,27 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 // ── Inbound email webhook (no auth — verified by webhook signature) ──────────
 Route::post('email/inbound', [\App\Modules\Email\Http\Controllers\InboundEmailController::class, 'handleInbound'])
     ->middleware('throttle:30,1');
+
+// ── SCIM 2.0 endpoints (token-authenticated, spec-style paths) ─────────────
+Route::prefix('scim/v2')
+    ->middleware(['scim.token', 'throttle:120,1'])
+    ->group(function () {
+        Route::get('ServiceProviderConfig', [\App\Core\Http\Controllers\Api\ScimController::class, 'serviceProviderConfig']);
+        Route::get('Schemas', [\App\Core\Http\Controllers\Api\ScimController::class, 'schemas']);
+        Route::get('Schemas/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'schemaById']);
+        Route::get('ResourceTypes', [\App\Core\Http\Controllers\Api\ScimController::class, 'resourceTypes']);
+
+        Route::get('Users', [\App\Core\Http\Controllers\Api\ScimController::class, 'listUsers']);
+        Route::post('Users', [\App\Core\Http\Controllers\Api\ScimController::class, 'createUser'])->middleware('idempotent');
+        Route::get('Users/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'showUser']);
+        Route::put('Users/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'replaceUser'])->middleware('idempotent');
+        Route::patch('Users/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'patchUser'])->middleware('idempotent');
+        Route::delete('Users/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'deleteUser']);
+
+        Route::get('Groups', [\App\Core\Http\Controllers\Api\ScimController::class, 'listGroups']);
+        Route::post('Groups', [\App\Core\Http\Controllers\Api\ScimController::class, 'createGroup'])->middleware('idempotent');
+        Route::get('Groups/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'showGroup']);
+        Route::put('Groups/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'replaceGroup'])->middleware('idempotent');
+        Route::patch('Groups/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'patchGroup'])->middleware('idempotent');
+        Route::delete('Groups/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'deleteGroup']);
+    });

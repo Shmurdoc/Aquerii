@@ -58,7 +58,7 @@ return new class extends Migration
             $table->string('country', 100)->nullable();
             $table->uuid('owner_id')->nullable();
             $table->jsonb('custom_fields')->default('{}');
-            $table->uuid('created_by');
+            $table->uuid('created_by')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
         });
@@ -67,7 +67,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('workspace_id');
             $table->uuid('company_id')->nullable();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone', 50)->nullable();
             $table->text('avatar_url')->nullable();
@@ -76,7 +76,7 @@ return new class extends Migration
             $table->string('country', 100)->nullable();
             $table->uuid('owner_id')->nullable();
             $table->jsonb('custom_fields')->default('{}');
-            $table->uuid('created_by');
+            $table->uuid('created_by')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
             $table->foreign('company_id')->references('id')->on('crm_companies')->nullOnDelete();
@@ -97,9 +97,10 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('color', 20)->nullable();
             $table->float('position')->default(0);
-            $table->decimal('probability', 5, 2)->default(0);
+            $table->decimal('win_probability', 5, 2)->default(0);
             $table->boolean('is_won')->default(false);
             $table->boolean('is_lost')->default(false);
+            $table->timestampsTz();
             $table->foreign('pipeline_id')->references('id')->on('crm_pipelines')->cascadeOnDelete();
         });
 
@@ -120,7 +121,8 @@ return new class extends Migration
             $table->decimal('probability', 5, 2)->nullable();
             $table->text('lost_reason')->nullable();
             $table->jsonb('custom_fields')->default('{}');
-            $table->uuid('created_by');
+            $table->float('position')->default(0);
+            $table->uuid('created_by')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
             $table->foreign('pipeline_id')->references('id')->on('crm_pipelines');

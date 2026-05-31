@@ -8,8 +8,10 @@ use App\Core\Models\Item;
 use App\Core\Models\Scenario;
 use App\Core\Models\ScenarioAdjustment;
 use App\Core\Models\WorkspaceMember;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class ScenarioController extends Controller
 {
@@ -91,7 +93,7 @@ class ScenarioController extends Controller
             'adjustment_type' => $data['adjustment_type'],
             'parameters' => $data['parameters'],
             'description' => $data['description'] ?? null,
-            'position' => $scenarioModel->adjustments()->max('position') + 1,
+            'position' => ((int) $scenarioModel->adjustments()->max('position')) + 1,
         ]);
 
         // Re-run simulation after adding adjustment
@@ -135,14 +137,14 @@ class ScenarioController extends Controller
             ->with('adjustments')
             ->get();
 
-        // Run simulation on each scenario
+        abort_if($scenarios->count() !== count($data['scenario_ids']), 404, 'One or more scenarios were not found in this workspace.');
+
+        // Ensure simulation results are present and up to date for each scenario.
         foreach ($scenarios as $scenario) {
-            if (empty($scenario->simulation_results)) {
-                $this->runSimulation($scenario);
-            }
+            $this->runSimulation($scenario);
         }
 
-        return response()->json(['data' => $scenarios]);
+        return response()->json(['data' => $scenarios->map->fresh()]);
     }
 
     private function captureProjectState(string $workspace): array
@@ -186,11 +188,40 @@ class ScenarioController extends Controller
     private function runSimulation(Scenario $scenario): void
     {
         $snapshot = $scenario->snapshot_data;
-        $adjustments = $scenario->adjustments;
+        $adjustments = $scenario->adjustments()->orderBy('position')->get();
+
+        $inputHash = hash('sha256', json_encode([
+            'snapshot' => $snapshot,
+            'adjustments' => $adjustments->map(fn (ScenarioAdjustment $adj) => [
+                'id' => $adj->id,
+                'type' => $adj->adjustment_type,
+                'parameters' => $adj->parameters,
+                'position' => $adj->position,
+            ])->values()->all(),
+        ]));
+
+        $existingHash = data_get($scenario->simulation_results, 'meta.input_hash');
+        if (! empty($scenario->simulation_results) && $existingHash === $inputHash) {
+            return;
+        }
 
         // Start with baseline snapshot
-        $tasks = collect($snapshot['tasks'] ?? []);
-        $teamCapacity = collect($snapshot['team_capacity'] ?? []);
+        $tasks = collect($snapshot['tasks'] ?? [])
+            ->map(function ($task) {
+                $task['estimated_hours'] = (float) ($task['estimated_hours'] ?? 0);
+                $task['tracked_hours'] = (float) ($task['tracked_hours'] ?? 0);
+
+                return $task;
+            });
+        $teamCapacity = collect($snapshot['team_capacity'] ?? [])
+            ->map(function ($member) {
+                $member['weekly_capacity_hours'] = (float) ($member['weekly_capacity_hours'] ?? 0);
+
+                return $member;
+            });
+
+        // Guardrail for overly large sync simulation payloads.
+        abort_if($tasks->count() > 5000, 422, 'Scenario has too many tasks for synchronous simulation.');
 
         // Apply adjustments
         foreach ($adjustments as $adj) {
@@ -200,7 +231,22 @@ class ScenarioController extends Controller
         // Calculate projected outcomes
         $totalEstimatedHours = $tasks->sum('estimated_hours');
         $totalCapacityHours = $teamCapacity->sum('weekly_capacity_hours');
-        $overdueTasks = $tasks->filter(fn ($t) => $t['status'] !== 'done' && $t['due_date'] && \Carbon\Carbon::parse($t['due_date'])->isPast())->count();
+        $overdueTasks = $tasks->filter(function ($t) {
+            if (($t['status'] ?? null) === 'done') {
+                return false;
+            }
+
+            $dueDate = $t['due_date'] ?? null;
+            if (! $dueDate) {
+                return false;
+            }
+
+            try {
+                return Carbon::parse($dueDate)->isPast();
+            } catch (\Throwable) {
+                return false;
+            }
+        })->count();
         $pendingTasks = $tasks->filter(fn ($t) => $t['status'] !== 'done')->count();
 
         // Project timeline
@@ -225,12 +271,18 @@ class ScenarioController extends Controller
             'projected_completion' => $projectedCompletion->toISOString(),
             'risk_score' => min(100, round(($overdueTasks / max(1, $tasks->count())) * 100 + ($avgLoadPerPerson > 40 ? 20 : 0))),
             'simulated_at' => now()->toISOString(),
+            'meta' => [
+                'engine_version' => 2,
+                'input_hash' => $inputHash,
+                'task_count' => $tasks->count(),
+                'adjustment_count' => $adjustments->count(),
+            ],
         ];
 
         $scenario->update(['simulation_results' => $results]);
     }
 
-    private function applyAdjustment(ScenarioAdjustment $adj, &$tasks, &$teamCapacity): void
+    private function applyAdjustment(ScenarioAdjustment $adj, Collection &$tasks, Collection &$teamCapacity): void
     {
         $params = $adj->parameters;
 
@@ -241,9 +293,11 @@ class ScenarioController extends Controller
                     $taskIndex = $tasks->search(fn ($t) => $t['id'] === $params['task_id']);
                     if ($taskIndex !== false) {
                         $task = $tasks[$taskIndex];
-                        $task['due_date'] = \Carbon\Carbon::parse($task['due_date'])
-                            ->addDays($params['days'] ?? 3)
-                            ->toDateString();
+                        if (! empty($task['due_date'])) {
+                            $task['due_date'] = Carbon::parse($task['due_date'])
+                                ->addDays((int) ($params['days'] ?? 3))
+                                ->toDateString();
+                        }
                         $tasks[$taskIndex] = $task;
                     }
                 }
@@ -267,9 +321,9 @@ class ScenarioController extends Controller
             case 'change_scope':
                 // Add or remove hours from total estimate
                 $changeHours = $params['hours_change'] ?? 0;
-                $tasks = $tasks->map(function ($t) use ($changeHours) {
+                $tasks = $tasks->map(function ($t) use ($changeHours, $params) {
                     if (!empty($params['task_id']) && $t['id'] === $params['task_id']) {
-                        $t['estimated_hours'] = max(0, ($t['estimated_hours'] ?? 0) + $changeHours);
+                        $t['estimated_hours'] = max(0, (float) ($t['estimated_hours'] ?? 0) + (float) $changeHours);
                     }
                     return $t;
                 });
@@ -287,8 +341,8 @@ class ScenarioController extends Controller
                 } elseif (!empty($params['days_change'])) {
                     $tasks = $tasks->map(function ($t) use ($params) {
                         if ($t['due_date']) {
-                            $t['due_date'] = \Carbon\Carbon::parse($t['due_date'])
-                                ->addDays($params['days_change'])
+                            $t['due_date'] = Carbon::parse($t['due_date'])
+                                ->addDays((int) $params['days_change'])
                                 ->toDateString();
                         }
                         return $t;

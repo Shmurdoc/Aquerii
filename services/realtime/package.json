@@ -2,7 +2,9 @@
   "name": "@aquerii/realtime",
   "version": "1.0.0",
   "private": true,
-  "engines": { "node": ">=20.0.0" },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
@@ -11,31 +13,33 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "socket.io": "^4.7.5",
-    "ioredis": "^5.3.2",
+    "@opentelemetry/auto-instrumentations-node": "^0.75.0",
+    "@opentelemetry/exporter-metrics-otlp-http": "^0.217.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.217.0",
+    "@opentelemetry/sdk-node": "^0.217.0",
     "@socket.io/redis-adapter": "^8.3.0",
+    "axios": "^1.7.2",
+    "engine.io": "6.6.4",
+    "http-terminator": "^3.2.0",
+    "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.1.0",
-    "yjs": "^13.6.18",
-    "y-protocols": "^1.0.6",
     "pino": "^9.2.0",
     "pino-http": "^10.2.0",
-    "@opentelemetry/sdk-node": "^0.217.0",
-    "@opentelemetry/auto-instrumentations-node": "^0.75.0",
-    "@opentelemetry/exporter-trace-otlp-http": "^0.217.0",
-    "@opentelemetry/exporter-metrics-otlp-http": "^0.217.0",
     "prom-client": "^15.1.3",
-    "http-terminator": "^3.2.0",
-    "axios": "^1.7.2",
+    "socket.io": "^4.8.3",
+    "y-protocols": "^1.0.6",
+    "yjs": "^13.6.18",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "typescript": "^5.5.3",
-    "tsx": "^4.16.2",
-    "vitest": "^1.6.0",
-    "@types/node": "^20.14.10",
     "@types/jsonwebtoken": "^9.0.6",
-    "eslint": "^9.6.0"
+    "@types/node": "^20.14.10",
+    "@types/socket.io": "^3.0.0",
+    "eslint": "^9.6.0",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.3",
+    "vitest": "^1.6.0"
   },
   "overrides": {
     "protobufjs": "^7.4.0",

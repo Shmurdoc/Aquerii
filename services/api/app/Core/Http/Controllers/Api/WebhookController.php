@@ -28,6 +28,8 @@ class WebhookController extends Controller
     {
         $payload = $request->getContent();
         $sig = $request->header('Stripe-Signature');
+        $headers = $request->headers->all();
+        $eventLogId = null;
 
         try {
             $event = StripeWebhook::constructEvent(
@@ -35,20 +37,52 @@ class WebhookController extends Controller
                 $sig,
                 config('services.stripe.webhook_secret')
             );
+
+            $workspaceId = $event->data->object->metadata->workspace_id ?? null;
+            $eventLogId = $this->createIntegrationEvent(
+                processor: 'stripe',
+                eventType: (string) $event->type,
+                payload: json_decode($payload, true) ?? ['raw' => $payload],
+                headers: $headers,
+                processorEventId: (string) ($event->id ?? ''),
+                workspaceId: $workspaceId
+            );
         } catch (SignatureVerificationException $e) {
             Log::warning('Stripe webhook signature mismatch', ['error' => $e->getMessage()]);
+
+            $this->createIntegrationEvent(
+                processor: 'stripe',
+                eventType: 'signature_verification_failed',
+                payload: json_decode($payload, true) ?? ['raw' => $payload],
+                headers: $headers,
+                processorEventId: null,
+                workspaceId: null,
+                status: 'rejected',
+                error: $e->getMessage()
+            );
 
             return response('Invalid signature', 400);
         }
 
-        match ($event->type) {
-            'customer.subscription.created',
-            'customer.subscription.updated' => $this->handleSubscriptionUpsert($event->data->object),
-            'customer.subscription.deleted' => $this->handleSubscriptionDeleted($event->data->object),
-            'invoice.payment_succeeded' => $this->handleInvoicePaid($event->data->object),
-            'invoice.payment_failed' => $this->handleInvoiceFailed($event->data->object),
-            default => null,
-        };
+        try {
+            match ($event->type) {
+                'customer.subscription.created',
+                'customer.subscription.updated' => $this->handleSubscriptionUpsert($event->data->object),
+                'customer.subscription.deleted' => $this->handleSubscriptionDeleted($event->data->object),
+                'invoice.payment_succeeded' => $this->handleInvoicePaid($event->data->object),
+                'invoice.payment_failed' => $this->handleInvoiceFailed($event->data->object),
+                default => null,
+            };
+
+            if ($eventLogId) {
+                $this->markIntegrationEventProcessed($eventLogId);
+            }
+        } catch (\Throwable $e) {
+            if ($eventLogId) {
+                $this->markIntegrationEventFailed($eventLogId, $e->getMessage());
+            }
+            throw $e;
+        }
 
         return response('OK', 200);
     }
@@ -56,24 +90,50 @@ class WebhookController extends Controller
     // POST /webhooks/payfast
     public function payfast(Request $request): Response
     {
+        $payload = $request->all();
+        $headers = $request->headers->all();
+        $workspaceId = $request->input('custom_str1');
+
         // Verify PayFast ITN
         if (! $this->verifyPayfast($request)) {
             Log::warning('PayFast ITN verification failed', $request->all());
 
+            $this->createIntegrationEvent(
+                processor: 'payfast',
+                eventType: 'verification_failed',
+                payload: $payload,
+                headers: $headers,
+                processorEventId: (string) ($request->input('pf_payment_id') ?? ''),
+                workspaceId: $workspaceId,
+                status: 'rejected',
+                error: 'PayFast ITN verification failed'
+            );
+
             return response('Invalid', 400);
         }
 
-        $workspaceId = $request->input('custom_str1');
         $plan = $request->input('custom_str2');
         $status = $request->input('payment_status');
         $pfSubToken = $request->input('token'); // recurring token
+        $eventLogId = $this->createIntegrationEvent(
+            processor: 'payfast',
+            eventType: 'payment_notification',
+            payload: $payload,
+            headers: $headers,
+            processorEventId: (string) ($request->input('pf_payment_id') ?? ''),
+            workspaceId: $workspaceId
+        );
 
         if ($status !== 'COMPLETE') {
+            $this->markIntegrationEventProcessed($eventLogId);
+
             return response('OK', 200);
         }
 
         $workspace = Workspace::find($workspaceId);
         if (! $workspace) {
+            $this->markIntegrationEventFailed($eventLogId, 'Workspace not found');
+
             return response('Not found', 404);
         }
 
@@ -84,16 +144,16 @@ class WebhookController extends Controller
                 'plan_expires_at' => now()->addMonth(),
             ]);
 
-            DB::table('billing_events')->insert([
-                'id' => Str::uuid(),
-                'workspace_id' => $workspace->id,
-                'processor' => 'payfast',
-                'processor_event_id' => null, // PayFast ITN has no unique event ID
-                'event_type' => 'payment_succeeded',
-                'payload' => json_encode($request->all()),
-                'processed_at' => now(),
-            ]);
+            $this->upsertBillingEvent(
+                workspaceId: (string) $workspace->id,
+                processor: 'payfast',
+                processorEventId: (string) ($request->input('pf_payment_id') ?? Str::uuid()),
+                eventType: 'payment_succeeded',
+                payload: $request->all(),
+            );
         });
+
+        $this->markIntegrationEventProcessed($eventLogId);
 
         return response('OK', 200);
     }
@@ -116,15 +176,13 @@ class WebhookController extends Controller
                 'plan_expires_at' => Carbon::createFromTimestamp($sub->current_period_end),
             ]);
 
-            DB::table('billing_events')->insert([
-                'id' => Str::uuid(),
-                'workspace_id' => $workspaceId,
-                'processor' => 'stripe',
-                'processor_event_id' => $sub->id,
-                'event_type' => 'subscription_upsert',
-                'payload' => json_encode(method_exists($sub, 'toArray') ? $sub->toArray() : $sub),
-                'processed_at' => now(),
-            ]);
+            $this->upsertBillingEvent(
+                workspaceId: (string) $workspaceId,
+                processor: 'stripe',
+                processorEventId: (string) $sub->id,
+                eventType: 'subscription_upsert',
+                payload: $sub instanceof \Stripe\StripeObject ? $sub->toArray() : (array) $sub,
+            );
         });
     }
 
@@ -150,15 +208,13 @@ class WebhookController extends Controller
             return;
         }
 
-        DB::table('billing_events')->insert([
-            'id' => Str::uuid(),
-            'workspace_id' => $workspace->id,
-            'processor' => 'stripe',
-            'processor_event_id' => $invoice->id,
-            'event_type' => 'invoice_paid',
-            'payload' => json_encode(['invoice_id' => $invoice->id, 'amount' => $invoice->amount_paid]),
-            'processed_at' => now(),
-        ]);
+        $this->upsertBillingEvent(
+            workspaceId: (string) $workspace->id,
+            processor: 'stripe',
+            processorEventId: (string) $invoice->id,
+            eventType: 'invoice_paid',
+            payload: ['invoice_id' => $invoice->id, 'amount' => $invoice->amount_paid],
+        );
     }
 
     private function handleInvoiceFailed(object $invoice): void
@@ -174,15 +230,13 @@ class WebhookController extends Controller
             'plan_expires_at' => Carbon::createFromTimestamp($invoice->period_end ?? $invoice->created),
         ]);
 
-        DB::table('billing_events')->insert([
-            'id' => Str::uuid(),
-            'workspace_id' => $workspace->id,
-            'processor' => 'stripe',
-            'processor_event_id' => $invoice->id,
-            'event_type' => 'invoice_payment_failed',
-            'payload' => json_encode(['invoice_id' => $invoice->id, 'amount' => $invoice->amount_due]),
-            'processed_at' => now(),
-        ]);
+        $this->upsertBillingEvent(
+            workspaceId: (string) $workspace->id,
+            processor: 'stripe',
+            processorEventId: (string) $invoice->id,
+            eventType: 'invoice_payment_failed',
+            payload: ['invoice_id' => $invoice->id, 'amount' => $invoice->amount_due],
+        );
 
         Log::warning('Stripe invoice payment failed', [
             'workspace_id' => $workspace->id,
@@ -232,5 +286,80 @@ class WebhookController extends Controller
             config('services.stripe.prices.business') => 'business',
             default => 'starter',
         };
+    }
+
+    private function createIntegrationEvent(
+        string $processor,
+        string $eventType,
+        array $payload,
+        array $headers,
+        ?string $processorEventId,
+        ?string $workspaceId,
+        string $status = 'received',
+        ?string $error = null
+    ): string {
+        $id = (string) Str::uuid();
+
+        DB::table('integration_webhook_events')->insert([
+            'id' => $id,
+            'workspace_id' => $workspaceId,
+            'processor' => $processor,
+            'processor_event_id' => $processorEventId,
+            'event_type' => $eventType,
+            'payload' => json_encode($payload),
+            'headers' => json_encode($headers),
+            'status' => $status,
+            'retry_count' => 0,
+            'next_retry_at' => null,
+            'processed_at' => $status === 'processed' ? now() : null,
+            'last_error' => $error,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return $id;
+    }
+
+    private function markIntegrationEventProcessed(string $eventId): void
+    {
+        DB::table('integration_webhook_events')
+            ->where('id', $eventId)
+            ->update([
+                'status' => 'processed',
+                'processed_at' => now(),
+                'last_error' => null,
+                'updated_at' => now(),
+            ]);
+    }
+
+    private function markIntegrationEventFailed(string $eventId, string $error): void
+    {
+        DB::table('integration_webhook_events')
+            ->where('id', $eventId)
+            ->update([
+                'status' => 'failed',
+                'next_retry_at' => now()->addMinutes(5),
+                'last_error' => mb_substr($error, 0, 4000),
+                'updated_at' => now(),
+            ]);
+    }
+
+    private function upsertBillingEvent(
+        string $workspaceId,
+        string $processor,
+        string $processorEventId,
+        string $eventType,
+        array $payload
+    ): void {
+        DB::table('billing_events')->updateOrInsert(
+            ['processor' => $processor, 'processor_event_id' => $processorEventId],
+            [
+                'id' => (string) Str::uuid(),
+                'workspace_id' => $workspaceId,
+                'event_type' => $eventType,
+                'payload' => json_encode($payload),
+                'processed_at' => now(),
+            ]
+        );
     }
 }

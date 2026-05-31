@@ -313,7 +313,7 @@ function LeaveTab({ wid }: { wid: string }) {
 
   const approveLeave = useMutation({
     mutationFn: ({ id, action }: { id: string; action: string }) =>
-      api.patch(`/workspaces/${wid}/hr/leave/${id}`, { action }),
+      api.patch(`/workspaces/${wid}/hr/leave/${id}/action`, { action }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['leave', wid] })
       qc.invalidateQueries({ queryKey: ['leave-balance', wid] })
@@ -644,7 +644,7 @@ function ExpensesTab({ wid }: { wid: string }) {
 
   const approveExpense = useMutation({
     mutationFn: ({ id, action }: { id: string; action: string }) =>
-      api.patch(`/workspaces/${wid}/hr/expenses/${id}`, { action }),
+      api.patch(`/workspaces/${wid}/hr/expenses/${id}/action`, { action }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['expenses', wid] })
       toast.success('Expense updated.')

@@ -24,12 +24,17 @@
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_STORE" value="file" force="true"/>
         <env name="DB_CONNECTION" value="pgsql" force="true"/>
-        <env name="DB_HOST" value="localhost"/>
+        <env name="DB_HOST" value="postgres"/>
         <env name="DB_PORT" value="5432" force="true"/>
         <env name="DB_DATABASE" value="aquerii_test" force="true"/>
+        <env name="DB_CHARSET" value="utf8" force="true"/>
         <env name="DB_USERNAME" value="aquerii_app"/>
-        <env name="DB_PASSWORD" value="secret" force="true"/>
-        <env name="REDIS_HOST" value="localhost"/>
+        <env name="DB_PASSWORD" value="${DB_PASSWORD}" force="true"/>
+        <env name="REDIS_CLIENT" value="predis" force="true"/>
+        <env name="REDIS_HOST" value="redis"/>
+        <env name="REDIS_PORT" value="6379" force="true"/>
+        <env name="DB_SUPERADMIN_USERNAME" value="aquerii_superadmin" force="true"/>
+        <env name="DB_SUPERADMIN_PASSWORD" value="secret_superadmin_password" force="true"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync" force="true"/>
         <env name="SESSION_DRIVER" value="array" force="true"/>

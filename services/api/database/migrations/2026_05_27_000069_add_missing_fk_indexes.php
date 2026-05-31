@@ -53,11 +53,11 @@ return new class extends Migration
                 continue;
             }
 
-            Schema::table($table, function (Blueprint $table) use ($columns) {
+            Schema::table($table, function (Blueprint $blueprint) use ($table, $columns) {
                 foreach ($columns as $column) {
                     $indexName = "idx_{$table}_{$column}";
                     try {
-                        $table->index($column, $indexName);
+                        $blueprint->index($column, $indexName);
                     } catch (\Exception) {
                     }
                 }
@@ -72,11 +72,11 @@ return new class extends Migration
                 continue;
             }
 
-            Schema::table($table, function (Blueprint $table) use ($columns) {
+            Schema::table($table, function (Blueprint $blueprint) use ($table, $columns) {
                 foreach ($columns as $column) {
                     $indexName = "idx_{$table}_{$column}";
                     try {
-                        $table->dropIndex($indexName);
+                        $blueprint->dropIndex($indexName);
                     } catch (\Exception) {
                     }
                 }

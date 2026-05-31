@@ -2,6 +2,7 @@
 import './instrumentation' // OTel must initialise before anything else
 
 import { createServer } from 'http'
+import type { ServerResponse } from 'http'
 import { Server } from 'socket.io'
 import { createAdapter } from '@socket.io/redis-adapter'
 import { Redis } from 'ioredis'
@@ -55,13 +56,14 @@ async function bootstrap(): Promise<void> {
 
   // ── HTTP + Socket.IO ─────────────────────────────────────────────────────
   const httpServer = createServer((req, res) => {
+    const response = res as ServerResponse
     if (req.url === '/health' || req.url === '/healthz') {
-      res.writeHead(200, { 'Content-Type': 'application/json' })
-      res.end(JSON.stringify({ status: 'ok', service: 'realtime', uptime: process.uptime() }))
+      response.writeHead(200, { 'Content-Type': 'application/json' })
+      ;(response as any).end(JSON.stringify({ status: 'ok', service: 'realtime', uptime: process.uptime() }))
       return
     }
-    res.writeHead(404)
-    res.end()
+    response.writeHead(404)
+    ;(response as any).end()
   })
 
   const io = new Server(httpServer, {

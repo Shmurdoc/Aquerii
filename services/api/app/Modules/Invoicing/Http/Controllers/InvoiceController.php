@@ -103,9 +103,10 @@ class InvoiceController extends Controller
     public function update(Request $request, Workspace $workspace, Invoice $invoice): JsonResponse
     {
         abort_if($invoice->workspace_id !== $workspace->id, 404);
+        abort_if($invoice->status === 'posted', 422, 'Posted invoices are immutable. Use reversal workflow.');
 
         $validated = $request->validate([
-            'status' => 'sometimes|string|max:20',
+            'status' => 'sometimes|string|in:draft,pending_approval,approved,posted,reversed,sent,partial,paid,overdue,cancelled',
             'invoice_number' => 'sometimes|string|max:50',
             'customer_name' => 'sometimes|string|max:255',
             'customer_email' => 'nullable|email|max:255',
@@ -122,6 +123,7 @@ class InvoiceController extends Controller
     public function destroy(Workspace $workspace, Invoice $invoice): JsonResponse
     {
         abort_if($invoice->workspace_id !== $workspace->id, 404);
+        abort_if($invoice->status === 'posted', 422, 'Posted invoices cannot be deleted. Use reversal workflow.');
         $invoice->delete();
 
         return response()->json(['data' => ['deleted' => true]]);

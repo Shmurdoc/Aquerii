@@ -22,8 +22,12 @@ class SuperAdminSeeder extends Seeder
             return;
         }
 
+        $userId = (string) Str::uuid();
+
+        DB::statement("SET app.current_user_id = '{$userId}'");
+
         DB::table('users')->insert([
-            'id' => (string) Str::uuid(),
+            'id' => $userId,
             'name' => 'Super Admin',
             'email' => $email,
             'email_verified_at' => now(),
@@ -31,6 +35,8 @@ class SuperAdminSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        DB::statement('RESET app.current_user_id');
 
         $this->command->info("Super admin created: {$email}");
     }

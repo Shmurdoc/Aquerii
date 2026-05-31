@@ -5,25 +5,54 @@ namespace App\Core\Http\Controllers\Api;
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\FieldPermission;
 use App\Core\Models\ScimToken;
+use App\Core\Services\AuditService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class FieldPermissionController extends Controller
 {
+    public function __construct(private AuditService $audit) {}
+
     public function index(Request $request, string $workspace): JsonResponse
     {
-        $permissions = FieldPermission::where('workspace_id', $workspace)
+        $query = FieldPermission::query()
+            ->where('workspace_id', $workspace);
+
+        if ($request->filled('entity_type')) {
+            $query->where('entity_type', strtolower((string) $request->query('entity_type')));
+        }
+
+        if ($request->filled('role')) {
+            $query->where('role', strtolower((string) $request->query('role')));
+        }
+
+        if ($request->filled('field_name')) {
+            $query->where('field_name', strtolower((string) $request->query('field_name')));
+        }
+
+        $permissions = $query
             ->orderBy('entity_type')
             ->orderBy('field_name')
             ->orderBy('role')
-            ->get();
+            ->paginate(min(200, max(1, (int) $request->query('per_page', 100))));
 
-        return response()->json(['data' => $permissions]);
+        return response()->json([
+            'data' => $permissions->items(),
+            'meta' => [
+                'total' => $permissions->total(),
+                'per_page' => $permissions->perPage(),
+                'current_page' => $permissions->currentPage(),
+                'last_page' => $permissions->lastPage(),
+            ],
+        ]);
     }
 
     public function store(Request $request, string $workspace): JsonResponse
     {
+        $this->requireWorkspaceAdmin($request, $workspace);
+
         $data = $request->validate([
             'entity_type' => 'required|string|max:100',
             'field_name' => 'required|string|max:100',
@@ -31,28 +60,48 @@ class FieldPermissionController extends Controller
             'permission' => 'required|string|in:read,write,hidden',
         ]);
 
+        $entityType = strtolower(trim($data['entity_type']));
+        $fieldName = strtolower(trim($data['field_name']));
+        $role = strtolower(trim($data['role']));
+        $permissionValue = strtolower(trim($data['permission']));
+
         $permission = FieldPermission::updateOrCreate(
             [
                 'workspace_id' => $workspace,
-                'entity_type' => $data['entity_type'],
-                'field_name' => $data['field_name'],
-                'role' => $data['role'],
+                'entity_type' => $entityType,
+                'field_name' => $fieldName,
+                'role' => $role,
             ],
-            ['permission' => $data['permission']]
+            ['permission' => $permissionValue]
         );
+
+        $this->safeAudit('field_permission.upsert', $workspace, $request->user()?->id, 'field_permission', (string) $permission->id, [], [
+            'entity_type' => $permission->entity_type,
+            'field_name' => $permission->field_name,
+            'role' => $permission->role,
+            'permission' => $permission->permission,
+        ]);
 
         return response()->json(['data' => $permission]);
     }
 
     public function destroy(Request $request, string $workspace, string $permission): JsonResponse
     {
-        FieldPermission::where('workspace_id', $workspace)->findOrFail($permission)->delete();
+        $this->requireWorkspaceAdmin($request, $workspace);
+
+        $model = FieldPermission::where('workspace_id', $workspace)->findOrFail($permission);
+        $before = $model->toArray();
+        $model->delete();
+
+        $this->safeAudit('field_permission.delete', $workspace, $request->user()?->id, 'field_permission', $permission, $before, []);
 
         return response()->json(['message' => 'Deleted']);
     }
 
     public function bulkUpdate(Request $request, string $workspace): JsonResponse
     {
+        $this->requireWorkspaceAdmin($request, $workspace);
+
         $data = $request->validate([
             'permissions' => 'required|array',
             'permissions.*.entity_type' => 'required|string',
@@ -61,17 +110,30 @@ class FieldPermissionController extends Controller
             'permissions.*.permission' => 'required|string|in:read,write,hidden',
         ]);
 
+        $now = now();
+        $rows = [];
+
         foreach ($data['permissions'] as $perm) {
-            FieldPermission::updateOrCreate(
-                [
-                    'workspace_id' => $workspace,
-                    'entity_type' => $perm['entity_type'],
-                    'field_name' => $perm['field_name'],
-                    'role' => $perm['role'],
-                ],
-                ['permission' => $perm['permission']]
-            );
+            $rows[] = [
+                'workspace_id' => $workspace,
+                'entity_type' => strtolower(trim($perm['entity_type'])),
+                'field_name' => strtolower(trim($perm['field_name'])),
+                'role' => strtolower(trim($perm['role'])),
+                'permission' => strtolower(trim($perm['permission'])),
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
         }
+
+        DB::table('field_permissions')->upsert(
+            $rows,
+            ['workspace_id', 'entity_type', 'field_name', 'role'],
+            ['permission', 'updated_at']
+        );
+
+        $this->safeAudit('field_permission.bulk_upsert', $workspace, $request->user()?->id, 'field_permission', null, [], [
+            'count' => count($rows),
+        ]);
 
         return response()->json(['message' => 'Permissions updated']);
     }
@@ -80,6 +142,8 @@ class FieldPermissionController extends Controller
 
     public function scimTokens(Request $request, string $workspace): JsonResponse
     {
+        $this->requireWorkspaceAdmin($request, $workspace);
+
         $tokens = ScimToken::where('workspace_id', $workspace)
             ->orderBy('created_at', 'desc')
             ->get()
@@ -97,12 +161,24 @@ class FieldPermissionController extends Controller
 
     public function scimTokenCreate(Request $request, string $workspace): JsonResponse
     {
+        $this->requireWorkspaceAdmin($request, $workspace);
+
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'scope' => 'nullable|string|in:users,groups',
+            'scope' => ['nullable', 'string', 'regex:/^(users|groups)(,(users|groups))*$/i'],
         ]);
 
         $rawToken = ScimToken::generate($workspace, $data['name'], $data['scope'] ?? 'users');
+
+        $createdToken = ScimToken::where('workspace_id', $workspace)
+            ->where('name', $data['name'])
+            ->orderByDesc('created_at')
+            ->first();
+
+        $this->safeAudit('scim.token.created', $workspace, $request->user()?->id, 'scim_token', (string) ($createdToken?->id), [], [
+            'name' => $data['name'],
+            'scope' => $data['scope'] ?? 'users',
+        ]);
 
         return response()->json([
             'token' => $rawToken,
@@ -112,15 +188,34 @@ class FieldPermissionController extends Controller
 
     public function scimTokenRevoke(Request $request, string $workspace, string $token): JsonResponse
     {
-        ScimToken::where('workspace_id', $workspace)
+        $this->requireWorkspaceAdmin($request, $workspace);
+
+        $before = ScimToken::where('workspace_id', $workspace)
+            ->where('id', $token)
+            ->first();
+
+        $updated = ScimToken::where('workspace_id', $workspace)
             ->where('id', $token)
             ->update(['is_active' => false]);
+
+        abort_unless($updated > 0, 404, 'SCIM token not found.');
+
+        $this->safeAudit('scim.token.revoked', $workspace, $request->user()?->id, 'scim_token', $token, $before?->toArray() ?? [], ['is_active' => false]);
 
         return response()->json(['message' => 'Token revoked']);
     }
 
     public function scimUsersProvision(Request $request, string $workspace): JsonResponse
     {
+        // Support bearer SCIM token auth for IdP callers, while preserving
+        // authenticated admin usage for manual testing and bootstrap flows.
+        $scimToken = $this->resolveScimToken($request, $workspace);
+        if (! $scimToken) {
+            $this->requireWorkspaceAdmin($request, $workspace);
+        } elseif (! $scimToken->hasScope('users')) {
+            abort(403, 'SCIM token scope does not allow user provisioning.');
+        }
+
         // SCIM 2.0 User provisioning endpoint
         $data = $request->validate([
             'schemas' => 'required|array',
@@ -149,6 +244,11 @@ class FieldPermissionController extends Controller
             ]);
         }
 
+        $this->safeAudit('scim.user.provisioned', $workspace, $request->user()?->id, 'user', (string) $user->id, [], [
+            'email' => $user->email,
+            'via_token' => $scimToken !== null,
+        ]);
+
         return response()->json([
             'schemas' => ['urn:ietf:params:scim:schemas:core:2.0:User'],
             'id' => $user->id,
@@ -156,5 +256,63 @@ class FieldPermissionController extends Controller
             'name' => ['givenName' => $user->name, 'familyName' => ''],
             'active' => true,
         ]);
+    }
+
+    private function resolveScimToken(Request $request, string $workspaceId): ?ScimToken
+    {
+        $auth = (string) $request->header('Authorization', '');
+        if (! str_starts_with($auth, 'Bearer ')) {
+            return null;
+        }
+
+        $rawToken = trim(substr($auth, 7));
+        if ($rawToken === '') {
+            return null;
+        }
+
+        $token = ScimToken::verify($rawToken);
+        if (! $token || $token->workspace_id !== $workspaceId) {
+            return null;
+        }
+
+        return $token;
+    }
+
+    private function requireWorkspaceAdmin(Request $request, string $workspaceId): void
+    {
+        $user = $request->user();
+        abort_unless($user, 401, 'Unauthenticated.');
+
+        $member = DB::table('workspace_members')
+            ->where('workspace_id', $workspaceId)
+            ->where('user_id', $user->id)
+            ->where('status', 'active')
+            ->first(['role']);
+
+        abort_if(! $member || ! in_array($member->role, ['owner', 'admin'], true), 403, 'Insufficient role for this action.');
+    }
+
+    private function safeAudit(
+        string $action,
+        ?string $workspaceId,
+        ?string $userId,
+        ?string $resourceType,
+        ?string $resourceId,
+        array $before,
+        array $after
+    ): void {
+        try {
+            $this->audit->log(
+                action: $action,
+                workspaceId: $workspaceId,
+                userId: $userId,
+                resourceType: $resourceType,
+                resourceId: $resourceId,
+                before: $before,
+                after: $after,
+            );
+        } catch (Throwable) {
+            // Audit logging must never break provisioning or permission ops.
+        }
     }
 }

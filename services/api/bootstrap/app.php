@@ -2,6 +2,7 @@
 
 use App\Core\Exceptions\Handler;
 use App\Core\Http\Middleware\CheckFeatureAccess;
+use App\Core\Http\Middleware\AuthenticateScimToken;
 use App\Core\Http\Middleware\EnforceIdempotency;
 use App\Core\Http\Middleware\EnsureEmailIsVerified;
 use App\Core\Http\Middleware\InternalSecret;
@@ -32,6 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => EnsureEmailIsVerified::class,
             'workspace.role' => RequireWorkspaceRole::class,
             'feature' => CheckFeatureAccess::class,
+            'scim.token' => AuthenticateScimToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

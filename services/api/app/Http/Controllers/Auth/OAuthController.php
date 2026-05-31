@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Models\OAuthAccount;
-use App\Models\User;
-use App\Models\Workspace;
-use App\Models\WorkspaceMember;
+use App\Core\Http\Controllers\Controller;
+use App\Core\Models\OAuthAccount;
+use App\Core\Models\User;
+use App\Core\Models\Workspace;
+use App\Core\Models\WorkspaceMember;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,13 +17,18 @@ use Laravel\Socialite\Facades\Socialite;
 
 class OAuthController extends Controller
 {
-    private const PROVIDERS = ['google', 'github'];
+    private const PROVIDERS = ['google', 'github', 'microsoft'];
 
     public function redirect(Request $request, string $provider): RedirectResponse
     {
         $this->validateProvider($provider);
 
-        return Socialite::driver($provider)->stateless()->redirect();
+        $driver = Socialite::driver($provider);
+        if (method_exists($driver, 'stateless')) {
+            $driver = $driver->stateless();
+        }
+
+        return $driver->redirect();
     }
 
     public function callback(Request $request, string $provider): JsonResponse
@@ -31,7 +36,12 @@ class OAuthController extends Controller
         $this->validateProvider($provider);
 
         try {
-            $social = Socialite::driver($provider)->stateless()->user();
+            $driver = Socialite::driver($provider);
+            if (method_exists($driver, 'stateless')) {
+                $driver = $driver->stateless();
+            }
+
+            $social = $driver->user();
         } catch (\Throwable $e) {
             return response()->json([
                 'error' => ['code' => 'OAUTH_FAILED', 'message' => 'OAuth authentication failed.'],

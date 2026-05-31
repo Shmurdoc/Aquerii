@@ -20,13 +20,18 @@ class CalendarSyncService
             return ['success' => false, 'error' => 'No OAuth account linked'];
         }
 
+        $accessToken = $account->decryptedAccessToken();
+        if (! $accessToken) {
+            return ['success' => false, 'error' => 'OAuth token is unavailable'];
+        }
+
         $provider = $sync->provider;
         $events = [];
 
         try {
             $events = match ($provider) {
-                'google' => $this->fetchGoogleEvents($account, $sync->calendar_id, $daysBack, $daysForward),
-                'microsoft' => $this->fetchOutlookEvents($account, $sync->calendar_id, $daysBack, $daysForward),
+                'google' => $this->fetchGoogleEvents($accessToken, $sync->calendar_id, $daysBack, $daysForward),
+                'microsoft' => $this->fetchOutlookEvents($accessToken, $sync->calendar_id, $daysBack, $daysForward),
                 default => [],
             };
 
@@ -43,12 +48,12 @@ class CalendarSyncService
         }
     }
 
-    protected function fetchGoogleEvents(OAuthAccount $account, string $calendarId, int $daysBack, int $daysForward): array
+    protected function fetchGoogleEvents(string $accessToken, string $calendarId, int $daysBack, int $daysForward): array
     {
         $timeMin = Carbon::now()->subDays($daysBack)->toIso8601String();
         $timeMax = Carbon::now()->addDays($daysForward)->toIso8601String();
 
-        $response = Http::withToken($account->access_token)
+        $response = Http::withToken($accessToken)
             ->get("https://www.googleapis.com/calendar/v3/calendars/{$calendarId}/events", [
                 'timeMin' => $timeMin,
                 'timeMax' => $timeMax,
@@ -63,12 +68,12 @@ class CalendarSyncService
         return $response->json('items', []);
     }
 
-    protected function fetchOutlookEvents(OAuthAccount $account, string $calendarId, int $daysBack, int $daysForward): array
+    protected function fetchOutlookEvents(string $accessToken, string $calendarId, int $daysBack, int $daysForward): array
     {
         $timeMin = Carbon::now()->subDays($daysBack)->format('Y-m-d\TH:i:s\Z');
         $timeMax = Carbon::now()->addDays($daysForward)->format('Y-m-d\TH:i:s\Z');
 
-        $response = Http::withToken($account->access_token)
+        $response = Http::withToken($accessToken)
             ->get("https://graph.microsoft.com/v1.0/me/calendars/{$calendarId}/events", [
                 '\$filter' => "start/dateTime ge '{$timeMin}' and end/dateTime le '{$timeMax}'",
                 '\$orderby' => 'start/dateTime',
@@ -84,10 +89,15 @@ class CalendarSyncService
 
     public function getCalendars(OAuthAccount $account, string $provider): array
     {
+        $accessToken = $account->decryptedAccessToken();
+        if (! $accessToken) {
+            return [];
+        }
+
         try {
             return match ($provider) {
-                'google' => $this->listGoogleCalendars($account),
-                'microsoft' => $this->listOutlookCalendars($account),
+                'google' => $this->listGoogleCalendars($accessToken),
+                'microsoft' => $this->listOutlookCalendars($accessToken),
                 default => [],
             };
         } catch (\Throwable $e) {
@@ -97,9 +107,9 @@ class CalendarSyncService
         }
     }
 
-    protected function listGoogleCalendars(OAuthAccount $account): array
+    protected function listGoogleCalendars(string $accessToken): array
     {
-        $response = Http::withToken($account->access_token)
+        $response = Http::withToken($accessToken)
             ->get('https://www.googleapis.com/calendar/v3/users/me/calendarList');
 
         if (! $response->successful()) {
@@ -112,9 +122,9 @@ class CalendarSyncService
         ], $response->json('items', []));
     }
 
-    protected function listOutlookCalendars(OAuthAccount $account): array
+    protected function listOutlookCalendars(string $accessToken): array
     {
-        $response = Http::withToken($account->access_token)
+        $response = Http::withToken($accessToken)
             ->get('https://graph.microsoft.com/v1.0/me/calendars');
 
         if (! $response->successful()) {

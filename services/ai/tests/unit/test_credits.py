@@ -14,6 +14,7 @@ import pytest
 import fakeredis.aioredis
 from datetime import date
 from unittest.mock import AsyncMock, MagicMock, patch
+from redis.exceptions import ResponseError
 
 
 # ---------------------------------------------------------------------------
@@ -95,12 +96,21 @@ return redis.call('INCRBY', key, cost)
 """
 
 
+async def _eval_or_skip(fake_redis, script, numkeys, *args):
+    try:
+        return await fake_redis.eval(script, numkeys, *args)
+    except ResponseError as exc:
+        if 'unknown command `eval`' in str(exc).lower():
+            pytest.skip('fakeredis in this environment does not support EVAL')
+        raise
+
+
 @pytest.mark.asyncio
 async def test_lua_allows_usage_within_limit(fake_redis):
     key = "ai_credits:ws-lua:2026-05"
     await fake_redis.set(key, 0)
 
-    result = await fake_redis.eval(_LUA_DECREMENT, 1, key, 1000, 5)
+    result = await _eval_or_skip(fake_redis, _LUA_DECREMENT, 1, key, 1000, 5)
     assert result == 5
 
 
@@ -110,7 +120,7 @@ async def test_lua_rejects_when_limit_exceeded(fake_redis):
     key = "ai_credits:ws-limit:2026-05"
     await fake_redis.set(key, 998)
 
-    result = await fake_redis.eval(_LUA_DECREMENT, 1, key, 1000, 5)
+    result = await _eval_or_skip(fake_redis, _LUA_DECREMENT, 1, key, 1000, 5)
     assert result == -1
 
 
@@ -120,7 +130,7 @@ async def test_lua_allows_exact_limit_boundary(fake_redis):
     key = "ai_credits:ws-boundary:2026-05"
     await fake_redis.set(key, 995)
 
-    result = await fake_redis.eval(_LUA_DECREMENT, 1, key, 1000, 5)
+    result = await _eval_or_skip(fake_redis, _LUA_DECREMENT, 1, key, 1000, 5)
     assert result == 1000
 
 
@@ -130,7 +140,7 @@ async def test_lua_one_over_boundary_is_rejected(fake_redis):
     key = "ai_credits:ws-over:2026-05"
     await fake_redis.set(key, 996)
 
-    result = await fake_redis.eval(_LUA_DECREMENT, 1, key, 1000, 5)
+    result = await _eval_or_skip(fake_redis, _LUA_DECREMENT, 1, key, 1000, 5)
     assert result == -1
 
 
@@ -139,7 +149,7 @@ async def test_lua_missing_key_treated_as_zero(fake_redis):
     """When key doesn't exist the Lua script must treat it as 0."""
     key = "ai_credits:ws-missing:2026-05"
     # Key intentionally not set
-    result = await fake_redis.eval(_LUA_DECREMENT, 1, key, 1000, 3)
+    result = await _eval_or_skip(fake_redis, _LUA_DECREMENT, 1, key, 1000, 3)
     assert result == 3
 
 

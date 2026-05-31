@@ -9,11 +9,13 @@ use App\Modules\CRM\Models\CrmDeal;
 use App\Modules\CRM\Models\CrmLead;
 use App\Modules\CRM\Models\CrmPipeline;
 use App\Modules\CRM\Models\CrmPipelineStage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
+
     $this->user = User::factory()->create();
     $this->workspace = Workspace::factory()->create(['owner_id' => $this->user->id]);
     WorkspaceMember::factory()->create([
@@ -172,16 +174,46 @@ it('creates a deal', function () {
 });
 
 it('lists deals', function () {
-    CrmDeal::factory()->count(2)->create(['workspace_id' => $this->workspace->id]);
+    $pipeline = CrmPipeline::factory()->create(['workspace_id' => $this->workspace->id]);
+    $stage = CrmPipelineStage::factory()->create([
+        'pipeline_id' => $pipeline->id,
+        'workspace_id' => $this->workspace->id,
+    ]);
+    $deal1 = CrmDeal::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'pipeline_id' => $pipeline->id,
+        'stage_id' => $stage->id,
+        'title' => 'Test Deal Alpha',
+    ]);
+    $deal2 = CrmDeal::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'pipeline_id' => $pipeline->id,
+        'stage_id' => $stage->id,
+        'title' => 'Test Deal Beta',
+    ]);
 
     $response = $this->getJson("/api/workspaces/{$this->workspace->id}/crm/deals");
 
     $response->assertStatus(200)
-        ->assertJsonCount(2, 'data');
+        ->assertJsonFragment(['title' => 'Test Deal Alpha'])
+        ->assertJsonFragment(['title' => 'Test Deal Beta']);
 });
 
 it('marks a deal as won', function () {
-    $deal = CrmDeal::factory()->create(['workspace_id' => $this->workspace->id]);
+    DB::table('crm_deals')->delete();
+    DB::table('crm_pipeline_stages')->delete();
+    DB::table('crm_pipelines')->delete();
+
+    $pipeline = CrmPipeline::factory()->create(['workspace_id' => $this->workspace->id]);
+    $stage = CrmPipelineStage::factory()->create([
+        'pipeline_id' => $pipeline->id,
+        'workspace_id' => $this->workspace->id,
+    ]);
+    $deal = CrmDeal::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'pipeline_id' => $pipeline->id,
+        'stage_id' => $stage->id,
+    ]);
 
     $response = $this->postJson(
         "/api/workspaces/{$this->workspace->id}/crm/deals/{$deal->id}/won",

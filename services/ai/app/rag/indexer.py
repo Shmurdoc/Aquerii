@@ -1,10 +1,15 @@
-from typing import Optional
-import chromadb
+from typing import Any, Optional
 from app.core.config import settings
 from app.core.providers import generate_embedding
 
 
-def get_chroma_client() -> chromadb.AsyncHttpClient:
+async def embed_text(text: str) -> list[float]:
+    return generate_embedding(text)
+
+
+def get_chroma_client() -> Any:
+    import chromadb
+
     headers = {"X-Chroma-Token": settings.CHROMADB_AUTH_TOKEN} if settings.CHROMADB_AUTH_TOKEN else {}
     return chromadb.AsyncHttpClient(
         host=settings.CHROMA_HOST,
@@ -17,7 +22,7 @@ def collection_name(workspace_id: str) -> str:
     return f'workspace_{workspace_id.replace("-", "_")}'
 
 
-async def get_or_create_collection(workspace_id: str) -> chromadb.Collection:
+async def get_or_create_collection(workspace_id: str) -> Any:
     client = get_chroma_client()
     name = collection_name(workspace_id)
     return await client.get_or_create_collection(
@@ -31,7 +36,7 @@ async def index_item(workspace_id: str, item_id: str, title: str, description: s
     if not text:
         return
 
-    embedding = generate_embedding(text)
+    embedding = await embed_text(text)
     collection = await get_or_create_collection(workspace_id)
     await collection.upsert(
         ids=[f'item:{item_id}'],
@@ -52,7 +57,7 @@ async def index_document(workspace_id: str, doc_id: str, title: str, content_tex
     if not text:
         return
 
-    embedding = generate_embedding(text)
+    embedding = await embed_text(text)
     collection = await get_or_create_collection(workspace_id)
     await collection.upsert(
         ids=[f'doc:{doc_id}'],
@@ -70,7 +75,7 @@ async def index_document(workspace_id: str, doc_id: str, title: str, content_tex
 
 async def search(workspace_id: str, query: str, n_results: int = 5,
                  filter_type: Optional[str] = None) -> list[dict]:
-    query_embedding = generate_embedding(query)
+    query_embedding = await embed_text(query)
     collection = await get_or_create_collection(workspace_id)
 
     where = {'type': filter_type} if filter_type else None

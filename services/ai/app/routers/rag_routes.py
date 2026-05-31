@@ -1,24 +1,32 @@
 from __future__ import annotations
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-import chromadb
+from typing import Any
 from app.core.config import settings
 from app.core.providers import generate_text, generate_embedding
 from app.security.auth import verify_internal_token
-from app.rag.indexer import hybrid_search as rag_hybrid_search, rebuild_faiss
 from app.rag.reranker import rerank_batch
 from app.rag.relevance import filter_relevant_chunks
 
 router = APIRouter(dependencies=[Depends(verify_internal_token)])
 
-_chroma: chromadb.HttpClient | None = None
+_chroma: Any | None = None
 
 
-def _get_chroma() -> chromadb.HttpClient:
+def _service_unavailable(detail: str) -> HTTPException:
+    return HTTPException(status_code=503, detail={"code": "RAG_UNAVAILABLE", "message": detail})
+
+
+def _get_chroma() -> Any:
     global _chroma
     if _chroma is None:
-        headers = {"X-Chroma-Token": settings.CHROMADB_AUTH_TOKEN} if settings.CHROMADB_AUTH_TOKEN else {}
-        _chroma = chromadb.HttpClient(host=settings.CHROMA_HOST, port=settings.CHROMA_PORT, headers=headers)
+        try:
+            import chromadb
+
+            headers = {"X-Chroma-Token": settings.CHROMADB_AUTH_TOKEN} if settings.CHROMADB_AUTH_TOKEN else {}
+            _chroma = chromadb.HttpClient(host=settings.CHROMA_HOST, port=settings.CHROMA_PORT, headers=headers)
+        except Exception as exc:
+            raise _service_unavailable(f"ChromaDB is unavailable: {exc}") from exc
     return _chroma
 
 
@@ -27,6 +35,15 @@ def _collection(workspace_id: str):
         name=f"ws_{workspace_id.replace('-', '_')}",
         metadata={"hnsw:space": "cosine"},
     )
+
+
+def _rag_indexer():
+    try:
+        from app.rag import indexer
+    except Exception as exc:
+        raise _service_unavailable(f"RAG backend is unavailable: {exc}") from exc
+
+    return indexer
 
 
 class IngestRequest(BaseModel):
@@ -84,7 +101,7 @@ async def ingest(body: IngestRequest):
 @router.post("/rebuild-index")
 async def rebuild_index_endpoint(body: RebuildIndexRequest):
     if settings.FAISS_ENABLED:
-        await rebuild_faiss(body.workspace_id)
+        await _rag_indexer().rebuild_faiss(body.workspace_id)
         return {"status": "ok", "message": "FAISS index rebuilt from ChromaDB"}
     return {"status": "skipped", "message": "FAISS not enabled"}
 
@@ -96,7 +113,7 @@ async def query(body: QueryRequest):
 
     try:
         if settings.RAG_HYBRID_SEARCH and settings.FAISS_ENABLED:
-            results = await rag_hybrid_search(
+            results = await _rag_indexer().hybrid_search(
                 body.workspace_id, body.query, top_k=body.top_k * 3
             )
         else:
