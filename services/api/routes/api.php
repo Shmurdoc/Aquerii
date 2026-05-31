@@ -519,6 +519,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // ── Template System module ─────────────────────────────────────────
         require __DIR__.'/modules/templates.php';
+
+        // ── HR module ─────────────────────────────────────────────────────
+        require __DIR__.'/modules/hr.php';
     });
 
 });
