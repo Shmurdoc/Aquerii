@@ -782,6 +782,396 @@ export const erpDelegation = {
   },
 }
 
+// ─── Financial Approval Controls (Floating API) ────────────────────────────
+
+export interface FinancialApproval {
+  id: string
+  workspace_id: string
+  invoice_id: string
+  status: 'pending' | 'approved' | 'rejected'
+  submitted_by: string
+  approved_by: string | null
+  notes: string | null
+  created_at: string
+}
+
+export const erpFinancialApprovals = {
+  list: async (): Promise<FinancialApproval[]> => {
+    const res = await api.get(`/workspaces/${wid()}/finance/invoice-approvals`)
+    return normalizeList(res)
+  },
+  submit: async (invoiceId: string): Promise<FinancialApproval> => {
+    const res = await api.post(`/workspaces/${wid()}/finance/invoices/${invoiceId}/submit-approval`)
+    return unwrap(res)
+  },
+  approve: async (approvalId: string, notes?: string): Promise<FinancialApproval> => {
+    const res = await api.post(`/workspaces/${wid()}/finance/invoice-approvals/${approvalId}/approve`, { notes })
+    return unwrap(res)
+  },
+  reject: async (approvalId: string, notes?: string): Promise<FinancialApproval> => {
+    const res = await api.post(`/workspaces/${wid()}/finance/invoice-approvals/${approvalId}/reject`, { notes })
+    return unwrap(res)
+  },
+  reverse: async (invoiceId: string, notes?: string): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/finance/invoices/${invoiceId}/reverse`, { notes })
+    return unwrap(res)
+  },
+}
+
+// ─── Report Scheduling (Floating API) ───────────────────────────────────────
+
+export interface ReportSchedule {
+  id: string
+  workspace_id: string
+  name: string
+  report_type: string
+  frequency: string
+  recipients: string[]
+  is_active: boolean
+  next_run_at: string | null
+  last_run_at: string | null
+  created_at: string
+}
+
+export const erpReportSchedules = {
+  list: async (): Promise<ReportSchedule[]> => {
+    const res = await api.get(`/workspaces/${wid()}/reports/schedules`)
+    return normalizeList(res)
+  },
+  create: async (payload: Partial<ReportSchedule>): Promise<ReportSchedule> => {
+    const res = await api.post(`/workspaces/${wid()}/reports/schedules`, payload)
+    return unwrap(res)
+  },
+  update: async (id: string, payload: Partial<ReportSchedule>): Promise<ReportSchedule> => {
+    const res = await api.patch(`/workspaces/${wid()}/reports/schedules/${id}`, payload)
+    return unwrap(res)
+  },
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/workspaces/${wid()}/reports/schedules/${id}`)
+  },
+  runNow: async (id: string): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/reports/schedules/${id}/run-now`)
+    return unwrap(res)
+  },
+  exceptions: async (): Promise<unknown[]> => {
+    const res = await api.get(`/workspaces/${wid()}/reports/schedules/exceptions`)
+    return normalizeList(res)
+  },
+}
+
+// ─── Goals / OKRs (Floating API) ───────────────────────────────────────────
+
+export interface Goal {
+  id: string
+  workspace_id: string
+  title: string
+  description: string | null
+  type: string
+  target_value: number
+  current_value: number
+  unit: string | null
+  status: string
+  owner_id: string
+  start_date: string | null
+  due_date: string | null
+  created_at: string
+}
+
+export const erpGoals = {
+  list: async (): Promise<Goal[]> => {
+    const res = await api.get(`/workspaces/${wid()}/goals`)
+    return normalizeList(res)
+  },
+  create: async (payload: Partial<Goal>): Promise<Goal> => {
+    const res = await api.post(`/workspaces/${wid()}/goals`, payload)
+    return unwrap(res)
+  },
+  update: async (id: string, payload: Partial<Goal>): Promise<Goal> => {
+    const res = await api.patch(`/workspaces/${wid()}/goals/${id}`, payload)
+    return unwrap(res)
+  },
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/workspaces/${wid()}/goals/${id}`)
+  },
+}
+
+// ─── Meeting Outcomes (Floating API) ────────────────────────────────────────
+
+export interface MeetingOutcome {
+  id: string
+  workspace_id: string
+  meeting_id: string
+  summary: string
+  action_items: string[]
+  attendees: string[]
+  effectiveness_score: number | null
+  created_at: string
+}
+
+export const erpMeetingOutcomes = {
+  list: async (): Promise<MeetingOutcome[]> => {
+    const res = await api.get(`/workspaces/${wid()}/meeting-outcomes`)
+    return normalizeList(res)
+  },
+  create: async (meetingId: string, payload: Partial<MeetingOutcome>): Promise<MeetingOutcome> => {
+    const res = await api.post(`/workspaces/${wid()}/meetings/${meetingId}/outcome`, payload)
+    return unwrap(res)
+  },
+  get: async (meetingId: string): Promise<MeetingOutcome> => {
+    const res = await api.get(`/workspaces/${wid()}/meetings/${meetingId}/outcome`)
+    return unwrap(res)
+  },
+}
+
+// ─── Email Project Addresses (Floating API) ─────────────────────────────────
+
+export interface EmailProjectAddress {
+  id: string
+  workspace_id: string
+  address: string
+  label: string | null
+  is_active: boolean
+  created_at: string
+}
+
+export const erpEmailAddresses = {
+  list: async (): Promise<EmailProjectAddress[]> => {
+    const res = await api.get(`/workspaces/${wid()}/email/project-addresses`)
+    return normalizeList(res)
+  },
+  create: async (payload: Partial<EmailProjectAddress>): Promise<EmailProjectAddress> => {
+    const res = await api.post(`/workspaces/${wid()}/email/project-addresses`, payload)
+    return unwrap(res)
+  },
+  update: async (id: string, payload: Partial<EmailProjectAddress>): Promise<EmailProjectAddress> => {
+    const res = await api.patch(`/workspaces/${wid()}/email/project-addresses/${id}`, payload)
+    return unwrap(res)
+  },
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/workspaces/${wid()}/email/project-addresses/${id}`)
+  },
+}
+
+// ─── Employee Groups (Floating API) ─────────────────────────────────────────
+
+export interface EmployeeGroup {
+  id: string
+  workspace_id: string
+  name: string
+  description: string | null
+  parent_id: string | null
+  head_user_id: string | null
+  created_at: string
+}
+
+export const erpEmployeeGroups = {
+  list: async (): Promise<EmployeeGroup[]> => {
+    const res = await api.get(`/workspaces/${wid()}/employee-groups`)
+    return normalizeList(res)
+  },
+  create: async (payload: Partial<EmployeeGroup>): Promise<EmployeeGroup> => {
+    const res = await api.post(`/workspaces/${wid()}/employee-groups`, payload)
+    return unwrap(res)
+  },
+  update: async (id: string, payload: Partial<EmployeeGroup>): Promise<EmployeeGroup> => {
+    const res = await api.patch(`/workspaces/${wid()}/employee-groups/${id}`, payload)
+    return unwrap(res)
+  },
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/workspaces/${wid()}/employee-groups/${id}`)
+  },
+  orgChart: async (): Promise<unknown> => {
+    const res = await api.get(`/workspaces/${wid()}/employee-groups/org-chart`)
+    return unwrap(res)
+  },
+}
+
+// ─── Field Permissions (Floating API) ───────────────────────────────────────
+
+export interface FieldPermission {
+  id: string
+  workspace_id: string
+  module: string
+  field: string
+  roles: string[]
+  created_at: string
+}
+
+export const erpFieldPermissions = {
+  list: async (module?: string): Promise<FieldPermission[]> => {
+    const params = module ? { module } : {}
+    const res = await api.get(`/workspaces/${wid()}/field-permissions`, { params })
+    return normalizeList(res)
+  },
+  create: async (payload: Partial<FieldPermission>): Promise<FieldPermission> => {
+    const res = await api.post(`/workspaces/${wid()}/field-permissions`, payload)
+    return unwrap(res)
+  },
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/workspaces/${wid()}/field-permissions/${id}`)
+  },
+  bulk: async (payload: { permissions: Partial<FieldPermission>[] }): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/field-permissions/bulk`, payload)
+    return unwrap(res)
+  },
+}
+
+// ─── Audit Logs (Floating API) ──────────────────────────────────────────────
+
+export interface AuditLogEntry {
+  id: string
+  workspace_id: string
+  user_id: string
+  action: string
+  subject_type: string
+  subject_id: string
+  properties: Record<string, unknown>
+  created_at: string
+}
+
+export const erpAuditLogs = {
+  list: async (params?: { limit?: number; user_id?: string; module?: string }): Promise<AuditLogEntry[]> => {
+    const res = await api.get(`/workspaces/${wid()}/audit-logs`, { params })
+    return normalizeList(res)
+  },
+}
+
+// ─── Integration Reliability (Floating API) ─────────────────────────────────
+
+export interface WebhookEvent {
+  id: string
+  workspace_id: string
+  webhook_id: string
+  event_type: string
+  payload: Record<string, unknown>
+  status: string
+  attempts: number
+  last_attempt_at: string | null
+  created_at: string
+}
+
+export const erpWebhookEvents = {
+  list: async (): Promise<WebhookEvent[]> => {
+    const res = await api.get(`/workspaces/${wid()}/integrations/webhook-events`)
+    return normalizeList(res)
+  },
+  retry: async (id: string): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/integrations/webhook-events/${id}/retry`)
+    return unwrap(res)
+  },
+  replay: async (id: string): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/integrations/webhook-events/${id}/replay-now`)
+    return unwrap(res)
+  },
+}
+
+// ─── Offline Sync (Floating API) ────────────────────────────────────────────
+
+export interface SyncConflict {
+  id: string
+  workspace_id: string
+  entity_type: string
+  entity_id: string
+  local_version: Record<string, unknown>
+  remote_version: Record<string, unknown>
+  resolution: string | null
+  created_at: string
+}
+
+export const erpSyncConflicts = {
+  list: async (): Promise<SyncConflict[]> => {
+    const res = await api.get(`/workspaces/${wid()}/sync/conflicts`)
+    return normalizeList(res)
+  },
+  resolve: async (id: string, resolution: Record<string, unknown>): Promise<unknown> => {
+    const res = await api.patch(`/workspaces/${wid()}/sync/conflicts/${id}`, { resolution })
+    return unwrap(res)
+  },
+  resolveAll: async (): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/sync/conflicts/resolve-all`)
+    return unwrap(res)
+  },
+}
+
+// ─── Document PDFs (Floating API) ───────────────────────────────────────────
+
+export const erpDocumentPdfs = {
+  quote: async (id: string): Promise<Blob> => {
+    const res = await api.get(`/workspaces/${wid()}/documents/quotes/${id}/pdf`, { responseType: 'blob' })
+    return res.data
+  },
+  salesOrder: async (id: string): Promise<Blob> => {
+    const res = await api.get(`/workspaces/${wid()}/documents/sales-orders/${id}/pdf`, { responseType: 'blob' })
+    return res.data
+  },
+  purchaseOrder: async (id: string): Promise<Blob> => {
+    const res = await api.get(`/workspaces/${wid()}/documents/purchase-orders/${id}/pdf`, { responseType: 'blob' })
+    return res.data
+  },
+  goodsReceipt: async (id: string): Promise<Blob> => {
+    const res = await api.get(`/workspaces/${wid()}/documents/goods-receipts/${id}/pdf`, { responseType: 'blob' })
+    return res.data
+  },
+  receipt: async (id: string): Promise<Blob> => {
+    const res = await api.get(`/workspaces/${wid()}/documents/receipts/${id}/pdf`, { responseType: 'blob' })
+    return res.data
+  },
+  creditNote: async (id: string): Promise<Blob> => {
+    const res = await api.get(`/workspaces/${wid()}/documents/credit-notes/${id}/pdf`, { responseType: 'blob' })
+    return res.data
+  },
+}
+
+// ─── AI Floating APIs ───────────────────────────────────────────────────────
+
+export const erpAI = {
+  dealSummary: async (dealId: string): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/ai/deal-summary`, { deal_id: dealId })
+    return unwrap(res)
+  },
+  churnRisk: async (contactId: string): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/ai/churn-risk`, { contact_id: contactId })
+    return unwrap(res)
+  },
+  nextAction: async (context: Record<string, unknown>): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/ai/next-action`, context)
+    return unwrap(res)
+  },
+  emailCompose: async (params: Record<string, unknown>): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/ai/email-compose`, params)
+    return unwrap(res)
+  },
+  dataClean: async (params: Record<string, unknown>): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/ai/data-clean`, params)
+    return unwrap(res)
+  },
+  anomalyDetection: async (params: Record<string, unknown>): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/ai/anomaly-detection`, params)
+    return unwrap(res)
+  },
+  taskDuration: async (params: Record<string, unknown>): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/ai/predictions/task-duration`, params)
+    return unwrap(res)
+  },
+  delayRisk: async (params: Record<string, unknown>): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/ai/predictions/delay-risk`, params)
+    return unwrap(res)
+  },
+  okrProgress: async (params: Record<string, unknown>): Promise<unknown> => {
+    const res = await api.post(`/workspaces/${wid()}/ai/predictions/okr-progress`, params)
+    return unwrap(res)
+  },
+}
+
+// ─── Sales Order to Invoice (Floating API) ──────────────────────────────────
+
+export const erpSalesOrdersExtra = {
+  convertToInvoice: async (soId: string): Promise<Invoice> => {
+    const res = await api.post(`/workspaces/${wid()}/sales/orders/${soId}/convert-to-invoice`)
+    return unwrap(res)
+  },
+}
+
 // ─── Formatting helpers ───────────────────────────────────────────────────────
 
 export function formatCurrency(amount: number | string, currency = 'USD'): string {

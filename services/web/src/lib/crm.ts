@@ -612,3 +612,341 @@ export function useMarkLost(w: string | undefined, id: string) {
     onSuccess: () => { qc.invalidateQueries({ queryKey: [...wk(w), 'deals'] }); qc.invalidateQueries({ queryKey: ['crm-deals', w] }) },
   })
 }
+
+// ─── CRM Products (Floating API) ────────────────────────────────────────────
+
+export interface CrmProduct {
+  id: string
+  workspace_id: string
+  name: string
+  sku: string | null
+  description: string | null
+  unit_price: number
+  unit: string
+  category: string | null
+  is_active: boolean
+  created_by: string
+  created_at: string
+  updated_at: string
+}
+
+export function useCrmProducts(w: string | undefined) {
+  return useQuery({
+    queryKey: [...wk(w), 'crm-products'],
+    queryFn: () => api.get(`/workspaces/${w}/crm/products`).then(r => r.data?.data ?? []),
+    enabled: !!w,
+  })
+}
+
+export function useCreateCrmProduct(w: string | undefined) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Partial<CrmProduct>) => api.post(`/workspaces/${w}/crm/products`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-products'] }),
+  })
+}
+
+export function useUpdateCrmProduct(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Partial<CrmProduct>) => api.patch(`/workspaces/${w}/crm/products/${id}`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-products'] }),
+  })
+}
+
+export function useDeleteCrmProduct(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api.delete(`/workspaces/${w}/crm/products/${id}`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-products'] }),
+  })
+}
+
+// ─── CRM Quotes (Floating API) ──────────────────────────────────────────────
+
+export interface CrmQuote {
+  id: string
+  workspace_id: string
+  deal_id: string | null
+  contact_id: string | null
+  quote_number: string
+  status: 'draft' | 'sent' | 'accepted' | 'rejected'
+  subtotal: number
+  tax_total: number
+  total: number
+  valid_until: string | null
+  notes: string | null
+  created_by: string
+  created_at: string
+  updated_at: string
+  items?: CrmQuoteItem[]
+  deal?: Deal
+  contact?: CrmContact
+}
+
+export interface CrmQuoteItem {
+  id: string
+  quote_id: string
+  product_id: string | null
+  description: string
+  quantity: number
+  unit_price: number
+  tax_rate: number
+  total: number
+}
+
+export function useCrmQuotes(w: string | undefined) {
+  return useQuery({
+    queryKey: [...wk(w), 'crm-quotes'],
+    queryFn: () => api.get(`/workspaces/${w}/crm/quotes`).then(r => r.data?.data ?? []),
+    enabled: !!w,
+  })
+}
+
+export function useCrmQuote(w: string | undefined, id: string | null) {
+  return useQuery({
+    queryKey: [...wk(w), 'crm-quotes', id],
+    queryFn: () => api.get(`/workspaces/${w}/crm/quotes/${id}`).then(r => r.data?.data),
+    enabled: !!w && !!id,
+  })
+}
+
+export function useCreateCrmQuote(w: string | undefined) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Partial<CrmQuote>) => api.post(`/workspaces/${w}/crm/quotes`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-quotes'] }),
+  })
+}
+
+export function useUpdateCrmQuote(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Partial<CrmQuote>) => api.patch(`/workspaces/${w}/crm/quotes/${id}`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-quotes'] }),
+  })
+}
+
+export function useDeleteCrmQuote(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api.delete(`/workspaces/${w}/crm/quotes/${id}`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-quotes'] }),
+  })
+}
+
+export function useSendCrmQuote(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api.post(`/workspaces/${w}/crm/quotes/${id}/send`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-quotes'] }),
+  })
+}
+
+export function useAcceptCrmQuote(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api.post(`/workspaces/${w}/crm/quotes/${id}/accept`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-quotes'] }),
+  })
+}
+
+export function useRejectCrmQuote(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api.post(`/workspaces/${w}/crm/quotes/${id}/reject`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-quotes'] }),
+  })
+}
+
+export function useDuplicateCrmQuote(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api.post(`/workspaces/${w}/crm/quotes/${id}/duplicate`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-quotes'] }),
+  })
+}
+
+// ─── CRM Calendar Sync (Floating API) ───────────────────────────────────────
+
+export interface CrmCalendarSync {
+  id: string
+  workspace_id: string
+  provider: 'google' | 'microsoft'
+  calendar_id: string
+  calendar_name: string
+  sync_direction: 'pull' | 'push' | 'both'
+  last_synced_at: string | null
+  is_active: boolean
+  created_at: string
+}
+
+export function useCrmCalendarSyncs(w: string | undefined) {
+  return useQuery({
+    queryKey: [...wk(w), 'crm-calendar-syncs'],
+    queryFn: () => api.get(`/workspaces/${w}/crm/calendar-syncs`).then(r => r.data?.data ?? []),
+    enabled: !!w,
+  })
+}
+
+export function useCreateCrmCalendarSync(w: string | undefined) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Partial<CrmCalendarSync>) => api.post(`/workspaces/${w}/crm/calendar-syncs`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-calendar-syncs'] }),
+  })
+}
+
+export function useDeleteCrmCalendarSync(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api.delete(`/workspaces/${w}/crm/calendar-syncs/${id}`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-calendar-syncs'] }),
+  })
+}
+
+export function useSyncCrmCalendar(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api.post(`/workspaces/${w}/crm/calendar-syncs/${id}/sync`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-calendar-syncs'] }),
+  })
+}
+
+export function useProviderCalendars(w: string | undefined) {
+  return useQuery({
+    queryKey: [...wk(w), 'crm-provider-calendars'],
+    queryFn: () => api.get(`/workspaces/${w}/crm/provider-calendars`).then(r => r.data?.data ?? []),
+    enabled: !!w,
+  })
+}
+
+// ─── CRM Approval Rules (Floating API) ──────────────────────────────────────
+
+export interface CrmApprovalRule {
+  id: string
+  workspace_id: string
+  name: string
+  trigger: string
+  approvers: string[]
+  is_active: boolean
+  created_at: string
+}
+
+export function useCrmApprovalRules(w: string | undefined) {
+  return useQuery({
+    queryKey: [...wk(w), 'crm-approval-rules'],
+    queryFn: () => api.get(`/workspaces/${w}/crm/approval-rules`).then(r => r.data?.data ?? []),
+    enabled: !!w,
+  })
+}
+
+export function useCreateCrmApprovalRule(w: string | undefined) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Partial<CrmApprovalRule>) => api.post(`/workspaces/${w}/crm/approval-rules`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-approval-rules'] }),
+  })
+}
+
+export function useUpdateCrmApprovalRule(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Partial<CrmApprovalRule>) => api.patch(`/workspaces/${w}/crm/approval-rules/${id}`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-approval-rules'] }),
+  })
+}
+
+export function useDeleteCrmApprovalRule(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api.delete(`/workspaces/${w}/crm/approval-rules/${id}`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-approval-rules'] }),
+  })
+}
+
+// ─── CRM Deal Approvals (Floating API) ──────────────────────────────────────
+
+export interface CrmDealApproval {
+  id: string
+  workspace_id: string
+  deal_id: string
+  rule_id: string
+  status: 'pending' | 'approved' | 'rejected'
+  approver_id: string
+  decision_at: string | null
+  notes: string | null
+  created_at: string
+  deal?: Deal
+  approver?: { id: string; name: string }
+}
+
+export function useCrmDealApprovals(w: string | undefined) {
+  return useQuery({
+    queryKey: [...wk(w), 'crm-deal-approvals'],
+    queryFn: () => api.get(`/workspaces/${w}/crm/deal-approvals`).then(r => r.data?.data ?? []),
+    enabled: !!w,
+  })
+}
+
+export function useApproveDeal(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data?: { notes?: string }) => api.post(`/workspaces/${w}/crm/deal-approvals/${id}/approve`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-deal-approvals'] }),
+  })
+}
+
+export function useRejectDealApproval(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data?: { notes?: string }) => api.post(`/workspaces/${w}/crm/deal-approvals/${id}/reject`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-deal-approvals'] }),
+  })
+}
+
+// ─── CRM Automation Rules (Floating API) ────────────────────────────────────
+
+export interface CrmAutomationRule {
+  id: string
+  workspace_id: string
+  name: string
+  trigger_type: string
+  conditions: Record<string, unknown>
+  actions: Record<string, unknown>
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export function useCrmAutomationRules(w: string | undefined) {
+  return useQuery({
+    queryKey: [...wk(w), 'crm-automation-rules'],
+    queryFn: () => api.get(`/workspaces/${w}/crm/automation-rules`).then(r => r.data?.data ?? []),
+    enabled: !!w,
+  })
+}
+
+export function useCreateCrmAutomationRule(w: string | undefined) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Partial<CrmAutomationRule>) => api.post(`/workspaces/${w}/crm/automation-rules`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-automation-rules'] }),
+  })
+}
+
+export function useUpdateCrmAutomationRule(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Partial<CrmAutomationRule>) => api.patch(`/workspaces/${w}/crm/automation-rules/${id}`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-automation-rules'] }),
+  })
+}
+
+export function useDeleteCrmAutomationRule(w: string | undefined, id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api.delete(`/workspaces/${w}/crm/automation-rules/${id}`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...wk(w), 'crm-automation-rules'] }),
+  })
+}
