@@ -530,6 +530,135 @@ export const erpJournalEntries = {
   },
 }
 
+// ─── Job Cards ────────────────────────────────────────────────────────────────
+
+export type JobCardStatus = 'new' | 'in_progress' | 'completed' | 'signed_off' | 'rejected'
+export type JobCardPriority = 'low' | 'medium' | 'high' | 'critical'
+
+export interface JobCardTask {
+  id?: string
+  job_card_id?: string
+  description: string
+  is_checked: boolean
+  position: number
+  category: string
+  completed_by?: string | null
+  completed_at?: string | null
+}
+
+export interface JobCardTimeEntry {
+  id?: string
+  job_card_id?: string
+  user_id: string
+  started_at: string
+  ended_at?: string | null
+  duration_minutes?: number | null
+  notes?: string | null
+  user?: { id: string; name: string }
+}
+
+export interface JobCardAttachment {
+  id?: string
+  job_card_id?: string
+  filename: string
+  filepath: string
+  mime_type?: string | null
+  file_size?: number | null
+  category: string
+  uploaded_by: string
+}
+
+export interface JobCard {
+  id: string
+  workspace_id: string
+  assigned_to: string | null
+  client_id: string | null
+  title: string
+  description: string | null
+  status: JobCardStatus
+  priority: JobCardPriority
+  industry_template: string | null
+  location: string | null
+  custom_fields: Record<string, unknown> | null
+  started_at: string | null
+  completed_at: string | null
+  signed_off_at: string | null
+  signed_off_by: string | null
+  signoff_notes: string | null
+  rejection_reason: string | null
+  created_by: string
+  created_at: string
+  updated_at: string
+  tasks?: JobCardTask[]
+  time_entries?: JobCardTimeEntry[]
+  attachments?: JobCardAttachment[]
+  assigned_to_user?: { id: string; name: string }
+  created_by_user?: { id: string; name: string }
+}
+
+export interface CreateJobCardPayload {
+  title: string
+  description?: string | null
+  status?: JobCardStatus
+  priority?: JobCardPriority
+  assigned_to?: string | null
+  client_id?: string | null
+  industry_template?: string | null
+  location?: string | null
+  custom_fields?: string | null
+  started_at?: string | null
+  tasks?: { description: string; category?: string }[]
+}
+
+export interface UpdateJobCardPayload {
+  title?: string
+  description?: string | null
+  status?: JobCardStatus
+  priority?: JobCardPriority
+  assigned_to?: string | null
+  client_id?: string | null
+  location?: string | null
+  custom_fields?: string | null
+  started_at?: string | null
+  rejection_reason?: string | null
+}
+
+export const erpJobCards = {
+  list: async (params?: { status?: string; priority?: string; assigned_to?: string; search?: string; per_page?: number }): Promise<JobCard[]> => {
+    const res = await api.get(`/workspaces/${wid()}/job-cards`, { params })
+    return normalizeList<JobCard>(res)
+  },
+
+  get: async (id: string): Promise<JobCard> => {
+    const res = await api.get(`/workspaces/${wid()}/job-cards/${id}`)
+    return unwrap<JobCard>(res)
+  },
+
+  create: async (payload: CreateJobCardPayload): Promise<JobCard> => {
+    const res = await api.post(`/workspaces/${wid()}/job-cards`, payload)
+    return unwrap<JobCard>(res)
+  },
+
+  update: async (id: string, payload: UpdateJobCardPayload): Promise<JobCard> => {
+    const res = await api.patch(`/workspaces/${wid()}/job-cards/${id}`, payload)
+    return unwrap<JobCard>(res)
+  },
+
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/workspaces/${wid()}/job-cards/${id}`)
+  },
+
+  signOff: async (id: string, notes?: string): Promise<JobCard> => {
+    const res = await api.post(`/workspaces/${wid()}/job-cards/${id}/sign-off`, { notes })
+    return unwrap<JobCard>(res)
+  },
+
+  reject: async (id: string, rejection_reason: string): Promise<JobCard> => {
+    const res = await api.post(`/workspaces/${wid()}/job-cards/${id}/reject`, { rejection_reason })
+    return unwrap<JobCard>(res)
+  },
+}
+
 // ─── Formatting helpers ───────────────────────────────────────────────────────
 
 export function formatCurrency(amount: number | string, currency = 'USD'): string {

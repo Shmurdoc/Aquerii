@@ -34,6 +34,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/marketing/email-templates': 'Email Templates',
   '/marketing/segments': 'Segments',
   '/erp': 'ERP',
+  '/erp/job-cards': 'Job Cards',
   '/erp/invoicing': 'Invoicing',
   '/erp/purchasing': 'Purchasing',
   '/erp/sales': 'Sales',

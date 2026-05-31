@@ -43,6 +43,7 @@ import InvoicingPage     from '@/pages/invoicing/InvoicingPage'
 import PurchasingPage    from '@/pages/purchasing/PurchasingPage'
 import SalesPage         from '@/pages/sales/SalesPage'
 import InventoryPage     from '@/pages/inventory/InventoryPage'
+import JobCardsPage      from '@/pages/jobcards/JobCardsPage'
 import MeetingsPage      from '@/pages/meetings/MeetingsPage'
 import AccountingPage    from '@/pages/accounting/AccountingPage'
 import GeneralTab      from '@/components/settings/GeneralTab'
@@ -142,6 +143,7 @@ export default function App() {
             <Route path="/erp/purchasing"  element={<PurchasingPage />} />
             <Route path="/erp/sales"       element={<SalesPage />} />
             <Route path="/erp/inventory"   element={<InventoryPage />} />
+            <Route path="/erp/job-cards"   element={<JobCardsPage />} />
             <Route path="/erp/accounting"  element={<AccountingPage />} />
           </Route>
           <Route path="/my-day"        element={<MyDayPage />} />

@@ -74,6 +74,7 @@ const SECTIONS: Record<string, { label: string; items: { to: string; label: stri
   '/erp': {
     label: 'ERP',
     items: [
+      { to: '/erp/job-cards',  label: 'Job Cards'  },
       { to: '/erp/invoicing',  label: 'Invoicing'  },
       { to: '/erp/purchasing', label: 'Purchasing' },
       { to: '/erp/sales',      label: 'Sales'      },

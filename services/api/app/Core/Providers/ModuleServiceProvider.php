@@ -13,6 +13,7 @@ use App\Modules\Documents\Providers\DocumentsServiceProvider;
 use App\Modules\Email\Providers\EmailServiceProvider;
 use App\Modules\Inventory\Providers\InventoryServiceProvider;
 use App\Modules\Invoicing\Providers\InvoicingServiceProvider;
+use App\Modules\JobCards\Providers\JobCardsServiceProvider;
 use App\Modules\Marketing\Providers\MarketingServiceProvider;
 use App\Modules\Purchasing\Providers\PurchasingServiceProvider;
 use App\Modules\Sales\Providers\SalesServiceProvider;
@@ -32,6 +33,7 @@ class ModuleServiceProvider extends ServiceProvider
         $this->registerIf('MODULE_BILLING', BillingServiceProvider::class);
         $this->registerIf('MODULE_INVENTORY', InventoryServiceProvider::class);
         $this->registerIf('MODULE_INVOICING', InvoicingServiceProvider::class);
+        $this->registerIf('MODULE_JOBCARDS', JobCardsServiceProvider::class);
         $this->registerIf('MODULE_ACCOUNTING', AccountingServiceProvider::class);
         $this->registerIf('MODULE_PURCHASING', PurchasingServiceProvider::class);
         $this->registerIf('MODULE_SALES', SalesServiceProvider::class);

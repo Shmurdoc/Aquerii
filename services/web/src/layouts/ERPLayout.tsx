@@ -1,7 +1,8 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { FileText, ShoppingCart, TrendingUp, Package, BookOpen } from 'lucide-react'
+import { ClipboardList, FileText, ShoppingCart, TrendingUp, Package, BookOpen } from 'lucide-react'
 
 const TABS = [
+  { to: '/erp/job-cards',  label: 'Job Cards',  icon: ClipboardList },
   { to: '/erp/invoicing',  label: 'Invoicing',  icon: FileText    },
   { to: '/erp/purchasing', label: 'Purchasing', icon: ShoppingCart },
   { to: '/erp/sales',      label: 'Sales',      icon: TrendingUp  },
