@@ -12,6 +12,9 @@
     "test:e2e": "playwright test",
     "audit:local": "node tests/e2e/audit-localhost.js"
   },
+  "overrides": {
+    "lodash-es": "4.18.1"
+  },
   "dependencies": {
     "@blocknote/core": "^0.14.2",
     "@blocknote/react": "^0.14.2",
