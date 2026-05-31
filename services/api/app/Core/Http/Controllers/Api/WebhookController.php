@@ -17,11 +17,11 @@ use Stripe\Webhook as StripeWebhook;
 
 class WebhookController extends Controller
 {
-    private StripeClient $stripe;
+    private ?StripeClient $stripe = null;
 
-    public function __construct()
+    private function stripeClient(): StripeClient
     {
-        $this->stripe = new StripeClient(config('services.stripe.secret'));
+        return $this->stripe ??= new StripeClient(config('services.stripe.secret'));
     }
 
     // POST /webhooks/stripe

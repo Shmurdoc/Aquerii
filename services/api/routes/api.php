@@ -119,6 +119,11 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     // All workspace-scoped routes
     Route::prefix('workspaces/{workspace}')->middleware('workspace')->group(function () {
 
+        // Chat module (higher throttle limit for real-time usage)
+        Route::middleware('throttle:120,1')->group(function () {
+            require __DIR__ . '/modules/chat.php';
+        });
+
         Route::get('', [WorkspaceController::class, 'show']);
         Route::patch('', [WorkspaceController::class, 'update'])->middleware('idempotent');
 
