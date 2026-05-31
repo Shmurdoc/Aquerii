@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { ClipboardList, FileText, ShoppingCart, TrendingUp, Package, BookOpen, Users } from 'lucide-react'
+import { ClipboardList, FileText, ShoppingCart, TrendingUp, Package, BookOpen, Users, CheckCircle, Calendar, Mail, Building2, Shield, Webhook } from 'lucide-react'
 
 const TABS = [
   { to: '/erp/job-cards',  label: 'Job Cards',  icon: ClipboardList },
@@ -9,6 +9,14 @@ const TABS = [
   { to: '/erp/sales',      label: 'Sales',      icon: TrendingUp  },
   { to: '/erp/inventory',  label: 'Inventory',  icon: Package     },
   { to: '/erp/accounting', label: 'Accounting', icon: BookOpen    },
+  { to: '/erp/financial-approvals', label: 'Approvals', icon: CheckCircle },
+  { to: '/erp/report-schedules', label: 'Report Schedules', icon: Calendar },
+  { to: '/erp/goals',      label: 'Goals',     icon: TrendingUp  },
+  { to: '/erp/meeting-outcomes', label: 'Meeting Outcomes', icon: Calendar },
+  { to: '/erp/email-addresses', label: 'Email Addresses', icon: Mail },
+  { to: '/erp/employee-groups', label: 'Employee Groups', icon: Building2 },
+  { to: '/erp/audit-logs', label: 'Audit Logs', icon: Shield },
+  { to: '/erp/webhook-events', label: 'Webhook Events', icon: Webhook },
 ]
 
 export default function ERPLayout() {

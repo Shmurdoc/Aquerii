@@ -53,6 +53,14 @@ import JobCardsPage      from '@/pages/jobcards/JobCardsPage'
 import DelegationsPage   from '@/pages/delegations/DelegationsPage'
 import MeetingsPage      from '@/pages/meetings/MeetingsPage'
 import AccountingPage    from '@/pages/accounting/AccountingPage'
+import FinancialApprovalsPage from '@/pages/erp/FinancialApprovalsPage'
+import ReportSchedulesPage from '@/pages/erp/ReportSchedulesPage'
+import GoalsPage         from '@/pages/erp/GoalsPage'
+import MeetingOutcomesPage from '@/pages/erp/MeetingOutcomesPage'
+import EmailAddressesPage from '@/pages/erp/EmailAddressesPage'
+import EmployeeGroupsPage from '@/pages/erp/EmployeeGroupsPage'
+import AuditLogsPage     from '@/pages/erp/AuditLogsPage'
+import WebhookEventsPage from '@/pages/erp/WebhookEventsPage'
 import GeneralTab      from '@/components/settings/GeneralTab'
 import ProfileTab      from '@/components/settings/ProfileTab'
 import MembersTab      from '@/components/settings/MembersTab'
@@ -159,6 +167,14 @@ export default function App() {
             <Route path="/erp/job-cards"   element={<JobCardsPage />} />
             <Route path="/erp/delegations" element={<DelegationsPage />} />
             <Route path="/erp/accounting"  element={<AccountingPage />} />
+            <Route path="/erp/financial-approvals" element={<FinancialApprovalsPage />} />
+            <Route path="/erp/report-schedules" element={<ReportSchedulesPage />} />
+            <Route path="/erp/goals"       element={<GoalsPage />} />
+            <Route path="/erp/meeting-outcomes" element={<MeetingOutcomesPage />} />
+            <Route path="/erp/email-addresses" element={<EmailAddressesPage />} />
+            <Route path="/erp/employee-groups" element={<EmployeeGroupsPage />} />
+            <Route path="/erp/audit-logs"  element={<AuditLogsPage />} />
+            <Route path="/erp/webhook-events" element={<WebhookEventsPage />} />
           </Route>
           <Route path="/my-day"        element={<MyDayPage />} />
           <Route path="/calendar"      element={<CalendarPage />} />
