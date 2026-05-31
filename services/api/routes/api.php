@@ -452,6 +452,12 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::patch('email/project-addresses/{address}', [ProjectEmailAddressController::class, 'update'])->middleware('idempotent');
             Route::delete('email/project-addresses/{address}', [ProjectEmailAddressController::class, 'destroy']);
         });
+
+        // ── Job Cards module ────────────────────────────────────────────────
+        require __DIR__.'/modules/jobcards.php';
+
+        // ── Delegation module ───────────────────────────────────────────────
+        require __DIR__.'/modules/delegation.php';
     });
 
 });
