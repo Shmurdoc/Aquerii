@@ -77,6 +77,6 @@ function CardFooter({ children, className }: CardSectionProps) {
   )
 }
 
-;(Card as any).Header = CardHeader
-;(Card as any).Body = CardBody
-;(Card as any).Footer = CardFooter
+(Card as any).Header = CardHeader
+(Card as any).Body = CardBody
+(Card as any).Footer = CardFooter

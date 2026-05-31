@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException, Request, Depends
 from pydantic import BaseModel, Field
 import google.generativeai as genai
 from app.core.config import settings
+from app.core.providers import generate_text, generate_json
 from app.security.sanitizer import sanitize, PromptInjectionError
 from app.security.auth import verify_internal_token
 

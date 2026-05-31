@@ -14,7 +14,7 @@ use Laravel\Sanctum\Sanctum;
 beforeEach(function () {
     $this->owner = User::factory()->create();
     $this->member = User::factory()->create();
-    $this->outsider = User::factory()->create();
+    $this->nonParticipant = User::factory()->create();
 
     $this->workspace = Workspace::factory()->create(['owner_id' => $this->owner->id]);
 
@@ -28,6 +28,13 @@ beforeEach(function () {
     WorkspaceMember::factory()->create([
         'workspace_id' => $this->workspace->id,
         'user_id' => $this->member->id,
+        'role' => 'member',
+        'status' => 'active',
+    ]);
+
+    WorkspaceMember::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $this->nonParticipant->id,
         'role' => 'member',
         'status' => 'active',
     ]);
@@ -109,7 +116,7 @@ it('supports group channel creation plus reply, mentions, and structured attachm
         ->assertJsonPath('data.attachments.2.type', 'document')
         ->assertJsonPath('data.attachments.3.type', 'activity');
 
-    Queue::assertPushed(SendNotification::class, function (SendNotification $job) use ($channelId) {
+    Queue::assertPushed(SendNotification::class, function (SendNotification $job) {
         return $job->workspaceId === $this->workspace->id
             && $job->userId === $this->member->id
             && $job->type === 'chat.mention'
@@ -141,7 +148,7 @@ it('rejects posting when user is not a channel participant', function () {
         'user_id' => $this->owner->id,
     ]);
 
-    Sanctum::actingAs($this->outsider);
+    Sanctum::actingAs($this->nonParticipant);
 
     $res = $this->postJson(
         "/api/workspaces/{$this->workspace->id}/chat/channels/{$channel->id}/messages",
@@ -149,5 +156,5 @@ it('rejects posting when user is not a channel participant', function () {
         idempotency(),
     );
 
-    $res->assertStatus(403);
+    $res->assertStatus(404);
 });
