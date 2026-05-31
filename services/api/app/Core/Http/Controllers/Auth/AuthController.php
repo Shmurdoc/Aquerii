@@ -30,6 +30,7 @@ class AuthController extends Controller
             'data' => [
                 'user' => $this->userShape($user),
                 'workspace' => $this->workspaceShape($workspace),
+                'role' => 'owner',
                 'token' => $token,
                 'expires_at' => $expiresAt,
             ],
@@ -56,11 +57,13 @@ class AuthController extends Controller
 
         [$user, $token, $expiresAt] = $result;
         $workspace = $user->workspaces()->first();
+        $role = $workspace ? $workspace->pivot->role ?? 'member' : null;
 
         return response()->json([
             'data' => [
                 'user' => $this->userShape($user),
                 'workspace' => $workspace ? $this->workspaceShape($workspace) : null,
+                'role' => $role,
                 'token' => $token,
                 'expires_at' => $expiresAt,
             ],
@@ -84,11 +87,13 @@ class AuthController extends Controller
 
         [$user, $token, $expiresAt] = $result;
         $workspace = $user->workspaces()->first();
+        $role = $workspace ? $workspace->pivot->role ?? 'member' : null;
 
         return response()->json([
             'data' => [
                 'user' => $this->userShape($user),
                 'workspace' => $workspace ? $this->workspaceShape($workspace) : null,
+                'role' => $role,
                 'token' => $token,
                 'expires_at' => $expiresAt,
             ],

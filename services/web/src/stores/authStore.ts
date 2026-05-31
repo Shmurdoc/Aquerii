@@ -23,9 +23,10 @@ interface AuthState {
   user: User | null
   workspace: Workspace | null
   role: string | null
-  setAuth: (token: string, user: User, workspace: Workspace) => void
+  setAuth: (token: string, user: User, workspace: Workspace, role?: string) => void
   setUser: (user: User) => void
   setWorkspace: (workspace: Workspace) => void
+  setRole: (role: string) => void
   logout: () => void
 }
 
@@ -37,10 +38,11 @@ export const useAuthStore = create<AuthState>()(
       workspace: null,
       role:      null,
 
-      setAuth: (token, user, workspace) => set({ token, user, workspace }),
+      setAuth: (token, user, workspace, role) => set({ token, user, workspace, role: role ?? null }),
       setUser: (user) => set({ user }),
       setWorkspace: (workspace) => set({ workspace }),
-      logout: () => set({ token: null, user: null, workspace: null }),
+      setRole: (role) => set({ role }),
+      logout: () => set({ token: null, user: null, workspace: null, role: null }),
     }),
     {
       name: 'aquerii-auth',

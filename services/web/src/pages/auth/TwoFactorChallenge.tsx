@@ -16,12 +16,21 @@ export default function TwoFactorChallenge() {
     e.preventDefault()
     setLoading(true)
     try {
-      const payload = useRecovery
-        ? { recovery_code: recoveryCode }
-        : { two_factor_code: code }
-      const res = await api.post('/two-factor-challenge', payload)
-      const { token, user, workspace } = res.data.data
-      setAuth(token, user, workspace)
+      // Get mfa_token from URL params or localStorage
+      const urlParams = new URLSearchParams(window.location.search)
+      const mfaToken = urlParams.get('mfa_token') ?? localStorage.getItem('mfa_token')
+      
+      if (!mfaToken) {
+        toast.error('MFA token not found. Please login again.')
+        navigate('/login')
+        return
+      }
+
+      const payload = { mfa_token: mfaToken, code }
+      const res = await api.post('/auth/mfa/verify-token', payload)
+      const { token, user, workspace, role } = res.data.data
+      setAuth(token, user, workspace, role)
+      localStorage.removeItem('mfa_token')
       navigate('/boards')
     } catch (err: any) {
       toast.error(err.response?.data?.error?.message ?? 'Verification failed')

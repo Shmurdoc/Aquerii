@@ -107,6 +107,7 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     Route::post('auth/logout', [AuthController::class, 'logout']);
     Route::post('auth/mfa/enable', [AuthController::class, 'enableMfa'])->middleware(['idempotent', 'verified']);
     Route::post('auth/mfa/verify', [AuthController::class, 'verifyMfa'])->middleware('throttle:5,1');
+    Route::post('auth/mfa/verify-token', [AuthController::class, 'verifyMfaWithToken'])->middleware('throttle:5,1');
     Route::post('auth/mfa/disable', [AuthController::class, 'disableMfa']);
 
     // Current user

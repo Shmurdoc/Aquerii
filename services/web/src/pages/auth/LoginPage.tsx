@@ -24,9 +24,9 @@ export default function LoginPage() {
   const mutation = useMutation({
     mutationFn: (data: FormData) => api.post('/auth/login', data),
     onSuccess: (res) => {
-      const { user, token, workspace, mfa_required } = res.data.data
+      const { user, token, workspace, role, mfa_required } = res.data.data
       if (mfa_required) return // form will reveal MFA field
-      setAuth(token, user, workspace)
+      setAuth(token, user, workspace, role)
       navigate('/boards')
     },
     onError: (err: any) => {

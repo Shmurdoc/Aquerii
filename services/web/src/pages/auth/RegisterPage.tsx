@@ -29,8 +29,8 @@ export default function RegisterPage() {
   const mutation = useMutation({
     mutationFn: (data: FormData) => api.post('/auth/register', data),
     onSuccess: (res) => {
-      const { user, token, workspace } = res.data.data
-      setAuth(token, user, workspace)
+      const { user, token, workspace, role } = res.data.data
+      setAuth(token, user, workspace, role)
       navigate('/onboarding')
     },
     onError: (err: any) => {
