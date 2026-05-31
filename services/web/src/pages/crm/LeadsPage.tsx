@@ -109,6 +109,26 @@ export default function LeadsPage() {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Summary Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-6 py-3 border-b border-[var(--color-glass-border)] animate-slide-up">
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">Total Leads</p>
+          <p className="text-lg font-bold text-[var(--color-text-primary)]">{leads.length}</p>
+        </div>
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">New</p>
+          <p className="text-lg font-bold text-blue-400">{leads.filter((l: CrmLead) => l.status === 'new').length}</p>
+        </div>
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">Qualified</p>
+          <p className="text-lg font-bold text-purple-400">{leads.filter((l: CrmLead) => l.status === 'qualified').length}</p>
+        </div>
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">Won</p>
+          <p className="text-lg font-bold text-emerald-400">{leads.filter((l: CrmLead) => l.status === 'won').length}</p>
+        </div>
+      </div>
+
       <div className="px-6 py-4 border-b border-[var(--color-glass-border)] flex items-center gap-3 shrink-0">
         <h1 className="text-sm font-semibold text-[var(--color-text-primary)] flex-1">Leads</h1>
         <div className="relative">
@@ -160,7 +180,7 @@ export default function LeadsPage() {
         </div>
       )}
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto animate-fade-in">
         <DataTable
           columns={columns}
           data={filtered}
