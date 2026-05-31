@@ -87,7 +87,7 @@ return new class extends Migration
             $table->uuid('workspace_id');
             $table->string('name')->default('Sales Pipeline');
             $table->boolean('is_default')->default(false);
-            $table->timestampTz('created_at')->useCurrent();
+            $table->timestampsTz();
         });
 
         Schema::create('crm_pipeline_stages', function (Blueprint $table) {

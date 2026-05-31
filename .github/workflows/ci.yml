@@ -297,9 +297,9 @@ jobs:
           cp .env.example .env
           sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env
           sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
+          mkdir -p bootstrap/cache
           composer install --prefer-dist --no-scripts --no-progress
           php artisan key:generate --force --quiet
-          mkdir -p bootstrap/cache
 
       - name: Run static endpoint audit
         run: python services/tests/python/system_hardening_audit.py --repo-root . --output-json services/tests/python/endpoint-audit-report.json
