@@ -121,7 +121,7 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // Chat module (higher throttle limit for real-time usage)
         Route::middleware('throttle:120,1')->group(function () {
-            require __DIR__ . '/modules/chat.php';
+            require __DIR__.'/modules/chat.php';
         });
 
         Route::get('', [WorkspaceController::class, 'show']);
