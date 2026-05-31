@@ -156,5 +156,5 @@ it('rejects posting when user is not a channel participant', function () {
         idempotency(),
     );
 
-    $res->assertStatus(404);
+    $res->assertStatus(403);
 });

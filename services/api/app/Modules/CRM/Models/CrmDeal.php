@@ -26,6 +26,7 @@ class CrmDeal extends Model
         'expected_close_date', 'won_at', 'lost_at', 'notes', 'custom_fields',
         'loss_reason', 'loss_details', 'forecast_category', 'discount_amount',
         'discount_type', 'competitors', 'last_activity_at', 'stage_history',
+        'position',
     ];
 
     protected function casts(): array

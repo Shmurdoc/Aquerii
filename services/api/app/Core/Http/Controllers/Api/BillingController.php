@@ -11,18 +11,18 @@ use Stripe\StripeClient;
 
 class BillingController extends Controller
 {
-    private StripeClient $stripe;
+    private ?StripeClient $stripe = null;
 
-    public function __construct()
+    private function stripe(): StripeClient
     {
-        $this->stripe = new StripeClient(config('services.stripe.secret'));
+        return $this->stripe ??= new StripeClient(config('services.stripe.secret'));
     }
 
     // GET /workspaces/{workspace}/billing
     public function show(Request $request, Workspace $workspace): JsonResponse
     {
         $sub = $workspace->stripe_subscription_id
-            ? $this->stripe->subscriptions->retrieve($workspace->stripe_subscription_id, [
+            ? $this->stripe()->subscriptions->retrieve($workspace->stripe_subscription_id, [
                 'expand' => ['items.data.price.product'],
             ])
             : null;
@@ -75,7 +75,7 @@ class BillingController extends Controller
 
         // Ensure Stripe customer
         if (! $workspace->stripe_customer_id) {
-            $customer = $this->stripe->customers->create([
+            $customer = $this->stripe()->customers->create([
                 'email' => $request->user()->email,
                 'name' => $workspace->name,
                 'metadata' => ['workspace_id' => $workspace->id],
@@ -83,7 +83,7 @@ class BillingController extends Controller
             $workspace->update(['stripe_customer_id' => $customer->id]);
         }
 
-        $session = $this->stripe->checkout->sessions->create([
+        $session = $this->stripe()->checkout->sessions->create([
             'customer' => $workspace->stripe_customer_id,
             'mode' => 'subscription',
             'line_items' => [[
@@ -106,7 +106,7 @@ class BillingController extends Controller
     {
         abort_unless($workspace->stripe_customer_id, 422, 'No billing account found.');
 
-        $session = $this->stripe->billingPortal->sessions->create([
+        $session = $this->stripe()->billingPortal->sessions->create([
             'customer' => $workspace->stripe_customer_id,
             'return_url' => $request->input('return_url', config('app.frontend_url')),
         ]);
@@ -119,7 +119,7 @@ class BillingController extends Controller
     {
         abort_unless($workspace->stripe_subscription_id, 422, 'No active subscription.');
 
-        $this->stripe->subscriptions->update($workspace->stripe_subscription_id, [
+        $this->stripe()->subscriptions->update($workspace->stripe_subscription_id, [
             'cancel_at_period_end' => true,
         ]);
 

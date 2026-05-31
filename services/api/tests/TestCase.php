@@ -41,7 +41,11 @@ abstract class TestCase extends BaseTestCase
 
         // Clear file cache between tests to prevent rate-limit state and
         // idempotency keys from leaking between test runs.
-        Cache::flush();
+        try {
+            Cache::flush();
+        } catch (\UnexpectedValueException $e) {
+            // Cache directory may not have subdirectories yet (e.g. CI)
+        }
 
         // Reset any statically-cached auth guard user (e.g. from Sanctum::actingAs)
         // so it does not bleed into subsequent requests within the same test.
