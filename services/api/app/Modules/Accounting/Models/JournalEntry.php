@@ -4,12 +4,16 @@ namespace App\Modules\Accounting\Models;
 
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
+use Database\Factories\Accounting\JournalEntryFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class JournalEntry extends Model
 {
+    use HasFactory;
+
     public $incrementing = false;
 
     protected $keyType = 'string';
@@ -18,6 +22,11 @@ class JournalEntry extends Model
         'workspace_id', 'account_id', 'entry_date', 'description',
         'debit_amount', 'credit_amount', 'reference_type', 'reference_id', 'created_by',
     ];
+
+    protected static function newFactory(): JournalEntryFactory
+    {
+        return JournalEntryFactory::new();
+    }
 
     public function casts(): array
     {

@@ -4,6 +4,8 @@ namespace App\Modules\Accounting\Models;
 
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
+use Database\Factories\Accounting\AccountFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +14,7 @@ use Illuminate\Support\Str;
 
 class Account extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     public $incrementing = false;
 
@@ -21,6 +23,11 @@ class Account extends Model
     protected $fillable = [
         'workspace_id', 'code', 'name', 'type', 'description', 'is_active', 'created_by',
     ];
+
+    protected static function newFactory(): AccountFactory
+    {
+        return AccountFactory::new();
+    }
 
     public function casts(): array
     {

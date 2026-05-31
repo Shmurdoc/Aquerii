@@ -4,6 +4,8 @@ namespace App\Modules\Templates\Models;
 
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
+use Database\Factories\Templates\TemplateFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +13,7 @@ use Illuminate\Support\Str;
 
 class Template extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     public $incrementing = false;
 
@@ -21,6 +23,11 @@ class Template extends Model
         'workspace_id', 'name', 'type', 'description', 'content',
         'variables', 'version', 'is_public', 'created_by',
     ];
+
+    protected static function newFactory(): TemplateFactory
+    {
+        return TemplateFactory::new();
+    }
 
     protected function casts(): array
     {
