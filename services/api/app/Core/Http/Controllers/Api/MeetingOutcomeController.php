@@ -4,7 +4,6 @@ namespace App\Core\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Goal;
-use App\Core\Models\KeyResult;
 use App\Core\Models\MeetingOutcome;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -68,11 +67,15 @@ class MeetingOutcomeController extends Controller
     private function updateGoalProgress(MeetingOutcome $outcome): void
     {
         $goal = Goal::find($outcome->linked_goal_id);
-        if (!$goal) return;
+        if (! $goal) {
+            return;
+        }
 
         // Find the first key result and increment based on effectiveness
         $kr = $goal->keyResults()->first();
-        if (!$kr) return;
+        if (! $kr) {
+            return;
+        }
 
         // Simple: effectiveness 1-5 maps to 10-50% progress increment
         $increment = $outcome->effectiveness_score * 10;

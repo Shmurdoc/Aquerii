@@ -23,9 +23,9 @@ class IndustryTemplateSeeder extends Seeder
                             ['name' => 'Tire Size', 'type' => 'select', 'options' => ['295/80R22.5', '315/80R22.5', '385/65R22.5', '12.00R20']],
                             ['name' => 'Tire Brand', 'type' => 'text', 'placeholder' => 'e.g., Bridgestone, Michelin'],
                             ['name' => 'Tread Depth', 'type' => 'number', 'unit' => 'mm'],
-                            ['name' => 'Axle Position', 'type' => 'select', 'options' => ['Front Left', 'Front Right', 'Rear Left', 'Rear Right', 'Drive Axle', 'Trailer']]
+                            ['name' => 'Axle Position', 'type' => 'select', 'options' => ['Front Left', 'Front Right', 'Rear Left', 'Rear Right', 'Drive Axle', 'Trailer']],
                         ],
-                        'estimated_hours' => 1.5
+                        'estimated_hours' => 1.5,
                     ],
                     [
                         'name' => 'Puncture Repair',
@@ -33,9 +33,9 @@ class IndustryTemplateSeeder extends Seeder
                         'checklist' => ['Remove tire from wheel', 'Inspect damage', 'Apply patch', 'Test repair', 'Rebalance tire', 'Refit and torque'],
                         'custom_fields' => [
                             ['name' => 'Puncture Location', 'type' => 'select', 'options' => ['Tread', 'Sidewall', 'Shoulder']],
-                            ['name' => 'Patch Type', 'type' => 'select', 'options' => ['Mushroom', 'Plug', 'Patch']]
+                            ['name' => 'Patch Type', 'type' => 'select', 'options' => ['Mushroom', 'Plug', 'Patch']],
                         ],
-                        'estimated_hours' => 0.75
+                        'estimated_hours' => 0.75,
                     ],
                     [
                         'name' => 'Wheel Alignment',
@@ -44,15 +44,15 @@ class IndustryTemplateSeeder extends Seeder
                         'custom_fields' => [
                             ['name' => 'Front Camber', 'type' => 'number', 'unit' => 'degrees'],
                             ['name' => 'Front Toe', 'type' => 'number', 'unit' => 'mm'],
-                            ['name' => 'Rear Camber', 'type' => 'number', 'unit' => 'degrees']
+                            ['name' => 'Rear Camber', 'type' => 'number', 'unit' => 'degrees'],
                         ],
-                        'estimated_hours' => 1
-                    ]
+                        'estimated_hours' => 1,
+                    ],
                 ]),
                 'custom_fields' => json_encode([
                     ['name' => 'Vehicle Registration', 'type' => 'text', 'required' => true],
                     ['name' => 'Vehicle Make', 'type' => 'text'],
-                    ['name' => 'Fleet Number', 'type' => 'text']
+                    ['name' => 'Fleet Number', 'type' => 'text'],
                 ]),
                 'is_active' => true,
                 'created_at' => now(),
@@ -70,9 +70,9 @@ class IndustryTemplateSeeder extends Seeder
                         'custom_fields' => [
                             ['name' => 'Odometer Reading', 'type' => 'number', 'unit' => 'km'],
                             ['name' => 'Oil Grade', 'type' => 'select', 'options' => ['10W-40', '15W-40', '20W-50', '5W-30']],
-                            ['name' => 'Oil Quantity', 'type' => 'number', 'unit' => 'liters']
+                            ['name' => 'Oil Quantity', 'type' => 'number', 'unit' => 'liters'],
                         ],
-                        'estimated_hours' => 2
+                        'estimated_hours' => 2,
                     ],
                     [
                         'name' => 'Brake Service',
@@ -81,9 +81,9 @@ class IndustryTemplateSeeder extends Seeder
                         'custom_fields' => [
                             ['name' => 'Front Pad Thickness', 'type' => 'number', 'unit' => 'mm'],
                             ['name' => 'Rear Pad Thickness', 'type' => 'number', 'unit' => 'mm'],
-                            ['name' => 'Brake Fluid Level', 'type' => 'select', 'options' => ['Full', 'Low', 'Critical']]
+                            ['name' => 'Brake Fluid Level', 'type' => 'select', 'options' => ['Full', 'Low', 'Critical']],
                         ],
-                        'estimated_hours' => 1.5
+                        'estimated_hours' => 1.5,
                     ],
                     [
                         'name' => 'Breakdown Recovery',
@@ -92,16 +92,16 @@ class IndustryTemplateSeeder extends Seeder
                         'custom_fields' => [
                             ['name' => 'Location', 'type' => 'text', 'required' => true],
                             ['name' => 'Fault Description', 'type' => 'textarea'],
-                            ['name' => 'Recovery Method', 'type' => 'select', 'options' => ['Roadside Repair', 'Tow to Workshop', 'Mobile Workshop']]
+                            ['name' => 'Recovery Method', 'type' => 'select', 'options' => ['Roadside Repair', 'Tow to Workshop', 'Mobile Workshop']],
                         ],
-                        'estimated_hours' => 2
-                    ]
+                        'estimated_hours' => 2,
+                    ],
                 ]),
                 'custom_fields' => json_encode([
                     ['name' => 'Vehicle Registration', 'type' => 'text', 'required' => true],
                     ['name' => 'Vehicle Make/Model', 'type' => 'text'],
                     ['name' => 'Fleet Number', 'type' => 'text'],
-                    ['name' => 'Odometer Reading', 'type' => 'number', 'unit' => 'km']
+                    ['name' => 'Odometer Reading', 'type' => 'number', 'unit' => 'km'],
                 ]),
                 'is_active' => true,
                 'created_at' => now(),
@@ -119,9 +119,9 @@ class IndustryTemplateSeeder extends Seeder
                         'custom_fields' => [
                             ['name' => 'Circuit Number', 'type' => 'text'],
                             ['name' => 'Cable Size', 'type' => 'select', 'options' => ['1.5mm²', '2.5mm²', '4mm²', '6mm²', '10mm²', '16mm²']],
-                            ['name' => 'Breaker Rating', 'type' => 'number', 'unit' => 'A']
+                            ['name' => 'Breaker Rating', 'type' => 'number', 'unit' => 'A'],
                         ],
-                        'estimated_hours' => 4
+                        'estimated_hours' => 4,
                     ],
                     [
                         'name' => 'Repair',
@@ -129,9 +129,9 @@ class IndustryTemplateSeeder extends Seeder
                         'checklist' => ['Safety isolation', 'Fault diagnosis', 'Repair execution', 'Testing', 'Certificate issued'],
                         'custom_fields' => [
                             ['name' => 'Fault Description', 'type' => 'textarea'],
-                            ['name' => 'Fault Location', 'type' => 'text']
+                            ['name' => 'Fault Location', 'type' => 'text'],
                         ],
-                        'estimated_hours' => 2
+                        'estimated_hours' => 2,
                     ],
                     [
                         'name' => 'Compliance Inspection',
@@ -140,15 +140,15 @@ class IndustryTemplateSeeder extends Seeder
                         'custom_fields' => [
                             ['name' => 'COC Number', 'type' => 'text'],
                             ['name' => 'Valid Until', 'type' => 'date'],
-                            ['name' => 'Non-Compliances Found', 'type' => 'number']
+                            ['name' => 'Non-Compliances Found', 'type' => 'number'],
                         ],
-                        'estimated_hours' => 2
-                    ]
+                        'estimated_hours' => 2,
+                    ],
                 ]),
                 'custom_fields' => json_encode([
                     ['name' => 'Property Address', 'type' => 'text', 'required' => true],
                     ['name' => 'Client Name', 'type' => 'text'],
-                    ['name' => 'Municipality', 'type' => 'text']
+                    ['name' => 'Municipality', 'type' => 'text'],
                 ]),
                 'is_active' => true,
                 'created_at' => now(),
@@ -166,9 +166,9 @@ class IndustryTemplateSeeder extends Seeder
                         'custom_fields' => [
                             ['name' => 'Pipe Type', 'type' => 'select', 'options' => ['PVC', 'Copper', 'PEX', 'Galvanized']],
                             ['name' => 'Pipe Diameter', 'type' => 'select', 'options' => ['15mm', '22mm', '28mm', '32mm', '40mm']],
-                            ['name' => 'Pressure Test Result', 'type' => 'number', 'unit' => 'bar']
+                            ['name' => 'Pressure Test Result', 'type' => 'number', 'unit' => 'bar'],
                         ],
-                        'estimated_hours' => 4
+                        'estimated_hours' => 4,
                     ],
                     [
                         'name' => 'Repair',
@@ -176,9 +176,9 @@ class IndustryTemplateSeeder extends Seeder
                         'checklist' => ['Isolate water supply', 'Identify leak/fault', 'Repair execution', 'Pressure test', 'Flow test', 'COC issued'],
                         'custom_fields' => [
                             ['name' => 'Leak Location', 'type' => 'text'],
-                            ['name' => 'Repair Method', 'type' => 'select', 'options' => ['Patch', 'Replace Section', 'Full Replace']]
+                            ['name' => 'Repair Method', 'type' => 'select', 'options' => ['Patch', 'Replace Section', 'Full Replace']],
                         ],
-                        'estimated_hours' => 2
+                        'estimated_hours' => 2,
                     ],
                     [
                         'name' => 'Emergency Callout',
@@ -186,15 +186,15 @@ class IndustryTemplateSeeder extends Seeder
                         'checklist' => ['Emergency assessment', 'Safety measures', 'Temporary fix', 'Permanent repair plan', 'Client notification'],
                         'custom_fields' => [
                             ['name' => 'Emergency Type', 'type' => 'select', 'options' => ['Burst Pipe', 'Blocked Drain', 'Gas Leak', 'Flood', 'Other']],
-                            ['name' => 'Response Time', 'type' => 'number', 'unit' => 'minutes']
+                            ['name' => 'Response Time', 'type' => 'number', 'unit' => 'minutes'],
                         ],
-                        'estimated_hours' => 1
-                    ]
+                        'estimated_hours' => 1,
+                    ],
                 ]),
                 'custom_fields' => json_encode([
                     ['name' => 'Property Address', 'type' => 'text', 'required' => true],
                     ['name' => 'Client Name', 'type' => 'text'],
-                    ['name' => 'Water Meter Number', 'type' => 'text']
+                    ['name' => 'Water Meter Number', 'type' => 'text'],
                 ]),
                 'is_active' => true,
                 'created_at' => now(),
@@ -211,9 +211,9 @@ class IndustryTemplateSeeder extends Seeder
                         'checklist' => ['Task assessment', 'Material check', 'Execution', 'Quality check', 'Client sign-off'],
                         'custom_fields' => [
                             ['name' => 'Task Type', 'type' => 'select', 'options' => ['Repair', 'Installation', 'Inspection', 'Other']],
-                            ['name' => 'Materials Used', 'type' => 'textarea']
+                            ['name' => 'Materials Used', 'type' => 'textarea'],
                         ],
-                        'estimated_hours' => 2
+                        'estimated_hours' => 2,
                     ],
                     [
                         'name' => 'Inspection',
@@ -221,16 +221,16 @@ class IndustryTemplateSeeder extends Seeder
                         'checklist' => ['Safety briefing', 'Visual inspection', 'Detailed assessment', 'Report generation', 'Client review'],
                         'custom_fields' => [
                             ['name' => 'Inspection Type', 'type' => 'select', 'options' => ['Safety', 'Quality', 'Compliance', 'Condition']],
-                            ['name' => 'Findings', 'type' => 'textarea']
+                            ['name' => 'Findings', 'type' => 'textarea'],
                         ],
-                        'estimated_hours' => 1
-                    ]
+                        'estimated_hours' => 1,
+                    ],
                 ]),
                 'custom_fields' => json_encode([
                     ['name' => 'Site Location', 'type' => 'text', 'required' => true],
                     ['name' => 'Client Name', 'type' => 'text'],
                     ['name' => 'Contact Person', 'type' => 'text'],
-                    ['name' => 'Contact Phone', 'type' => 'text']
+                    ['name' => 'Contact Phone', 'type' => 'text'],
                 ]),
                 'is_active' => true,
                 'created_at' => now(),

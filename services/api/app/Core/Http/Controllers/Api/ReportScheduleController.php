@@ -4,6 +4,7 @@ namespace App\Core\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
 use App\Core\Services\AuditService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -228,7 +229,7 @@ class ReportScheduleController extends Controller
         ]);
     }
 
-    private function nextRunFromFrequency(string $frequency): \Carbon\Carbon
+    private function nextRunFromFrequency(string $frequency): Carbon
     {
         return match ($frequency) {
             'daily' => now()->addDay(),

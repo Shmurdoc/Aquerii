@@ -6,7 +6,6 @@ use App\Core\Models\WorkspaceMember;
 use App\Modules\CRM\Models\CrmCompany;
 use App\Modules\CRM\Models\CrmContact;
 use App\Modules\CRM\Models\CrmDeal;
-use App\Modules\CRM\Models\CrmLead;
 use App\Modules\CRM\Models\CrmPipeline;
 use App\Modules\CRM\Models\CrmPipelineStage;
 use Illuminate\Support\Facades\DB;

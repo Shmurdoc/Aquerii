@@ -215,21 +215,21 @@ class ItemController extends Controller
         if ($scope === 'my') {
             $query->where(function ($q) use ($userId) {
                 $q->whereHas('assignees', fn ($a) => $a->where('users.id', $userId))
-                  ->orWhereDoesntHave('assignees');
+                    ->orWhereDoesntHave('assignees');
             });
         }
 
         $items = $query->get();
 
         $results = $items->map(fn (Item $item) => [
-            'id'         => $item->id,
-            'title'      => $item->title,
-            'priority'   => $item->priority,
-            'due_date'   => $item->due_date?->toDateString(),
-            'done'       => (bool) $item->status === 'done',
-            'board_id'   => $item->board_id,
+            'id' => $item->id,
+            'title' => $item->title,
+            'priority' => $item->priority,
+            'due_date' => $item->due_date?->toDateString(),
+            'done' => (bool) $item->status === 'done',
+            'board_id' => $item->board_id,
             'board_name' => $item->board?->name ?? 'Untitled Board',
-            'board_color'=> $item->board?->color,
+            'board_color' => $item->board?->color,
         ]);
 
         return response()->json(['data' => $results]);

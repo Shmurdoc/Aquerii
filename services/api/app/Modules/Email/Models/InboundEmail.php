@@ -3,6 +3,7 @@
 namespace App\Modules\Email\Models;
 
 use App\Core\Models\Item;
+use App\Core\Models\Workspace;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,7 +30,7 @@ class InboundEmail extends Model
 
     public function workspace()
     {
-        return $this->belongsTo(\App\Core\Models\Workspace::class);
+        return $this->belongsTo(Workspace::class);
     }
 
     public function projectEmailAddress()

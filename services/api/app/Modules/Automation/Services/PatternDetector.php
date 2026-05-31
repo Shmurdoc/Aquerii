@@ -3,12 +3,10 @@
 namespace App\Modules\Automation\Services;
 
 use App\Core\Models\Item;
-use App\Core\Models\Workspace;
 use App\Modules\Automation\Models\Automation;
 use App\Modules\Automation\Models\AutomationRecommendation;
-use App\Modules\Automation\Models\AutomationRun;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PatternDetector
 {
@@ -165,7 +163,7 @@ class PatternDetector
             ->where('status', 'pending')
             ->exists();
 
-        if (!$exists) {
+        if (! $exists) {
             AutomationRecommendation::create(array_merge($data, [
                 'workspace_id' => $workspaceId,
             ]));

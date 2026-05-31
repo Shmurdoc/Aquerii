@@ -45,8 +45,8 @@ return new class extends Migration
         // FOR SELECT only — the separate INSERT policy below handles inserts
         // so the USING clause doesn't block adding the first workspace member.
         DB::unprepared(
-            "CREATE POLICY workspace_members_own_workspaces ON workspace_members FOR SELECT
-             USING (workspace_id IN (SELECT auth.current_user_workspace_ids()))"
+            'CREATE POLICY workspace_members_own_workspaces ON workspace_members FOR SELECT
+             USING (workspace_id IN (SELECT auth.current_user_workspace_ids()))'
         );
 
         // Add a separate INSERT policy so the USING clause (which acts as an

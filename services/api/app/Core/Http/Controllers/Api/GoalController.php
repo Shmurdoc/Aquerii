@@ -4,7 +4,6 @@ namespace App\Core\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Goal;
-use App\Core\Models\KeyResult;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -47,7 +46,7 @@ class GoalController extends Controller
             'position' => Goal::where('workspace_id', $workspace)->max('position') + 1,
         ]);
 
-        if (!empty($data['key_results'])) {
+        if (! empty($data['key_results'])) {
             foreach ($data['key_results'] as $kr) {
                 $goal->keyResults()->create([
                     'title' => $kr['title'],

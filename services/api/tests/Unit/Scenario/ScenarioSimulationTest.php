@@ -2,12 +2,11 @@
 
 use App\Core\Http\Controllers\Api\ScenarioController;
 use App\Core\Models\ScenarioAdjustment;
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 function invokeApplyAdjustment(ScenarioAdjustment $adj, Collection &$tasks, Collection &$teamCapacity): void
 {
-    $controller = new ScenarioController();
+    $controller = new ScenarioController;
     $ref = new ReflectionClass($controller);
     $method = $ref->getMethod('applyAdjustment');
     $method->setAccessible(true);

@@ -5,6 +5,8 @@ namespace App\Core\Http\Controllers\Api;
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\FieldPermission;
 use App\Core\Models\ScimToken;
+use App\Core\Models\User;
+use App\Core\Models\Workspace;
 use App\Core\Services\AuditService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -229,15 +231,15 @@ class FieldPermissionController extends Controller
 
         // Find or create user
         $email = $data['userName'];
-        $name = ($data['name']['givenName'] ?? '') . ' ' . ($data['name']['familyName'] ?? '');
+        $name = ($data['name']['givenName'] ?? '').' '.($data['name']['familyName'] ?? '');
 
-        $user = \App\Core\Models\User::firstOrCreate(
+        $user = User::firstOrCreate(
             ['email' => $email],
             ['name' => trim($name) ?: $email]
         );
 
         // Add to workspace if not already a member
-        $workspaceModel = \App\Core\Models\Workspace::find($workspace);
+        $workspaceModel = Workspace::find($workspace);
         if ($workspaceModel) {
             $workspaceModel->members()->syncWithoutDetaching([
                 $user->id => ['role' => 'member', 'status' => 'active'],

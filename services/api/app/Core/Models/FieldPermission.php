@@ -51,7 +51,7 @@ class FieldPermission extends Model
             ->where('role', $role)
             ->first();
 
-        if (!$permission) {
+        if (! $permission) {
             // Default: members can read/write, viewers can read
             return $role === 'member' || ($role === 'viewer' && $requiredPermission === 'read');
         }

@@ -34,7 +34,7 @@ class ScimToken extends Model
      */
     public static function generate(string $workspaceId, string $name, string $scope = 'users'): string
     {
-        $rawToken = 'scim_' . Str::random(32);
+        $rawToken = 'scim_'.Str::random(32);
         $hash = hash('sha256', $rawToken);
 
         static::create([

@@ -5,7 +5,6 @@ namespace App\Core\Services;
 use App\Core\Models\Board;
 use App\Core\Models\BoardGroup;
 use App\Core\Models\Workspace;
-use App\Core\Services\UsageService;
 use Illuminate\Support\Facades\DB;
 
 class BoardService

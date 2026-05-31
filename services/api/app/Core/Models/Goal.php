@@ -39,7 +39,9 @@ class Goal extends Model
     public function getProgressAttribute(): float
     {
         $keyResults = $this->keyResults;
-        if ($keyResults->isEmpty()) return 0;
+        if ($keyResults->isEmpty()) {
+            return 0;
+        }
 
         return round($keyResults->avg(function ($kr) {
             return $kr->target_value > 0

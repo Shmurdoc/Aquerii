@@ -525,6 +525,7 @@ class ScimController extends Controller
     {
         if (preg_match('/^userName\s+eq\s+"([^"]+)"$/i', $filter, $m)) {
             $query->where('users.email', strtolower($m[1]));
+
             return;
         }
 
@@ -642,6 +643,7 @@ class ScimController extends Controller
             WorkspaceMember::where('workspace_id', $workspaceId)
                 ->where('employee_group_id', $group->id)
                 ->update(['employee_group_id' => null, 'updated_at' => now()]);
+
             return;
         }
 

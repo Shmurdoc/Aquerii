@@ -738,7 +738,7 @@ LUA;
         $internalSecret = config('services.ai.internal_secret', '');
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $internalSecret,
+            'Authorization' => 'Bearer '.$internalSecret,
             'Content-Type' => 'application/json',
         ])->timeout(30)->post("{$aiServiceUrl}{$endpoint}", $data);
 

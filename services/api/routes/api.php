@@ -1,15 +1,28 @@
 <?php
 
+use App\Core\Http\Controllers\Api\AuditLogController;
 use App\Core\Http\Controllers\Api\BillingController;
 use App\Core\Http\Controllers\Api\BrandingController;
 use App\Core\Http\Controllers\Api\BulkActionController;
 use App\Core\Http\Controllers\Api\CommentController;
 use App\Core\Http\Controllers\Api\DocumentPdfController;
 use App\Core\Http\Controllers\Api\EmployeeGroupController;
+use App\Core\Http\Controllers\Api\FieldPermissionController;
 use App\Core\Http\Controllers\Api\FileController;
+use App\Core\Http\Controllers\Api\FinancialApprovalController;
+use App\Core\Http\Controllers\Api\GoalController;
+use App\Core\Http\Controllers\Api\IntegrationReliabilityController;
 use App\Core\Http\Controllers\Api\InvoicePdfController;
 use App\Core\Http\Controllers\Api\InvoiceWorkflowController;
+use App\Core\Http\Controllers\Api\MeetingOutcomeController;
 use App\Core\Http\Controllers\Api\NotificationController;
+use App\Core\Http\Controllers\Api\OfflineSyncController;
+use App\Core\Http\Controllers\Api\PluginController;
+use App\Core\Http\Controllers\Api\ReportController;
+use App\Core\Http\Controllers\Api\ReportScheduleController;
+use App\Core\Http\Controllers\Api\ScenarioController;
+use App\Core\Http\Controllers\Api\ScimController;
+use App\Core\Http\Controllers\Api\SentimentController;
 use App\Core\Http\Controllers\Api\WebhookController;
 use App\Core\Http\Controllers\Api\WorkspaceController;
 use App\Core\Http\Controllers\Api\WorkspaceLogoController;
@@ -23,6 +36,7 @@ use App\Core\Http\Controllers\UserController;
 use App\Http\Controllers\Api\WorkspaceInvitationController;
 use App\Modules\AI\Http\Controllers\AIController;
 use App\Modules\Automation\Http\Controllers\AutomationController;
+use App\Modules\Automation\Http\Controllers\RecommendationController;
 use App\Modules\CRM\Http\Controllers\CalendarSyncController;
 use App\Modules\CRM\Http\Controllers\CallLogController;
 use App\Modules\CRM\Http\Controllers\CompanyController;
@@ -43,6 +57,8 @@ use App\Modules\CRM\Http\Controllers\QuotaController;
 use App\Modules\CRM\Http\Controllers\QuoteController;
 use App\Modules\CRM\Http\Controllers\SequenceController;
 use App\Modules\CRM\Http\Controllers\StageController;
+use App\Modules\Email\Http\Controllers\InboundEmailController;
+use App\Modules\Email\Http\Controllers\ProjectEmailAddressController;
 use Illuminate\Support\Facades\Route;
 
 // ── Health check (public) ─────────────────────────────────────────────────────
@@ -180,41 +196,41 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::post('notifications/read-all', [NotificationController::class, 'markAllRead']);
 
         // Reports
-        Route::get('reports/dashboard', [\App\Core\Http\Controllers\Api\ReportController::class, 'dashboard']);
-        Route::get('reports/invoices', [\App\Core\Http\Controllers\Api\ReportController::class, 'invoices']);
-        Route::get('reports/expenses', [\App\Core\Http\Controllers\Api\ReportController::class, 'expenses']);
-        Route::get('reports/procurement', [\App\Core\Http\Controllers\Api\ReportController::class, 'procurement']);
-        Route::get('reports/inventory', [\App\Core\Http\Controllers\Api\ReportController::class, 'inventory']);
-        Route::get('reports/export/{type}', [\App\Core\Http\Controllers\Api\ReportController::class, 'export']);
+        Route::get('reports/dashboard', [ReportController::class, 'dashboard']);
+        Route::get('reports/invoices', [ReportController::class, 'invoices']);
+        Route::get('reports/expenses', [ReportController::class, 'expenses']);
+        Route::get('reports/procurement', [ReportController::class, 'procurement']);
+        Route::get('reports/inventory', [ReportController::class, 'inventory']);
+        Route::get('reports/export/{type}', [ReportController::class, 'export']);
 
         // Scheduled report delivery (workspace admin)
-        Route::get('reports/schedules', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'index'])->middleware('workspace.role:owner,admin');
-        Route::post('reports/schedules', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'store'])->middleware(['idempotent', 'workspace.role:owner,admin']);
-        Route::patch('reports/schedules/{schedule}', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'update'])->middleware(['idempotent', 'workspace.role:owner,admin']);
-        Route::delete('reports/schedules/{schedule}', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'destroy'])->middleware('workspace.role:owner,admin');
-        Route::post('reports/schedules/{schedule}/run-now', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'runNow'])->middleware(['idempotent', 'workspace.role:owner,admin']);
-        Route::get('reports/schedules/exceptions', [\App\Core\Http\Controllers\Api\ReportScheduleController::class, 'exceptions'])->middleware('workspace.role:owner,admin');
+        Route::get('reports/schedules', [ReportScheduleController::class, 'index'])->middleware('workspace.role:owner,admin');
+        Route::post('reports/schedules', [ReportScheduleController::class, 'store'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::patch('reports/schedules/{schedule}', [ReportScheduleController::class, 'update'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::delete('reports/schedules/{schedule}', [ReportScheduleController::class, 'destroy'])->middleware('workspace.role:owner,admin');
+        Route::post('reports/schedules/{schedule}/run-now', [ReportScheduleController::class, 'runNow'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::get('reports/schedules/exceptions', [ReportScheduleController::class, 'exceptions'])->middleware('workspace.role:owner,admin');
 
         // Integration reliability control plane (workspace admin)
-        Route::get('integrations/webhook-events', [\App\Core\Http\Controllers\Api\IntegrationReliabilityController::class, 'index'])->middleware('workspace.role:owner,admin');
-        Route::post('integrations/webhook-events/{event}/retry', [\App\Core\Http\Controllers\Api\IntegrationReliabilityController::class, 'retry'])->middleware(['idempotent', 'workspace.role:owner,admin']);
-        Route::post('integrations/webhook-events/{event}/replay-now', [\App\Core\Http\Controllers\Api\IntegrationReliabilityController::class, 'replayNow'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::get('integrations/webhook-events', [IntegrationReliabilityController::class, 'index'])->middleware('workspace.role:owner,admin');
+        Route::post('integrations/webhook-events/{event}/retry', [IntegrationReliabilityController::class, 'retry'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::post('integrations/webhook-events/{event}/replay-now', [IntegrationReliabilityController::class, 'replayNow'])->middleware(['idempotent', 'workspace.role:owner,admin']);
 
         // Audit logs (workspace admin)
-        Route::get('audit-logs', [\App\Core\Http\Controllers\Api\AuditLogController::class, 'index'])->middleware('workspace.role:owner,admin');
+        Route::get('audit-logs', [AuditLogController::class, 'index'])->middleware('workspace.role:owner,admin');
 
         // Field-level permissions (workspace admin)
-        Route::get('field-permissions', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'index'])->middleware('workspace.role:owner,admin');
-        Route::post('field-permissions', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'store'])->middleware(['idempotent', 'workspace.role:owner,admin']);
-        Route::delete('field-permissions/{permission}', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'destroy'])->middleware('workspace.role:owner,admin');
-        Route::post('field-permissions/bulk', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'bulkUpdate'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::get('field-permissions', [FieldPermissionController::class, 'index'])->middleware('workspace.role:owner,admin');
+        Route::post('field-permissions', [FieldPermissionController::class, 'store'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::delete('field-permissions/{permission}', [FieldPermissionController::class, 'destroy'])->middleware('workspace.role:owner,admin');
+        Route::post('field-permissions/bulk', [FieldPermissionController::class, 'bulkUpdate'])->middleware(['idempotent', 'workspace.role:owner,admin']);
 
         // SCIM token management (workspace admin)
-        Route::get('scim/tokens', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokens'])->middleware('workspace.role:owner,admin');
-        Route::post('scim/tokens', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokenCreate'])->middleware(['idempotent', 'workspace.role:owner,admin']);
-        Route::delete('scim/tokens/{token}', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimTokenRevoke'])->middleware('workspace.role:owner,admin');
+        Route::get('scim/tokens', [FieldPermissionController::class, 'scimTokens'])->middleware('workspace.role:owner,admin');
+        Route::post('scim/tokens', [FieldPermissionController::class, 'scimTokenCreate'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+        Route::delete('scim/tokens/{token}', [FieldPermissionController::class, 'scimTokenRevoke'])->middleware('workspace.role:owner,admin');
         // Legacy bootstrap path kept for compatibility with existing clients.
-        Route::post('scim/users', [\App\Core\Http\Controllers\Api\FieldPermissionController::class, 'scimUsersProvision'])->middleware('idempotent');
+        Route::post('scim/users', [FieldPermissionController::class, 'scimUsersProvision'])->middleware('idempotent');
 
         // CRM (basic: free tier; pipelines: gated)
         Route::get('crm/pipelines', [PipelineController::class, 'index']);
@@ -360,18 +376,18 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::post('data-clean', [AIController::class, 'dataClean']);
 
             // AI-recommended automations (pattern detection)
-            Route::get('automation-recommendations', [\App\Modules\Automation\Http\Controllers\RecommendationController::class, 'index']);
-            Route::post('automation-recommendations/refresh', [\App\Modules\Automation\Http\Controllers\RecommendationController::class, 'refresh'])->middleware('idempotent');
-            Route::post('automation-recommendations/{recommendation}/accept', [\App\Modules\Automation\Http\Controllers\RecommendationController::class, 'accept'])->middleware('idempotent');
-            Route::post('automation-recommendations/{recommendation}/dismiss', [\App\Modules\Automation\Http\Controllers\RecommendationController::class, 'dismiss'])->middleware('idempotent');
+            Route::get('automation-recommendations', [RecommendationController::class, 'index']);
+            Route::post('automation-recommendations/refresh', [RecommendationController::class, 'refresh'])->middleware('idempotent');
+            Route::post('automation-recommendations/{recommendation}/accept', [RecommendationController::class, 'accept'])->middleware('idempotent');
+            Route::post('automation-recommendations/{recommendation}/dismiss', [RecommendationController::class, 'dismiss'])->middleware('idempotent');
 
             // Plugin marketplace
-            Route::get('plugins/marketplace', [\App\Core\Http\Controllers\Api\PluginController::class, 'marketplace']);
-            Route::get('plugins/installed', [\App\Core\Http\Controllers\Api\PluginController::class, 'installed']);
-            Route::post('plugins/{plugin}/install', [\App\Core\Http\Controllers\Api\PluginController::class, 'install'])->middleware('idempotent');
-            Route::delete('plugins/{plugin}/uninstall', [\App\Core\Http\Controllers\Api\PluginController::class, 'uninstall']);
-            Route::post('plugins/{plugin}/toggle', [\App\Core\Http\Controllers\Api\PluginController::class, 'toggle'])->middleware('idempotent');
-            Route::patch('plugins/{plugin}/settings', [\App\Core\Http\Controllers\Api\PluginController::class, 'updateSettings'])->middleware('idempotent');
+            Route::get('plugins/marketplace', [PluginController::class, 'marketplace']);
+            Route::get('plugins/installed', [PluginController::class, 'installed']);
+            Route::post('plugins/{plugin}/install', [PluginController::class, 'install'])->middleware('idempotent');
+            Route::delete('plugins/{plugin}/uninstall', [PluginController::class, 'uninstall']);
+            Route::post('plugins/{plugin}/toggle', [PluginController::class, 'toggle'])->middleware('idempotent');
+            Route::patch('plugins/{plugin}/settings', [PluginController::class, 'updateSettings'])->middleware('idempotent');
 
             Route::post('anomaly-detection', [AIController::class, 'anomalyDetection']);
         });
@@ -385,11 +401,11 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::post('sales/orders/{so}/convert-to-invoice', [InvoiceWorkflowController::class, 'convertToInvoice'])->middleware('idempotent');
 
             // Financial approval controls (invoices)
-            Route::get('finance/invoice-approvals', [\App\Core\Http\Controllers\Api\FinancialApprovalController::class, 'index'])->middleware('workspace.role:owner,admin');
-            Route::post('finance/invoices/{invoice}/submit-approval', [\App\Core\Http\Controllers\Api\FinancialApprovalController::class, 'submitInvoice'])->middleware('idempotent');
-            Route::post('finance/invoice-approvals/{approval}/approve', [\App\Core\Http\Controllers\Api\FinancialApprovalController::class, 'approveInvoice'])->middleware(['idempotent', 'workspace.role:owner,admin']);
-            Route::post('finance/invoice-approvals/{approval}/reject', [\App\Core\Http\Controllers\Api\FinancialApprovalController::class, 'rejectInvoice'])->middleware(['idempotent', 'workspace.role:owner,admin']);
-            Route::post('finance/invoices/{invoice}/reverse', [\App\Core\Http\Controllers\Api\FinancialApprovalController::class, 'reversePostedInvoice'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+            Route::get('finance/invoice-approvals', [FinancialApprovalController::class, 'index'])->middleware('workspace.role:owner,admin');
+            Route::post('finance/invoices/{invoice}/submit-approval', [FinancialApprovalController::class, 'submitInvoice'])->middleware('idempotent');
+            Route::post('finance/invoice-approvals/{approval}/approve', [FinancialApprovalController::class, 'approveInvoice'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+            Route::post('finance/invoice-approvals/{approval}/reject', [FinancialApprovalController::class, 'rejectInvoice'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+            Route::post('finance/invoices/{invoice}/reverse', [FinancialApprovalController::class, 'reversePostedInvoice'])->middleware(['idempotent', 'workspace.role:owner,admin']);
 
             Route::prefix('documents')->group(function () {
                 Route::get('quotes/{id}/pdf', [DocumentPdfController::class, 'quote']);
@@ -401,64 +417,64 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             });
 
             // Offline sync
-            Route::get('sync/conflicts', [\App\Core\Http\Controllers\Api\OfflineSyncController::class, 'conflicts']);
-            Route::patch('sync/conflicts/{conflict}', [\App\Core\Http\Controllers\Api\OfflineSyncController::class, 'resolve'])->middleware('idempotent');
-            Route::post('sync/conflicts/resolve-all', [\App\Core\Http\Controllers\Api\OfflineSyncController::class, 'resolveAll'])->middleware('idempotent');
+            Route::get('sync/conflicts', [OfflineSyncController::class, 'conflicts']);
+            Route::patch('sync/conflicts/{conflict}', [OfflineSyncController::class, 'resolve'])->middleware('idempotent');
+            Route::post('sync/conflicts/resolve-all', [OfflineSyncController::class, 'resolveAll'])->middleware('idempotent');
 
             // Sentiment / burnout detection
-            Route::get('sentiment/team', [\App\Core\Http\Controllers\Api\SentimentController::class, 'teamOverview']);
-            Route::get('sentiment/member/{userId}', [\App\Core\Http\Controllers\Api\SentimentController::class, 'memberMetrics']);
-            Route::post('sentiment/refresh', [\App\Core\Http\Controllers\Api\SentimentController::class, 'refresh'])->middleware('idempotent');
+            Route::get('sentiment/team', [SentimentController::class, 'teamOverview']);
+            Route::get('sentiment/member/{userId}', [SentimentController::class, 'memberMetrics']);
+            Route::post('sentiment/refresh', [SentimentController::class, 'refresh'])->middleware('idempotent');
 
             // Goals / OKRs
-            Route::apiResource('goals', \App\Core\Http\Controllers\Api\GoalController::class)->middleware('idempotent');
+            Route::apiResource('goals', GoalController::class)->middleware('idempotent');
 
             // Meeting outcomes
-            Route::get('meeting-outcomes', [\App\Core\Http\Controllers\Api\MeetingOutcomeController::class, 'index']);
-            Route::post('meetings/{meeting}/outcome', [\App\Core\Http\Controllers\Api\MeetingOutcomeController::class, 'store'])->middleware('idempotent');
-            Route::get('meetings/{meeting}/outcome', [\App\Core\Http\Controllers\Api\MeetingOutcomeController::class, 'show']);
+            Route::get('meeting-outcomes', [MeetingOutcomeController::class, 'index']);
+            Route::post('meetings/{meeting}/outcome', [MeetingOutcomeController::class, 'store'])->middleware('idempotent');
+            Route::get('meetings/{meeting}/outcome', [MeetingOutcomeController::class, 'show']);
 
             // Scenarios (digital twin / what-if)
-            Route::apiResource('scenarios', \App\Core\Http\Controllers\Api\ScenarioController::class)->middleware('idempotent');
-            Route::post('scenarios/{scenario}/adjustments', [\App\Core\Http\Controllers\Api\ScenarioController::class, 'addAdjustment'])->middleware('idempotent');
-            Route::delete('scenarios/{scenario}/adjustments/{adjustment}', [\App\Core\Http\Controllers\Api\ScenarioController::class, 'removeAdjustment']);
-            Route::post('scenarios/{scenario}/simulate', [\App\Core\Http\Controllers\Api\ScenarioController::class, 'simulate'])->middleware('idempotent');
-            Route::post('scenarios/compare', [\App\Core\Http\Controllers\Api\ScenarioController::class, 'compare'])->middleware('idempotent');
+            Route::apiResource('scenarios', ScenarioController::class)->middleware('idempotent');
+            Route::post('scenarios/{scenario}/adjustments', [ScenarioController::class, 'addAdjustment'])->middleware('idempotent');
+            Route::delete('scenarios/{scenario}/adjustments/{adjustment}', [ScenarioController::class, 'removeAdjustment']);
+            Route::post('scenarios/{scenario}/simulate', [ScenarioController::class, 'simulate'])->middleware('idempotent');
+            Route::post('scenarios/compare', [ScenarioController::class, 'compare'])->middleware('idempotent');
 
             // Project email addresses (management)
-            Route::get('email/project-addresses', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'index']);
-            Route::post('email/project-addresses', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'store'])->middleware('idempotent');
-            Route::patch('email/project-addresses/{address}', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'update'])->middleware('idempotent');
-            Route::delete('email/project-addresses/{address}', [\App\Modules\Email\Http\Controllers\ProjectEmailAddressController::class, 'destroy']);
+            Route::get('email/project-addresses', [ProjectEmailAddressController::class, 'index']);
+            Route::post('email/project-addresses', [ProjectEmailAddressController::class, 'store'])->middleware('idempotent');
+            Route::patch('email/project-addresses/{address}', [ProjectEmailAddressController::class, 'update'])->middleware('idempotent');
+            Route::delete('email/project-addresses/{address}', [ProjectEmailAddressController::class, 'destroy']);
         });
     });
 
 });
 
 // ── Inbound email webhook (no auth — verified by webhook signature) ──────────
-Route::post('email/inbound', [\App\Modules\Email\Http\Controllers\InboundEmailController::class, 'handleInbound'])
+Route::post('email/inbound', [InboundEmailController::class, 'handleInbound'])
     ->middleware('throttle:30,1');
 
 // ── SCIM 2.0 endpoints (token-authenticated, spec-style paths) ─────────────
 Route::prefix('scim/v2')
     ->middleware(['scim.token', 'throttle:120,1'])
     ->group(function () {
-        Route::get('ServiceProviderConfig', [\App\Core\Http\Controllers\Api\ScimController::class, 'serviceProviderConfig']);
-        Route::get('Schemas', [\App\Core\Http\Controllers\Api\ScimController::class, 'schemas']);
-        Route::get('Schemas/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'schemaById']);
-        Route::get('ResourceTypes', [\App\Core\Http\Controllers\Api\ScimController::class, 'resourceTypes']);
+        Route::get('ServiceProviderConfig', [ScimController::class, 'serviceProviderConfig']);
+        Route::get('Schemas', [ScimController::class, 'schemas']);
+        Route::get('Schemas/{id}', [ScimController::class, 'schemaById']);
+        Route::get('ResourceTypes', [ScimController::class, 'resourceTypes']);
 
-        Route::get('Users', [\App\Core\Http\Controllers\Api\ScimController::class, 'listUsers']);
-        Route::post('Users', [\App\Core\Http\Controllers\Api\ScimController::class, 'createUser'])->middleware('idempotent');
-        Route::get('Users/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'showUser']);
-        Route::put('Users/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'replaceUser'])->middleware('idempotent');
-        Route::patch('Users/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'patchUser'])->middleware('idempotent');
-        Route::delete('Users/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'deleteUser']);
+        Route::get('Users', [ScimController::class, 'listUsers']);
+        Route::post('Users', [ScimController::class, 'createUser'])->middleware('idempotent');
+        Route::get('Users/{id}', [ScimController::class, 'showUser']);
+        Route::put('Users/{id}', [ScimController::class, 'replaceUser'])->middleware('idempotent');
+        Route::patch('Users/{id}', [ScimController::class, 'patchUser'])->middleware('idempotent');
+        Route::delete('Users/{id}', [ScimController::class, 'deleteUser']);
 
-        Route::get('Groups', [\App\Core\Http\Controllers\Api\ScimController::class, 'listGroups']);
-        Route::post('Groups', [\App\Core\Http\Controllers\Api\ScimController::class, 'createGroup'])->middleware('idempotent');
-        Route::get('Groups/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'showGroup']);
-        Route::put('Groups/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'replaceGroup'])->middleware('idempotent');
-        Route::patch('Groups/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'patchGroup'])->middleware('idempotent');
-        Route::delete('Groups/{id}', [\App\Core\Http\Controllers\Api\ScimController::class, 'deleteGroup']);
+        Route::get('Groups', [ScimController::class, 'listGroups']);
+        Route::post('Groups', [ScimController::class, 'createGroup'])->middleware('idempotent');
+        Route::get('Groups/{id}', [ScimController::class, 'showGroup']);
+        Route::put('Groups/{id}', [ScimController::class, 'replaceGroup'])->middleware('idempotent');
+        Route::patch('Groups/{id}', [ScimController::class, 'patchGroup'])->middleware('idempotent');
+        Route::delete('Groups/{id}', [ScimController::class, 'deleteGroup']);
     });

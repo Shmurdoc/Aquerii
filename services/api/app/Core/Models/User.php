@@ -2,6 +2,7 @@
 
 namespace App\Core\Models;
 
+use App\Modules\CRM\Models\CrmCompany;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -53,7 +54,7 @@ class User extends Authenticatable
 
     public function ownedCompanies()
     {
-        return $this->hasMany(\App\Modules\CRM\Models\CrmCompany::class, 'owner_id');
+        return $this->hasMany(CrmCompany::class, 'owner_id');
     }
 
     public function oauthAccounts()

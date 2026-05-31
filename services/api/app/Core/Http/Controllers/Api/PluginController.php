@@ -21,7 +21,7 @@ class PluginController extends Controller
         if ($request->search) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'ilike', "%{$this->escapeLike($request->search)}%")
-                  ->orWhere('description', 'ilike', "%{$this->escapeLike($request->search)}%");
+                    ->orWhere('description', 'ilike', "%{$this->escapeLike($request->search)}%");
             });
         }
 
@@ -94,7 +94,7 @@ class PluginController extends Controller
             ->where('plugin_id', $plugin)
             ->firstOrFail();
 
-        $installation->update(['is_enabled' => !$installation->is_enabled]);
+        $installation->update(['is_enabled' => ! $installation->is_enabled]);
 
         return response()->json(['data' => $installation->fresh()]);
     }

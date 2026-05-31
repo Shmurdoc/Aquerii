@@ -6,7 +6,6 @@ use App\Core\Http\Controllers\Controller;
 use App\Core\Mail\WorkspaceInvitation;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
-use App\Core\Services\Auth0Service;
 use App\Core\Services\UsageService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;

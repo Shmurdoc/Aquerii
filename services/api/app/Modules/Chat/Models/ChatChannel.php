@@ -3,6 +3,7 @@
 namespace App\Modules\Chat\Models;
 
 use App\Core\Models\User;
+use App\Core\Models\Workspace;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,7 +27,7 @@ class ChatChannel extends Model
 
     public function workspace()
     {
-        return $this->belongsTo(\App\Core\Models\Workspace::class);
+        return $this->belongsTo(Workspace::class);
     }
 
     public function creator()

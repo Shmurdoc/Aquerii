@@ -58,7 +58,7 @@ return new class extends Migration
                     $indexName = "idx_{$table}_{$column}";
                     try {
                         $blueprint->index($column, $indexName);
-                    } catch (\Exception) {
+                    } catch (Exception) {
                     }
                 }
             });
@@ -77,7 +77,7 @@ return new class extends Migration
                     $indexName = "idx_{$table}_{$column}";
                     try {
                         $blueprint->dropIndex($indexName);
-                    } catch (\Exception) {
+                    } catch (Exception) {
                     }
                 }
             });

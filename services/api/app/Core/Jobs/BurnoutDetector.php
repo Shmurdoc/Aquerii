@@ -5,7 +5,6 @@ namespace App\Core\Jobs;
 use App\Core\Models\BurnoutScore;
 use App\Core\Models\Item;
 use App\Core\Models\TeamActivityMetric;
-use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use App\Modules\Chat\Models\ChatMessage;
@@ -25,7 +24,9 @@ class BurnoutDetector implements ShouldQueue
     public function handle(): void
     {
         $workspace = Workspace::find($this->workspaceId);
-        if (!$workspace) return;
+        if (! $workspace) {
+            return;
+        }
 
         // Get all active members
         $members = WorkspaceMember::where('workspace_id', $this->workspaceId)
@@ -49,7 +50,9 @@ class BurnoutDetector implements ShouldQueue
             ->where('date', $date)
             ->exists();
 
-        if ($exists) return;
+        if ($exists) {
+            return;
+        }
 
         // Task metrics
         $tasksAssigned = Item::where('workspace_id', $this->workspaceId)
@@ -149,7 +152,9 @@ class BurnoutDetector implements ShouldQueue
             ->where('date', '>=', Carbon::today()->subDays(7))
             ->get();
 
-        if ($metrics->isEmpty()) return;
+        if ($metrics->isEmpty()) {
+            return;
+        }
 
         $factors = [];
 

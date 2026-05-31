@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Stripe\Exception\SignatureVerificationException;
 use Stripe\StripeClient;
+use Stripe\StripeObject;
 use Stripe\Webhook as StripeWebhook;
 
 class WebhookController extends Controller
@@ -181,7 +182,7 @@ class WebhookController extends Controller
                 processor: 'stripe',
                 processorEventId: (string) $sub->id,
                 eventType: 'subscription_upsert',
-                payload: $sub instanceof \Stripe\StripeObject ? $sub->toArray() : (array) $sub,
+                payload: $sub instanceof StripeObject ? $sub->toArray() : (array) $sub,
             );
         });
     }

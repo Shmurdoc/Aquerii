@@ -3,7 +3,10 @@
 namespace App\Core\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
+use App\Core\Models\Board;
+use App\Core\Models\Item;
 use App\Core\Models\SyncConflict;
+use App\Modules\Documents\Models\Document;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -67,16 +70,20 @@ class OfflineSyncController extends Controller
             $this->applyResolution($conflict);
         }
 
-        return response()->json(['message' => 'Resolved ' . $conflicts->count() . ' conflicts']);
+        return response()->json(['message' => 'Resolved '.$conflicts->count().' conflicts']);
     }
 
     private function applyResolution(SyncConflict $conflict): void
     {
         $modelClass = $this->resolveModelClass($conflict->entity_type);
-        if (!$modelClass) return;
+        if (! $modelClass) {
+            return;
+        }
 
         $entity = $modelClass::find($conflict->entity_id);
-        if (!$entity) return;
+        if (! $entity) {
+            return;
+        }
 
         switch ($conflict->resolution) {
             case 'local':
@@ -96,9 +103,9 @@ class OfflineSyncController extends Controller
     private function resolveModelClass(string $type): ?string
     {
         return match ($type) {
-            'item' => \App\Core\Models\Item::class,
-            'document' => \App\Modules\Documents\Models\Document::class,
-            'board' => \App\Core\Models\Board::class,
+            'item' => Item::class,
+            'document' => Document::class,
+            'board' => Board::class,
             default => null,
         };
     }

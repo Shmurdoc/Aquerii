@@ -24,7 +24,7 @@ class RecommendationController extends Controller
 
     public function refresh(Request $request, string $workspace): JsonResponse
     {
-        $detector = new PatternDetector();
+        $detector = new PatternDetector;
         $recommendations = $detector->detect($workspace);
 
         return response()->json([

@@ -1,9 +1,9 @@
 <?php
 
+use App\Core\Models\FeatureFlag;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
-use App\Core\Models\FeatureFlag;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;

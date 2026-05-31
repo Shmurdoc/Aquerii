@@ -66,7 +66,7 @@ class IntegrationReliabilityController extends Controller
                 'updated_at' => now(),
             ]);
 
-            ReplayIntegrationWebhookEvent::dispatch($eventId);
+        ReplayIntegrationWebhookEvent::dispatch($eventId);
 
         $this->audit->log(
             action: 'integration.webhook.retry_requested',

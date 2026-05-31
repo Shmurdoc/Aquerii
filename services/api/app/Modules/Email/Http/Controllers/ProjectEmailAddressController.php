@@ -28,7 +28,7 @@ class ProjectEmailAddressController extends Controller
         ]);
 
         // Generate a unique email address
-        $prefix = Str::slug($data['label'] ?? 'inbox') . '-' . Str::random(6);
+        $prefix = Str::slug($data['label'] ?? 'inbox').'-'.Str::random(6);
         $address = "{$prefix}@inbound.aquerii.app";
 
         $projectEmail = ProjectEmailAddress::create([

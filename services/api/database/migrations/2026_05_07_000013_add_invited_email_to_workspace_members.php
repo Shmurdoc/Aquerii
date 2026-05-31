@@ -49,8 +49,8 @@ return new class extends Migration
         DB::unprepared('DROP POLICY IF EXISTS workspace_members_insert ON workspace_members');
         DB::unprepared('DROP POLICY IF EXISTS workspace_members_own_workspaces ON workspace_members');
         DB::unprepared(
-            "CREATE POLICY workspace_members_own_workspaces ON workspace_members FOR SELECT
-             USING (workspace_id IN (SELECT auth.current_user_workspace_ids()))"
+            'CREATE POLICY workspace_members_own_workspaces ON workspace_members FOR SELECT
+             USING (workspace_id IN (SELECT auth.current_user_workspace_ids()))'
         );
 
         DB::unprepared(
@@ -73,8 +73,8 @@ return new class extends Migration
         DB::unprepared('DROP POLICY IF EXISTS workspace_members_insert ON workspace_members');
         DB::unprepared('DROP POLICY IF EXISTS workspace_members_own_workspaces ON workspace_members');
         DB::unprepared(
-            "CREATE POLICY workspace_members_own_workspaces ON workspace_members FOR SELECT
-             USING (workspace_id IN (SELECT auth.current_user_workspace_ids()))"
+            'CREATE POLICY workspace_members_own_workspaces ON workspace_members FOR SELECT
+             USING (workspace_id IN (SELECT auth.current_user_workspace_ids()))'
         );
 
         DB::unprepared(

@@ -2,9 +2,9 @@
 
 namespace App\Modules\Email\Http\Controllers;
 
-use App\Core\Models\Item;
 use App\Core\Models\Board;
 use App\Core\Models\BoardGroup;
+use App\Core\Models\Item;
 use App\Modules\Email\Models\InboundEmail;
 use App\Modules\Email\Models\ProjectEmailAddress;
 use Illuminate\Http\JsonResponse;
@@ -25,13 +25,14 @@ class InboundEmailController extends Controller
             Log::warning('Inbound email webhook signature verification failed', [
                 'ip' => $request->ip(),
             ]);
+
             return response()->json(['error' => 'Invalid signature'], 401);
         }
 
         // Extract email data from webhook payload
         $data = $this->parseWebhookPayload($request);
 
-        if (!$data) {
+        if (! $data) {
             return response()->json(['error' => 'Invalid payload'], 400);
         }
 
@@ -40,8 +41,9 @@ class InboundEmailController extends Controller
             ->where('address', $data['to'])
             ->first();
 
-        if (!$projectEmail) {
+        if (! $projectEmail) {
             Log::warning('Inbound email to unknown address', ['to' => $data['to']]);
+
             return response()->json(['message' => 'Address not configured'], 200);
         }
 
@@ -104,6 +106,7 @@ class InboundEmailController extends Controller
         $token = config('services.mailgun.webhook_signing_key');
         if (! $token) {
             Log::warning('Mailgun webhook signing key not configured');
+
             return false;
         }
 
@@ -119,6 +122,7 @@ class InboundEmailController extends Controller
         }
 
         $signature = hash_hmac('sha256', "{$timestamp}{$token}", $token);
+
         return hash_equals($signature, $request->input('signature', ''));
     }
 
@@ -127,6 +131,7 @@ class InboundEmailController extends Controller
         $publicKey = config('services.sendgrid.webhook_signing_key');
         if (! $publicKey) {
             Log::warning('SendGrid webhook signing key not configured');
+
             return false;
         }
 
@@ -141,7 +146,7 @@ class InboundEmailController extends Controller
             return false;
         }
 
-        $payload = $timestamp . $request->getContent();
+        $payload = $timestamp.$request->getContent();
         $signedSignature = '';
         openssl_sign($payload, $signedSignature, $publicKey, OPENSSL_ALGO_SHA256);
         $expectedSignature = base64_encode($signedSignature);
@@ -154,6 +159,7 @@ class InboundEmailController extends Controller
         $token = config('services.postmark.webhook_signing_key');
         if (! $token) {
             Log::warning('Postmark webhook signing key not configured');
+
             return false;
         }
 
@@ -163,6 +169,7 @@ class InboundEmailController extends Controller
         }
 
         $hmac = hash_hmac('sha256', $request->getContent(), $token);
+
         return hash_equals($hmac, $signature);
     }
 
@@ -210,6 +217,7 @@ class InboundEmailController extends Controller
         if (preg_match('/<(.+?)>/', $address, $matches)) {
             return $matches[1];
         }
+
         return trim($address);
     }
 
@@ -218,6 +226,7 @@ class InboundEmailController extends Controller
         if (preg_match('/^(.+?)\s*</', $address, $matches)) {
             return trim($matches[1], '"\'');
         }
+
         return '';
     }
 
@@ -229,14 +238,15 @@ class InboundEmailController extends Controller
 
             // Determine board
             $boardId = $projectEmail->target_board_id;
-            if (!$boardId) {
+            if (! $boardId) {
                 // Find or use first board in workspace
                 $boardId = Board::where('workspace_id', $email->workspace_id)
                     ->first()?->id;
             }
 
-            if (!$boardId) {
+            if (! $boardId) {
                 $email->update(['status' => 'failed', 'processing_notes' => 'No board found']);
+
                 return;
             }
 

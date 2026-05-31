@@ -1,10 +1,11 @@
 <?php
 
+use App\Core\Models\Board;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
-use App\Core\Models\Board;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
@@ -59,7 +60,7 @@ it('allows workspace owner to read audit logs', function () {
     Sanctum::actingAs($this->owner);
 
     DB::table('audit_logs')->insert([
-        'id' => (string) \Illuminate\Support\Str::uuid(),
+        'id' => (string) Str::uuid(),
         'workspace_id' => $this->workspace->id,
         'user_id' => $this->owner->id,
         'action' => 'security.test_event',

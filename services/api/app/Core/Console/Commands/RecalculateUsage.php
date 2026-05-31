@@ -38,7 +38,7 @@ class RecalculateUsage extends Command
 
         $bar->finish();
         $this->newLine();
-        $this->info('Usage recalculated for ' . $workspaces->count() . ' workspace(s).');
+        $this->info('Usage recalculated for '.$workspaces->count().' workspace(s).');
 
         return self::SUCCESS;
     }

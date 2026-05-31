@@ -96,7 +96,7 @@ class TeamCapacityController extends Controller
             ->where('user_id', $userId)
             ->update($data);
 
-        if (!$updated) {
+        if (! $updated) {
             return response()->json(['error' => 'Member not found'], 404);
         }
 

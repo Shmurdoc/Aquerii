@@ -289,7 +289,7 @@ class ScenarioController extends Controller
         switch ($adj->adjustment_type) {
             case 'add_delay':
                 // Add delay to a specific task
-                if (!empty($params['task_id'])) {
+                if (! empty($params['task_id'])) {
                     $taskIndex = $tasks->search(fn ($t) => $t['id'] === $params['task_id']);
                     if ($taskIndex !== false) {
                         $task = $tasks[$taskIndex];
@@ -313,7 +313,7 @@ class ScenarioController extends Controller
 
             case 'remove_task':
                 // Remove a task from scope
-                if (!empty($params['task_id'])) {
+                if (! empty($params['task_id'])) {
                     $tasks = $tasks->filter(fn ($t) => $t['id'] !== $params['task_id']);
                 }
                 break;
@@ -322,29 +322,31 @@ class ScenarioController extends Controller
                 // Add or remove hours from total estimate
                 $changeHours = $params['hours_change'] ?? 0;
                 $tasks = $tasks->map(function ($t) use ($changeHours, $params) {
-                    if (!empty($params['task_id']) && $t['id'] === $params['task_id']) {
+                    if (! empty($params['task_id']) && $t['id'] === $params['task_id']) {
                         $t['estimated_hours'] = max(0, (float) ($t['estimated_hours'] ?? 0) + (float) $changeHours);
                     }
+
                     return $t;
                 });
                 break;
 
             case 'change_deadline':
                 // Change deadline for a specific task or all tasks
-                if (!empty($params['task_id'])) {
+                if (! empty($params['task_id'])) {
                     $taskIndex = $tasks->search(fn ($t) => $t['id'] === $params['task_id']);
                     if ($taskIndex !== false) {
                         $task = $tasks[$taskIndex];
                         $task['due_date'] = $params['new_date'];
                         $tasks[$taskIndex] = $task;
                     }
-                } elseif (!empty($params['days_change'])) {
+                } elseif (! empty($params['days_change'])) {
                     $tasks = $tasks->map(function ($t) use ($params) {
                         if ($t['due_date']) {
                             $t['due_date'] = Carbon::parse($t['due_date'])
                                 ->addDays((int) $params['days_change'])
                                 ->toDateString();
                         }
+
                         return $t;
                     });
                 }

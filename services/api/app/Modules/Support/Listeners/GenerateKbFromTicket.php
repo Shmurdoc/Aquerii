@@ -50,12 +50,12 @@ class GenerateKbFromTicket
         $sections = [];
 
         // Section 1: Problem description
-        if (!empty($ticket->description)) {
+        if (! empty($ticket->description)) {
             $sections[] = "## Problem\n\n{$ticket->description}";
         }
 
         // Section 2: Resolution
-        if (!empty($ticket->resolution_summary)) {
+        if (! empty($ticket->resolution_summary)) {
             $sections[] = "## Resolution\n\n{$ticket->resolution_summary}";
         }
 
@@ -70,6 +70,7 @@ class GenerateKbFromTicket
             $conversation = $messages->map(function ($msg) {
                 $sender = $msg->user ? $msg->user->name : 'Customer';
                 $body = strip_tags($msg->body);
+
                 return "**{$sender}:** {$body}";
             })->implode("\n\n");
 

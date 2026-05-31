@@ -15,7 +15,7 @@ Route::prefix('ai')->middleware('idempotent')->group(function () {
     Route::post('document/analyze', [AIController::class, 'analyzeDocument']);
     Route::post('document/auto-tag', [AIController::class, 'autoTagDocument']);
     Route::post('document/link-deal', [AIController::class, 'linkDocumentToDeal']);
-    
+
     // Predictions (rule-based)
     Route::post('predictions/task-duration', [AIController::class, 'predictTaskDuration']);
     Route::post('predictions/delay-risk', [AIController::class, 'predictDelayRisk']);

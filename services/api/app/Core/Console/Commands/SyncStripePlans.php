@@ -31,11 +31,13 @@ class SyncStripePlans extends Command
         foreach (SubscriptionPlan::cases() as $plan) {
             if ($plan === SubscriptionPlan::Enterprise) {
                 $this->warn("Skipping {$plan->label()} — Enterprise uses custom pricing");
+
                 continue;
             }
 
             if ($plan->monthlyPriceCents() === 0) {
                 $this->warn("Skipping {$plan->label()} — \$0 plan (no Stripe product needed)");
+
                 continue;
             }
 
@@ -48,6 +50,7 @@ class SyncStripePlans extends Command
                     'monthly_price_cents' => $plan->monthlyPriceCents(),
                     'annual_price_cents' => $plan->monthlyPriceCents() * 12,
                 ];
+
                 continue;
             }
 
@@ -65,7 +68,7 @@ class SyncStripePlans extends Command
 
             $this->line("  Product: {$product->id}");
             $this->line("  Monthly price: {$monthlyPrice->id} ({$plan->monthlyPriceCents()} {$currency})");
-            $this->line("  Annual price: {$annualPrice->id} (" . $plan->monthlyPriceCents() * 12 . " {$currency})");
+            $this->line("  Annual price: {$annualPrice->id} (".$plan->monthlyPriceCents() * 12 ." {$currency})");
         }
 
         $this->table(

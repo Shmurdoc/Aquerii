@@ -56,7 +56,7 @@ class VatService
      */
     public function formatZAR(float $amount): string
     {
-        return 'R' . number_format($amount, 2, '.', ',');
+        return 'R'.number_format($amount, 2, '.', ',');
     }
 
     /**
@@ -64,6 +64,6 @@ class VatService
      */
     public function formatUSD(float $amount): string
     {
-        return '$' . number_format($amount, 2, '.', ',');
+        return '$'.number_format($amount, 2, '.', ',');
     }
 }

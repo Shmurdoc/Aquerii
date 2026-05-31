@@ -6,6 +6,7 @@ use App\Core\Models\Workspace;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class RunDunning extends Command
 {
@@ -38,7 +39,7 @@ class RunDunning extends Command
                 ]);
 
                 DB::table('billing_events')->insert([
-                    'id' => (string) \Illuminate\Support\Str::uuid(),
+                    'id' => (string) Str::uuid(),
                     'workspace_id' => $workspace->id,
                     'processor' => 'system',
                     'event_type' => 'dunning_downgraded',
@@ -76,7 +77,7 @@ class RunDunning extends Command
                 ]);
 
                 DB::table('billing_events')->insert([
-                    'id' => (string) \Illuminate\Support\Str::uuid(),
+                    'id' => (string) Str::uuid(),
                     'workspace_id' => $workspace->id,
                     'processor' => 'system',
                     'event_type' => 'dunning_suspended',

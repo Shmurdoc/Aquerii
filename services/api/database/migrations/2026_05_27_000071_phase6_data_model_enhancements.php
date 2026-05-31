@@ -32,7 +32,7 @@ return new class extends Migration
 
             // Add FK on owner_id if not set
             $fkName = 'crm_companies_owner_id_foreign';
-            $fkExists = collect(DB::select("SELECT conname FROM pg_constraint WHERE conname = ?", [$fkName]))->isNotEmpty();
+            $fkExists = collect(DB::select('SELECT conname FROM pg_constraint WHERE conname = ?', [$fkName]))->isNotEmpty();
             if (! $fkExists && Schema::hasColumn('crm_companies', 'owner_id')) {
                 $table->foreign('owner_id', $fkName)->references('id')->on('users')->nullOnDelete();
             }

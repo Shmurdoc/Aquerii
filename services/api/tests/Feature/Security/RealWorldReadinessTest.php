@@ -1,10 +1,11 @@
 <?php
 
+use App\Core\Models\FeatureFlag;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
-use App\Core\Models\FeatureFlag;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
@@ -117,7 +118,7 @@ it('supports invoice approval lifecycle for finance controls', function () {
 });
 
 it('allows owner to mark integration webhook event for retry', function () {
-    Illuminate\Support\Facades\Queue::fake();
+    Queue::fake();
 
     Sanctum::actingAs($this->owner);
 

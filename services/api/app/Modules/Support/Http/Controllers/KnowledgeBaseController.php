@@ -2,10 +2,10 @@
 
 namespace App\Modules\Support\Http\Controllers;
 
+use App\Core\Http\Controllers\Controller;
 use App\Modules\Support\Models\KnowledgeBaseArticle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Core\Http\Controllers\Controller;
 
 class KnowledgeBaseController extends Controller
 {
