@@ -15,6 +15,18 @@ return new class extends Migration
             });
         }
 
+        if (! Schema::hasColumn('crm_contacts', 'notes')) {
+            Schema::table('crm_contacts', function (Blueprint $table) {
+                $table->text('notes')->nullable()->after('job_title');
+            });
+        }
+
+        if (! Schema::hasColumn('crm_contacts', 'deal_value')) {
+            Schema::table('crm_contacts', function (Blueprint $table) {
+                $table->decimal('deal_value', 15, 2)->nullable()->after('lead_score');
+            });
+        }
+
         if (! Schema::hasColumn('crm_deals', 'position')) {
             Schema::table('crm_deals', function (Blueprint $table) {
                 $table->unsignedBigInteger('position')->default(0)->after('probability');
@@ -28,6 +40,18 @@ return new class extends Migration
             Schema::table('crm_contacts', function (Blueprint $table) {
                 $table->dropForeign(['stage_id']);
                 $table->dropColumn('stage_id');
+            });
+        }
+
+        if (Schema::hasColumn('crm_contacts', 'notes')) {
+            Schema::table('crm_contacts', function (Blueprint $table) {
+                $table->dropColumn('notes');
+            });
+        }
+
+        if (Schema::hasColumn('crm_contacts', 'deal_value')) {
+            Schema::table('crm_contacts', function (Blueprint $table) {
+                $table->dropColumn('deal_value');
             });
         }
 

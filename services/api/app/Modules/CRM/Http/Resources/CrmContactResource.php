@@ -18,10 +18,10 @@ class CrmContactResource extends JsonResource
             'phone' => $this->phone,
             'lead_score' => $this->lead_score,
             'company_id' => $this->company_id,
-            'stage_id' => $this->stage_id,
-            'notes' => $this->notes,
-            'deal_value' => $this->deal_value,
-            'tags' => $this->tags,
+            'stage_id' => $this->whenHas('stage_id'),
+            'notes' => $this->whenHas('notes'),
+            'deal_value' => $this->whenHas('deal_value'),
+            'tags' => $this->whenHas('tags'),
             'created_at' => $this->created_at,
         ];
     }
