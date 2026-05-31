@@ -2,6 +2,16 @@ import { api } from '@/lib/api'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getSocket } from '@/lib/socket'
 
+export type ChatAttachmentType = 'user' | 'task' | 'activity' | 'whiteboard' | 'document' | 'file' | 'link'
+
+export interface ChatAttachment {
+  type: ChatAttachmentType
+  id?: string | null
+  label?: string | null
+  url?: string | null
+  meta?: Record<string, unknown>
+}
+
 export interface ChatChannel {
   id: string
   workspace_id: string
@@ -31,8 +41,9 @@ export interface ChatMessage {
   channel_id: string
   user_id: string
   body: string
-  attachments: Record<string, unknown>[]
+  attachments: ChatAttachment[]
   reply_to: string | null
+  replyTo?: { id: string; body: string; user_id: string } | null
   is_edited: boolean
   is_deleted: boolean
   user?: { id: string; name: string }
@@ -74,10 +85,21 @@ export function useChatMessages(w: string | undefined, channelId: string | null)
   })
 }
 
-export function sendChatMessage(channelId: string, body: string, replyTo?: string) {
+export function sendChatMessage(
+  channelId: string,
+  body: string,
+  options?: { replyTo?: string; attachments?: ChatAttachment[]; mentionUserIds?: string[] },
+) {
   const socket = getSocket()
   const tempId = crypto.randomUUID()
-  socket.emit('chat:message:send', { channelId, body, replyTo, tempId })
+  socket.emit('chat:message:send', {
+    channelId,
+    body,
+    replyTo: options?.replyTo,
+    attachments: options?.attachments,
+    mentionUserIds: options?.mentionUserIds,
+    tempId,
+  })
   return tempId
 }
 

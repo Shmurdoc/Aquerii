@@ -11,10 +11,24 @@ const API_URL = process.env.API_URL ?? 'http://api:8000';
 const API_SECRET = process.env.REALTIME_SECRET ?? process.env.INTERNAL_API_KEY ?? '';
 const ChatMessageSchema = zod_1.z.object({
     channelId: zod_1.z.string().uuid(),
-    body: zod_1.z.string().min(1).max(10000),
+    body: zod_1.z.string().max(10000).default(''),
     replyTo: zod_1.z.string().uuid().optional(),
+    attachments: zod_1.z.array(zod_1.z.object({
+        type: zod_1.z.enum(['user', 'task', 'activity', 'whiteboard', 'document', 'file', 'link']),
+        id: zod_1.z.string().max(120).optional(),
+        label: zod_1.z.string().max(255).optional(),
+        url: zod_1.z.string().max(2000).optional(),
+        meta: zod_1.z.record(zod_1.z.string(), zod_1.z.unknown()).optional(),
+    })).max(20).optional(),
+    mentionUserIds: zod_1.z.array(zod_1.z.string().uuid()).max(25).optional(),
     tempId: zod_1.z.string().optional(),
+}).refine((v) => v.body.trim().length > 0 || (v.attachments?.length ?? 0) > 0, {
+    message: 'Message body or attachments required',
 });
+const ChatMessageParsedSchema = ChatMessageSchema.transform((v) => ({
+    ...v,
+    body: v.body.trim(),
+}));
 const ChatTypingSchema = zod_1.z.object({
     channelId: zod_1.z.string().uuid(),
 });
@@ -24,15 +38,20 @@ const ChatReadSchema = zod_1.z.object({
 function registerChatHandler(socket, user) {
     // ── Send message ───────────────────────────────────────────────────────────
     socket.on('chat:message:send', async (raw) => {
-        const parsed = ChatMessageSchema.safeParse(raw);
+        const parsed = ChatMessageParsedSchema.safeParse(raw);
         if (!parsed.success) {
             socket.emit('error', { event: 'chat:message:send', issues: parsed.error.issues });
             return;
         }
-        const { channelId, body, replyTo, tempId } = parsed.data;
+        const { channelId, body, replyTo, attachments, mentionUserIds, tempId } = parsed.data;
         try {
             // Persist message via API
-            const res = await axios_1.default.post(`${API_URL}/api/workspaces/${user.workspace_id}/chat/channels/${channelId}/messages`, { body, reply_to: replyTo }, {
+            const res = await axios_1.default.post(`${API_URL}/api/workspaces/${user.workspace_id}/chat/channels/${channelId}/messages`, {
+                body,
+                reply_to: replyTo,
+                attachments,
+                mention_user_ids: mentionUserIds,
+            }, {
                 headers: {
                     'Authorization': `Bearer ${API_SECRET}`,
                     'Content-Type': 'application/json',
@@ -40,7 +59,6 @@ function registerChatHandler(socket, user) {
                 },
             });
             const message = res.data.data;
-            // Broadcast to channel room
             socket.to(`chat:${channelId}`).emit('chat:message:new', {
                 id: message.id,
                 channelId,

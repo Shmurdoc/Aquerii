@@ -9,10 +9,25 @@ const API_SECRET = process.env.REALTIME_SECRET ?? process.env.INTERNAL_API_KEY ?
 
 const ChatMessageSchema = z.object({
   channelId: z.string().uuid(),
-  body:      z.string().min(1).max(10000),
-  replyTo:   z.string().uuid().optional(),
-  tempId:    z.string().optional(),
+  body: z.string().max(10000).default(''),
+  replyTo: z.string().uuid().optional(),
+  attachments: z.array(z.object({
+    type: z.enum(['user', 'task', 'activity', 'whiteboard', 'document', 'file', 'link']),
+    id: z.string().max(120).optional(),
+    label: z.string().max(255).optional(),
+    url: z.string().max(2000).optional(),
+    meta: z.record(z.string(), z.unknown()).optional(),
+  })).max(20).optional(),
+  mentionUserIds: z.array(z.string().uuid()).max(25).optional(),
+  tempId: z.string().optional(),
+}).refine((v) => v.body.trim().length > 0 || (v.attachments?.length ?? 0) > 0, {
+  message: 'Message body or attachments required',
 })
+
+const ChatMessageParsedSchema = ChatMessageSchema.transform((v) => ({
+  ...v,
+  body: v.body.trim(),
+}))
 
 const ChatTypingSchema = z.object({
   channelId: z.string().uuid(),
@@ -28,19 +43,24 @@ export function registerChatHandler(
 ): void {
   // ── Send message ───────────────────────────────────────────────────────────
   socket.on('chat:message:send', async (raw: unknown) => {
-    const parsed = ChatMessageSchema.safeParse(raw)
+    const parsed = ChatMessageParsedSchema.safeParse(raw)
     if (!parsed.success) {
       socket.emit('error', { event: 'chat:message:send', issues: parsed.error.issues })
       return
     }
 
-    const { channelId, body, replyTo, tempId } = parsed.data
+    const { channelId, body, replyTo, attachments, mentionUserIds, tempId } = parsed.data
 
     try {
       // Persist message via API
       const res = await axios.post(
         `${API_URL}/api/workspaces/${user.workspace_id}/chat/channels/${channelId}/messages`,
-        { body, reply_to: replyTo },
+        {
+          body,
+          reply_to: replyTo,
+          attachments,
+          mention_user_ids: mentionUserIds,
+        },
         {
           headers: {
             'Authorization': `Bearer ${API_SECRET}`,
@@ -52,7 +72,6 @@ export function registerChatHandler(
 
       const message = res.data.data
 
-      // Broadcast to channel room
       socket.to(`chat:${channelId}`).emit('chat:message:new', {
         id: message.id,
         channelId,
