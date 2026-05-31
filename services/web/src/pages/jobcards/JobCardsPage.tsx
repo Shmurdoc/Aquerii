@@ -551,6 +551,26 @@ export default function JobCardsPage() {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Summary Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-6 py-3 border-b border-[var(--color-glass-border)] animate-slide-up">
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">Total Job Cards</p>
+          <p className="text-lg font-bold text-[var(--color-text-primary)]">{cards.length}</p>
+        </div>
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">In Progress</p>
+          <p className="text-lg font-bold text-amber-400">{cards.filter((c: JobCard) => c.status === 'in_progress').length}</p>
+        </div>
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">Completed</p>
+          <p className="text-lg font-bold text-emerald-400">{cards.filter((c: JobCard) => c.status === 'completed' || c.status === 'signed_off').length}</p>
+        </div>
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">Critical</p>
+          <p className="text-lg font-bold text-red-400">{cards.filter((c: JobCard) => c.priority === 'critical').length}</p>
+        </div>
+      </div>
+
       <div className="flex items-center gap-3 px-6 py-4 border-b border-[var(--color-glass-border)] shrink-0">
         <h1 className="text-base font-semibold text-[var(--color-text-primary)] mr-2">Job Cards</h1>
         <div className="flex gap-1">
@@ -569,7 +589,7 @@ export default function JobCardsPage() {
         <Button size="sm" onClick={() => setShowNew(true)}><Plus size={13} /> New Job Card</Button>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto animate-fade-in">
         <DataTable columns={columns} data={cards} keyExtractor={(card: any) => card.id}
           isLoading={isLoading} emptyTitle="No job cards found" emptyDescription="Create your first job card to get started."
           onRowClick={(card: any) => setSelectedId(card.id)} />
