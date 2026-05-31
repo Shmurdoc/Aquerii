@@ -2,6 +2,8 @@
 
 use App\Core\Http\Controllers\Api\EmployeeController;
 use App\Core\Http\Controllers\Api\TeamCapacityController;
+use App\Core\Models\AttendanceLog;
+use App\Core\Models\LeaveRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -16,11 +18,73 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('hr/attendance/clock-out', [EmployeeController::class, 'clockOut'])->middleware('idempotent');
         Route::get('hr/attendance', [EmployeeController::class, 'attendanceHistory']);
 
+        // Timesheet (aggregated)
+        Route::get('hr/timesheet', function (Request $request, string $workspace) {
+            $from = $request->query('from', now()->startOfWeek()->toDateString());
+            $to = $request->query('to', now()->endOfWeek()->toDateString());
+
+            $logs = AttendanceLog::where('workspace_id', $workspace)
+                ->whereBetween('clock_in', [$from, $to])
+                ->get()
+                ->groupBy('user_id')
+                ->map(function ($entries, $userId) {
+                    $totalMinutes = $entries->sum(function ($entry) {
+                        if ($entry->clock_out) {
+                            return Carbon\Carbon::parse($entry->clock_in)->diffInMinutes(Carbon\Carbon::parse($entry->clock_out));
+                        }
+
+                        return 0;
+                    });
+
+                    return [
+                        'user_id' => $userId,
+                        'total_hours' => round($totalMinutes / 60, 2),
+                        'entries' => $entries->count(),
+                    ];
+                });
+
+            return response()->json(['data' => $logs]);
+        });
+
+        // Attendance report (org-wide)
+        Route::get('hr/attendance/report', function (Request $request, string $workspace) {
+            $from = $request->query('from', now()->startOfMonth()->toDateString());
+            $to = $request->query('to', now()->endOfMonth()->toDateString());
+
+            $report = AttendanceLog::where('workspace_id', $workspace)
+                ->whereBetween('clock_in', [$from, $to])
+                ->selectRaw('user_id, COUNT(*) as total_entries, SUM(CASE WHEN clock_out IS NOT NULL THEN 1 ELSE 0 END) as completed_shifts')
+                ->groupBy('user_id')
+                ->get();
+
+            return response()->json(['data' => $report]);
+        });
+
         // Leave requests
         Route::get('hr/leave', [EmployeeController::class, 'leaveIndex']);
         Route::post('hr/leave', [EmployeeController::class, 'leaveStore'])->middleware('idempotent');
         Route::patch('hr/leave/{leaveId}/action', [EmployeeController::class, 'leaveApprove'])->middleware('idempotent');
         Route::get('hr/leave/balance', [EmployeeController::class, 'leaveBalance']);
+
+        // Leave calendar (team view)
+        Route::get('hr/leave/calendar', function (Request $request, string $workspace) {
+            $from = $request->query('from', now()->startOfMonth()->toDateString());
+            $to = $request->query('to', now()->endOfMonth()->toDateString());
+
+            $leaves = LeaveRequest::where('workspace_id', $workspace)
+                ->where('status', 'approved')
+                ->where(function ($q) use ($from, $to) {
+                    $q->whereBetween('start_date', [$from, $to])
+                        ->orWhereBetween('end_date', [$from, $to])
+                        ->orWhere(function ($q2) use ($from, $to) {
+                            $q2->where('start_date', '<=', $from)->where('end_date', '>=', $to);
+                        });
+                })
+                ->with('user:id,name,email')
+                ->get();
+
+            return response()->json(['data' => $leaves]);
+        });
 
         // Expense claims
         Route::get('hr/expenses', [EmployeeController::class, 'expenseIndex']);

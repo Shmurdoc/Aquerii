@@ -1094,6 +1094,10 @@ export const erpAuditLogs = {
     const res = await api.get(`/workspaces/${wid()}/audit-logs`, { params })
     return normalizeList(res)
   },
+  export: async (format: 'csv' | 'json' = 'csv'): Promise<Blob> => {
+    const res = await api.get(`/workspaces/${wid()}/audit-logs/export`, { params: { format }, responseType: 'blob' })
+    return res.data
+  },
 }
 
 // ─── Integration Reliability (Floating API) ─────────────────────────────────
@@ -1233,6 +1237,54 @@ export const erpSalesOrdersExtra = {
 }
 
 // ─── Formatting helpers ───────────────────────────────────────────────────────
+
+// ─── HR Floating APIs ───────────────────────────────────────────────────────
+
+export interface TimesheetEntry {
+  user_id: string
+  total_hours: number
+  entries: number
+}
+
+export interface AttendanceReport {
+  user_id: string
+  total_entries: number
+  completed_shifts: number
+}
+
+export interface LeaveCalendarEntry {
+  id: string
+  user_id: string
+  start_date: string
+  end_date: string
+  type: string
+  reason: string
+  user?: { id: string; name: string; email: string }
+}
+
+export const erpHR = {
+  timesheet: async (from?: string, to?: string): Promise<TimesheetEntry[]> => {
+    const params: Record<string, string> = {}
+    if (from) params.from = from
+    if (to) params.to = to
+    const res = await api.get(`/workspaces/${wid()}/hr/timesheet`, { params })
+    return Object.values(res.data?.data ?? {})
+  },
+  attendanceReport: async (from?: string, to?: string): Promise<AttendanceReport[]> => {
+    const params: Record<string, string> = {}
+    if (from) params.from = from
+    if (to) params.to = to
+    const res = await api.get(`/workspaces/${wid()}/hr/attendance/report`, { params })
+    return normalizeList(res)
+  },
+  leaveCalendar: async (from?: string, to?: string): Promise<LeaveCalendarEntry[]> => {
+    const params: Record<string, string> = {}
+    if (from) params.from = from
+    if (to) params.to = to
+    const res = await api.get(`/workspaces/${wid()}/hr/leave/calendar`, { params })
+    return normalizeList(res)
+  },
+}
 
 export function formatCurrency(amount: number | string, currency = 'USD'): string {
   const n = typeof amount === 'string' ? parseFloat(amount) : amount

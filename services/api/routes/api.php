@@ -34,6 +34,7 @@ use App\Core\Http\Controllers\BoardController;
 use App\Core\Http\Controllers\BoardGroupController;
 use App\Core\Http\Controllers\ItemController;
 use App\Core\Http\Controllers\UserController;
+use App\Core\Models\Item;
 use App\Http\Controllers\Api\WorkspaceInvitationController;
 use App\Modules\AI\Http\Controllers\AIController;
 use App\Modules\Automation\Http\Controllers\AutomationController;
@@ -61,6 +62,7 @@ use App\Modules\CRM\Http\Controllers\StageController;
 use App\Modules\Email\Http\Controllers\InboundEmailController;
 use App\Modules\Email\Http\Controllers\ProjectEmailAddressController;
 use Illuminate\Support\Facades\Route;
+use Spatie\Activitylog\Activity;
 
 // ── Health check (public) ─────────────────────────────────────────────────────
 Route::get('healthz', fn () => response()->json(['status' => 'ok', 'service' => 'api']));
@@ -186,10 +188,10 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::apiResource('items', ItemController::class)->middleware('idempotent');
 
             Route::get('items/{item}/activity', [ItemController::class, 'activity']);
-            Route::get('items/{item}/linked-documents', function (\App\Core\Models\Item $item) {
+            Route::get('items/{item}/linked-documents', function (Item $item) {
                 return response()->json(['data' => $item->linkedDocuments]);
             });
-            Route::get('items/{item}/linked-deals', function (\App\Core\Models\Item $item) {
+            Route::get('items/{item}/linked-deals', function (Item $item) {
                 return response()->json(['data' => $item->linkedDeals]);
             });
             Route::get('items/{item}/subitems', [ItemController::class, 'subitems']);
@@ -247,7 +249,7 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // Workspace activity feed (used by DashboardPage)
         Route::get('activity', function (Request $request, string $workspace) {
-            $activity = \Spatie\Activitylog\Activity::query()
+            $activity = Activity::query()
                 ->where('subject_id', $workspace)
                 ->orWhere('causer_id', $request->user()->id)
                 ->orderBy('created_at', 'desc')
@@ -255,6 +257,28 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
                 ->get();
 
             return response()->json(['data' => $activity]);
+        });
+
+        // Audit log export
+        Route::get('audit-logs/export', function (Request $request, string $workspace) {
+            $format = $request->query('format', 'csv');
+            $logs = Activity::query()
+                ->where('subject_id', $workspace)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            if ($format === 'json') {
+                return response()->json(['data' => $logs])->header('Content-Disposition', 'attachment; filename="audit-logs.json"');
+            }
+
+            $csv = "ID,Action,Subject Type,Subject ID,Causer ID,Created At\n";
+            foreach ($logs as $log) {
+                $csv .= "{$log->id},{$log->log_name},{$log->subject_type},{$log->subject_id},{$log->causer_id},{$log->created_at}\n";
+            }
+
+            return response($csv)
+                ->header('Content-Type', 'text/csv')
+                ->header('Content-Disposition', 'attachment; filename="audit-logs.csv"');
         });
 
         // Field-level permissions (workspace admin)
@@ -491,6 +515,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // ── Delegation module ───────────────────────────────────────────────
         require __DIR__.'/modules/delegation.php';
+
+        // ── Template System module ─────────────────────────────────────────
+        require __DIR__.'/modules/templates.php';
     });
 
 });
