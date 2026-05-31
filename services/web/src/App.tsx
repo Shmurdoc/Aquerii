@@ -61,6 +61,7 @@ import EmailAddressesPage from '@/pages/erp/EmailAddressesPage'
 import EmployeeGroupsPage from '@/pages/erp/EmployeeGroupsPage'
 import AuditLogsPage     from '@/pages/erp/AuditLogsPage'
 import WebhookEventsPage from '@/pages/erp/WebhookEventsPage'
+import FieldPermissionsPage from '@/pages/erp/FieldPermissionsPage'
 import GeneralTab      from '@/components/settings/GeneralTab'
 import ProfileTab      from '@/components/settings/ProfileTab'
 import MembersTab      from '@/components/settings/MembersTab'
@@ -175,6 +176,7 @@ export default function App() {
             <Route path="/erp/employee-groups" element={<EmployeeGroupsPage />} />
             <Route path="/erp/audit-logs"  element={<AuditLogsPage />} />
             <Route path="/erp/webhook-events" element={<WebhookEventsPage />} />
+            <Route path="/erp/field-permissions" element={<FieldPermissionsPage />} />
           </Route>
           <Route path="/my-day"        element={<MyDayPage />} />
           <Route path="/calendar"      element={<CalendarPage />} />

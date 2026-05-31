@@ -17,6 +17,7 @@ const TABS = [
   { to: '/erp/employee-groups', label: 'Employee Groups', icon: Building2 },
   { to: '/erp/audit-logs', label: 'Audit Logs', icon: Shield },
   { to: '/erp/webhook-events', label: 'Webhook Events', icon: Webhook },
+  { to: '/erp/field-permissions', label: 'Field Permissions', icon: Shield },
 ]
 
 export default function ERPLayout() {
