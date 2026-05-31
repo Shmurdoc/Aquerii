@@ -17,6 +17,14 @@ use Illuminate\Support\Str;
 
 class WorkspaceController extends Controller
 {
+    // GET /workspaces
+    public function index(Request $request): JsonResponse
+    {
+        $workspaces = $request->user()->workspaces()->get();
+
+        return response()->json(['data' => $workspaces]);
+    }
+
     // POST /workspaces
     public function store(Request $request): JsonResponse
     {

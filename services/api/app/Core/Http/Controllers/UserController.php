@@ -42,4 +42,24 @@ class UserController extends Controller
 
         return response()->json(['data' => $user->fresh()]);
     }
+
+    // POST /me/avatar
+    public function uploadAvatar(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'avatar' => 'required|image|max:2048',
+        ]);
+
+        $user = $request->user();
+
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store("avatars/{$user->id}", 's3');
+            $validated['avatar_url'] = Storage::disk('s3')->url($path);
+            unset($validated['avatar']);
+        }
+
+        $user->update($validated);
+
+        return response()->json(['data' => $user->fresh()]);
+    }
 }

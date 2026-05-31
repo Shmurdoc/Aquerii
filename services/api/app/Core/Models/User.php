@@ -24,6 +24,7 @@ class User extends Authenticatable
         'locale', 'timezone', 'two_factor_enabled',
         'email_verified_at', 'last_seen_at',
         'two_factor_secret', 'two_factor_recovery_codes',
+        'notification_preferences',
     ];
 
     protected $hidden = [

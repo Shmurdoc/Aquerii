@@ -23,6 +23,7 @@ use App\Core\Http\Controllers\Api\ReportScheduleController;
 use App\Core\Http\Controllers\Api\ScenarioController;
 use App\Core\Http\Controllers\Api\ScimController;
 use App\Core\Http\Controllers\Api\SentimentController;
+use App\Core\Http\Controllers\Api\UserSettingsController;
 use App\Core\Http\Controllers\Api\WebhookController;
 use App\Core\Http\Controllers\Api\WorkspaceController;
 use App\Core\Http\Controllers\Api\WorkspaceLogoController;
@@ -109,11 +110,25 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     // Current user
     Route::get('me', [UserController::class, 'me']);
     Route::put('me', [UserController::class, 'update'])->middleware('idempotent');
+    Route::post('me/avatar', [UserController::class, 'uploadAvatar']);
+
+    // User settings (Fortify-style routes)
+    Route::post('user/two-factor-authentication', [UserSettingsController::class, 'enableTwoFactor']);
+    Route::post('user/confirmed-two-factor-authentication', [UserSettingsController::class, 'confirmTwoFactor']);
+    Route::delete('user/two-factor-authentication', [UserSettingsController::class, 'disableTwoFactor']);
+    Route::get('user/two-factor-qr-code', [UserSettingsController::class, 'getTwoFactorQrCode']);
+    Route::get('user/two-factor-recovery-codes', [UserSettingsController::class, 'getTwoFactorRecoveryCodes']);
+    Route::get('user/sessions', [UserSettingsController::class, 'getSessions']);
+    Route::delete('user/sessions/{sessionId}', [UserSettingsController::class, 'revokeSession']);
+    Route::get('user/notifications/preferences', [UserSettingsController::class, 'getNotificationPreferences']);
+    Route::put('user/notifications/preferences', [UserSettingsController::class, 'updateNotificationPreferences']);
+    Route::post('user/password', [UserSettingsController::class, 'changePassword']);
     Route::get('me/notifications', [NotificationController::class, 'index']);
     Route::patch('me/notifications/{id}/read', [NotificationController::class, 'markRead']);
     Route::post('me/notifications/read-all', [NotificationController::class, 'markAllRead']);
 
     // Workspace creation
+    Route::get('workspaces', [WorkspaceController::class, 'index']);
     Route::post('workspaces', [WorkspaceController::class, 'store'])->middleware('idempotent');
 
     // All workspace-scoped routes
@@ -171,6 +186,12 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::apiResource('items', ItemController::class)->middleware('idempotent');
 
             Route::get('items/{item}/activity', [ItemController::class, 'activity']);
+            Route::get('items/{item}/linked-documents', function (\App\Core\Models\Item $item) {
+                return response()->json(['data' => $item->linkedDocuments]);
+            });
+            Route::get('items/{item}/linked-deals', function (\App\Core\Models\Item $item) {
+                return response()->json(['data' => $item->linkedDeals]);
+            });
             Route::get('items/{item}/subitems', [ItemController::class, 'subitems']);
             Route::post('items/{item}/subitems', [ItemController::class, 'storeSubitem'])->middleware('idempotent');
             Route::post('items/{item}/duplicate', [ItemController::class, 'duplicate'])->middleware('idempotent');
@@ -223,6 +244,18 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // Audit logs (workspace admin)
         Route::get('audit-logs', [AuditLogController::class, 'index'])->middleware('workspace.role:owner,admin');
+
+        // Workspace activity feed (used by DashboardPage)
+        Route::get('activity', function (Request $request, string $workspace) {
+            $activity = \Spatie\Activitylog\Activity::query()
+                ->where('subject_id', $workspace)
+                ->orWhere('causer_id', $request->user()->id)
+                ->orderBy('created_at', 'desc')
+                ->limit($request->query('limit', 20))
+                ->get();
+
+            return response()->json(['data' => $activity]);
+        });
 
         // Field-level permissions (workspace admin)
         Route::get('field-permissions', [FieldPermissionController::class, 'index'])->middleware('workspace.role:owner,admin');
