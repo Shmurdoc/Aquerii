@@ -512,7 +512,6 @@ export const erpAccounts = {
 export const erpJournalEntries = {
   list: async (params?: { from?: string; to?: string; account_id?: string; per_page?: number }): Promise<JournalEntry[]> => {
     const res = await api.get(`/workspaces/${wid()}/journal-entries`, { params })
-    // { data: { data: JournalEntry[], ... } }
     const d = res.data?.data
     if (d && Array.isArray(d.data)) return d.data
     if (Array.isArray(d)) return d
@@ -527,6 +526,67 @@ export const erpJournalEntries = {
   }): Promise<JournalEntry[]> => {
     const res = await api.post(`/workspaces/${wid()}/journal-entries`, payload)
     return res.data?.data ?? []
+  },
+
+  update: async (id: string, payload: Partial<{ description: string; debit_amount: number; credit_amount: number; entry_date: string }>): Promise<JournalEntry> => {
+    const res = await api.patch(`/workspaces/${wid()}/journal-entries/${id}`, payload)
+    return unwrap(res)
+  },
+
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/workspaces/${wid()}/journal-entries/${id}`)
+  },
+}
+
+// ─── Accounting Financial Reports ────────────────────────────────────────────
+
+export interface TrialBalanceEntry {
+  account_id: string
+  code: string
+  name: string
+  type: string
+  debit: number
+  credit: number
+  balance: number
+}
+
+export interface ProfitLossReport {
+  revenue: number
+  expenses: number
+  net_income: number
+  accounts: Array<{ id: string; name: string; type: string; amount: number }>
+}
+
+export interface BalanceSheetReport {
+  assets: number
+  liabilities: number
+  equity: number
+  total_liabilities_and_equity: number
+}
+
+export interface CashFlowReport {
+  operating: number
+  investing: number
+  financing: number
+  net_cash_flow: number
+}
+
+export const erpFinancialReports = {
+  trialBalance: async (): Promise<TrialBalanceEntry[]> => {
+    const res = await api.get(`/workspaces/${wid()}/reports/trial-balance`)
+    return res.data?.data ?? []
+  },
+  profitLoss: async (): Promise<ProfitLossReport> => {
+    const res = await api.get(`/workspaces/${wid()}/reports/profit-loss`)
+    return res.data?.data ?? {}
+  },
+  balanceSheet: async (): Promise<BalanceSheetReport> => {
+    const res = await api.get(`/workspaces/${wid()}/reports/balance-sheet`)
+    return res.data?.data ?? {}
+  },
+  cashFlow: async (): Promise<CashFlowReport> => {
+    const res = await api.get(`/workspaces/${wid()}/reports/cash-flow`)
+    return res.data?.data ?? {}
   },
 }
 

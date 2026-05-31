@@ -73,4 +73,28 @@ class JournalEntryController extends Controller
 
         return response()->json(['data' => $created], 201);
     }
+
+    public function update(Request $request, Workspace $workspace, string $journal_entry): JsonResponse
+    {
+        $entry = JournalEntry::where('workspace_id', $workspace->id)->findOrFail($journal_entry);
+
+        $validated = $request->validate([
+            'description' => 'sometimes|string|max:500',
+            'debit_amount' => 'sometimes|numeric|min:0',
+            'credit_amount' => 'sometimes|numeric|min:0',
+            'entry_date' => 'sometimes|date',
+        ]);
+
+        $entry->update($validated);
+
+        return response()->json(['data' => $entry->fresh()->load('account')]);
+    }
+
+    public function destroy(Workspace $workspace, string $journal_entry): JsonResponse
+    {
+        $entry = JournalEntry::where('workspace_id', $workspace->id)->findOrFail($journal_entry);
+        $entry->delete();
+
+        return response()->json(['data' => ['deleted' => true]]);
+    }
 }

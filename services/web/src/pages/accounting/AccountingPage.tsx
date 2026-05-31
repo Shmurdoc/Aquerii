@@ -4,8 +4,10 @@ import {
   useAccounts, useCreateAccount, useUpdateAccount, useDeleteAccount,
   useJournalEntries, useCreateJournalEntry,
 } from '@/hooks/useAccounting'
-import { Account, AccountType, JournalEntry, JournalEntryLine, formatCurrency, formatDate } from '@/lib/erp'
+import { Account, AccountType, JournalEntry, JournalEntryLine, formatCurrency, formatDate, erpFinancialReports, TrialBalanceEntry, ProfitLossReport, BalanceSheetReport, CashFlowReport } from '@/lib/erp'
 import { Button, Input, Select, DataTable, type Column } from '@/components/ui'
+import { useQuery } from '@tanstack/react-query'
+import { useAuthStore } from '@/stores/authStore'
 
 const ACCOUNT_TYPES: AccountType[] = ['asset', 'liability', 'equity', 'income', 'expense']
 
@@ -180,7 +182,145 @@ function NewJournalEntryModal({ accounts, onClose }: { accounts: Account[]; onCl
   )
 }
 
-type Tab = 'accounts' | 'journal'
+type Tab = 'accounts' | 'journal' | 'reports'
+
+function ReportsTab() {
+  const w = useAuthStore(s => s.workspace?.id)
+
+  const { data: trialBalance, isLoading: loadingTB } = useQuery({
+    queryKey: ['trial-balance', w],
+    queryFn: () => erpFinancialReports.trialBalance(),
+    enabled: !!w,
+  })
+
+  const { data: pl, isLoading: loadingPL } = useQuery({
+    queryKey: ['profit-loss', w],
+    queryFn: () => erpFinancialReports.profitLoss(),
+    enabled: !!w,
+  })
+
+  const { data: bs, isLoading: loadingBS } = useQuery({
+    queryKey: ['balance-sheet', w],
+    queryFn: () => erpFinancialReports.balanceSheet(),
+    enabled: !!w,
+  })
+
+  const { data: cf, isLoading: loadingCF } = useQuery({
+    queryKey: ['cash-flow', w],
+    queryFn: () => erpFinancialReports.cashFlow(),
+    enabled: !!w,
+  })
+
+  return (
+    <div className="space-y-6">
+      {/* Trial Balance */}
+      <div>
+        <h3 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3">Trial Balance</h3>
+        {loadingTB ? (
+          <div className="text-xs text-[var(--color-text-muted)]">Loading...</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[var(--color-glass-border)]">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-[var(--color-text-muted)]">Code</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-[var(--color-text-muted)]">Account</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-[var(--color-text-muted)]">Debit</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-[var(--color-text-muted)]">Credit</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-[var(--color-text-muted)]">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {trialBalance?.map((e: TrialBalanceEntry) => (
+                  <tr key={e.account_id} className="border-b border-[var(--color-glass-border)]/50">
+                    <td className="px-4 py-2 font-mono text-xs text-[var(--color-text-secondary)]">{e.code}</td>
+                    <td className="px-4 py-2 text-[var(--color-text-primary)]">{e.name}</td>
+                    <td className="px-4 py-2 text-right font-mono text-xs">{e.debit > 0 ? formatCurrency(e.debit) : '—'}</td>
+                    <td className="px-4 py-2 text-right font-mono text-xs">{e.credit > 0 ? formatCurrency(e.credit) : '—'}</td>
+                    <td className="px-4 py-2 text-right font-mono text-xs font-semibold">{formatCurrency(e.balance)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Profit & Loss */}
+      <div>
+        <h3 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3">Profit & Loss</h3>
+        {loadingPL ? (
+          <div className="text-xs text-[var(--color-text-muted)]">Loading...</div>
+        ) : pl ? (
+          <div className="grid grid-cols-3 gap-4">
+            <div className="rounded-lg border border-[var(--color-glass-border)] p-4">
+              <div className="text-xs text-[var(--color-text-muted)] mb-1">Revenue</div>
+              <div className="text-lg font-bold text-emerald-400">{formatCurrency(pl.revenue)}</div>
+            </div>
+            <div className="rounded-lg border border-[var(--color-glass-border)] p-4">
+              <div className="text-xs text-[var(--color-text-muted)] mb-1">Expenses</div>
+              <div className="text-lg font-bold text-red-400">{formatCurrency(pl.expenses)}</div>
+            </div>
+            <div className="rounded-lg border border-[var(--color-glass-border)] p-4">
+              <div className="text-xs text-[var(--color-text-muted)] mb-1">Net Income</div>
+              <div className={`text-lg font-bold ${pl.net_income >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatCurrency(pl.net_income)}</div>
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      {/* Balance Sheet */}
+      <div>
+        <h3 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3">Balance Sheet</h3>
+        {loadingBS ? (
+          <div className="text-xs text-[var(--color-text-muted)]">Loading...</div>
+        ) : bs ? (
+          <div className="grid grid-cols-3 gap-4">
+            <div className="rounded-lg border border-[var(--color-glass-border)] p-4">
+              <div className="text-xs text-[var(--color-text-muted)] mb-1">Assets</div>
+              <div className="text-lg font-bold text-blue-400">{formatCurrency(bs.assets)}</div>
+            </div>
+            <div className="rounded-lg border border-[var(--color-glass-border)] p-4">
+              <div className="text-xs text-[var(--color-text-muted)] mb-1">Liabilities</div>
+              <div className="text-lg font-bold text-red-400">{formatCurrency(bs.liabilities)}</div>
+            </div>
+            <div className="rounded-lg border border-[var(--color-glass-border)] p-4">
+              <div className="text-xs text-[var(--color-text-muted)] mb-1">Equity</div>
+              <div className="text-lg font-bold text-purple-400">{formatCurrency(bs.equity)}</div>
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      {/* Cash Flow */}
+      <div>
+        <h3 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3">Cash Flow</h3>
+        {loadingCF ? (
+          <div className="text-xs text-[var(--color-text-muted)]">Loading...</div>
+        ) : cf ? (
+          <div className="grid grid-cols-4 gap-4">
+            <div className="rounded-lg border border-[var(--color-glass-border)] p-4">
+              <div className="text-xs text-[var(--color-text-muted)] mb-1">Operating</div>
+              <div className="text-lg font-bold text-emerald-400">{formatCurrency(cf.operating)}</div>
+            </div>
+            <div className="rounded-lg border border-[var(--color-glass-border)] p-4">
+              <div className="text-xs text-[var(--color-text-muted)] mb-1">Investing</div>
+              <div className="text-lg font-bold text-blue-400">{formatCurrency(cf.investing)}</div>
+            </div>
+            <div className="rounded-lg border border-[var(--color-glass-border)] p-4">
+              <div className="text-xs text-[var(--color-text-muted)] mb-1">Financing</div>
+              <div className="text-lg font-bold text-purple-400">{formatCurrency(cf.financing)}</div>
+            </div>
+            <div className="rounded-lg border border-[var(--color-glass-border)] p-4">
+              <div className="text-xs text-[var(--color-text-muted)] mb-1">Net Cash Flow</div>
+              <div className={`text-lg font-bold ${cf.net_cash_flow >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatCurrency(cf.net_cash_flow)}</div>
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  )
+}
 
 export default function AccountingPage() {
   const [tab, setTab]                     = useState<Tab>('accounts')
@@ -269,7 +409,7 @@ export default function AccountingPage() {
     <div className="flex flex-col h-full">
       <div className="flex items-center gap-4 px-5 py-4 border-b border-[var(--color-glass-border)] shrink-0">
         <div className="flex gap-1 bg-[var(--color-bg-elevated)] rounded-lg p-0.5">
-          {(['accounts', 'journal'] as Tab[]).map((t) => (
+          {(['accounts', 'journal', 'reports'] as Tab[]).map((t) => (
             <button key={t} onClick={() => setTab(t)}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${tab === t ? 'bg-[var(--color-bg-hover)] text-[var(--color-text-primary)]' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'}`}>
               {t === 'accounts' ? 'Chart of Accounts' : 'Journal Ledger'}
@@ -405,6 +545,8 @@ export default function AccountingPage() {
             emptyDescription="Post an entry to get started."
           />
         )}
+
+        {tab === 'reports' && <ReportsTab />}
       </div>
 
       {showNewAccount  && <NewAccountModal onClose={() => setShowNewAccount(false)} />}
