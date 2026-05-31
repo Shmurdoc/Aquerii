@@ -728,12 +728,12 @@ If you think Aquerii is "done" because it has some CRUD screens and a nice sideb
 | JOB-04 | Job card list | 1 | 1 | 1 | BUILT |
 | JOB-05 | Job card detail | 1 | 1 | 1 | BUILT |
 | JOB-06 | Job card status workflow | 1 | 1 | 1 | BUILT |
-| JOB-07 | Job card assignment | 1 | 1 | 0 | BUILT |
+| JOB-07 | Job card assignment | 1 | 1 | 1 | BUILT |
 | JOB-08 | Job card sign-off | 1 | 1 | 1 | BUILT |
-| JOB-09 | Job card photo capture | 1 | 0 | 0 | BUILT |
-| JOB-10 | Job card materials tracking | 0 | 0 | 0 | MISSING |
-| JOB-11 | Job card labour tracking | 1 | 0 | 0 | BUILT |
-| JOB-12 | Job card safety checklist | 0 | 0 | 0 | MISSING |
+| JOB-09 | Job card photo capture | 1 | 1 | 1 | BUILT |
+| JOB-10 | Job card materials tracking | 1 | 1 | 1 | BUILT |
+| JOB-11 | Job card labour tracking | 1 | 1 | 1 | BUILT |
+| JOB-12 | Job card safety checklist | 1 | 1 | 1 | BUILT |
 
 ---
 
@@ -873,14 +873,14 @@ If you think Aquerii is "done" because it has some CRUD screens and a nice sideb
 | 24. AI | 8 | 2 | 5 | 1 |
 | 25. Scenarios | 7 | 6 | 1 | 0 |
 | 26. Plugins | 7 | 5 | 2 | 0 |
-| 27. Job Cards | 12 | 9 | 1 | 2 |
+| 27. Job Cards | 12 | 12 | 0 | 0 |
 | 28. Delegation | 6 | 0 | 0 | 6 |
 | 29. Capacity | 4 | 0 | 4 | 0 |
 | 30. My Day | 6 | 6 | 0 | 0 |
 | 31. Real-time | 7 | 7 | 0 | 0 |
 | 32. Infrastructure | 15 | 15 | 0 | 0 |
 | 33. Security | 12 | 12 | 0 | 0 |
-| **TOTAL** | **487** | **~260** | **~55** | **~80** |
+| **TOTAL** | **487** | **~263** | **~52** | **~78** |
 
 ## CRITICAL GAPS (Top Priority)
 
@@ -888,8 +888,7 @@ If you think Aquerii is "done" because it has some CRUD screens and a nice sideb
 1. **Delegation** (DEL-01 to DEL-06) — 6 features, all missing
 
 ### Partially Built Modules:
-1. **Job Cards** (JOB-01 to JOB-12) — 9/12 built, missing: materials tracking (JOB-10), photo capture UI (JOB-09), safety checklist (JOB-12)
-2. **Template System** (TPL-01 to TPL-09) — 6 features missing, 3 partial
+1. **Template System** (TPL-01 to TPL-09) — 6 features missing, 3 partial
 
 ### Backend-Only Features (no frontend UI):
 - SCIM 2.0 provisioning (A-17, A-18)
@@ -907,7 +906,7 @@ If you think Aquerii is "done" because it has some CRUD screens and a nice sideb
 
 ### Test Coverage Gaps:
 - **Zero tests** for: Invoicing, Purchasing, Sales, Inventory, Accounting, Marketing, Support, Documents, Calendar, HR, Settings, Integrations, Reporting, Notifications
-- Existing tests cover only: Auth (3), Boards (1), CRM (1), AI (2+Python), Items (1), Workspace (1), Scenario (1), Security (3), Rules (1), JobCards (12)
+- Existing tests cover only: Auth (3), Boards (1), CRM (1), AI (2+Python), Items (1), Workspace (1), Scenario (1), Security (3), Rules (1), JobCards (21)
 
 ---
 
