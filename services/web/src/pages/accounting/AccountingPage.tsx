@@ -407,12 +407,32 @@ export default function AccountingPage() {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Summary Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-5 py-3 border-b border-[var(--color-glass-border)] animate-slide-up">
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">Accounts</p>
+          <p className="text-lg font-bold text-[var(--color-text-primary)]">{accounts.length}</p>
+        </div>
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">Journal Entries</p>
+          <p className="text-lg font-bold text-indigo-400">{entries.length}</p>
+        </div>
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">Total Debits</p>
+          <p className="text-lg font-bold text-blue-400">{formatCurrency(entries.reduce((s: number, e: JournalEntry) => s + (e.debit_amount || 0), 0))}</p>
+        </div>
+        <div className="glass-card p-2 rounded-lg">
+          <p className="text-[10px] text-[var(--color-text-muted)]">Total Credits</p>
+          <p className="text-lg font-bold text-emerald-400">{formatCurrency(entries.reduce((s: number, e: JournalEntry) => s + (e.credit_amount || 0), 0))}</p>
+        </div>
+      </div>
+
       <div className="flex items-center gap-4 px-5 py-4 border-b border-[var(--color-glass-border)] shrink-0">
         <div className="flex gap-1 bg-[var(--color-bg-elevated)] rounded-lg p-0.5">
           {(['accounts', 'journal', 'reports'] as Tab[]).map((t) => (
             <button key={t} onClick={() => setTab(t)}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${tab === t ? 'bg-[var(--color-bg-hover)] text-[var(--color-text-primary)]' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'}`}>
-              {t === 'accounts' ? 'Chart of Accounts' : 'Journal Ledger'}
+              {t === 'accounts' ? 'Chart of Accounts' : t === 'journal' ? 'Journal Ledger' : 'Financial Reports'}
             </button>
           ))}
         </div>
@@ -455,7 +475,7 @@ export default function AccountingPage() {
         )}
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto animate-fade-in">
         {tab === 'accounts' && (
           loadingAccounts ? (
             <div className="flex items-center justify-center h-40 text-[var(--color-text-muted)] text-sm">Loading…</div>

@@ -401,6 +401,22 @@ export default function InventoryPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Summary Stats */}
+        <div className="grid grid-cols-3 gap-3 px-5 py-3 border-b border-gray-800 animate-slide-up">
+          <div className="glass-card p-2 rounded-lg">
+            <p className="text-[10px] text-gray-500">Products</p>
+            <p className="text-lg font-bold text-gray-100">{products.length}</p>
+          </div>
+          <div className="glass-card p-2 rounded-lg">
+            <p className="text-[10px] text-gray-500">Categories</p>
+            <p className="text-lg font-bold text-indigo-400">{categories.length}</p>
+          </div>
+          <div className="glass-card p-2 rounded-lg">
+            <p className="text-[10px] text-gray-500">Total Stock</p>
+            <p className="text-lg font-bold text-emerald-400">{products.reduce((s: number, p: Product) => s + (p.stock_items ?? []).filter((st: StockItem) => st.status === 'in_stock').reduce((n: number, st: StockItem) => n + st.quantity, 0), 0)}</p>
+          </div>
+        </div>
+
         <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-800">
           <h1 className="text-base font-semibold text-gray-100">
             {selectedCategoryId ? (categories.find((c) => c.id === selectedCategoryId)?.name ?? 'Products') : 'All Products'}
@@ -418,7 +434,7 @@ export default function InventoryPage() {
           </button>
         </div>
 
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto animate-fade-in">
           {isLoading ? (
             <div className="flex items-center justify-center h-40 text-gray-500 text-sm">Loading…</div>
           ) : products.length === 0 ? (
