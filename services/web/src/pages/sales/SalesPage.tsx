@@ -169,6 +169,26 @@ export default function SalesPage() {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Summary Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-6 py-4 border-b border-[var(--color-glass-border)] animate-slide-up">
+        <div className="glass-card p-3 rounded-xl">
+          <p className="text-xs text-[var(--color-text-muted)]">Total Orders</p>
+          <p className="text-xl font-bold text-[var(--color-text-primary)]">{orders.length}</p>
+        </div>
+        <div className="glass-card p-3 rounded-xl">
+          <p className="text-xs text-[var(--color-text-muted)]">Total Value</p>
+          <p className="text-xl font-bold text-emerald-400">{formatCurrency(orders.reduce((s: number, o: any) => s + (o.total || 0), 0))}</p>
+        </div>
+        <div className="glass-card p-3 rounded-xl">
+          <p className="text-xs text-[var(--color-text-muted)]">Quotations</p>
+          <p className="text-xl font-bold text-blue-400">{orders.filter((o: any) => o.status === 'quotation').length}</p>
+        </div>
+        <div className="glass-card p-3 rounded-xl">
+          <p className="text-xs text-[var(--color-text-muted)]">Delivered</p>
+          <p className="text-xl font-bold text-emerald-400">{orders.filter((o: any) => o.status === 'delivered').length}</p>
+        </div>
+      </div>
+
       <div className="flex items-center gap-3 px-6 py-4 border-b border-[var(--color-glass-border)] shrink-0">
         <h1 className="text-base font-semibold text-[var(--color-text-primary)] mr-2">Sales Orders</h1>
         <div className="flex gap-1">
@@ -192,7 +212,7 @@ export default function SalesPage() {
         </Button>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto animate-fade-in">
         <DataTable
           columns={columns}
           data={orders}

@@ -162,6 +162,26 @@ export default function PurchasingPage() {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Summary Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-6 py-4 border-b border-[var(--color-glass-border)] animate-slide-up">
+        <div className="glass-card p-3 rounded-xl">
+          <p className="text-xs text-[var(--color-text-muted)]">Total POs</p>
+          <p className="text-xl font-bold text-[var(--color-text-primary)]">{orders.length}</p>
+        </div>
+        <div className="glass-card p-3 rounded-xl">
+          <p className="text-xs text-[var(--color-text-muted)]">Total Value</p>
+          <p className="text-xl font-bold text-emerald-400">{formatCurrency(orders.reduce((s: number, o: any) => s + (o.total || 0), 0))}</p>
+        </div>
+        <div className="glass-card p-3 rounded-xl">
+          <p className="text-xs text-[var(--color-text-muted)]">Pending</p>
+          <p className="text-xl font-bold text-amber-400">{orders.filter((o: any) => o.status === 'sent').length}</p>
+        </div>
+        <div className="glass-card p-3 rounded-xl">
+          <p className="text-xs text-[var(--color-text-muted)]">Received</p>
+          <p className="text-xl font-bold text-emerald-400">{orders.filter((o: any) => o.status === 'received').length}</p>
+        </div>
+      </div>
+
       <div className="flex items-center gap-3 px-6 py-4 border-b border-[var(--color-glass-border)] shrink-0">
         <h1 className="text-base font-semibold text-[var(--color-text-primary)] mr-2">Purchase Orders</h1>
         <div className="flex gap-1">
@@ -185,7 +205,7 @@ export default function PurchasingPage() {
         </Button>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto animate-fade-in">
         <DataTable
           columns={columns}
           data={orders}
