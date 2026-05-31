@@ -734,6 +734,54 @@ export interface JobCardMaterial {
   created_by: string
 }
 
+// ─── Delegation (DEL-01 to DEL-06) ───────────────────────────────────────────
+
+export interface Delegation {
+  id: string
+  workspace_id: string
+  item_id: string
+  from_user_id: string
+  to_user_id: string
+  reason: string
+  notes: string | null
+  status: 'active' | 'revoked' | 'completed'
+  delegated_at: string
+  expires_at: string | null
+  returned_at: string | null
+  accepted_at: string | null
+  accepted_by: string | null
+  item?: { id: string; title: string }
+  from_user?: { id: string; name: string; email: string }
+  to_user?: { id: string; name: string; email: string }
+}
+
+export const erpDelegation = {
+  list: async (params?: { direction?: 'sent' | 'received'; status?: string }): Promise<Delegation[]> => {
+    const q = new URLSearchParams()
+    if (params?.direction) q.set('direction', params.direction)
+    if (params?.status) q.set('status', params.status)
+    const res = await api.get(`/workspaces/${wid()}/delegations?${q}`)
+    return normalizeList(res)
+  },
+  delegate: async (boardId: string, itemId: string, toUserId: string, reason: string, expiresAt?: string, key?: string): Promise<Delegation> => {
+    const headers: Record<string, string> = { 'Idempotency-Key': key ?? crypto.randomUUID() }
+    const res = await api.post(`/workspaces/${wid()}/boards/${boardId}/items/${itemId}/delegate`,
+      { to_user_id: toUserId, reason, expires_at: expiresAt ?? null },
+      { headers }
+    )
+    return unwrap(res)
+  },
+  revoke: async (boardId: string, itemId: string): Promise<Delegation> => {
+    const res = await api.delete(`/workspaces/${wid()}/boards/${boardId}/items/${itemId}/delegate`)
+    return unwrap(res)
+  },
+  accept: async (boardId: string, itemId: string, key?: string): Promise<Delegation> => {
+    const headers: Record<string, string> = { 'Idempotency-Key': key ?? crypto.randomUUID() }
+    const res = await api.post(`/workspaces/${wid()}/boards/${boardId}/items/${itemId}/delegate/accept`, {}, { headers })
+    return unwrap(res)
+  },
+}
+
 // ─── Formatting helpers ───────────────────────────────────────────────────────
 
 export function formatCurrency(amount: number | string, currency = 'USD'): string {

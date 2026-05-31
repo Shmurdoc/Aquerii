@@ -79,7 +79,7 @@ class JobCardController extends Controller
             'created_by' => $request->user()->id,
         ]);
 
-        if (!empty($validated['tasks'])) {
+        if (! empty($validated['tasks'])) {
             foreach ($validated['tasks'] as $i => $task) {
                 $card->tasks()->create([
                     'description' => $task['description'],
@@ -120,7 +120,7 @@ class JobCardController extends Controller
         ]);
 
         $newStatus = $validated['status'] ?? null;
-        if ($newStatus === 'in_progress' && !$jobCard->started_at) {
+        if ($newStatus === 'in_progress' && ! $jobCard->started_at) {
             $validated['started_at'] = now();
         } elseif ($newStatus === 'completed') {
             $validated['completed_at'] = now();

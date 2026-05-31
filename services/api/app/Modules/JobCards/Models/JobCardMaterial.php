@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 class JobCardMaterial extends Model
 {
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [

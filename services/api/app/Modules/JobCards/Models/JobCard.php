@@ -4,6 +4,7 @@ namespace App\Modules\JobCards\Models;
 
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
+use Database\Factories\JobCards\JobCardFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ class JobCard extends Model
     use HasFactory, SoftDeletes;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -38,7 +40,7 @@ class JobCard extends Model
 
     public static function newFactory(): Factory
     {
-        return \Database\Factories\JobCards\JobCardFactory::new();
+        return JobCardFactory::new();
     }
 
     protected static function boot(): void

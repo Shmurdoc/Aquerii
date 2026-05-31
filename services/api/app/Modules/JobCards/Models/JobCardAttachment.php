@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 class JobCardAttachment extends Model
 {
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -30,6 +31,6 @@ class JobCardAttachment extends Model
 
     public function uploadedBy(): BelongsTo
     {
-        return $this->belongsTo(\App\Core\Models\User::class, 'uploaded_by');
+        return $this->belongsTo(User::class, 'uploaded_by');
     }
 }

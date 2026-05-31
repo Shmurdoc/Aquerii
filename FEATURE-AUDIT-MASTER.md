@@ -742,12 +742,12 @@ If you think Aquerii is "done" because it has some CRUD screens and a nice sideb
 ### 28.1 Delegation
 | # | Feature | Backend | Frontend | Tests | Status |
 |---|---------|---------|----------|-------|--------|
-| DEL-01 | Delegate task | ? | ? | ? | AUDIT |
-| DEL-02 | Delegation record | ? | ? | ? | AUDIT |
+| DEL-01 | Delegate task | ✓ | ✓ | ✓ | BUILT |
+| DEL-02 | Delegation record | ✓ | ✓ | ✓ | BUILT |
 | DEL-03 | Delegation notification | ? | ? | ? | AUDIT |
-| DEL-04 | Delegation expiry | ? | ? | ? | AUDIT |
-| DEL-05 | Delegation revoke | ? | ? | ? | AUDIT |
-| DEL-06 | Delegation audit | ? | ? | ? | AUDIT |
+| DEL-04 | Delegation expiry | ✓ | ✓ | ✓ | BUILT |
+| DEL-05 | Delegation revoke | ✓ | ✓ | ✓ | BUILT |
+| DEL-06 | Delegation audit | ✓ | ✓ | ✓ | BUILT |
 
 ---
 
@@ -874,18 +874,18 @@ If you think Aquerii is "done" because it has some CRUD screens and a nice sideb
 | 25. Scenarios | 7 | 6 | 1 | 0 |
 | 26. Plugins | 7 | 5 | 2 | 0 |
 | 27. Job Cards | 12 | 12 | 0 | 0 |
-| 28. Delegation | 6 | 0 | 0 | 6 |
+| 28. Delegation | 6 | 5 | 0 | 1 |
 | 29. Capacity | 4 | 0 | 4 | 0 |
 | 30. My Day | 6 | 6 | 0 | 0 |
 | 31. Real-time | 7 | 7 | 0 | 0 |
 | 32. Infrastructure | 15 | 15 | 0 | 0 |
 | 33. Security | 12 | 12 | 0 | 0 |
-| **TOTAL** | **487** | **~263** | **~52** | **~78** |
+| **TOTAL** | **487** | **~268** | **~52** | **~73** |
 
 ## CRITICAL GAPS (Top Priority)
 
 ### Completely Missing Modules (0% built):
-1. **Delegation** (DEL-01 to DEL-06) — 6 features, all missing
+*(none — all modules have at least partial coverage)*
 
 ### Partially Built Modules:
 1. **Template System** (TPL-01 to TPL-09) — 6 features missing, 3 partial
