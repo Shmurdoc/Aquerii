@@ -85,8 +85,8 @@ function CardFooter({ children, className }: CardSectionProps) {
   )
 }
 
-/* eslint-disable no-extra-semi, no-unexpected-multiline */
-;(Card as CardComponent).Header = CardHeader
-;(Card as CardComponent).Body = CardBody
-;(Card as CardComponent).Footer = CardFooter
-/* eslint-enable no-extra-semi, no-unexpected-multiline */
+/* eslint-disable no-extra-semi */
+;(Card as any).Header = CardHeader
+;(Card as any).Body = CardBody
+;(Card as any).Footer = CardFooter
+/* eslint-enable no-extra-semi */
