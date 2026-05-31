@@ -25,6 +25,12 @@ import FilesPage     from '@/pages/documents/FilesPage'
 import CRMPage       from '@/pages/crm/CRMPage'
 import ContactsPage  from '@/pages/crm/ContactsPage'
 import LeadsPage     from '@/pages/crm/LeadsPage'
+import ProductsPage  from '@/pages/crm/ProductsPage'
+import QuotesPage    from '@/pages/crm/QuotesPage'
+import CalendarSyncPage from '@/pages/crm/CalendarSyncPage'
+import ApprovalRulesPage from '@/pages/crm/ApprovalRulesPage'
+import DealApprovalsPage from '@/pages/crm/DealApprovalsPage'
+import AutomationRulesPage from '@/pages/crm/AutomationRulesPage'
 import ForecastPage  from '@/pages/crm/ForecastPage'
 import QuotasPage    from '@/pages/crm/QuotasPage'
 import SequencesPage from '@/pages/crm/SequencesPage'
@@ -129,6 +135,12 @@ export default function App() {
           <Route path="/crm/forecast"   element={<ForecastPage />} />
           <Route path="/crm/quotas"     element={<QuotasPage />} />
           <Route path="/crm/sequences"  element={<SequencesPage />} />
+          <Route path="/crm/products"   element={<ProductsPage />} />
+          <Route path="/crm/quotes"     element={<QuotesPage />} />
+          <Route path="/crm/calendar-sync" element={<CalendarSyncPage />} />
+          <Route path="/crm/approval-rules" element={<ApprovalRulesPage />} />
+          <Route path="/crm/deal-approvals" element={<DealApprovalsPage />} />
+          <Route path="/crm/automation-rules" element={<AutomationRulesPage />} />
           <Route path="/support" element={<Navigate to="/support/tickets" replace />} />
           <Route path="/support/tickets"         element={<TicketsPage />} />
           <Route path="/support/tickets/:ticketId" element={<TicketDetailPage />} />

@@ -32,6 +32,12 @@ const SECTIONS: Record<string, { label: string; items: { to: string; label: stri
       { to: '/crm/forecast',    label: 'Forecast'   },
       { to: '/crm/quotas',      label: 'Quotas'     },
       { to: '/crm/sequences',   label: 'Sequences'  },
+      { to: '/crm/products',    label: 'Products'   },
+      { to: '/crm/quotes',      label: 'Quotes'     },
+      { to: '/crm/calendar-sync', label: 'Calendar Sync' },
+      { to: '/crm/approval-rules', label: 'Approval Rules' },
+      { to: '/crm/deal-approvals', label: 'Deal Approvals' },
+      { to: '/crm/automation-rules', label: 'Automation Rules' },
     ],
   },
   '/support': {
