@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { X, Trash2, ChevronDown } from 'lucide-react'
-import { SalesOrder, UpdateSOPayload, SOStatus, formatCurrency, formatDate } from '@/lib/erp'
+import { SalesOrder, UpdateSOPayload, SOStatus, formatCurrency, formatDate, erpSalesOrdersExtra } from '@/lib/erp'
 import { useUpdateSalesOrder, useDeleteSalesOrder } from '@/hooks/useSalesOrders'
 import StatusBadge from '@/components/erp/StatusBadge'
 import LineItemsEditor, { LineItem } from '@/components/erp/LineItemsEditor'
@@ -60,6 +60,16 @@ export default function SalesOrderDrawer({ so, onClose, onDeleted }: Props) {
   async function handleDelete() {
     await deleteMutation.mutateAsync(so.id)
     onDeleted()
+  }
+
+  async function handleConvertToInvoice() {
+    try {
+      await erpSalesOrdersExtra.convertToInvoice(so.id)
+      toast.success('Invoice created from sales order.')
+      onDeleted()
+    } catch (err: any) {
+      toast.error(err.response?.data?.error?.message ?? 'Failed to convert.')
+    }
   }
 
   return (
@@ -173,21 +183,29 @@ export default function SalesOrderDrawer({ so, onClose, onDeleted }: Props) {
       </div>
 
       <div className="px-5 py-4 border-t border-gray-800 flex items-center justify-between">
-        {!confirmDelete ? (
-          <button onClick={() => setConfirmDelete(true)}
-            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-red-400">
-            <Trash2 size={13} />Delete
-          </button>
-        ) : (
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-red-400">Delete this SO?</span>
-            <button onClick={handleDelete} disabled={deleteMutation.isPending}
-              className="text-xs px-2 py-1 rounded bg-red-600 hover:bg-red-700 text-white disabled:opacity-50">
-              {deleteMutation.isPending ? 'Deleting…' : 'Confirm'}
+        <div className="flex items-center gap-2">
+          {!confirmDelete ? (
+            <button onClick={() => setConfirmDelete(true)}
+              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-red-400">
+              <Trash2 size={13} />Delete
             </button>
-            <button onClick={() => setConfirmDelete(false)} className="text-xs text-gray-500 hover:text-gray-300">Cancel</button>
-          </div>
-        )}
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-red-400">Delete this SO?</span>
+              <button onClick={handleDelete} disabled={deleteMutation.isPending}
+                className="text-xs px-2 py-1 rounded bg-red-600 hover:bg-red-700 text-white disabled:opacity-50">
+                {deleteMutation.isPending ? 'Deleting…' : 'Confirm'}
+              </button>
+              <button onClick={() => setConfirmDelete(false)} className="text-xs text-gray-500 hover:text-gray-300">Cancel</button>
+            </div>
+          )}
+          {so.status === 'confirmed' && (
+            <button onClick={handleConvertToInvoice}
+              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white">
+              Convert to Invoice
+            </button>
+          )}
+        </div>
         {editing && (
           <div className="flex items-center gap-2">
             <button onClick={() => setEditing(false)}
