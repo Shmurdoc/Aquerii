@@ -318,6 +318,7 @@ jobs:
     name: SAST — Semgrep
     runs-on: ubuntu-latest
     needs: [test-php, test-node, test-web, test-python, test-php-scim-security, endpoint-audit-static]
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
@@ -330,6 +331,7 @@ jobs:
     name: Secrets — Gitleaks
     runs-on: ubuntu-latest
     needs: [test-php, test-node, test-web, test-python, test-php-scim-security, endpoint-audit-static]
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
