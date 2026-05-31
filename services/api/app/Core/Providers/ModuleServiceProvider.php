@@ -11,7 +11,6 @@ use App\Modules\Chat\Providers\ChatServiceProvider;
 use App\Modules\CRM\Providers\CrmServiceProvider;
 use App\Modules\Delegation\Providers\DelegationServiceProvider;
 use App\Modules\Documents\Providers\DocumentsServiceProvider;
-use App\Modules\Templates\Providers\TemplateServiceProvider;
 use App\Modules\Email\Providers\EmailServiceProvider;
 use App\Modules\Inventory\Providers\InventoryServiceProvider;
 use App\Modules\Invoicing\Providers\InvoicingServiceProvider;
@@ -20,6 +19,7 @@ use App\Modules\Marketing\Providers\MarketingServiceProvider;
 use App\Modules\Purchasing\Providers\PurchasingServiceProvider;
 use App\Modules\Sales\Providers\SalesServiceProvider;
 use App\Modules\Support\Providers\SupportServiceProvider;
+use App\Modules\Templates\Providers\TemplateServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
