@@ -2,6 +2,7 @@
 
 namespace App\Modules\CRM\Models;
 
+use Database\Factories\CrmPipelineStageFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 class CrmPipelineStage extends Model
 {
     use HasFactory, HasUuids;
+
+    protected static function newFactory(): CrmPipelineStageFactory
+    {
+        return CrmPipelineStageFactory::new();
+    }
 
     protected $table = 'crm_pipeline_stages';
 

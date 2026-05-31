@@ -4,6 +4,7 @@ namespace App\Modules\CRM\Models;
 
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
+use Database\Factories\CrmLeadFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CrmLead extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;
+
+    protected static function newFactory(): CrmLeadFactory
+    {
+        return CrmLeadFactory::new();
+    }
 
     protected $table = 'crm_leads';
 

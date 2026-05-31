@@ -33,15 +33,16 @@ class CompanyController extends Controller
         ]);
 
         $id = Str::uuid()->toString();
-        DB::table('crm_companies')->insert([
+        $data = [
             'id' => $id,
             'workspace_id' => $workspace->id,
             ...$validated,
             'created_at' => now(),
             'updated_at' => now(),
-        ]);
+        ];
+        DB::table('crm_companies')->insert($data);
 
-        return response()->json(['data' => ['id' => $id]], 201);
+        return response()->json(['data' => $data], 201);
     }
 
     // PATCH /workspaces/{workspace}/crm/companies/{company}

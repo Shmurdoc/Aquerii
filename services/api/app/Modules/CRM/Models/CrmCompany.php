@@ -5,6 +5,7 @@ namespace App\Modules\CRM\Models;
 use App\Core\Enums\SubscriptionPlan;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
+use Database\Factories\CrmCompanyFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CrmCompany extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;
+
+    protected static function newFactory(): CrmCompanyFactory
+    {
+        return CrmCompanyFactory::new();
+    }
 
     protected $table = 'crm_companies';
 

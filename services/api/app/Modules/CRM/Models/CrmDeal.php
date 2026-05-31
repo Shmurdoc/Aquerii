@@ -4,6 +4,7 @@ namespace App\Modules\CRM\Models;
 
 use App\Core\Models\Item;
 use App\Core\Models\User;
+use Database\Factories\CrmDealFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,11 @@ use Illuminate\Database\Eloquent\Model;
 class CrmDeal extends Model
 {
     use HasFactory, HasUuids;
+
+    protected static function newFactory(): CrmDealFactory
+    {
+        return CrmDealFactory::new();
+    }
 
     protected $table = 'crm_deals';
 
