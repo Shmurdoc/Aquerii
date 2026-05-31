@@ -94,17 +94,17 @@ class JobCardController extends Controller
         return response()->json(['data' => $card], 201);
     }
 
-    public function show(Workspace $workspace, JobCard $jobCard): JsonResponse
+    public function show(Workspace $workspace, string $job_card): JsonResponse
     {
-        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+        $jobCard = JobCard::where('workspace_id', $workspace->id)->findOrFail($job_card);
         $jobCard->load(['assignedTo', 'createdBy', 'signedOffBy', 'tasks', 'timeEntries.user', 'attachments', 'materials']);
 
         return response()->json(['data' => $jobCard]);
     }
 
-    public function update(Request $request, Workspace $workspace, JobCard $jobCard): JsonResponse
+    public function update(Request $request, Workspace $workspace, string $job_card): JsonResponse
     {
-        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+        $jobCard = JobCard::where('workspace_id', $workspace->id)->findOrFail($job_card);
 
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
@@ -131,17 +131,17 @@ class JobCardController extends Controller
         return response()->json(['data' => $jobCard->fresh()->load(['assignedTo', 'createdBy', 'tasks'])]);
     }
 
-    public function destroy(Workspace $workspace, JobCard $jobCard): JsonResponse
+    public function destroy(Workspace $workspace, string $job_card): JsonResponse
     {
-        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+        $jobCard = JobCard::where('workspace_id', $workspace->id)->findOrFail($job_card);
         $jobCard->delete();
 
         return response()->json(['data' => ['deleted' => true]]);
     }
 
-    public function signOff(Request $request, Workspace $workspace, JobCard $jobCard): JsonResponse
+    public function signOff(Request $request, Workspace $workspace, string $job_card): JsonResponse
     {
-        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+        $jobCard = JobCard::where('workspace_id', $workspace->id)->findOrFail($job_card);
         abort_if($jobCard->status === 'signed_off', 422, 'Job card is already signed off.');
 
         $validated = $request->validate([
@@ -158,9 +158,9 @@ class JobCardController extends Controller
         return response()->json(['data' => $jobCard->fresh()->load(['assignedTo', 'createdBy', 'signedOffBy'])]);
     }
 
-    public function reject(Request $request, Workspace $workspace, JobCard $jobCard): JsonResponse
+    public function reject(Request $request, Workspace $workspace, string $job_card): JsonResponse
     {
-        abort_if($jobCard->workspace_id !== $workspace->id, 404);
+        $jobCard = JobCard::where('workspace_id', $workspace->id)->findOrFail($job_card);
         abort_if($jobCard->status === 'signed_off', 422, 'Job card is already signed off.');
 
         $validated = $request->validate([

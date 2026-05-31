@@ -54,6 +54,11 @@ class JobCard extends Model
         return $this->belongsTo(Workspace::class);
     }
 
+    public function scopeWorkspace($query, string $workspaceId)
+    {
+        return $query->where('workspace_id', $workspaceId);
+    }
+
     public function assignedTo(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');
