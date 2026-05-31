@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('emails')) {
+            return;
+        }
+
         Schema::create('emails', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('workspace_id');

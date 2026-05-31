@@ -1,4 +1,4 @@
-import { forwardRef, type ReactNode, type MouseEventHandler } from 'react'
+import { forwardRef, type ReactNode, type MouseEventHandler, type ForwardRefExoticComponent, type RefAttributes } from 'react'
 import { clsx } from 'clsx'
 
 type CardVariant = 'default' | 'interactive' | 'glass'
@@ -53,6 +53,14 @@ type CardSectionProps = {
   className?: string
 }
 
+type CardComponent = ForwardRefExoticComponent<
+  CardProps & RefAttributes<HTMLDivElement>
+> & {
+  Header: typeof CardHeader
+  Body: typeof CardBody
+  Footer: typeof CardFooter
+}
+
 function CardHeader({ children, className }: CardSectionProps) {
   return (
     <div className={clsx('flex items-center gap-3', className)}>
@@ -77,6 +85,8 @@ function CardFooter({ children, className }: CardSectionProps) {
   )
 }
 
-(Card as any).Header = CardHeader
-(Card as any).Body = CardBody
-(Card as any).Footer = CardFooter
+/* eslint-disable no-extra-semi, no-unexpected-multiline */
+;(Card as CardComponent).Header = CardHeader
+;(Card as CardComponent).Body = CardBody
+;(Card as CardComponent).Footer = CardFooter
+/* eslint-enable no-extra-semi, no-unexpected-multiline */

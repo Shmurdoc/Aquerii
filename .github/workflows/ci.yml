@@ -146,6 +146,8 @@ jobs:
           sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env.testing
           sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env.testing
           sed -i "s|CACHE_DRIVER=.*|CACHE_DRIVER=array|" .env.testing || echo "CACHE_DRIVER=array" >> .env.testing
+          sed -i 's|value="postgres"|value="localhost"|' phpunit.xml
+          sed -i 's|value="redis"|value="localhost"|' phpunit.xml
           mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --env=testing --quiet
 
@@ -257,6 +259,8 @@ jobs:
           sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env.testing
           sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env.testing
           sed -i "s|CACHE_DRIVER=.*|CACHE_DRIVER=array|" .env.testing || echo "CACHE_DRIVER=array" >> .env.testing
+          sed -i 's|value="postgres"|value="localhost"|' phpunit.xml
+          sed -i 's|value="redis"|value="localhost"|' phpunit.xml
           mkdir -p bootstrap/cache
           mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --env=testing --quiet
@@ -287,6 +291,10 @@ jobs:
       - name: Install API deps for route inventory
         working-directory: services/api
         run: |
+          cp .env.example .env
+          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env
+          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
+          php artisan key:generate --force --quiet
           composer install --prefer-dist --no-scripts --no-progress
           mkdir -p bootstrap/cache
 
