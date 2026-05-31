@@ -11,6 +11,7 @@ use App\Modules\Chat\Providers\ChatServiceProvider;
 use App\Modules\CRM\Providers\CrmServiceProvider;
 use App\Modules\Delegation\Providers\DelegationServiceProvider;
 use App\Modules\Documents\Providers\DocumentsServiceProvider;
+use App\Modules\Templates\Providers\TemplateServiceProvider;
 use App\Modules\Email\Providers\EmailServiceProvider;
 use App\Modules\Inventory\Providers\InventoryServiceProvider;
 use App\Modules\Invoicing\Providers\InvoicingServiceProvider;
@@ -27,6 +28,7 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $this->registerIf('MODULE_CRM', CrmServiceProvider::class);
         $this->registerIf('MODULE_DELEGATION', DelegationServiceProvider::class);
+        $this->registerIf('MODULE_TEMPLATES', TemplateServiceProvider::class);
         $this->registerIf('MODULE_AUTOMATION', AutomationServiceProvider::class);
         $this->registerIf('MODULE_DOCUMENTS', DocumentsServiceProvider::class);
         $this->registerIf('MODULE_EMAIL', EmailServiceProvider::class);
