@@ -123,7 +123,7 @@ it('creates a job card with tasks', function () {
 
 it('rejects cross-workspace access', function () {
     $otherWorkspace = Workspace::factory()->create();
-    $card = JobCard::factory()->create(['workspace_id' => $otherWorkspace->id]);
+    $card = JobCard::factory()->create(['workspace_id' => $this->workspace->id]);
     $response = $this->getJson("/api/workspaces/{$otherWorkspace->id}/job-cards/{$card->id}");
     $response->assertStatus(404);
 });
