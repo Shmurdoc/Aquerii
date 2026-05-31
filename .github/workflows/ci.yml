@@ -263,6 +263,7 @@ jobs:
           sed -i "s|CACHE_DRIVER=.*|CACHE_DRIVER=array|" .env.testing || echo "CACHE_DRIVER=array" >> .env.testing
           sed -i 's|value="postgres"|value="localhost"|' phpunit.xml
           sed -i 's|value="redis"|value="localhost"|' phpunit.xml
+          sed -i 's|value="${DB_PASSWORD}"|value="secret"|' phpunit.xml
           mkdir -p bootstrap/cache
           mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --env=testing --quiet

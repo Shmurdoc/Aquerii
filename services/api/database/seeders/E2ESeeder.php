@@ -120,12 +120,12 @@ class E2ESeeder extends Seeder
             ]);
 
             $defaultStages = [
-                ['name' => 'Lead',         'color' => '#6366f1', 'probability' => 10],
-                ['name' => 'Qualified',    'color' => '#8b5cf6', 'probability' => 25],
-                ['name' => 'Proposal',     'color' => '#3b82f6', 'probability' => 50],
-                ['name' => 'Negotiation',  'color' => '#f59e0b', 'probability' => 75],
-                ['name' => 'Closed Won',   'color' => '#22c55e', 'probability' => 100],
-                ['name' => 'Closed Lost',  'color' => '#ef4444', 'probability' => 0],
+                ['name' => 'Lead',         'color' => '#6366f1', 'win_probability' => 10],
+                ['name' => 'Qualified',    'color' => '#8b5cf6', 'win_probability' => 25],
+                ['name' => 'Proposal',     'color' => '#3b82f6', 'win_probability' => 50],
+                ['name' => 'Negotiation',  'color' => '#f59e0b', 'win_probability' => 75],
+                ['name' => 'Closed Won',   'color' => '#22c55e', 'win_probability' => 100],
+                ['name' => 'Closed Lost',  'color' => '#ef4444', 'win_probability' => 0],
             ];
 
             foreach ($defaultStages as $i => $stage) {
@@ -136,7 +136,7 @@ class E2ESeeder extends Seeder
                     'name' => $stage['name'],
                     'color' => $stage['color'],
                     'position' => ($i + 1) * 65536,
-                    'probability' => $stage['probability'],
+                    'win_probability' => $stage['win_probability'],
                 ]);
             }
 
