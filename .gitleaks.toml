@@ -6,13 +6,3 @@ description = "Ignore gstack skill files and opencode config"
 paths = [
     '''(.*)?\.opencode/''',
 ]
-
-[[allowlists]]
-description = "Doc example: synthetic idempotency key in test code, not a real secret"
-regexTarget = "secret"
-regexes = [
-    '''^[A-Za-z]+_[A-Z0-9]+_reorder_[0-9]+$''',
-]
-paths = [
-    '''docs/plans/plans/ERROR_HANDLING\.md''',
-]
