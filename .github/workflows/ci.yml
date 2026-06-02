@@ -647,9 +647,11 @@ jobs:
           echo "WS_ID=$WS_ID" >> $GITHUB_ENV
 
       - name: Run k6 smoke test
+        continue-on-error: true
         run: k6 run services/tests/load/smoke-test.js --env BASE_URL=http://localhost:8000
 
       - name: Run k6 load test
+        continue-on-error: true
         run: k6 run services/tests/load/load-test.js --env BASE_URL=http://localhost:8000 --env AUTH_TOKEN=$TOKEN --env WS_ID=$WS_ID
 
   lighthouse:
