@@ -5,6 +5,7 @@ namespace App\Modules\HSSE\Models;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use Database\Factories\HSSE\HazardFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Hazard extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $table = 'hsse_hazards';
 
