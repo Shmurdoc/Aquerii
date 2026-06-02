@@ -22,7 +22,7 @@ it('generates sequential references with no gaps within a year', function () {
 
     $refs = collect(range(1, 5))->map(
         fn () => $service->next($this->workspace->id, ReferenceSequenceService::ENTITY_INCIDENT)
-    );
+    )->all();
 
     expect($refs)->toEqual([
         'INC-'.now()->format('Y').'-0001',
