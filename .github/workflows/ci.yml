@@ -654,6 +654,14 @@ jobs:
         continue-on-error: true
         run: k6 run services/tests/load/load-test.js --env BASE_URL=http://localhost:8000 --env AUTH_TOKEN=$TOKEN --env WS_ID=$WS_ID
 
+      - name: Upload API logs (debug)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-api-logs
+          path: services/api/storage/logs/*.log
+          if-no-files-found: ignore
+
   lighthouse:
     name: Lighthouse CI
     runs-on: ubuntu-latest
