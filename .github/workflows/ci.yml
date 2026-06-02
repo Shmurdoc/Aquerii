@@ -529,7 +529,9 @@ jobs:
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
           sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
-          sed -i 's|APP_ENV=.*|APP_ENV=testing|' .env
+          sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env
+          echo "SUPER_ADMIN_EMAIL=superadmin@aquerii.local" >> .env
+          echo "SUPER_ADMIN_PASSWORD=aquerii-dev-only" >> .env
           composer install --prefer-dist --no-scripts --no-progress --quiet
           mkdir -p bootstrap/cache
           mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
@@ -607,9 +609,11 @@ jobs:
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
           sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
-          sed -i 's|APP_ENV=.*|APP_ENV=testing|' .env
+          sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env
           echo "MEILISEARCH_HOST=http://localhost:7700" >> .env
           echo "MEILISEARCH_KEY=test_key" >> .env
+          echo "SUPER_ADMIN_EMAIL=superadmin@aquerii.local" >> .env
+          echo "SUPER_ADMIN_PASSWORD=aquerii-dev-only" >> .env
           composer install --prefer-dist --no-scripts --no-progress --quiet
           mkdir -p bootstrap/cache
           mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
