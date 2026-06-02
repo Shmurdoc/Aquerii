@@ -17,6 +17,6 @@ services/realtime/dist/
 services/ai/app/rag/faiss_indexer.py
 services/realtime/src/ydoc/YDocManager.ts
 
-# Pre-existing plan-doc false positives (ws:// in docker-compose local-dev example,
-# nginx add_header in location, k8s securityContext — handled separately)
+# Pre-existing plan-doc false positives (insecure-websocket rule in
+# docker-compose local-dev example; nginx + k8s handled in their own fixes)
 docs/super-plan/
