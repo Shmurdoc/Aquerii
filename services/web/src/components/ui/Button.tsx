@@ -41,6 +41,7 @@ const sizeStyles: Record<ButtonSize, string> = {
 }
 
 const iconOnlyStyles: Record<ButtonSize, string> = {
+  xs: 'w-6 p-0',
   sm: 'w-7 p-0',
   md: 'w-9 p-0',
   lg: 'w-11 p-0',
