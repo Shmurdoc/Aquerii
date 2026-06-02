@@ -12,9 +12,15 @@ export const options = {
 };
 
 export default function () {
-  const auth = login('test@example.com', 'password123');
-  const token = auth.token;
-  const wsId = workspaceId(token);
+  // Login once per VU and reuse the token. Per-iteration login would exceed
+  // the production throttle:5,1 on /api/auth/login and trip 429s.
+  if (!__ENV.__TOKEN__) {
+    const auth = login('test@example.com', 'password123');
+    __ENV.__TOKEN = auth.token;
+    __ENV.__WS_ID = workspaceId(auth.token);
+  }
+  const token = __ENV.__TOKEN;
+  const wsId = __ENV.__WS_ID;
   const headers = authedHeaders(token);
 
   // List boards
