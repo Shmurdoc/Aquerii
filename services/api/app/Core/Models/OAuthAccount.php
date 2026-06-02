@@ -23,6 +23,8 @@ class OAuthAccount extends Model
     {
         return [
             'expires_at' => 'datetime',
+            'access_token' => 'encrypted',
+            'refresh_token' => 'encrypted',
         ];
     }
 

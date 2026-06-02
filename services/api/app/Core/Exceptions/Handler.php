@@ -2,6 +2,7 @@
 
 namespace App\Core\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -41,6 +42,12 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'error' => ['code' => 'UNAUTHENTICATED', 'message' => 'Unauthenticated.'],
             ], 401);
+        }
+
+        if ($e instanceof AuthorizationException) {
+            return response()->json([
+                'error' => ['code' => 'FORBIDDEN', 'message' => $e->getMessage() ?: 'You are not authorized to perform this action.'],
+            ], 403);
         }
 
         if ($e instanceof ModelNotFoundException) {

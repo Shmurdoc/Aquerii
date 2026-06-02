@@ -11,8 +11,18 @@ class SuperAdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $email = env('SUPER_ADMIN_EMAIL', 'superadmin@aquerii.local');
-        $password = env('SUPER_ADMIN_PASSWORD', 'changeme_in_production');
+        $email = env('SUPER_ADMIN_EMAIL');
+        $password = env('SUPER_ADMIN_PASSWORD');
+
+        if (app()->environment('production') && (! $email || ! $password)) {
+            throw new \RuntimeException(
+                'SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD must be set in production. '.
+                'Refusing to seed super admin with default credentials.'
+            );
+        }
+
+        $email ??= 'superadmin@aquerii.local';
+        $password ??= 'aquerii-dev-only';
 
         $existing = DB::table('users')->where('email', $email)->first();
 
@@ -32,6 +42,15 @@ class SuperAdminSeeder extends Seeder
             'email' => $email,
             'email_verified_at' => now(),
             'password_hash' => Hash::make($password),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Grant the user super-admin role on platform_admins (matches migration schema)
+        DB::table('platform_admins')->insert([
+            'id' => (string) Str::uuid(),
+            'user_id' => $userId,
+            'level' => 'super',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

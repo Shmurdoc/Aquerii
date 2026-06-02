@@ -14,14 +14,11 @@ class SecureHeaders
         'Referrer-Policy' => 'strict-origin-when-cross-origin',
         'Permissions-Policy' => 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
         'X-XSS-Protection' => '0',
+        'Content-Security-Policy' => "default-src 'none'; frame-ancestors 'none'",
     ];
 
     public function handle(Request $request, Closure $next)
     {
-        if ($request->is('api/*')) {
-            return $next($request);
-        }
-
         $response = $next($request);
 
         foreach ($this->headers as $key => $value) {

@@ -7,11 +7,12 @@ use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
 class Document extends Model
 {
-    use HasUuids, Searchable;
+    use HasUuids, Searchable, SoftDeletes;
 
     protected $table = 'documents';
 

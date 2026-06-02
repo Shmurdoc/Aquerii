@@ -8,11 +8,13 @@ use Database\Factories\Accounting\JournalEntryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class JournalEntry extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public $incrementing = false;
 
@@ -21,6 +23,7 @@ class JournalEntry extends Model
     protected $fillable = [
         'workspace_id', 'account_id', 'entry_date', 'description',
         'debit_amount', 'credit_amount', 'reference_type', 'reference_id', 'created_by',
+        'status', 'posted_at', 'posted_by', 'reversal_of',
     ];
 
     protected static function newFactory(): JournalEntryFactory
@@ -34,6 +37,7 @@ class JournalEntry extends Model
             'entry_date' => 'date',
             'debit_amount' => 'float',
             'credit_amount' => 'float',
+            'posted_at' => 'datetime',
         ];
     }
 
@@ -56,5 +60,30 @@ class JournalEntry extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function postedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'posted_by');
+    }
+
+    public function reversalOf(): BelongsTo
+    {
+        return $this->belongsTo(JournalEntry::class, 'reversal_of');
+    }
+
+    public function reversals(): HasMany
+    {
+        return $this->hasMany(JournalEntry::class, 'reversal_of');
+    }
+
+    public function isPosted(): bool
+    {
+        return $this->status === 'posted';
+    }
+
+    public function isDraft(): bool
+    {
+        return $this->status === 'draft';
     }
 }

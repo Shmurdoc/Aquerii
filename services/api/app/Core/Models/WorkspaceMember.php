@@ -22,7 +22,8 @@ class WorkspaceMember extends Model
 
     protected $table = 'workspace_members';
 
-    const UPDATED_AT = null;
+    // updated_at was added in migration 2026_05_11_000014. Laravel manages
+    // the column automatically — no need to override UPDATED_AT.
 
     protected $fillable = [
         'workspace_id', 'user_id', 'role', 'invited_by', 'joined_at',
@@ -32,6 +33,12 @@ class WorkspaceMember extends Model
         'employee_group_id', 'reports_to',
         'company_id', 'is_company_owner',
         'weekly_capacity_hours', 'capacity_notes',
+    ];
+
+    // Salary is sensitive PII; do not leak in any JSON response.
+    // Only owner/admin controllers should read these via ->makeVisible() or direct DB access.
+    protected $hidden = [
+        'salary', 'salary_currency',
     ];
 
     protected function casts(): array

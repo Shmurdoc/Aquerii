@@ -43,7 +43,7 @@ services:
       target: production
     restart: unless-stopped
     environment:
-      APP_ENV: ${APP_ENV:-local}
+      APP_ENV: ${APP_ENV:-production}
       APP_DEBUG: ${APP_DEBUG:-false}
       APP_KEY: ${APP_KEY}
       APP_URL: ${APP_URL:-http://localhost}
@@ -116,7 +116,7 @@ services:
     restart: unless-stopped
     command: ["php", "artisan", "horizon"]
     environment:
-      APP_ENV: ${APP_ENV:-local}
+      APP_ENV: ${APP_ENV:-production}
       APP_KEY: ${APP_KEY}
       DB_HOST: postgres
       DB_PORT: 5432
@@ -397,6 +397,7 @@ services:
   mailpit:
     image: axllent/mailpit:latest
     restart: unless-stopped
+    profiles: ["dev"]  # opt-in: `docker compose --profile dev up`
     ports:
       - "8025:8025"   # Mailpit UI (dev only)
     networks:
@@ -439,6 +440,7 @@ services:
   grafana:
     image: grafana/grafana:10.4.0
     restart: unless-stopped
+    profiles: ["dev", "observability"]  # opt-in: `docker compose --profile observability up`
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}

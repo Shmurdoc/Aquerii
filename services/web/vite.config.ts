@@ -31,7 +31,9 @@ export default defineConfig({
   },
   build: {
     outDir:        'dist',
-    sourcemap:     true,
+    // Production builds ship without source maps to avoid leaking TS source.
+    // 'hidden' is allowed in dev where you need a built artifact for debugging.
+    sourcemap:     process.env.NODE_ENV === 'production' ? false : 'hidden',
     rollupOptions: {
       output: {
         manualChunks: {

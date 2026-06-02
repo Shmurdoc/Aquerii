@@ -2,13 +2,12 @@
 
 namespace App\Core\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class FeatureFlag extends Model
 {
-    use HasUuids;
-
+    // PK is a string slug (e.g. 'module.boards'), not a UUID. HasUuids would
+    // auto-generate UUIDs on create() and overwrite the intended key.
     protected $table = 'superadmin.feature_flags';
 
     protected $primaryKey = 'key';

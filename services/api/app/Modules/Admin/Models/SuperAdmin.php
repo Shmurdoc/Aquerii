@@ -2,27 +2,32 @@
 
 namespace App\Modules\Admin\Models;
 
+use App\Core\Models\User;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class SuperAdmin extends Authenticatable implements FilamentUser
+class SuperAdmin extends Model implements FilamentUser
 {
-    protected $connection = 'superadmin';
+    use HasUuids;
 
-    protected $table = 'superadmin.super_admins';
+    protected $table = 'platform_admins';
 
-    protected $fillable = ['name', 'email', 'password', 'totp_secret', 'totp_enabled', 'last_login_at', 'last_login_ip'];
-
-    protected $hidden = ['password', 'totp_secret'];
+    protected $fillable = ['user_id', 'level', 'granted_by'];
 
     protected $casts = [
-        'totp_enabled' => 'boolean',
-        'last_login_at' => 'datetime',
+        'level' => 'string',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        return in_array($this->level, ['super', 'admin'], true);
     }
 }

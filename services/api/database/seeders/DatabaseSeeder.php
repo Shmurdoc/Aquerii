@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             AutomationLibrarySeeder::class,
             ChartOfAccountsSeeder::class,
             FeaturesSeeder::class,
+            IndustryTemplateSeeder::class,
         ]);
 
         if (app()->environment('testing')) {

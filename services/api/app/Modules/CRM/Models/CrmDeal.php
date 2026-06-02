@@ -4,14 +4,15 @@ namespace App\Modules\CRM\Models;
 
 use App\Core\Models\Item;
 use App\Core\Models\User;
-use Database\Factories\CrmDealFactory;
+use Database\Factories\Modules\CRM\Models\CrmDealFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrmDeal extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected static function newFactory(): CrmDealFactory
     {

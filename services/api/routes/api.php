@@ -61,8 +61,9 @@ use App\Modules\CRM\Http\Controllers\SequenceController;
 use App\Modules\CRM\Http\Controllers\StageController;
 use App\Modules\Email\Http\Controllers\InboundEmailController;
 use App\Modules\Email\Http\Controllers\ProjectEmailAddressController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Spatie\Activitylog\Activity;
 
 // ── Health check (public) ─────────────────────────────────────────────────────
 Route::get('healthz', fn () => response()->json(['status' => 'ok', 'service' => 'api']));
@@ -80,10 +81,10 @@ Route::prefix('auth')->group(function () {
     Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->middleware($isTest ? [] : ['throttle:3,1']);
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->middleware($isTest ? ['idempotent'] : ['throttle:5,1', 'idempotent']);
     Route::post('refresh', [AuthController::class, 'refresh'])->middleware($isTest ? [] : ['throttle:10,1']);
-    Route::post('verify-email/resend', [AuthController::class, 'resendVerification']);
+    Route::post('verify-email/resend', [AuthController::class, 'resendVerification'])->middleware($isTest ? [] : ['throttle:3,1']);
     Route::post('verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
-    Route::get('oauth/{provider}', [OAuthController::class, 'redirect']);
-    Route::get('oauth/{provider}/callback', [OAuthController::class, 'callback']);
+    Route::get('oauth/{provider}', [OAuthController::class, 'redirect'])->middleware($isTest ? [] : ['throttle:10,1']);
+    Route::get('oauth/{provider}/callback', [OAuthController::class, 'callback'])->middleware($isTest ? [] : ['throttle:10,1']);
 });
 
 // ── Workspace invitation accept (signed URL — no auth required) ──────────────
@@ -142,7 +143,7 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             require __DIR__.'/modules/chat.php';
         });
 
-        Route::get('', [WorkspaceController::class, 'show']);
+        Route::get('', [WorkspaceController::class, 'show'])->name('workspaces.show');
         Route::patch('', [WorkspaceController::class, 'update'])->middleware('idempotent');
 
         // Logo
@@ -250,37 +251,57 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // Workspace activity feed (used by DashboardPage)
         Route::get('activity', function (Request $request, string $workspace) {
-            $activity = Activity::query()
-                ->where('subject_id', $workspace)
-                ->orWhere('causer_id', $request->user()->id)
+            $limit = min((int) $request->query('limit', 20), 100); // cap at 100
+            $activity = DB::table('activity_log')
+                ->where('workspace_id', $workspace) // workspace-scoped only, no cross-tenant orWhere
                 ->orderBy('created_at', 'desc')
-                ->limit($request->query('limit', 20))
+                ->limit($limit)
                 ->get();
 
             return response()->json(['data' => $activity]);
         });
 
-        // Audit log export
+        // Audit log export (owner/admin only, paginated, CSV-injection-safe)
         Route::get('audit-logs/export', function (Request $request, string $workspace) {
             $format = $request->query('format', 'csv');
-            $logs = Activity::query()
-                ->where('subject_id', $workspace)
+            $logs = DB::table('activity_log')
+                ->where('workspace_id', $workspace)
                 ->orderBy('created_at', 'desc')
+                ->limit(10000) // hard cap — no full-table dumps
                 ->get();
 
             if ($format === 'json') {
-                return response()->json(['data' => $logs])->header('Content-Disposition', 'attachment; filename="audit-logs.json"');
+                return response()->json(['data' => $logs])
+                    ->header('Content-Disposition', 'attachment; filename="audit-logs.json"');
             }
 
-            $csv = "ID,Action,Subject Type,Subject ID,Causer ID,Created At\n";
+            // CSV — sanitize every field to prevent formula injection
+            $sanitize = function ($value): string {
+                $value = (string) ($value ?? '');
+                // Strip leading =, +, -, @ which Excel treats as formulas
+                if (in_array(substr($value, 0, 1), ['=', '+', '-', '@'], true)) {
+                    $value = "'".$value;
+                }
+
+                return '"'.str_replace('"', '""', $value).'"';
+            };
+
+            $csv = "ID,Action,Entity Type,Entity ID,Actor ID,Created At\n";
             foreach ($logs as $log) {
-                $csv .= "{$log->id},{$log->log_name},{$log->subject_type},{$log->subject_id},{$log->causer_id},{$log->created_at}\n";
+                $csv .= implode(',', [
+                    $sanitize($log->id),
+                    $sanitize($log->action),
+                    $sanitize($log->entity_type),
+                    $sanitize($log->entity_id),
+                    $sanitize($log->actor_id),
+                    $sanitize($log->created_at),
+                ])."\n";
             }
 
             return response($csv)
                 ->header('Content-Type', 'text/csv')
                 ->header('Content-Disposition', 'attachment; filename="audit-logs.csv"');
-        });
+        })->middleware('workspace.role:owner,admin');
 
         // Field-level permissions (workspace admin)
         Route::get('field-permissions', [FieldPermissionController::class, 'index'])->middleware('workspace.role:owner,admin');

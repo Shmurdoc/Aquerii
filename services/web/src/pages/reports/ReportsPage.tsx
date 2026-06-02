@@ -97,12 +97,14 @@ function monthStartStr(): string {
 }
 
 async function downloadCSV(wid: string, type: string, from: string, to: string) {
-  const token = localStorage.getItem('token')
-  const res = await fetch(`/api/workspaces/${wid}/reports/export/${type}?from=${from}&to=${to}&format=csv`, {
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  if (!res.ok) return
-  const blob = await res.blob()
+  const res = await api.get(
+    `/workspaces/${wid}/reports/export/${type}`,
+    {
+      params: { from, to, format: 'csv' },
+      responseType: 'blob',
+    }
+  )
+  const blob = new Blob([res.data], { type: 'text/csv' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url; a.download = `${type}-${from}-${to}.csv`; a.click()

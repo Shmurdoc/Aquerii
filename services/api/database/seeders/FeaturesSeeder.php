@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Core\Enums\SubscriptionPlan;
 use App\Core\Models\FeatureFlag;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class FeaturesSeeder extends Seeder
 {
@@ -41,12 +40,15 @@ class FeaturesSeeder extends Seeder
             });
         }
 
-        // Seed plan overrides for enterprise
+        // Seed plan overrides for enterprise.
+        // On re-run: existing rows are matched by (plan_key, feature_key); we do NOT
+        // pass `id` in the update values, otherwise every re-seed generates a new UUID
+        // and the unique constraint on id trips a constraint violation.
         foreach (SubscriptionPlan::cases() as $plan) {
             foreach ($plan->features() as $featureKey => $enabled) {
                 \DB::table('plan_features')->updateOrInsert(
                     ['plan_key' => $plan->value, 'feature_key' => $featureKey],
-                    ['feature_value' => json_encode(['enabled' => $enabled]), 'id' => (string) Str::uuid()]
+                    ['feature_value' => json_encode(['enabled' => $enabled])]
                 );
             }
         }

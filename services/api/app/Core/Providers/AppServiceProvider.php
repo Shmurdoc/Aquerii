@@ -24,13 +24,18 @@ class AppServiceProvider extends ServiceProvider
         Board::observe(BoardObserver::class);
         Comment::observe(CommentObserver::class);
 
-        // Core route files (HR, Meetings, Reports) — always-on, not module-gated
+        // Core route files (Meetings, Reports) — always-on, not module-gated.
+        // HR is loaded via require in routes/api.php inside the workspace group.
         $this->loadCoreRoutes();
     }
 
     private function loadCoreRoutes(): void
     {
-        $coreRoutes = ['hr', 'meetings', 'reports'];
+        // Meetings routes are loaded here because they are not covered by api.php.
+        // Reports routes are defined directly in routes/api.php inside the
+        // auth:sanctum + throttle:60,1 group — do NOT load reports.php here as
+        // it would create duplicate routes that bypass rate limiting.
+        $coreRoutes = ['meetings'];
 
         foreach ($coreRoutes as $name) {
             $path = base_path("routes/modules/{$name}.php");

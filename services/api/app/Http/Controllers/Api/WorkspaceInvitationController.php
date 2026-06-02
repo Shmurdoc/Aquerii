@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
+use App\Core\Models\Workspace;
+use App\Core\Models\WorkspaceInvitation;
 use App\Mail\WorkspaceInvite;
-use App\Models\Workspace;
-use App\Models\WorkspaceInvitation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

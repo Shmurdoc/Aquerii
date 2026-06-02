@@ -6,13 +6,14 @@ use App\Modules\CRM\Models\CrmCompany;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasUuids, Notifiable;
+    use HasApiTokens, HasFactory, HasUuids, Notifiable, SoftDeletes;
 
     protected static function newFactory(): UserFactory
     {
@@ -61,5 +62,10 @@ class User extends Authenticatable
     public function oauthAccounts()
     {
         return $this->hasMany(OAuthAccount::class);
+    }
+
+    public function sessions()
+    {
+        return $this->hasMany(UserSession::class, 'user_id');
     }
 }
