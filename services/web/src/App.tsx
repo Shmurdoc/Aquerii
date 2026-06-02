@@ -70,6 +70,10 @@ import BillingTab      from '@/components/settings/BillingTab'
 import SecurityTab      from '@/components/settings/SecurityTab'
 import NotificationsTab from '@/components/settings/NotificationsTab'
 import AutomationPage  from '@/pages/automation/AutomationPage'
+import HSSEPage              from '@/pages/hsse/HSSEPage'
+import IncidentsPage         from '@/pages/hsse/IncidentsPage'
+import HazardsPage           from '@/pages/hsse/HazardsPage'
+import CorrectiveActionsPage from '@/pages/hsse/CorrectiveActionsPage'
 import ReportsPage      from '@/pages/reports/ReportsPage'
 import AIChatPage       from '@/pages/ai/AIChatPage'
 import ChatPage         from '@/pages/chat/ChatPage'
@@ -183,6 +187,11 @@ export default function App() {
           <Route path="/my-day"        element={<MyDayPage />} />
           <Route path="/calendar"      element={<CalendarPage />} />
           <Route path="/automation"    element={<AutomationPage />} />
+          <Route path="/hsse"              element={<Navigate to="/hsse/dashboard" replace />} />
+          <Route path="/hsse/dashboard"    element={<HSSEPage />} />
+          <Route path="/hsse/incidents"    element={<IncidentsPage />} />
+          <Route path="/hsse/hazards"      element={<HazardsPage />} />
+          <Route path="/hsse/actions"      element={<CorrectiveActionsPage />} />
           <Route path="/reports"       element={<ReportsPage />} />
           <Route path="/ai/chat"       element={<AIChatPage />} />
           <Route path="/chat"          element={<ChatPage />} />

@@ -10,6 +10,7 @@ type CardProps = {
   onClick?: MouseEventHandler
   children?: ReactNode
   className?: string
+  style?: React.CSSProperties
 }
 
 const variantStyles: Record<CardVariant, string> = {
@@ -26,7 +27,7 @@ const paddingStyles: Record<CardPadding, string> = {
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ variant = 'default', padding = 'md', onClick, children, className, ...props }, ref) => {
+  ({ variant = 'default', padding = 'md', onClick, children, className, style, ...props }, ref) => {
     return (
       <div
         ref={ref}
@@ -34,6 +35,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         role={onClick ? 'button' : undefined}
         tabIndex={onClick ? 0 : undefined}
         onKeyDown={onClick ? (e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (onClick as any)(e) } } : undefined}
+        style={style}
         className={clsx(
           'rounded-xl',
           variantStyles[variant],
