@@ -5,7 +5,6 @@ namespace App\Modules\HSSE\Services;
 use App\Modules\HSSE\Models\Incident;
 use App\Modules\HSSE\Models\Workspace;
 use Carbon\CarbonInterface;
-use Illuminate\Support\Collection;
 
 /**
  * Generates COIDA W.Cl.2 (Employer's Report of an Occupational Injury / Disease)

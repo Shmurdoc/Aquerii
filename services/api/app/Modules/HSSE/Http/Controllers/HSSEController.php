@@ -8,7 +8,7 @@ use App\Modules\HSSE\Models\Hazard;
 use App\Modules\HSSE\Models\Incident;
 use App\Modules\HSSE\Services\CoidaReportService;
 use App\Modules\HSSE\Services\MhsaReportService;
-use Carbon\CarbonInterface;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -89,8 +89,8 @@ class HSSEController extends Controller
             403
         );
 
-        $from = $request->query('from') ? \Carbon\Carbon::parse($request->query('from')) : null;
-        $to = $request->query('to') ? \Carbon\Carbon::parse($request->query('to')) : null;
+        $from = $request->query('from') ? Carbon::parse($request->query('from')) : null;
+        $to = $request->query('to') ? Carbon::parse($request->query('to')) : null;
 
         $summary = $this->coida->summary($workspace->id, $from, $to);
 
@@ -104,8 +104,8 @@ class HSSEController extends Controller
             403
         );
 
-        $from = $request->query('from') ? \Carbon\Carbon::parse($request->query('from')) : null;
-        $to = $request->query('to') ? \Carbon\Carbon::parse($request->query('to')) : null;
+        $from = $request->query('from') ? Carbon::parse($request->query('from')) : null;
+        $to = $request->query('to') ? Carbon::parse($request->query('to')) : null;
 
         $report = $this->mhsa->buildSection11Report($workspace->id, $from, $to);
 

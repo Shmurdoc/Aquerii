@@ -4,6 +4,7 @@ use App\Core\Models\AuditLog;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
+use App\Modules\HSSE\Models\CorrectiveAction;
 use App\Modules\HSSE\Models\Hazard;
 use App\Modules\HSSE\Models\Incident;
 use Laravel\Sanctum\Sanctum;
@@ -91,7 +92,7 @@ it('writes audit log on hazard identification with risk metadata', function () {
 });
 
 it('writes distinct audit actions when a corrective action is completed vs verified', function () {
-    $action = \App\Modules\HSSE\Models\CorrectiveAction::factory()->create([
+    $action = CorrectiveAction::factory()->create([
         'workspace_id' => $this->workspace->id,
         'assigned_to' => $this->user->id,
     ]);

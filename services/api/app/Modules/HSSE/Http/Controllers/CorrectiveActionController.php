@@ -72,7 +72,7 @@ class CorrectiveActionController extends Controller
             'due_date' => 'nullable|date',
         ]);
 
-        $action = DB::transaction(function () use ($request, $workspace, $validated) {
+        $action = DB::transaction(function () use ($workspace, $validated) {
             return CorrectiveAction::create([
                 'workspace_id' => $workspace->id,
                 'reference' => $this->sequences->next(

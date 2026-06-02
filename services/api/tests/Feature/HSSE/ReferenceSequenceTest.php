@@ -3,10 +3,7 @@
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
-use App\Modules\HSSE\Models\Incident;
 use App\Modules\HSSE\Services\ReferenceSequenceService;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Event;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
