@@ -15,6 +15,8 @@ class Incident extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'hsse_incidents';
+
     public const TYPE_FATALITY = 'fatality';
 
     public const TYPE_LOST_TIME = 'lost_time';

@@ -15,6 +15,8 @@ class CorrectiveAction extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'hsse_corrective_actions';
+
     public const SOURCE_INCIDENT = 'incident';
 
     public const SOURCE_HAZARD = 'hazard';

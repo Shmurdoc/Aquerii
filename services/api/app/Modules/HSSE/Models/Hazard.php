@@ -14,6 +14,8 @@ class Hazard extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'hsse_hazards';
+
     public const CATEGORY_PHYSICAL = 'physical';
 
     public const CATEGORY_CHEMICAL = 'chemical';
