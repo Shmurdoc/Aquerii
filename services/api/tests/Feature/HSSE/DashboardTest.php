@@ -23,6 +23,7 @@ it('returns aggregated dashboard stats', function () {
         'workspace_id' => $this->workspace->id,
         'reporter_id' => $this->user->id,
         'severity' => 'high',
+        'coida_reportable' => false,
     ]);
     Incident::factory()->create([
         'workspace_id' => $this->workspace->id,
