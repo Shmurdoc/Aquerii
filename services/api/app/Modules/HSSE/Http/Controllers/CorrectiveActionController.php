@@ -79,24 +79,24 @@ class CorrectiveActionController extends Controller
         return response()->json(['data' => $action], 201);
     }
 
-    public function show(Request $request, Workspace $workspace, CorrectiveAction $action): JsonResponse
+    public function show(Request $request, Workspace $workspace, CorrectiveAction $corrective_action): JsonResponse
     {
         abort_unless(
             $request->user()->workspaces()->where('workspace_id', $workspace->id)->exists()
-                && $action->workspace_id === $workspace->id,
+                && $corrective_action->workspace_id === $workspace->id,
             404
         );
 
-        $action->load(['assignee:id,name', 'verifier:id,name']);
+        $corrective_action->load(['assignee:id,name', 'verifier:id,name']);
 
-        return response()->json(['data' => $action]);
+        return response()->json(['data' => $corrective_action]);
     }
 
-    public function update(Request $request, Workspace $workspace, CorrectiveAction $action): JsonResponse
+    public function update(Request $request, Workspace $workspace, CorrectiveAction $corrective_action): JsonResponse
     {
         abort_unless(
             $request->user()->workspaces()->where('workspace_id', $workspace->id)->exists()
-                && $action->workspace_id === $workspace->id,
+                && $corrective_action->workspace_id === $workspace->id,
             404
         );
 
@@ -109,7 +109,7 @@ class CorrectiveActionController extends Controller
             'completion_evidence' => 'nullable|string',
         ]);
 
-        $statusChanged = isset($validated['status']) && $validated['status'] !== $action->status;
+        $statusChanged = isset($validated['status']) && $validated['status'] !== $corrective_action->status;
 
         if ($statusChanged) {
             if ($validated['status'] === CorrectiveAction::STATUS_COMPLETED) {
@@ -121,20 +121,20 @@ class CorrectiveActionController extends Controller
             }
         }
 
-        $action->update($validated);
+        $corrective_action->update($validated);
 
-        return response()->json(['data' => $action->fresh()]);
+        return response()->json(['data' => $corrective_action->fresh()]);
     }
 
-    public function destroy(Request $request, Workspace $workspace, CorrectiveAction $action): JsonResponse
+    public function destroy(Request $request, Workspace $workspace, CorrectiveAction $corrective_action): JsonResponse
     {
         abort_unless(
             $request->user()->workspaces()->where('workspace_id', $workspace->id)->exists()
-                && $action->workspace_id === $workspace->id,
+                && $corrective_action->workspace_id === $workspace->id,
             404
         );
 
-        $action->delete();
+        $corrective_action->delete();
 
         return response()->json(['data' => ['deleted' => true]]);
     }
