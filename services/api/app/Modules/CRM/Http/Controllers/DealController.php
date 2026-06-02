@@ -10,6 +10,7 @@ use App\Modules\CRM\Services\DealApprovalService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class DealController extends Controller
 {
@@ -20,25 +21,33 @@ class DealController extends Controller
 
     public function index(Request $request, Workspace $workspace): JsonResponse
     {
-        $query = CrmDeal::where('workspace_id', $workspace->id)
-            ->with(['stage', 'contact', 'owner']);
+        try {
+            $query = CrmDeal::where('workspace_id', $workspace->id)
+                ->with(['stage', 'contact', 'owner']);
 
-        if ($pipelineId = $request->query('pipeline_id')) {
-            $query->where('pipeline_id', $pipelineId);
-        }
-        if ($stageId = $request->query('stage_id')) {
-            $query->where('stage_id', $stageId);
-        }
-        if ($ownerId = $request->query('owner_id')) {
-            $query->where('owner_id', $ownerId);
-        }
-        if ($search = $request->query('search')) {
-            $query->where('title', 'ilike', "%{$this->escapeLike($search)}%");
-        }
+            if ($pipelineId = $request->query('pipeline_id')) {
+                $query->where('pipeline_id', $pipelineId);
+            }
+            if ($stageId = $request->query('stage_id')) {
+                $query->where('stage_id', $stageId);
+            }
+            if ($ownerId = $request->query('owner_id')) {
+                $query->where('owner_id', $ownerId);
+            }
+            if ($search = $request->query('search')) {
+                $query->where('title', 'ilike', "%{$this->escapeLike($search)}%");
+            }
 
-        $deals = $query->orderBy('position')->paginate(50);
+            $deals = $query->orderBy('position')->paginate(50);
 
-        return response()->json(['data' => $deals]);
+            return response()->json(['data' => $deals]);
+        } catch (\Throwable $e) {
+            Log::error('DealController@index failed', [
+                'workspace_id' => $workspace->id,
+                'exception' => $e,
+            ]);
+            throw $e;
+        }
     }
 
     public function store(Request $request, Workspace $workspace): JsonResponse
