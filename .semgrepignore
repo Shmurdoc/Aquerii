@@ -16,3 +16,7 @@ services/realtime/dist/
 # Pre-existing console.error with template literal findings (552 of them)
 services/ai/app/rag/faiss_indexer.py
 services/realtime/src/ydoc/YDocManager.ts
+
+# Pre-existing plan-doc false positives (ws:// in docker-compose local-dev example,
+# nginx add_header in location, k8s securityContext — handled separately)
+docs/super-plan/
