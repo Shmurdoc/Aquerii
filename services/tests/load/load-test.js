@@ -2,6 +2,13 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 import { login, authedHeaders, workspaceId } from './helpers.js';
 
+const BASE_URL = __ENV.BASE_URL || 'http://localhost:8000';
+
+// Login once per VU and reuse the token. With ramping-vus going up to 10,
+// per-iteration logins would flood /api/auth/login and trip 429s well before
+// the test could measure actual API throughput.
+let sharedAuth = null;
+
 export const options = {
   stages: [
     { duration: '1m', target: 10 },
@@ -14,12 +21,16 @@ export const options = {
   },
 };
 
-const BASE_URL = __ENV.BASE_URL || 'http://localhost:8000';
-
 export default function () {
-  const auth = login('test@example.com', 'password123');
-  const token = auth.token;
-  const wsId = workspaceId(token);
+  if (!sharedAuth) {
+    const auth = login('test@example.com', 'password123');
+    sharedAuth = {
+      token: auth.token,
+      wsId: workspaceId(auth.token),
+    };
+  }
+  const token = sharedAuth.token;
+  const wsId = sharedAuth.wsId;
   const headers = authedHeaders(token);
 
   // Browse boards
