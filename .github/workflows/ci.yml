@@ -75,6 +75,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm install --legacy-peer-deps
       - run: npm run lint
+      - run: npm run typecheck
 
   lint-python:
     name: Python Lint
