@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,8 +16,10 @@ return new class extends Migration
      * each child table to verify no rows reference the changing PK — a
      * catastrophic regression on large tables.
      *
-     * Each `Schema::table()` call is wrapped in a try/catch so re-running
-     * this migration (e.g. in tests) is idempotent.
+     * Uses raw `CREATE INDEX IF NOT EXISTS` (one statement per column) so the
+     * migration is idempotent and survives a column that hasn't been added
+     * by an earlier migration yet — common when this file is reordered or
+     * when a referenced migration is dropped in a follow-up branch.
      */
     private array $tables = [
         'crm_deals' => ['workspace_id'],
@@ -61,16 +64,16 @@ return new class extends Migration
                 continue;
             }
 
-            Schema::table($table, function (Blueprint $blueprint) use ($table, $columns) {
-                foreach ($columns as $column) {
-                    $indexName = "idx_{$table}_{$column}";
-                    try {
-                        $blueprint->index($column, $indexName);
-                    } catch (Throwable) {
-                        // Index already exists — safe to skip
-                    }
+            $existing = Schema::getColumnListing($table);
+
+            foreach ($columns as $column) {
+                if (! in_array($column, $existing, true)) {
+                    continue;
                 }
-            });
+
+                $indexName = "idx_{$table}_{$column}";
+                DB::statement("CREATE INDEX IF NOT EXISTS \"{$indexName}\" ON \"{$table}\" (\"{$column}\")");
+            }
         }
     }
 
@@ -81,16 +84,10 @@ return new class extends Migration
                 continue;
             }
 
-            Schema::table($table, function (Blueprint $blueprint) use ($table, $columns) {
-                foreach ($columns as $column) {
-                    $indexName = "idx_{$table}_{$column}";
-                    try {
-                        $blueprint->dropIndex($indexName);
-                    } catch (Throwable) {
-                        // Index didn't exist — safe to skip
-                    }
-                }
-            });
+            foreach ($columns as $column) {
+                $indexName = "idx_{$table}_{$column}";
+                DB::statement("DROP INDEX IF EXISTS \"{$indexName}\"");
+            }
         }
     }
 };
