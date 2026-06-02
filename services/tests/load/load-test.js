@@ -1,13 +1,18 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
-import { login, authedHeaders, workspaceId } from './helpers.js';
+import { authedHeaders } from './helpers.js';
 
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:8000';
 
-// Login once per VU and reuse the token. With ramping-vus going up to 10,
-// per-iteration logins would flood /api/auth/login and trip 429s well before
-// the test could measure actual API throughput.
-let sharedAuth = null;
+// Pre-supplied auth (CI sets AUTH_TOKEN/WS_ID via env). Each VU gets its own
+// runtime in k6, so module-level let doesn't share state across VUs — and
+// per-VU login would exceed the production throttle:5,1 on /api/auth/login.
+const token = __ENV.AUTH_TOKEN;
+const wsId  = __ENV.WS_ID;
+if (!token || !wsId) {
+  throw new Error('load-test.js requires AUTH_TOKEN and WS_ID env vars');
+}
+const headers = authedHeaders(token);
 
 export const options = {
   stages: [
@@ -22,16 +27,6 @@ export const options = {
 };
 
 export default function () {
-  if (!sharedAuth) {
-    const auth = login('test@example.com', 'password123');
-    sharedAuth = {
-      token: auth.token,
-      wsId: workspaceId(auth.token),
-    };
-  }
-  const token = sharedAuth.token;
-  const wsId = sharedAuth.wsId;
-  const headers = authedHeaders(token);
 
   // Browse boards
   let res = http.get(`${BASE_URL}/api/workspaces/${wsId}/boards`, { headers });

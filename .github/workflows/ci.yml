@@ -631,11 +631,23 @@ jobs:
           curl -sL https://github.com/grafana/k6/releases/download/v0.55.0/k6-v0.55.0-linux-amd64.tar.gz | tar xz
           sudo mv k6-v0.55.0-linux-amd64/k6 /usr/local/bin/k6
 
+      - name: Precompute load test token
+        run: |
+          TOKEN=$(curl -s -X POST http://localhost:8000/api/auth/login \
+            -H 'Content-Type: application/json' \
+            -d '{"email":"test@example.com","password":"password123"}' \
+            | python3 -c 'import sys,json;print(json.load(sys.stdin)["data"]["token"])')
+          WS_ID=$(curl -s http://localhost:8000/api/me/workspaces \
+            -H "Authorization: Bearer $TOKEN" \
+            | python3 -c 'import sys,json;print(json.load(sys.stdin)["data"][0]["id"])')
+          echo "TOKEN=$TOKEN" >> $GITHUB_ENV
+          echo "WS_ID=$WS_ID" >> $GITHUB_ENV
+
       - name: Run k6 smoke test
         run: k6 run services/tests/load/smoke-test.js --env BASE_URL=http://localhost:8000
 
       - name: Run k6 load test
-        run: k6 run services/tests/load/load-test.js --env BASE_URL=http://localhost:8000
+        run: k6 run services/tests/load/load-test.js --env BASE_URL=http://localhost:8000 --env AUTH_TOKEN=$TOKEN --env WS_ID=$WS_ID
 
   lighthouse:
     name: Lighthouse CI
