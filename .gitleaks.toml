@@ -6,3 +6,9 @@ description = "Ignore gstack skill files and opencode config"
 paths = [
     '''(.*)?\.opencode/''',
 ]
+
+[[allowlists]]
+description = "Doc example string in ERROR_HANDLING.md flagged as generic-api-key"
+paths = [
+    '''docs/plans/plans/ERROR_HANDLING\.md''',
+]
