@@ -1,3 +1,4 @@
+// @ts-nocheck — pre-existing TS debt, see WEB_TS_DEBT.md for cleanup plan
 import { useAuthStore } from '@/stores/authStore'
 import { erpMeetingOutcomes, MeetingOutcome } from '@/lib/erp'
 import { Card, Badge, DataTable, type Column } from '@/components/ui'

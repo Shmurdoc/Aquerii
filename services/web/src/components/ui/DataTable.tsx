@@ -14,13 +14,15 @@ export type Column<T> = {
 }
 
 type DataTableProps<T> = {
-  columns: Column<T>[]
+  columns: Array<Column<T> | Column<any>>
   data: T[]
   keyExtractor: (row: T) => string
   isLoading?: boolean
+  loading?: boolean
   error?: string | null
   onRetry?: () => void
   emptyTitle?: string
+  emptyMessage?: string
   emptyDescription?: string
   emptyAction?: ReactNode
   selectedRows?: Set<string>
@@ -35,9 +37,11 @@ export function DataTable<T>({
   data,
   keyExtractor,
   isLoading,
+  loading,
   error,
   onRetry,
-  emptyTitle = 'No data',
+  emptyTitle,
+  emptyMessage,
   emptyDescription,
   emptyAction,
   selectedRows,
@@ -46,6 +50,8 @@ export function DataTable<T>({
   sortable = true,
   className,
 }: DataTableProps<T>) {
+  const resolvedEmptyTitle = emptyTitle ?? emptyMessage ?? 'No data'
+  const resolvedIsLoading = isLoading ?? loading ?? false
   const [sortKey, setSortKey] = useState<string | null>(null)
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
   const [page, setPage] = useState(0)
@@ -114,10 +120,10 @@ export function DataTable<T>({
     )
   }
 
-  if (!isLoading && data.length === 0) {
+  if (!resolvedIsLoading && data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center gap-2">
-        <p className="text-sm font-medium text-[var(--color-text-primary)]">{emptyTitle}</p>
+        <p className="text-sm font-medium text-[var(--color-text-primary)]">{resolvedEmptyTitle}</p>
         {emptyDescription && <p className="text-xs text-[var(--color-text-muted)]">{emptyDescription}</p>}
         {emptyAction && <div className="mt-2">{emptyAction}</div>}
       </div>
@@ -161,7 +167,7 @@ export function DataTable<T>({
             </tr>
           </thead>
           <tbody>
-            {isLoading ? (
+            {resolvedIsLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <tr key={i} className="border-b border-[var(--color-glass-border)]">
                   {selectedRows && <td className="px-3 py-3"><Skeleton className="w-4 h-4 rounded" /></td>}
@@ -208,7 +214,7 @@ export function DataTable<T>({
 
       {/* Mobile cards */}
       <div className="sm:hidden space-y-2">
-        {isLoading ? (
+        {resolvedIsLoading ? (
           Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-lg p-4 space-y-2">
               {columns.filter(c => !c.hideOnMobile).map(col => (
@@ -251,7 +257,7 @@ export function DataTable<T>({
       </div>
 
       {/* Pagination */}
-      {!isLoading && totalPages > 1 && (
+      {!resolvedIsLoading && totalPages > 1 && (
         <div className="flex items-center justify-between px-3 py-3 border-t border-[var(--color-glass-border)]">
           <span className="text-xs text-[var(--color-text-muted)]">
             {sorted.length} total

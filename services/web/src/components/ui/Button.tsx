@@ -2,8 +2,8 @@ import { forwardRef, type ReactNode, type MouseEventHandler } from 'react'
 import { clsx } from 'clsx'
 import { Loader2 } from 'lucide-react'
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' | 'warning'
-type ButtonSize = 'sm' | 'md' | 'lg'
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' | 'warning' | 'outline'
+type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
 type ButtonProps = {
   as?: 'button' | 'a' | 'div'
@@ -30,9 +30,11 @@ const variantStyles: Record<ButtonVariant, string> = {
   danger: 'bg-[var(--color-status-blocked)] text-white hover:opacity-90 active:opacity-80 shadow-sm',
   success: 'bg-[var(--color-status-done)] text-white hover:opacity-90 active:opacity-80 shadow-sm',
   warning: 'bg-[var(--color-status-progress)] text-white hover:opacity-90 active:opacity-80 shadow-sm',
+  outline: 'border border-[var(--color-glass-border)] bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)]',
 }
 
 const sizeStyles: Record<ButtonSize, string> = {
+  xs: 'h-6 px-2 text-[10px] rounded gap-1',
   sm: 'h-7 px-2.5 text-xs rounded-md gap-1.5',
   md: 'h-9 px-3.5 text-sm rounded-lg gap-2',
   lg: 'h-11 px-5 text-base rounded-lg gap-2.5',
