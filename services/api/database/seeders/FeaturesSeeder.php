@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Core\Enums\SubscriptionPlan;
 use App\Core\Models\FeatureFlag;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class FeaturesSeeder extends Seeder
 {
@@ -48,7 +49,12 @@ class FeaturesSeeder extends Seeder
             foreach ($plan->features() as $featureKey => $enabled) {
                 \DB::table('plan_features')->updateOrInsert(
                     ['plan_key' => $plan->value, 'feature_key' => $featureKey],
-                    ['feature_value' => json_encode(['enabled' => $enabled])]
+                    [
+                        'id' => (string) Str::uuid(),
+                        'feature_value' => json_encode(['enabled' => $enabled]),
+                        'updated_at' => now(),
+                        'created_at' => now(),
+                    ]
                 );
             }
         }
