@@ -9,6 +9,9 @@ paths = [
 
 [[allowlists]]
 description = "Doc example string in ERROR_HANDLING.md flagged as generic-api-key"
+regexes = [
+    '''idempotency_key\s*=\s*['"]?[A-Za-z0-9_]+_reorder_[0-9]+['"]?''',
+]
 paths = [
     '''docs/plans/plans/ERROR_HANDLING\.md''',
 ]
