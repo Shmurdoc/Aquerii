@@ -6,11 +6,19 @@ use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
 use App\Modules\HSSE\Models\Hazard;
 use App\Modules\HSSE\Models\Incident;
+use App\Modules\HSSE\Services\CoidaReportService;
+use App\Modules\HSSE\Services\MhsaReportService;
+use Carbon\CarbonInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class HSSEController extends Controller
 {
+    public function __construct(
+        private CoidaReportService $coida,
+        private MhsaReportService $mhsa,
+    ) {}
+
     public function dashboard(Request $request, Workspace $workspace): JsonResponse
     {
         abort_unless(
@@ -42,6 +50,7 @@ class HSSEController extends Controller
                     ->pluck('count', 'type'),
                 'coida_reportable' => (clone $incidents)->where('coida_reportable', true)->count(),
                 'fatalities' => (clone $incidents)->where('type', Incident::TYPE_FATALITY)->count(),
+                'mhsa_class_a' => (clone $incidents)->where('mhsa_classification', 'A')->count(),
             ],
             'hazards' => [
                 'total' => (clone $hazards)->count(),
@@ -58,5 +67,48 @@ class HSSEController extends Controller
         ];
 
         return response()->json(['data' => $stats]);
+    }
+
+    public function coidaIncident(Request $request, Workspace $workspace, Incident $incident): JsonResponse
+    {
+        abort_unless(
+            $request->user()->workspaces()->where('workspace_id', $workspace->id)->exists()
+                && $incident->workspace_id === $workspace->id,
+            404
+        );
+
+        $payload = $this->coida->buildWcl2Payload($workspace, $incident);
+
+        return response()->json(['data' => $payload]);
+    }
+
+    public function coidaSummary(Request $request, Workspace $workspace): JsonResponse
+    {
+        abort_unless(
+            $request->user()->workspaces()->where('workspace_id', $workspace->id)->exists(),
+            403
+        );
+
+        $from = $request->query('from') ? \Carbon\Carbon::parse($request->query('from')) : null;
+        $to = $request->query('to') ? \Carbon\Carbon::parse($request->query('to')) : null;
+
+        $summary = $this->coida->summary($workspace->id, $from, $to);
+
+        return response()->json(['data' => $summary]);
+    }
+
+    public function mhsaReport(Request $request, Workspace $workspace): JsonResponse
+    {
+        abort_unless(
+            $request->user()->workspaces()->where('workspace_id', $workspace->id)->exists(),
+            403
+        );
+
+        $from = $request->query('from') ? \Carbon\Carbon::parse($request->query('from')) : null;
+        $to = $request->query('to') ? \Carbon\Carbon::parse($request->query('to')) : null;
+
+        $report = $this->mhsa->buildSection11Report($workspace->id, $from, $to);
+
+        return response()->json(['data' => $report]);
     }
 }

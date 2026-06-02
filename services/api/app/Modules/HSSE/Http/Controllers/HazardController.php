@@ -4,12 +4,20 @@ namespace App\Modules\HSSE\Http\Controllers;
 
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
+use App\Core\Services\AuditService;
 use App\Modules\HSSE\Models\Hazard;
+use App\Modules\HSSE\Services\ReferenceSequenceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HazardController extends Controller
 {
+    public function __construct(
+        private ReferenceSequenceService $sequences,
+        private AuditService $audit,
+    ) {}
+
     public function index(Request $request, Workspace $workspace): JsonResponse
     {
         abort_unless(
@@ -73,29 +81,44 @@ class HazardController extends Controller
             $residualLevel = Hazard::computeRiskLevel($residualScore);
         }
 
-        $hazard = Hazard::create([
-            'workspace_id' => $workspace->id,
-            'reference' => $this->nextReference($workspace->id),
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'category' => $validated['category'],
-            'location' => $validated['location'] ?? null,
-            'source' => $validated['source'] ?? null,
-            'potential_consequence' => $validated['potential_consequence'] ?? null,
-            'likelihood' => $validated['likelihood'],
-            'severity' => $validated['severity'],
-            'risk_score' => $score,
-            'risk_level' => $level,
-            'control_measures' => $validated['control_measures'] ?? null,
-            'residual_likelihood' => $validated['residual_likelihood'] ?? null,
-            'residual_severity' => $validated['residual_severity'] ?? null,
-            'residual_risk_score' => $residualScore,
-            'residual_risk_level' => $residualLevel,
-            'status' => $validated['status'] ?? Hazard::STATUS_IDENTIFIED,
-            'owner_id' => $request->user()->id,
-            'reviewer_id' => $validated['reviewer_id'] ?? null,
-            'next_review_date' => $validated['next_review_date'] ?? null,
-        ]);
+        $hazard = DB::transaction(function () use ($request, $workspace, $validated, $score, $level, $residualScore, $residualLevel) {
+            return Hazard::create([
+                'workspace_id' => $workspace->id,
+                'reference' => $this->sequences->next(
+                    $workspace->id,
+                    ReferenceSequenceService::ENTITY_HAZARD
+                ),
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'category' => $validated['category'],
+                'location' => $validated['location'] ?? null,
+                'source' => $validated['source'] ?? null,
+                'potential_consequence' => $validated['potential_consequence'] ?? null,
+                'likelihood' => $validated['likelihood'],
+                'severity' => $validated['severity'],
+                'risk_score' => $score,
+                'risk_level' => $level,
+                'control_measures' => $validated['control_measures'] ?? null,
+                'residual_likelihood' => $validated['residual_likelihood'] ?? null,
+                'residual_severity' => $validated['residual_severity'] ?? null,
+                'residual_risk_score' => $residualScore,
+                'residual_risk_level' => $residualLevel,
+                'status' => $validated['status'] ?? Hazard::STATUS_IDENTIFIED,
+                'owner_id' => $request->user()->id,
+                'reviewer_id' => $validated['reviewer_id'] ?? null,
+                'next_review_date' => $validated['next_review_date'] ?? null,
+            ]);
+        });
+
+        $this->audit->log(
+            action: 'hsse.hazard.identified',
+            workspaceId: $workspace->id,
+            userId: $request->user()->id,
+            resourceType: 'hazard',
+            resourceId: $hazard->id,
+            after: ['reference' => $hazard->reference, 'risk_level' => $hazard->risk_level],
+            meta: ['category' => $hazard->category, 'risk_score' => $hazard->risk_score]
+        );
 
         return response()->json(['data' => $hazard], 201);
     }
@@ -139,6 +162,8 @@ class HazardController extends Controller
             'next_review_date' => 'nullable|date',
         ]);
 
+        $before = $hazard->only(['status', 'risk_level', 'risk_score', 'likelihood', 'severity']);
+
         if (isset($validated['likelihood']) || isset($validated['severity'])) {
             $likelihood = $validated['likelihood'] ?? $hazard->likelihood;
             $severity = $validated['severity'] ?? $hazard->severity;
@@ -152,8 +177,20 @@ class HazardController extends Controller
         }
 
         $hazard->update($validated);
+        $hazard->refresh();
 
-        return response()->json(['data' => $hazard->fresh()]);
+        $this->audit->log(
+            action: 'hsse.hazard.updated',
+            workspaceId: $workspace->id,
+            userId: $request->user()->id,
+            resourceType: 'hazard',
+            resourceId: $hazard->id,
+            before: $before,
+            after: $hazard->only(array_keys($before)),
+            meta: ['reference' => $hazard->reference]
+        );
+
+        return response()->json(['data' => $hazard]);
     }
 
     public function destroy(Request $request, Workspace $workspace, Hazard $hazard): JsonResponse
@@ -164,18 +201,18 @@ class HazardController extends Controller
             404
         );
 
+        $reference = $hazard->reference;
         $hazard->delete();
 
+        $this->audit->log(
+            action: 'hsse.hazard.deleted',
+            workspaceId: $workspace->id,
+            userId: $request->user()->id,
+            resourceType: 'hazard',
+            resourceId: $hazard->id,
+            before: ['reference' => $reference, 'title' => $hazard->title],
+        );
+
         return response()->json(['data' => ['deleted' => true]]);
-    }
-
-    private function nextReference(string $workspaceId): string
-    {
-        $year = now()->format('Y');
-        $count = Hazard::where('workspace_id', $workspaceId)
-            ->where('reference', 'like', "HAZ-{$year}-%")
-            ->count();
-
-        return 'HAZ-'.$year.'-'.str_pad((string) ($count + 1), 4, '0', STR_PAD_LEFT);
     }
 }

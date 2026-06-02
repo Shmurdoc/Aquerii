@@ -4,12 +4,20 @@ namespace App\Modules\HSSE\Http\Controllers;
 
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
+use App\Core\Services\AuditService;
 use App\Modules\HSSE\Models\Incident;
+use App\Modules\HSSE\Services\ReferenceSequenceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class IncidentController extends Controller
 {
+    public function __construct(
+        private ReferenceSequenceService $sequences,
+        private AuditService $audit,
+    ) {}
+
     public function index(Request $request, Workspace $workspace): JsonResponse
     {
         abort_unless(
@@ -69,26 +77,46 @@ class IncidentController extends Controller
             'investigator_id' => 'nullable|uuid',
         ]);
 
-        $incident = Incident::create([
-            'workspace_id' => $workspace->id,
-            'reference' => $this->nextReference($workspace->id),
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'type' => $validated['type'],
-            'severity' => $validated['severity'],
-            'status' => Incident::STATUS_OPEN,
-            'occurred_at' => $validated['occurred_at'],
-            'reported_at' => now(),
-            'location' => $validated['location'] ?? null,
-            'location_details' => $validated['location_details'] ?? null,
-            'body_part_affected' => $validated['body_part_affected'] ?? null,
-            'injury_type' => $validated['injury_type'] ?? null,
-            'mhsa_classification' => $validated['mhsa_classification'] ?? null,
-            'coida_reportable' => $validated['coida_reportable'] ?? false,
-            'coida_reference' => $validated['coida_reference'] ?? null,
-            'reporter_id' => $request->user()->id,
-            'investigator_id' => $validated['investigator_id'] ?? null,
-        ]);
+        $incident = DB::transaction(function () use ($request, $workspace, $validated) {
+            return Incident::create([
+                'workspace_id' => $workspace->id,
+                'reference' => $this->sequences->next(
+                    $workspace->id,
+                    ReferenceSequenceService::ENTITY_INCIDENT
+                ),
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'type' => $validated['type'],
+                'severity' => $validated['severity'],
+                'status' => Incident::STATUS_OPEN,
+                'occurred_at' => $validated['occurred_at'],
+                'reported_at' => now(),
+                'location' => $validated['location'] ?? null,
+                'location_details' => $validated['location_details'] ?? null,
+                'body_part_affected' => $validated['body_part_affected'] ?? null,
+                'injury_type' => $validated['injury_type'] ?? null,
+                'mhsa_classification' => $validated['mhsa_classification'] ?? null,
+                'coida_reportable' => $validated['coida_reportable'] ?? false,
+                'coida_reference' => $validated['coida_reference'] ?? null,
+                'reporter_id' => $request->user()->id,
+                'investigator_id' => $validated['investigator_id'] ?? null,
+            ]);
+        });
+
+        $this->audit->log(
+            action: 'hsse.incident.reported',
+            workspaceId: $workspace->id,
+            userId: $request->user()->id,
+            resourceType: 'incident',
+            resourceId: $incident->id,
+            after: $incident->toArray(),
+            meta: [
+                'reference' => $incident->reference,
+                'type' => $incident->type,
+                'severity' => $incident->severity,
+                'coida_reportable' => $incident->coida_reportable,
+            ]
+        );
 
         return response()->json(['data' => $incident], 201);
     }
@@ -135,13 +163,33 @@ class IncidentController extends Controller
             'contributing_factors.*' => 'string',
         ]);
 
-        if (isset($validated['status']) && $validated['status'] === Incident::STATUS_CLOSED) {
+        $before = $incident->only([
+            'status', 'severity', 'type', 'investigator_id', 'root_cause', 'coida_reportable',
+        ]);
+
+        $statusChangedToClosed = isset($validated['status'])
+            && $validated['status'] === Incident::STATUS_CLOSED
+            && $incident->status !== Incident::STATUS_CLOSED;
+
+        if ($statusChangedToClosed) {
             $validated['closed_at'] = now();
         }
 
         $incident->update($validated);
+        $incident->refresh();
 
-        return response()->json(['data' => $incident->fresh()]);
+        $this->audit->log(
+            action: $statusChangedToClosed ? 'hsse.incident.closed' : 'hsse.incident.updated',
+            workspaceId: $workspace->id,
+            userId: $request->user()->id,
+            resourceType: 'incident',
+            resourceId: $incident->id,
+            before: $before,
+            after: $incident->only(array_keys($before)),
+            meta: ['reference' => $incident->reference]
+        );
+
+        return response()->json(['data' => $incident]);
     }
 
     public function destroy(Request $request, Workspace $workspace, Incident $incident): JsonResponse
@@ -152,18 +200,18 @@ class IncidentController extends Controller
             404
         );
 
+        $reference = $incident->reference;
         $incident->delete();
 
+        $this->audit->log(
+            action: 'hsse.incident.deleted',
+            workspaceId: $workspace->id,
+            userId: $request->user()->id,
+            resourceType: 'incident',
+            resourceId: $incident->id,
+            before: ['reference' => $reference, 'title' => $incident->title],
+        );
+
         return response()->json(['data' => ['deleted' => true]]);
-    }
-
-    private function nextReference(string $workspaceId): string
-    {
-        $year = now()->format('Y');
-        $count = Incident::where('workspace_id', $workspaceId)
-            ->where('reference', 'like', "INC-{$year}-%")
-            ->count();
-
-        return 'INC-'.$year.'-'.str_pad((string) ($count + 1), 4, '0', STR_PAD_LEFT);
     }
 }

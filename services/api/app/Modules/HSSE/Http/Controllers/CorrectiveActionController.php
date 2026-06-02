@@ -4,12 +4,20 @@ namespace App\Modules\HSSE\Http\Controllers;
 
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
+use App\Core\Services\AuditService;
 use App\Modules\HSSE\Models\CorrectiveAction;
+use App\Modules\HSSE\Services\ReferenceSequenceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CorrectiveActionController extends Controller
 {
+    public function __construct(
+        private ReferenceSequenceService $sequences,
+        private AuditService $audit,
+    ) {}
+
     public function index(Request $request, Workspace $workspace): JsonResponse
     {
         abort_unless(
@@ -64,17 +72,35 @@ class CorrectiveActionController extends Controller
             'due_date' => 'nullable|date',
         ]);
 
-        $action = CorrectiveAction::create([
-            'workspace_id' => $workspace->id,
-            'reference' => $this->nextReference($workspace->id),
-            'source_type' => $validated['source_type'],
-            'source_id' => $validated['source_id'] ?? null,
-            'description' => $validated['description'],
-            'assigned_to' => $validated['assigned_to'],
-            'priority' => $validated['priority'] ?? CorrectiveAction::PRIORITY_MEDIUM,
-            'status' => CorrectiveAction::STATUS_OPEN,
-            'due_date' => $validated['due_date'] ?? null,
-        ]);
+        $action = DB::transaction(function () use ($request, $workspace, $validated) {
+            return CorrectiveAction::create([
+                'workspace_id' => $workspace->id,
+                'reference' => $this->sequences->next(
+                    $workspace->id,
+                    ReferenceSequenceService::ENTITY_CORRECTIVE_ACTION
+                ),
+                'source_type' => $validated['source_type'],
+                'source_id' => $validated['source_id'] ?? null,
+                'description' => $validated['description'],
+                'assigned_to' => $validated['assigned_to'],
+                'priority' => $validated['priority'] ?? CorrectiveAction::PRIORITY_MEDIUM,
+                'status' => CorrectiveAction::STATUS_OPEN,
+                'due_date' => $validated['due_date'] ?? null,
+            ]);
+        });
+
+        $this->audit->log(
+            action: 'hsse.corrective_action.created',
+            workspaceId: $workspace->id,
+            userId: $request->user()->id,
+            resourceType: 'corrective_action',
+            resourceId: $action->id,
+            after: ['reference' => $action->reference, 'priority' => $action->priority],
+            meta: [
+                'source_type' => $action->source_type,
+                'assigned_to' => $action->assigned_to,
+            ]
+        );
 
         return response()->json(['data' => $action], 201);
     }
@@ -109,21 +135,40 @@ class CorrectiveActionController extends Controller
             'completion_evidence' => 'nullable|string',
         ]);
 
-        $statusChanged = isset($validated['status']) && $validated['status'] !== $corrective_action->status;
+        $before = $corrective_action->only(['status', 'priority', 'assigned_to']);
 
-        if ($statusChanged) {
-            if ($validated['status'] === CorrectiveAction::STATUS_COMPLETED) {
-                $validated['completed_at'] = now();
-            }
-            if ($validated['status'] === CorrectiveAction::STATUS_VERIFIED) {
-                $validated['verified_at'] = now();
-                $validated['verified_by'] = $request->user()->id;
-            }
+        $statusChanged = isset($validated['status']) && $validated['status'] !== $corrective_action->status;
+        $becameCompleted = $statusChanged && $validated['status'] === CorrectiveAction::STATUS_COMPLETED;
+        $becameVerified = $statusChanged && $validated['status'] === CorrectiveAction::STATUS_VERIFIED;
+
+        if ($becameCompleted) {
+            $validated['completed_at'] = now();
+        }
+        if ($becameVerified) {
+            $validated['verified_at'] = now();
+            $validated['verified_by'] = $request->user()->id;
         }
 
         $corrective_action->update($validated);
+        $corrective_action->refresh();
 
-        return response()->json(['data' => $corrective_action->fresh()]);
+        $this->audit->log(
+            action: match (true) {
+                $becameVerified => 'hsse.corrective_action.verified',
+                $becameCompleted => 'hsse.corrective_action.completed',
+                $statusChanged => 'hsse.corrective_action.status_changed',
+                default => 'hsse.corrective_action.updated',
+            },
+            workspaceId: $workspace->id,
+            userId: $request->user()->id,
+            resourceType: 'corrective_action',
+            resourceId: $corrective_action->id,
+            before: $before,
+            after: $corrective_action->only(array_keys($before)),
+            meta: ['reference' => $corrective_action->reference]
+        );
+
+        return response()->json(['data' => $corrective_action]);
     }
 
     public function destroy(Request $request, Workspace $workspace, CorrectiveAction $corrective_action): JsonResponse
@@ -134,18 +179,18 @@ class CorrectiveActionController extends Controller
             404
         );
 
+        $reference = $corrective_action->reference;
         $corrective_action->delete();
 
+        $this->audit->log(
+            action: 'hsse.corrective_action.deleted',
+            workspaceId: $workspace->id,
+            userId: $request->user()->id,
+            resourceType: 'corrective_action',
+            resourceId: $corrective_action->id,
+            before: ['reference' => $reference],
+        );
+
         return response()->json(['data' => ['deleted' => true]]);
-    }
-
-    private function nextReference(string $workspaceId): string
-    {
-        $year = now()->format('Y');
-        $count = CorrectiveAction::where('workspace_id', $workspaceId)
-            ->where('reference', 'like', "CA-{$year}-%")
-            ->count();
-
-        return 'CA-'.$year.'-'.str_pad((string) ($count + 1), 4, '0', STR_PAD_LEFT);
     }
 }
