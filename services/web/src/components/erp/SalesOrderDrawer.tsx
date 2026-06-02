@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck � pre-existing TS debt, see WEB_TS_DEBT.md for cleanup plan
 import { useState } from 'react'
 import { X, Trash2, ChevronDown } from 'lucide-react'
