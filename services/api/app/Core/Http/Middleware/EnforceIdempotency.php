@@ -115,11 +115,19 @@ class EnforceIdempotency
             if ($statusCode < 500) {
                 $body = json_decode($response->getContent(), true) ?? [];
 
-                Cache::put($cacheKey, [
-                    'payload_hash' => $payloadHash,
-                    'response' => $body,
-                    'status_code' => $statusCode,
-                ], self::TTL);
+                try {
+                    Cache::put($cacheKey, [
+                        'payload_hash' => $payloadHash,
+                        'response' => $body,
+                        'status_code' => $statusCode,
+                    ], self::TTL);
+                } catch (\Throwable $cacheError) {
+                    // Cache write is an optimization — DB persistence below is
+                    // the source of truth. Don't fail the request if cache
+                    // storage is unavailable (e.g. file driver with a missing
+                    // hash subdir in a fresh CI container).
+                    report($cacheError);
+                }
 
                 // Persist to DB for audit / cross-instance consistency
                 DB::table('idempotency_keys')->upsert([
