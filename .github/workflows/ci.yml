@@ -622,7 +622,11 @@ jobs:
           mkdir -p bootstrap/cache
           mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
           php artisan key:generate --force
-          php artisan migrate --force --seed
+          php artisan migrate --force
+          php artisan db:seed --class=DatabaseSeeder --force
+          php artisan db:seed --class=E2ESeeder --force
+          php artisan tinker --execute='var_dump(\App\Models\User::where("email","test@example.com")->first()); echo PHP_EOL;'
+          php artisan tinker --execute='$u = \App\Models\User::where("email","test@example.com")->first(); echo "PW check: " . (\Hash::check("password123", $u->password_hash) ? "OK" : "FAIL") . PHP_EOL;'
           php artisan serve --port=8000 &
           sleep 3
 
