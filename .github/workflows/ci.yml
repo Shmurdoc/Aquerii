@@ -606,6 +606,7 @@ jobs:
         working-directory: services/api
         run: |
           cp .env.example .env
+          sed -i 's|APP_URL=.*|APP_URL=http://localhost:8000|' .env
           sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env
           sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
@@ -633,13 +634,15 @@ jobs:
 
       - name: Precompute load test token
         run: |
-          TOKEN=$(curl -s -X POST http://localhost:8000/api/auth/login \
+          set -e
+          LOGIN=$(curl -s -X POST http://localhost:8000/api/auth/login \
             -H 'Content-Type: application/json' \
-            -d '{"email":"test@example.com","password":"password123"}' \
-            | python3 -c 'import sys,json;print(json.load(sys.stdin)["data"]["token"])')
-          WS_ID=$(curl -s http://localhost:8000/api/me/workspaces \
-            -H "Authorization: Bearer $TOKEN" \
-            | python3 -c 'import sys,json;print(json.load(sys.stdin)["data"][0]["id"])')
+            -d '{"email":"test@example.com","password":"password123"}')
+          echo "Login response: $LOGIN"
+          TOKEN=$(echo "$LOGIN" | python3 -c 'import sys,json;print(json.load(sys.stdin)["data"]["token"])')
+          ME=$(curl -s http://localhost:8000/api/me -H "Authorization: Bearer $TOKEN")
+          echo "Me response: $ME"
+          WS_ID=$(echo "$ME" | python3 -c 'import sys,json;print(json.load(sys.stdin)["data"]["workspaces"][0]["id"])')
           echo "TOKEN=$TOKEN" >> $GITHUB_ENV
           echo "WS_ID=$WS_ID" >> $GITHUB_ENV
 
