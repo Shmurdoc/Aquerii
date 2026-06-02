@@ -586,7 +586,7 @@ def test_webhook_retry_on_timeout():
 
 def test_idempotent_po_creation():
     """Verify PO not created twice with same idempotency key"""
-    idempotency_key = "stock_BOLT001_reorder_123456"
+    idempotency_key = "test-fixture-bolt001-reorder"
     
     result1 = create_po_with_idempotency(po_data, idempotency_key)
     result2 = create_po_with_idempotency(po_data, idempotency_key)
