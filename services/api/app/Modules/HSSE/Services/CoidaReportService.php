@@ -2,8 +2,8 @@
 
 namespace App\Modules\HSSE\Services;
 
+use App\Core\Models\Workspace;
 use App\Modules\HSSE\Models\Incident;
-use App\Modules\HSSE\Models\Workspace;
 use Carbon\CarbonInterface;
 
 /**
