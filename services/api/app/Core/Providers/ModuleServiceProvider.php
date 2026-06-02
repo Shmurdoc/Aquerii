@@ -12,6 +12,7 @@ use App\Modules\CRM\Providers\CrmServiceProvider;
 use App\Modules\Delegation\Providers\DelegationServiceProvider;
 use App\Modules\Documents\Providers\DocumentsServiceProvider;
 use App\Modules\Email\Providers\EmailServiceProvider;
+use App\Modules\HSSE\Providers\HSSEProvider;
 use App\Modules\Inventory\Providers\InventoryServiceProvider;
 use App\Modules\Invoicing\Providers\InvoicingServiceProvider;
 use App\Modules\JobCards\Providers\JobCardsServiceProvider;
@@ -31,6 +32,7 @@ class ModuleServiceProvider extends ServiceProvider
         $this->registerIf('MODULE_TEMPLATES', TemplateServiceProvider::class);
         $this->registerIf('MODULE_AUTOMATION', AutomationServiceProvider::class);
         $this->registerIf('MODULE_DOCUMENTS', DocumentsServiceProvider::class);
+        $this->registerIf('MODULE_HSSE', HSSEProvider::class);
         $this->registerIf('MODULE_EMAIL', EmailServiceProvider::class);
         $this->registerIf('MODULE_AI', AIServiceProvider::class);
         $this->registerIf('MODULE_ADMIN', AdminServiceProvider::class);
