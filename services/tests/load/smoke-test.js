@@ -2,6 +2,8 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 import { login, authedHeaders, workspaceId } from './helpers.js';
 
+let sharedAuth = null;
+
 export const options = {
   vus:       1,
   duration:  '30s',
@@ -14,13 +16,15 @@ export const options = {
 export default function () {
   // Login once per VU and reuse the token. Per-iteration login would exceed
   // the production throttle:5,1 on /api/auth/login and trip 429s.
-  if (!__ENV.__TOKEN__) {
+  if (!sharedAuth) {
     const auth = login('test@example.com', 'password123');
-    __ENV.__TOKEN = auth.token;
-    __ENV.__WS_ID = workspaceId(auth.token);
+    sharedAuth = {
+      token: auth.token,
+      wsId: workspaceId(auth.token),
+    };
   }
-  const token = __ENV.__TOKEN;
-  const wsId = __ENV.__WS_ID;
+  const token = sharedAuth.token;
+  const wsId = sharedAuth.wsId;
   const headers = authedHeaders(token);
 
   // List boards
