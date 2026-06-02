@@ -7,7 +7,6 @@ use App\Core\Models\Workspace;
 use App\Modules\HSSE\Models\Incident;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class IncidentController extends Controller
 {

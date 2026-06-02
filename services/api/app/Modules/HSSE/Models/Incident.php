@@ -8,6 +8,7 @@ use Database\Factories\HSSE\IncidentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Incident extends Model
@@ -105,7 +106,7 @@ class Incident extends Model
         return $this->belongsTo(User::class, 'investigator_id');
     }
 
-    public function correctiveActions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function correctiveActions(): HasMany
     {
         return $this->hasMany(CorrectiveAction::class, 'source_id')
             ->where('source_type', CorrectiveAction::SOURCE_INCIDENT);
