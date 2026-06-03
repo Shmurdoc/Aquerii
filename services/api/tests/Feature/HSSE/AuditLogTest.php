@@ -95,6 +95,7 @@ it('writes distinct audit actions when a corrective action is completed vs verif
     $action = CorrectiveAction::factory()->create([
         'workspace_id' => $this->workspace->id,
         'assigned_to' => $this->user->id,
+        'status' => CorrectiveAction::STATUS_OPEN,
     ]);
 
     $this->patchJson(
