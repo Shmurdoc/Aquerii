@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Modules\HSSE\Services;
+namespace App\Core\Services;
 
 use App\Modules\HSSE\Models\CorrectiveAction;
 use App\Modules\HSSE\Models\Hazard;
 use App\Modules\HSSE\Models\Incident;
+use App\Modules\PTW\Models\Permit;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -25,6 +26,8 @@ class ReferenceSequenceService
     public const ENTITY_HAZARD = 'hazard';
 
     public const ENTITY_CORRECTIVE_ACTION = 'corrective_action';
+
+    public const ENTITY_PERMIT = 'permit';
 
     public function next(string $workspaceId, string $entity): string
     {
@@ -73,6 +76,7 @@ class ReferenceSequenceService
             self::ENTITY_INCIDENT => 'INC',
             self::ENTITY_HAZARD => 'HAZ',
             self::ENTITY_CORRECTIVE_ACTION => 'CA',
+            self::ENTITY_PERMIT => 'PTW',
             default => throw new \InvalidArgumentException("Unknown entity: {$entity}"),
         };
     }
@@ -83,6 +87,7 @@ class ReferenceSequenceService
             Incident::class => self::ENTITY_INCIDENT,
             Hazard::class => self::ENTITY_HAZARD,
             CorrectiveAction::class => self::ENTITY_CORRECTIVE_ACTION,
+            Permit::class => self::ENTITY_PERMIT,
             default => throw new \InvalidArgumentException("Unknown model: {$modelClass}"),
         };
     }

@@ -17,6 +17,7 @@ use App\Modules\Inventory\Providers\InventoryServiceProvider;
 use App\Modules\Invoicing\Providers\InvoicingServiceProvider;
 use App\Modules\JobCards\Providers\JobCardsServiceProvider;
 use App\Modules\Marketing\Providers\MarketingServiceProvider;
+use App\Modules\PTW\Providers\PTWProvider;
 use App\Modules\Purchasing\Providers\PurchasingServiceProvider;
 use App\Modules\Sales\Providers\SalesServiceProvider;
 use App\Modules\Support\Providers\SupportServiceProvider;
@@ -46,6 +47,7 @@ class ModuleServiceProvider extends ServiceProvider
         $this->registerIf('MODULE_SUPPORT', SupportServiceProvider::class);
         $this->registerIf('MODULE_CHAT', ChatServiceProvider::class);
         $this->registerIf('MODULE_MARKETING', MarketingServiceProvider::class);
+        $this->registerIf('MODULE_PTW', PTWProvider::class);
     }
 
     private function registerIf(string $envKey, string $providerClass): void

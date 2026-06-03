@@ -4,7 +4,7 @@ import {
   LayoutGrid, FileText, Users, Settings, Bell,
   Inbox, Search, Wallet, Zap, ChevronLeft, ChevronRight, BarChart2,
   UserCheck, Video, Sparkles, Sun, Moon, HeadphonesIcon, Megaphone, Mail, CalendarDays,
-  MessageSquare, GitBranch, Package,
+  MessageSquare, GitBranch, Package, FileCheck2, ShieldAlert,
   type LucideIcon,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
@@ -58,6 +58,13 @@ const SECTIONS: NavSection[] = [
     label: 'ERP',
     items: [
       { to: '/erp', icon: Wallet, label: 'ERP', permission: 'invoices.*' },
+    ],
+  },
+  {
+    label: 'Safety',
+    items: [
+      { to: '/hsse', icon: ShieldAlert, label: 'HSSE' },
+      { to: '/ptw',  icon: FileCheck2, label: 'Permits' },
     ],
   },
   {

@@ -3,7 +3,7 @@
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
-use App\Modules\HSSE\Services\ReferenceSequenceService;
+use App\Core\Services\ReferenceSequenceService;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {

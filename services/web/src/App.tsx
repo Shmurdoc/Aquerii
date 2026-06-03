@@ -74,6 +74,9 @@ import HSSEPage              from '@/pages/hsse/HSSEPage'
 import IncidentsPage         from '@/pages/hsse/IncidentsPage'
 import HazardsPage           from '@/pages/hsse/HazardsPage'
 import CorrectiveActionsPage from '@/pages/hsse/CorrectiveActionsPage'
+import PermitsPage           from '@/pages/ptw/PermitsPage'
+import PermitDetailPage      from '@/pages/ptw/PermitDetailPage'
+import NewPermitPage         from '@/pages/ptw/NewPermitPage'
 import ReportsPage      from '@/pages/reports/ReportsPage'
 import AIChatPage       from '@/pages/ai/AIChatPage'
 import ChatPage         from '@/pages/chat/ChatPage'
@@ -192,6 +195,10 @@ export default function App() {
           <Route path="/hsse/incidents"    element={<IncidentsPage />} />
           <Route path="/hsse/hazards"      element={<HazardsPage />} />
           <Route path="/hsse/actions"      element={<CorrectiveActionsPage />} />
+          <Route path="/ptw"               element={<Navigate to="/ptw/permits" replace />} />
+          <Route path="/ptw/permits"       element={<PermitsPage />} />
+          <Route path="/ptw/permits/new"   element={<NewPermitPage />} />
+          <Route path="/ptw/permits/:permitId" element={<PermitDetailPage />} />
           <Route path="/reports"       element={<ReportsPage />} />
           <Route path="/ai/chat"       element={<AIChatPage />} />
           <Route path="/chat"          element={<ChatPage />} />
