@@ -6,7 +6,6 @@ use App\Core\Models\Board;
 use App\Core\Services\BoardService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class BoardController extends Controller
 {
@@ -14,20 +13,12 @@ class BoardController extends Controller
 
     public function index(Request $request, string $workspace): JsonResponse
     {
-        try {
-            $boards = Board::where('workspace_id', $workspace)
-                ->whereNull('deleted_at')
-                ->orderBy('position')
-                ->get();
+        $boards = Board::where('workspace_id', $workspace)
+            ->whereNull('deleted_at')
+            ->orderBy('position')
+            ->get();
 
-            return response()->json(['data' => $boards]);
-        } catch (\Throwable $e) {
-            Log::error('BoardController@index failed', [
-                'workspace_id' => $workspace,
-                'exception' => $e,
-            ]);
-            throw $e;
-        }
+        return response()->json(['data' => $boards]);
     }
 
     public function store(Request $request, string $workspace): JsonResponse
