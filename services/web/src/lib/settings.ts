@@ -248,6 +248,13 @@ export interface NotificationPreferences {
 
 export type WorkspaceRole = 'owner' | 'admin' | 'manager' | 'member' | 'viewer'
 
+/**
+ * Display names only — these are the labels used in the workspace member
+ * invitation / role-edit UI. The user's own effective permissions come
+ * from GET /api/me/permissions via the `usePermissions()` hook and are
+ * driven by their `account_type` and assigned system roles, not by this
+ * list. Keep this in sync with backend config/aquerii-roles.php.
+ */
 export const ROLES: { value: WorkspaceRole; label: string; description: string }[] = [
   { value: 'owner',  label: 'Owner',  description: 'Full access including billing' },
   { value: 'admin',  label: 'Admin',  description: 'Full access to workspace settings and billing' },
