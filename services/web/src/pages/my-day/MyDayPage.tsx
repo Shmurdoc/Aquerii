@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { format, parseISO, isBefore, isToday, isTomorrow, isThisWeek, startOfWeek, endOfWeek } from 'date-fns'
+import { format, parseISO, isBefore, isToday, isTomorrow, isThisWeek } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 import {
   AlertCircle,
@@ -13,8 +13,11 @@ import {
   RefreshCw,
 } from 'lucide-react'
 import clsx from 'clsx'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
 import { useMyDayTasks, type MyDayTask } from '@/hooks/useMyDayTasks'
-import { useUpdateItem } from '@/hooks/useItems'
+import { api } from '@/lib/api'
+import { useAuthStore } from '@/stores/authStore'
 
 const PRIORITY_BADGE: Record<string, string> = {
   critical: 'bg-red-500/20 text-red-400',
@@ -31,7 +34,7 @@ function classifyTask(task: MyDayTask): 'overdue' | 'today' | 'tomorrow' | 'this
   if (isBefore(due, now) && !isToday(due)) return 'overdue'
   if (isToday(due)) return 'today'
   if (isTomorrow(due)) return 'tomorrow'
-  if (isThisWeek(due)) return 'this_week'
+  if (isThisWeek(due, { weekStartsOn: 1 })) return 'this_week'
   return 'later'
 }
 
@@ -87,7 +90,7 @@ function TaskRow({ task, onToggle }: { task: MyDayTask; onToggle: (task: MyDayTa
           )}
           <span className="flex items-center gap-1 text-[10px] text-gray-500">
             <Calendar size={9} />
-            {format(parseISO(task.due_date), 'MMM d')}
+            {format(parseISO(task.due_date || new Date().toISOString()), 'MMM d')}
           </span>
         </div>
       </div>
@@ -164,11 +167,23 @@ function EmptySection({ label, icon: Icon }: { label: string; icon: typeof Clock
 export default function MyDayPage() {
   const navigate = useNavigate()
   const { data: tasks, isLoading, isError, refetch } = useMyDayTasks()
-  const updateItem = useUpdateItem('')
+  const workspace = useAuthStore(s => s.workspace)
+  const qc = useQueryClient()
+
+  const updateItem = useMutation({
+    mutationFn: ({ boardId, itemId, data }: {
+      boardId: string
+      itemId: string
+      data: { status?: string | null }
+    }) =>
+      api.patch(`/workspaces/${workspace!.id}/boards/${boardId}/items/${itemId}`, data),
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries({ queryKey: ['my-day', workspace?.id] })
+      qc.invalidateQueries({ queryKey: ['items', vars.boardId] })
+    },
+  })
 
   const now = new Date()
-  const weekStart = startOfWeek(now, { weekStartsOn: 1 })
-  const weekEnd = endOfWeek(now, { weekStartsOn: 1 })
 
   const sections: SectionConfig[] = [
     {
@@ -220,10 +235,14 @@ export default function MyDayPage() {
   )
 
   const handleToggle = (task: MyDayTask) => {
-    updateItem.mutate({
-      itemId: task.id,
-      data: { status: task.done ? null : 'done' as const },
-    })
+    updateItem.mutate(
+      {
+        boardId: task.board_id,
+        itemId: task.id,
+        data: { status: task.done ? null : 'done' as const },
+      },
+      { onError: (err: any) => toast.error(err?.response?.data?.message ?? 'Failed to update task') }
+    )
     // Optimistic update via the hook's refetch; no local state needed
   }
 
@@ -266,7 +285,13 @@ export default function MyDayPage() {
           </p>
         </div>
         {totalPending > 0 && (
-          <span className="text-xs bg-accent-light text-accent-text px-2 py-1 rounded-lg font-medium">
+          <span
+            className="text-xs px-2 py-1 rounded-lg font-medium"
+            style={{
+              backgroundColor: 'var(--color-accent-light)',
+              color: 'var(--color-accent-text)',
+            }}
+          >
             {totalPending} pending
           </span>
         )}
