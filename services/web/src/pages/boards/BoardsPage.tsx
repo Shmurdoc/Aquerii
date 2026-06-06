@@ -1,49 +1,99 @@
 import { useState } from 'react'
 import { useBoards, useCreateBoard, useDeleteBoard } from '@/hooks/useBoards'
 import { useNavigate } from 'react-router-dom'
-import { Plus, LayoutGrid, Trash2 } from 'lucide-react'
+import { Plus, LayoutGrid, MoreVertical, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { Modal } from '@/components/ui/Modal'
+import { Input } from '@/components/ui/Input'
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItems, DropdownMenuItem } from '@/components/ui/DropdownMenu'
+
+function NewBoardModal({ onClose }: { onClose: () => void }) {
+  const createBoard = useCreateBoard()
+  const navigate    = useNavigate()
+  const [name, setName]   = useState('')
+  const [submit, setSubmit] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const trimmed = name.trim()
+    if (!trimmed) return
+    setSubmit(true)
+    try {
+      const res = await createBoard.mutateAsync({ name: trimmed })
+      toast.success('Board created.')
+      onClose()
+      navigate(`/boards/${res.data.data.id}`)
+    } catch {
+      toast.error('Failed to create board.')
+    } finally {
+      setSubmit(false)
+    }
+  }
+
+  return (
+    <Modal
+      open
+      onClose={onClose}
+      title="New board"
+      description="Give your board a name. You can rename it later."
+      size="sm"
+      footer={
+        <>
+          <Button variant="secondary" size="sm" onClick={onClose} disabled={submit}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => { if (name.trim()) handleSubmit({ preventDefault: () => {} } as React.FormEvent) }}
+            loading={submit || createBoard.isPending}
+            disabled={!name.trim()}
+          >
+            Create board
+          </Button>
+        </>
+      }
+    >
+      <Input
+        autoFocus
+        label="Board name"
+        placeholder="e.g. Marketing roadmap"
+        value={name}
+        onChange={e => setName(e.target.value)}
+        onKeyDown={e => { if (e.key === 'Enter' && name.trim()) handleSubmit({ preventDefault: () => {} } as React.FormEvent) }}
+        containerClassName="!mb-0"
+      />
+    </Modal>
+  )
+}
 
 export default function BoardsPage() {
   const { data: boards = [], isLoading } = useBoards()
   const createBoard = useCreateBoard()
   const deleteBoard = useDeleteBoard()
   const navigate    = useNavigate()
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
+  const [showNew,      setShowNew]      = useState(false)
 
-  const handleCreate = async () => {
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return
     try {
-      const res = await createBoard.mutateAsync({ name: 'New Board' })
-      navigate(`/boards/${res.data.data.id}`)
+      await deleteBoard.mutateAsync(deleteTarget)
+      toast.success('Board deleted.')
     } catch {
-      toast.error('Failed to create board.')
+      toast.error('Failed to delete board.')
     }
-  }
-
-  const handleDelete = async (boardId: string, e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (confirmDelete === boardId) {
-      try {
-        await deleteBoard.mutateAsync(boardId)
-        toast.success('Board deleted.')
-      } catch {
-        toast.error('Failed to delete board.')
-      }
-      setConfirmDelete(null)
-    } else {
-      setConfirmDelete(boardId)
-      setTimeout(() => setConfirmDelete(c => c === boardId ? null : c), 3000)
-    }
+    setDeleteTarget(null)
   }
 
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-white">Boards</h1>
-        <Button variant="primary" size="sm" onClick={handleCreate}>
+        <h1 className="text-heading font-semibold text-[var(--color-text-primary)]">Boards</h1>
+        <Button variant="primary" size="sm" onClick={() => setShowNew(true)}>
           <Plus size={14} />
           New Board
         </Button>
@@ -51,8 +101,8 @@ export default function BoardsPage() {
 
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 bg-gray-800 rounded-xl animate-pulse" />
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="h-28 rounded-xl bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] animate-pulse" />
           ))}
         </div>
       ) : boards.length === 0 ? (
@@ -60,6 +110,11 @@ export default function BoardsPage() {
           icon={LayoutGrid}
           title="No boards yet"
           description="Create one to get started."
+          action={
+            <Button variant="primary" size="sm" onClick={() => setShowNew(true)}>
+              <Plus size={14} /> New board
+            </Button>
+          }
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -76,31 +131,59 @@ export default function BoardsPage() {
                 >
                   {board.icon ?? board.name[0]}
                 </div>
-                <p className="text-sm font-medium text-white group-hover:text-indigo-300 transition-colors truncate pr-6">
+                <p className="text-sm font-medium text-[var(--color-text-primary)] group-hover:text-[var(--color-accent-text)] transition-colors truncate pr-6">
                   {board.name}
                 </p>
                 {board.description && (
-                  <p className="text-xs text-gray-500 mt-0.5 truncate">{board.description}</p>
+                  <p className="text-xs text-[var(--color-text-muted)] mt-0.5 truncate">{board.description}</p>
                 )}
               </Card>
 
-              <Button
-                variant="ghost"
-                size="sm"
-                iconOnly
-                onClick={e => handleDelete(board.id, e)}
-                className={`absolute top-3 right-3 ${
-                  confirmDelete === board.id
-                    ? 'opacity-100 text-red-400 bg-red-500/10'
-                    : 'opacity-0 group-hover:opacity-100'
-                }`}
-              >
-                <Trash2 size={13} />
-              </Button>
+              <div className="absolute top-2 right-2" onClick={e => e.stopPropagation()}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" iconOnly aria-label="Board actions">
+                      <MoreVertical size={14} />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuItems align="end">
+                    <DropdownMenuItem
+                      icon={Trash2}
+                      label="Delete board"
+                      onClick={() => setDeleteTarget(board.id)}
+                    />
+                  </DropdownMenuItems>
+                </DropdownMenu>
+              </div>
             </div>
           ))}
         </div>
       )}
+
+      <Modal
+        open={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title="Delete board"
+        description="Are you sure you want to delete this board? This action cannot be undone."
+        size="sm"
+        footer={
+          <>
+            <Button variant="secondary" size="sm" onClick={() => setDeleteTarget(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={handleDeleteConfirm}
+              loading={deleteBoard.isPending}
+            >
+              Delete
+            </Button>
+          </>
+        }
+      />
+
+      {showNew && <NewBoardModal onClose={() => setShowNew(false)} />}
     </div>
   )
 }

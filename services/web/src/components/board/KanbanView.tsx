@@ -22,7 +22,7 @@ export default function KanbanView({ board, items, boardId }: Props) {
   const moveItem   = useMoveItem(boardId)
   const createItem = useCreateItem(boardId)
 
-  const groups = [...board.groups].sort((a, b) => a.position - b.position)
+  const groups = [...(board.groups ?? [])].sort((a, b) => a.position - b.position)
 
   const itemsByGroup = useCallback(
     (groupId: string) =>
@@ -99,15 +99,17 @@ function KanbanColumn({
   })
 
   return (
-    <div className="flex flex-col min-w-[280px] mr-4">
+    <div className="flex flex-col min-w-[280px] max-w-[320px] mr-4 min-w-0">
       {/* Group header */}
-      <div className="flex items-center gap-2 mb-2 px-1 flex-shrink-0">
+      <div className="flex items-center gap-2 mb-2 px-1 flex-shrink-0 rounded-t-xl">
         <div
           className="w-2.5 h-2.5 rounded-full flex-shrink-0"
           style={{ backgroundColor: group.color ?? '#6366f1' }}
         />
-        <span className="text-sm font-medium text-gray-200 flex-1 truncate">{group.name}</span>
-        <span className="text-xs text-gray-500 tabular-nums">{groupItems.length}</span>
+        <span className="text-sm font-medium text-[var(--color-text-primary)] flex-1 truncate">
+          {group.name}
+        </span>
+        <span className="text-xs text-[var(--color-text-muted)] tabular-nums">{groupItems.length}</span>
       </div>
 
       {/* Virtualized items */}
@@ -118,7 +120,11 @@ function KanbanColumn({
           {...provided.dragHandleProps}
           className={clsx(snapshot.isDragging && 'opacity-80')}
         >
-          <ItemCard item={groupItems[rubric.source.index]} boardId={boardId} />
+          <ItemCard
+            item={groupItems[rubric.source.index]}
+            boardId={boardId}
+            isDragging={snapshot.isDragging}
+          />
         </div>
       )}>
         {(provided, snapshot) => (
@@ -129,8 +135,11 @@ function KanbanColumn({
             }}
             {...provided.droppableProps}
             className={clsx(
-              'flex-1 min-h-[120px] rounded-xl transition-colors overflow-y-auto',
-              snapshot.isDraggingOver ? 'bg-indigo-950/40' : 'bg-gray-900/40'
+              'flex-1 min-h-[120px] rounded-xl transition-colors overflow-y-auto min-w-0',
+              'bg-[var(--color-glass-bg)] border border-[var(--color-glass-border)] backdrop-blur-sm',
+              snapshot.isDraggingOver
+                ? 'bg-indigo-950/40 border-[var(--color-accent)]/50'
+                : ''
             )}
             style={{ maxHeight: 'calc(100vh - 220px)' }}
           >
@@ -150,7 +159,9 @@ function KanbanColumn({
                         ref={prov.innerRef}
                         {...prov.draggableProps}
                         {...prov.dragHandleProps}
-                        className={clsx(snap.isDragging && 'opacity-80')}
+                        className={clsx(
+                          snap.isDragging && 'opacity-80 scale-105 ring-2 ring-indigo-500/50 shadow-2xl rounded-lg'
+                        )}
                         style={{
                           position: 'absolute',
                           top: 0,
@@ -162,7 +173,7 @@ function KanbanColumn({
                         }}
                       >
                         <div className="px-1 py-1">
-                          <ItemCard item={item} boardId={boardId} />
+                          <ItemCard item={item} boardId={boardId} isDragging={snap.isDragging} />
                         </div>
                       </div>
                     )}
@@ -178,7 +189,7 @@ function KanbanColumn({
       {/* Add item */}
       <button
         onClick={() => onAddItem(group.id)}
-        className="flex items-center gap-1.5 text-gray-500 hover:text-gray-300 text-xs px-3 py-2 rounded-lg hover:bg-gray-800 transition-colors mt-1 flex-shrink-0"
+        className="flex items-center gap-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] text-xs px-3 py-2 rounded-lg hover:bg-[var(--color-bg-hover)] transition-colors mt-1 flex-shrink-0"
       >
         <Plus size={12} />
         Add item
