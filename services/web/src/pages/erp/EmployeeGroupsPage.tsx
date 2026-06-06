@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck — pre-existing TS debt, see WEB_TS_DEBT.md for cleanup plan
 import { useAuthStore } from '@/stores/authStore'
 import { erpEmployeeGroups, EmployeeGroup } from '@/lib/erp'
 import { Card, Badge, Button, DataTable, type Column } from '@/components/ui'
@@ -15,7 +13,7 @@ function NewGroupModal({ onClose }: { onClose: () => void }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    await erpEmployeeGroups.create(form as any)
+    await erpEmployeeGroups.create(form)
     qc.invalidateQueries({ queryKey: ['employee-groups'] })
     toast.success('Group created.')
     onClose()
@@ -70,7 +68,13 @@ export default function EmployeeGroupsPage() {
         <Button onClick={() => setShowAdd(true)}><Plus size={14} /> New Group</Button>
       </div>
       <Card className="p-0 overflow-hidden">
-        <DataTable columns={columns} data={groups} loading={isLoading} emptyMessage="No employee groups" />
+        <DataTable
+          columns={columns}
+          data={groups}
+          keyExtractor={(r) => String(r.id)}
+          loading={isLoading}
+          emptyMessage="No employee groups"
+        />
       </Card>
       {showAdd && <NewGroupModal onClose={() => setShowAdd(false)} />}
     </div>

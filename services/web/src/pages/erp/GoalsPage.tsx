@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck — pre-existing TS debt, see WEB_TS_DEBT.md for cleanup plan
 import { useAuthStore } from '@/stores/authStore'
 import { erpGoals, Goal } from '@/lib/erp'
 import { Card, Badge, Button, DataTable, type Column } from '@/components/ui'
@@ -62,7 +60,7 @@ export default function GoalsPage() {
   const columns: Column<Goal>[] = [
     { key: 'title', header: 'Goal', render: r => <span className="font-medium">{r.title}</span> },
     { key: 'type', header: 'Type', render: r => <Badge variant="info">{r.type}</Badge> },
-    { key: 'target_value', header: 'Target', render: r => `${r.current_value ?? 0} / ${r.target_value} ${r.unit ?? ''}` },
+    { key: 'target_value', header: 'Target', render: r => `${r.current_value ?? 0} / ${r.target_value ?? 0} ${r.unit ?? ''}` },
     { key: 'status', header: 'Status', render: r => <Badge variant={r.status === 'active' ? 'success' : 'default'}>{r.status}</Badge> },
     { key: 'due_date', header: 'Due', render: r => r.due_date ? formatDate(r.due_date) : 'â€”' },
     { key: 'id', header: '', render: r => (
@@ -77,7 +75,13 @@ export default function GoalsPage() {
         <Button onClick={() => setShowAdd(true)}><Plus size={14} /> New Goal</Button>
       </div>
       <Card className="p-0 overflow-hidden">
-        <DataTable columns={columns} data={goals} loading={isLoading} emptyMessage="No goals set" />
+        <DataTable
+          columns={columns}
+          data={goals}
+          keyExtractor={(r) => String(r.id)}
+          loading={isLoading}
+          emptyMessage="No goals set"
+        />
       </Card>
       {showAdd && <NewGoalModal onClose={() => setShowAdd(false)} />}
     </div>
