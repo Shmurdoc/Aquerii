@@ -4,7 +4,7 @@ import { useTickets, useCreateTicket, useDeleteTicket, Ticket } from '@/lib/supp
 import { Search, Plus, ArrowUpRight, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import clsx from 'clsx'
-import { Button, Input, Select, DataTable, type Column } from '@/components/ui'
+import { Button, Input, MentionInput, Select, DataTable, type Column, PrintButton, ExportButton } from '@/components/ui'
 
 const PRIORITY_OPTIONS = [
   { value: 'low', label: 'Low' },
@@ -16,7 +16,7 @@ const PRIORITY_OPTIONS = [
 const STATUS_OPTIONS = [
   { value: '', label: 'All statuses' },
   { value: 'open', label: 'Open' },
-  { value: 'pending', label: 'Pending' },
+  { value: 'in_progress', label: 'In Progress' },
   { value: 'resolved', label: 'Resolved' },
   { value: 'closed', label: 'Closed' },
 ]
@@ -30,7 +30,7 @@ const PRIORITY_COLORS: Record<string, string> = {
 
 const STATUS_COLORS: Record<string, string> = {
   open: 'text-green-400 bg-green-500/10',
-  pending: 'text-yellow-400 bg-yellow-500/10',
+  in_progress: 'text-yellow-400 bg-yellow-500/10',
   resolved: 'text-blue-400 bg-blue-500/10',
   closed: 'text-gray-500 bg-gray-500/10',
 }
@@ -44,6 +44,7 @@ export default function TicketsPage() {
   const [search, setSearch] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ subject: '', description: '', priority: 'normal' })
+  const [mentionUserIds, setMentionUserIds] = useState<string[]>([])
 
   const params: Record<string, string> = {}
   if (statusFilter) params.status = statusFilter
@@ -56,7 +57,7 @@ export default function TicketsPage() {
 
   const handleCreate = () => {
     if (!form.subject.trim()) return
-    createTicket.mutate(form as any, { onSuccess: () => { setShowForm(false); setForm({ subject: '', description: '', priority: 'normal' }) } })
+    createTicket.mutate({ ...form, mention_user_ids: mentionUserIds } as any, { onSuccess: () => { setShowForm(false); setForm({ subject: '', description: '', priority: 'normal' }); setMentionUserIds([]) } })
   }
 
   if (!workspace) return null
@@ -140,6 +141,9 @@ export default function TicketsPage() {
       <div className="px-6 py-4 border-b border-[var(--color-glass-border)] flex items-center gap-3 shrink-0">
         <h1 className="text-sm font-semibold text-[var(--color-text-primary)] flex-1">Tickets</h1>
 
+        <ExportButton entity="tickets" />
+        <PrintButton label="Tickets" />
+
         <div className="relative">
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" />
           <Input
@@ -204,17 +208,16 @@ export default function TicketsPage() {
               >
                 <Plus size={12} /> Create
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => { setShowForm(false); setForm({ subject: '', description: '', priority: 'normal' }) }}>
+              <Button variant="ghost" size="sm" onClick={() => { setShowForm(false); setForm({ subject: '', description: '', priority: 'normal' }); setMentionUserIds([]) }}>
                 Cancel
               </Button>
             </div>
           </div>
-          <textarea
+          <MentionInput
             value={form.description}
-            onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+            onChange={(val, ids) => { setForm(f => ({ ...f, description: val })); setMentionUserIds(ids) }}
             placeholder="Description (optional)"
             rows={2}
-            className="w-full bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded-lg px-3 py-1.5 text-sm text-[var(--color-text-primary)] outline-none focus:ring-1 focus:ring-[var(--color-accent)] placeholder-[var(--color-text-muted)] resize-none"
           />
         </div>
       )}

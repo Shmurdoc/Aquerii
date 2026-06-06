@@ -5,7 +5,7 @@ import {
   ACTION_STATUS_COLORS, PRIORITY_COLORS,
   type CorrectiveAction, type ActionSourceType, type ActionPriority, type ActionStatus,
 } from '@/lib/hsse'
-import { Card, Badge, Button, Input, Textarea, Select } from '@/components/ui'
+import { Card, Badge, Button, Input, MentionInput, Select, PrintButton, ExportButton } from '@/components/ui'
 import { Plus, CheckCircle, X } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -42,9 +42,13 @@ export default function CorrectiveActionsPage() {
           <CheckCircle size={20} className="text-emerald-400" />
           <h1 className="text-xl font-semibold text-[var(--color-text-primary)]">Corrective Actions</h1>
         </div>
-        <Button onClick={() => setShowCreate(true)} variant="primary">
-          <Plus size={14} /> New Action
-        </Button>
+        <div className="flex items-center gap-2">
+          <ExportButton entity="corrective-actions" />
+          <PrintButton label="Corrective Actions" />
+          <Button onClick={() => setShowCreate(true)} variant="primary">
+            <Plus size={14} /> New Action
+          </Button>
+        </div>
       </div>
 
       <div className="flex gap-2 px-6 py-3 border-b border-[var(--color-glass-border)]">
@@ -145,6 +149,7 @@ function ActionFormModal({ action, onClose, onSubmit }: ActionFormProps) {
     description: '', source_type: 'observation',
     priority: 'medium', status: 'open', due_date: '',
   })
+  const [mentionUserIds, setMentionUserIds] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
 
   return (
@@ -164,7 +169,7 @@ function ActionFormModal({ action, onClose, onSubmit }: ActionFormProps) {
             e.preventDefault()
             setSubmitting(true)
             try {
-              await onSubmit(form)
+              await onSubmit({ ...form, mention_user_ids: mentionUserIds } as any)
             } finally {
               setSubmitting(false)
             }
@@ -173,10 +178,10 @@ function ActionFormModal({ action, onClose, onSubmit }: ActionFormProps) {
         >
           <div>
             <label className="text-xs text-[var(--color-text-muted)]">Description</label>
-            <Textarea
+            <MentionInput
               required
               value={form.description ?? ''}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              onChange={(val, ids) => { setForm({ ...form, description: val }); setMentionUserIds(ids) }}
               rows={3}
             />
           </div>

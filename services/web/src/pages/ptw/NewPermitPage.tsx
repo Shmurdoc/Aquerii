@@ -6,7 +6,7 @@ import {
   formatPermitType, isHighRiskType,
   type PermitType, type PermitRiskLevel, type PermitPayload, type EnergyType,
 } from '@/lib/ptw'
-import { Card, Button, Input, Textarea, Select } from '@/components/ui'
+import { Card, Button, Input, MentionInput, Select } from '@/components/ui'
 import { ArrowLeft, AlertTriangle, Plus, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -21,6 +21,7 @@ export default function NewPermitPage() {
     risk_level: 'medium', work_method_statement: '', ppe_required: '',
     pre_conditions: [],
   })
+  const [mentionUserIds, setMentionUserIds] = useState<string[]>([])
   const [preCondText, setPreCondText] = useState('')
   const [hazards, setHazards] = useState<HazardDraft[]>([])
   const [isolations, setIsolations] = useState<IsolationDraft[]>([])
@@ -35,12 +36,13 @@ export default function NewPermitPage() {
     e.preventDefault()
     setSubmitting(true)
     try {
-      const payload: PermitPayload = {
+      const payload = {
         ...form,
         pre_conditions: preCondText.split('\n').map((s) => s.trim()).filter(Boolean),
         hazards: hazards.filter((h) => h.description && h.control_measure),
         isolations: isolations.filter((i) => i.isolation_point && i.energy_type && i.method),
-      }
+        mention_user_ids: mentionUserIds,
+      } as PermitPayload & { mention_user_ids: string[] }
       const permit = await create.mutateAsync(payload)
       toast.success(`Created ${permit.reference}`)
       navigate(`/ptw/permits/${permit.id}`)
@@ -74,11 +76,11 @@ export default function NewPermitPage() {
           </div>
           <div>
             <label className="text-xs text-[var(--color-text-muted)]">Description</label>
-            <Textarea
+            <MentionInput
               required
               rows={3}
               value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              onChange={(val, ids) => { setForm({ ...form, description: val }); setMentionUserIds(ids) }}
             />
           </div>
           <div className="grid grid-cols-2 gap-3">

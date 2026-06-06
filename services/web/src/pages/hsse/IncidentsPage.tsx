@@ -5,7 +5,7 @@ import {
   SEVERITY_COLORS, formatIncidentType,
   type Incident, type IncidentType, type IncidentSeverity, type IncidentStatus,
 } from '@/lib/hsse'
-import { Card, Badge, Button, Input, Textarea, Select } from '@/components/ui'
+import { Card, Badge, Button, Input, MentionInput, Select, PrintButton, ExportButton } from '@/components/ui'
 import { Plus, AlertTriangle, X } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -24,9 +24,13 @@ export default function IncidentsPage() {
           <AlertTriangle size={20} className="text-red-400" />
           <h1 className="text-xl font-semibold text-[var(--color-text-primary)]">Incidents</h1>
         </div>
-        <Button onClick={() => setShowCreate(true)} variant="primary">
-          <Plus size={14} /> Report Incident
-        </Button>
+        <div className="flex items-center gap-2">
+          <ExportButton entity="incidents" />
+          <PrintButton label="Incidents" />
+          <Button onClick={() => setShowCreate(true)} variant="primary">
+            <Plus size={14} /> Report Incident
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -146,6 +150,7 @@ function IncidentFormModal({ incident, onClose, onSubmit }: IncidentFormProps) {
     title: '', description: '', occurred_at: new Date().toISOString().slice(0, 16),
     location: '', coida_reportable: false,
   })
+  const [mentionUserIds, setMentionUserIds] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
 
   return (
@@ -165,7 +170,7 @@ function IncidentFormModal({ incident, onClose, onSubmit }: IncidentFormProps) {
             e.preventDefault()
             setSubmitting(true)
             try {
-              await onSubmit(form)
+              await onSubmit({ ...form, mention_user_ids: mentionUserIds } as any)
             } finally {
               setSubmitting(false)
             }
@@ -183,10 +188,10 @@ function IncidentFormModal({ incident, onClose, onSubmit }: IncidentFormProps) {
           </div>
           <div>
             <label className="text-xs text-[var(--color-text-muted)]">Description</label>
-            <Textarea
+            <MentionInput
               required
               value={form.description ?? ''}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              onChange={(val, ids) => { setForm({ ...form, description: val }); setMentionUserIds(ids) }}
               rows={3}
             />
           </div>

@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type EmailAccount, sendEmail } from '@/lib/email'
 import { X, Send, Loader2 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { MentionInput } from '@/components/ui'
 
 interface Props {
   workspaceId: string
@@ -19,6 +20,7 @@ export default function ComposeModal({ workspaceId, accounts, onClose }: Props) 
   const [to, setTo]       = useState('')
   const [subject, setSubject] = useState('')
   const [body, setBody]   = useState('')
+  const [mentionUserIds, setMentionUserIds] = useState<string[]>([])
 
   const send = useMutation({
     mutationFn: () => sendEmail(workspaceId, {
@@ -88,12 +90,11 @@ export default function ComposeModal({ workspaceId, accounts, onClose }: Props) 
             />
           </div>
 
-          <textarea
+          <MentionInput
             value={body}
-            onChange={e => setBody(e.target.value)}
+            onChange={(val, ids) => { setBody(val); setMentionUserIds(ids) }}
             placeholder="Write your message…"
             rows={8}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-indigo-500 resize-none"
           />
         </div>
 

@@ -5,7 +5,7 @@ import {
   RISK_LEVEL_COLORS, computeRiskScore, computeRiskLevel,
   type Hazard, type HazardCategory, type HazardStatus, type RiskLevel,
 } from '@/lib/hsse'
-import { Card, Badge, Button, Input, Textarea, Select } from '@/components/ui'
+import { Card, Badge, Button, Input, MentionInput, Select, PrintButton, ExportButton } from '@/components/ui'
 import { Plus, TrendingUp, X } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -35,9 +35,13 @@ export default function HazardsPage() {
           <TrendingUp size={20} className="text-orange-400" />
           <h1 className="text-xl font-semibold text-[var(--color-text-primary)]">Risk Register</h1>
         </div>
-        <Button onClick={() => setShowCreate(true)} variant="primary">
-          <Plus size={14} /> Add Hazard
-        </Button>
+        <div className="flex items-center gap-2">
+          <ExportButton entity="hazards" />
+          <PrintButton label="Risk Register" />
+          <Button onClick={() => setShowCreate(true)} variant="primary">
+            <Plus size={14} /> Add Hazard
+          </Button>
+        </div>
       </div>
 
       <div className="flex gap-2 px-6 py-3 border-b border-[var(--color-glass-border)]">
@@ -154,6 +158,7 @@ function HazardFormModal({ hazard, onClose, onSubmit }: HazardFormProps) {
     likelihood: 3, severity: 3, status: 'identified', location: '',
     potential_consequence: '',
   })
+  const [mentionUserIds, setMentionUserIds] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
 
   const previewScore = computeRiskScore(form.likelihood ?? 1, form.severity ?? 1)
@@ -176,7 +181,7 @@ function HazardFormModal({ hazard, onClose, onSubmit }: HazardFormProps) {
             e.preventDefault()
             setSubmitting(true)
             try {
-              await onSubmit(form)
+              await onSubmit({ ...form, mention_user_ids: mentionUserIds } as any)
             } finally {
               setSubmitting(false)
             }
@@ -193,9 +198,9 @@ function HazardFormModal({ hazard, onClose, onSubmit }: HazardFormProps) {
           </div>
           <div>
             <label className="text-xs text-[var(--color-text-muted)]">Description</label>
-            <Textarea
+            <MentionInput
               value={form.description ?? ''}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              onChange={(val, ids) => { setForm({ ...form, description: val }); setMentionUserIds(ids) }}
               rows={2}
             />
           </div>
