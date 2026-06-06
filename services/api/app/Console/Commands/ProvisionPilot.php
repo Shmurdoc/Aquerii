@@ -37,16 +37,16 @@ class ProvisionPilot extends Command
     private const PILOT_DOMAIN = 'pilot.example.com';
 
     private array $users = [
-        ['name' => 'Thabo Mbeki',       'role' => 'owner',  'title' => 'Mine Manager'],
-        ['name' => 'Lindiwe Sisulu',    'role' => 'admin',  'title' => 'Safety Officer (HSSE)'],
-        ['name' => 'Sipho Nkosi',       'role' => 'admin',  'title' => 'Shift Supervisor'],
-        ['name' => 'Johan Botha',       'role' => 'member', 'title' => 'Equipment Operator'],
-        ['name' => 'David Mokoena',     'role' => 'member', 'title' => 'Maintenance Technician'],
-        ['name' => 'Nosipho Dlamini',   'role' => 'admin',  'title' => 'HR Coordinator'],
-        ['name' => 'Fatima Patel',      'role' => 'member', 'title' => 'Environmental Officer'],
-        ['name' => 'Grace Moloi',       'role' => 'viewer', 'title' => 'Admin Clerk'],
-        ['name' => 'Peter van Wyk',     'role' => 'member', 'title' => 'Storeman (Inventory)'],
-        ['name' => 'Bongani Zuma',      'role' => 'member', 'title' => 'Contractor Supervisor'],
+        ['name' => 'Sipho Mthembu',         'role' => 'owner',  'title' => 'Mine Manager'],
+        ['name' => 'Nomsa Dlamini',         'role' => 'admin',  'title' => 'Safety Officer (HSSE)'],
+        ['name' => 'Thandiwe Naidoo',       'role' => 'admin',  'title' => 'Shift Supervisor'],
+        ['name' => 'Bongani Khumalo',       'role' => 'member', 'title' => 'Equipment Operator'],
+        ['name' => 'Lerato Molefe',         'role' => 'member', 'title' => 'Maintenance Technician'],
+        ['name' => 'Johan van der Merwe',   'role' => 'admin',  'title' => 'HR Coordinator'],
+        ['name' => 'Fatima Patel',          'role' => 'member', 'title' => 'Environmental Officer'],
+        ['name' => 'Sibusiso Ndlovu',       'role' => 'viewer', 'title' => 'Admin Clerk'],
+        ['name' => 'Mandla Zwane',          'role' => 'member', 'title' => 'Storeman (Inventory)'],
+        ['name' => 'Palesa Motaung',        'role' => 'member', 'title' => 'Contractor Supervisor'],
     ];
 
     private array $miningHazards = [
