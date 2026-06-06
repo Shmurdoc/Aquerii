@@ -78,6 +78,7 @@ export function MeetingRoom({ meeting, userName, userEmail, onClose }: Props) {
     return (
       <div className="fixed inset-0 z-50 bg-black">
         <JitsiMeeting
+          meetingId={meeting.id}
           roomName={roomName}
           displayName={userName}
           email={userEmail}
