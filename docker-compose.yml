@@ -509,7 +509,7 @@ services:
       - api_net
       - observability_net
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:13132/"]
+      test: ["CMD", "/otelcol-contrib", "validate", "--config=/etc/otelcol-contrib/config.yaml"]
       interval: 30s
       timeout: 10s
       retries: 3
