@@ -16,6 +16,7 @@ class ForecastController extends Controller
         $deals = CrmDeal::where('workspace_id', $workspace->id)
             ->whereNull('won_at')
             ->whereNull('lost_at')
+            ->with('stage')
             ->get();
 
         $totalPipelineValue = $deals->sum(fn ($deal) => ($deal->value ?? 0) * ($deal->probability ?? 100) / 100);
@@ -26,9 +27,9 @@ class ForecastController extends Controller
 
             return [
                 'pipeline_id' => $group->first()->pipeline_id,
-                'pipeline_name' => $pipeline?->name,
-                'total_value' => $group->sum('value'),
-                'weighted_forecast' => $group->sum(fn ($d) => ($d->value ?? 0) * ($d->probability ?? 100) / 100),
+                'pipeline_name' => $pipeline?->name ?? 'Unknown',
+                'amount' => (float) $group->sum('value'),
+                'weighted' => (float) $group->sum(fn ($d) => ($d->value ?? 0) * ($d->probability ?? 100) / 100),
                 'deal_count' => $group->count(),
             ];
         })->values();
@@ -36,17 +37,17 @@ class ForecastController extends Controller
         $byStage = $deals->groupBy('stage_id')->map(function ($group) {
             return [
                 'stage_id' => $group->first()->stage_id,
-                'stage_name' => $group->first()->stage?->name,
-                'total_value' => $group->sum('value'),
-                'weighted_forecast' => $group->sum(fn ($d) => ($d->value ?? 0) * ($d->probability ?? 100) / 100),
+                'stage_name' => $group->first()->stage?->name ?? 'Unknown',
+                'amount' => (float) $group->sum('value'),
+                'weighted' => (float) $group->sum(fn ($d) => ($d->value ?? 0) * ($d->probability ?? 100) / 100),
                 'deal_count' => $group->count(),
             ];
         })->values();
 
         return response()->json([
             'data' => [
-                'total_pipeline_value' => round($totalPipelineValue, 2),
-                'weighted_forecast' => round($weightedForecast, 2),
+                'total_pipeline' => round((float) $totalPipelineValue, 2),
+                'weighted_forecast' => round((float) $weightedForecast, 2),
                 'by_pipeline' => $byPipeline,
                 'by_stage' => $byStage,
             ],
@@ -65,10 +66,10 @@ class ForecastController extends Controller
             $owner = $group->first()->owner;
 
             return [
-                'owner_id' => $group->first()->owner_id,
-                'owner_name' => $owner?->name,
-                'total_value' => $group->sum('value'),
-                'weighted_forecast' => $group->sum(fn ($d) => ($d->value ?? 0) * ($d->probability ?? 100) / 100),
+                'rep_id' => $group->first()->owner_id,
+                'rep_name' => $owner?->name ?? 'Unknown',
+                'amount' => (float) $group->sum('value'),
+                'weighted' => (float) $group->sum(fn ($d) => ($d->value ?? 0) * ($d->probability ?? 100) / 100),
                 'deal_count' => $group->count(),
             ];
         })->values();
@@ -88,9 +89,9 @@ class ForecastController extends Controller
 
             return [
                 'pipeline_id' => $group->first()->pipeline_id,
-                'pipeline_name' => $pipeline?->name,
-                'total_value' => $group->sum('value'),
-                'weighted_forecast' => $group->sum(fn ($d) => ($d->value ?? 0) * ($d->probability ?? 100) / 100),
+                'pipeline_name' => $pipeline?->name ?? 'Unknown',
+                'amount' => (float) $group->sum('value'),
+                'weighted' => (float) $group->sum(fn ($d) => ($d->value ?? 0) * ($d->probability ?? 100) / 100),
                 'deal_count' => $group->count(),
             ];
         })->values();
