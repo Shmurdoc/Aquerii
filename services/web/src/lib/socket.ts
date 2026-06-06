@@ -5,7 +5,10 @@ import type { AppNotification } from '@/stores/notificationStore'
 
 let socket: Socket | null = null
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null
+let genericReconnectTimer: ReturnType<typeof setTimeout> | null = null
+let reconnectAttempts = 0
 const MAX_BACKOFF = 30_000
+const GENERIC_DISCONNECT_GRACE_MS = 30_000
 
 export interface SocketEventMap {
   notification: (n: AppNotification) => void
@@ -17,8 +20,74 @@ export interface SocketEventMap {
   connect_error: (err: Error) => void
 }
 
+function attachGlobalListeners(s: Socket) {
+  s.on('connect', () => {
+    reconnectAttempts = 0
+    if (genericReconnectTimer) {
+      clearTimeout(genericReconnectTimer)
+      genericReconnectTimer = null
+    }
+    if (import.meta.env.DEV) console.debug('[realtime] connected', s.id)
+  })
+
+  s.on('disconnect', (reason) => {
+    if (import.meta.env.DEV) console.debug('[realtime] disconnected', reason)
+
+    if (reason === 'io server disconnect') {
+      // Server forced disconnect — likely auth/session expired. Refresh now.
+      refreshTokenAndReconnect()
+      return
+    }
+
+    if (reason === 'io client disconnect') {
+      // We disconnected on purpose — do nothing.
+      return
+    }
+
+    // Generic disconnect (transport close / transport error / ping timeout).
+    // socket.io's built-in reconnection will retry with backoff. If it can't
+    // re-establish within the grace window, force a token refresh and a
+    // fresh socket so a stale token can't keep blocking us indefinitely.
+    if (genericReconnectTimer) clearTimeout(genericReconnectTimer)
+    genericReconnectTimer = setTimeout(() => {
+      genericReconnectTimer = null
+      if (!socket?.connected) {
+        refreshTokenAndReconnect()
+      }
+    }, GENERIC_DISCONNECT_GRACE_MS)
+  })
+
+  s.on('connect_error', (err) => {
+    reconnectAttempts++
+    if (
+      err.message === 'AUTH_REQUIRED' ||
+      err.message === 'AUTH_INVALID' ||
+      reconnectAttempts >= 3
+    ) {
+      refreshTokenAndReconnect()
+    }
+  })
+
+  s.on('notification', (n: AppNotification) => {
+    useNotificationStore.getState().addNotification(n)
+  })
+
+  s.on('notification:read', (notificationId: string) => {
+    useNotificationStore.getState().markRead(notificationId)
+  })
+}
+
 export function getSocket(): Socket {
   if (socket?.connected) return socket
+
+  // Explicitly tear down any stale instance before creating a new one,
+  // otherwise listeners on the orphaned socket can still fire and dispatch
+  // into the stores after a brief network blip.
+  if (socket) {
+    socket.removeAllListeners()
+    socket.disconnect()
+    socket = null
+  }
 
   const { token } = useAuthStore.getState()
 
@@ -32,27 +101,7 @@ export function getSocket(): Socket {
     reconnectionDelayMax: MAX_BACKOFF,
   })
 
-  socket.on('connect', () => {
-    if (import.meta.env.DEV) console.debug('[realtime] connected', socket?.id)
-  })
-
-  socket.on('disconnect', (reason) => {
-    if (import.meta.env.DEV) console.debug('[realtime] disconnected', reason)
-  })
-
-  socket.on('connect_error', (err) => {
-    if (err.message === 'AUTH_REQUIRED' || err.message === 'AUTH_INVALID') {
-      refreshTokenAndReconnect()
-    }
-  })
-
-  socket.on('notification', (n: AppNotification) => {
-    useNotificationStore.getState().addNotification(n)
-  })
-
-  socket.on('notification:read', (notificationId: string) => {
-    useNotificationStore.getState().markRead(notificationId)
-  })
+  attachGlobalListeners(socket)
 
   return socket
 }
@@ -65,11 +114,22 @@ async function refreshTokenAndReconnect() {
 
     const { default: axios } = await import('axios')
     const res = await axios.post('/api/auth/refresh', { token })
-    const newToken = res.data.data.token
+    const newToken: string = res.data.data?.token ?? res.data.token
+    if (!newToken) throw new Error('Refresh response missing token')
 
     useAuthStore.setState((s) => ({ ...s, token: newToken }))
-    socket?.disconnect()
-    socket = null
+
+    // Force a fresh socket with the new token.
+    if (socket) {
+      socket.removeAllListeners()
+      socket.disconnect()
+      socket = null
+    }
+    if (genericReconnectTimer) {
+      clearTimeout(genericReconnectTimer)
+      genericReconnectTimer = null
+    }
+    reconnectAttempts = 0
     reconnectTimer = setTimeout(() => {
       reconnectTimer = null
       getSocket()
