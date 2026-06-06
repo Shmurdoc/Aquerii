@@ -1,28 +1,42 @@
 import { useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, type MutateOptions } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useNotificationStore } from '@/stores/notificationStore'
 import { useAuthStore } from '@/stores/authStore'
 import { getSocket } from '@/lib/socket'
 import type { AppNotification } from '@/stores/notificationStore'
 
+const PER_PAGE = 20
+
+interface NotificationsPage {
+  data: AppNotification[]
+  last_page: number
+  current_page: number
+}
+
+async function fetchNotificationsPage(workspaceId: string, page: number): Promise<NotificationsPage> {
+  const res = await api.get(`/workspaces/${workspaceId}/notifications`, {
+    params: { page, per_page: PER_PAGE },
+  })
+  return res.data
+}
+
 export function useNotifications() {
   const workspace = useAuthStore((s) => s.workspace)
-  const { setNotifications, addNotification, markRead, markAllRead, unreadCount } = useNotificationStore()
+  const { setNotifications, appendNotifications, addNotification, markRead, markAllRead, unreadCount } = useNotificationStore()
   const qc = useQueryClient()
 
   const { data } = useQuery({
     queryKey: ['notifications', workspace?.id],
-    queryFn: () => api.get(`/workspaces/${workspace!.id}/notifications`).then((r) => r.data.data),
+    queryFn: () => fetchNotificationsPage(workspace!.id, 1),
     enabled: !!workspace,
     refetchInterval: 30_000,
   })
 
   useEffect(() => {
-    if (data) setNotifications(data)
+    if (data) setNotifications(data.data, data.current_page < data.last_page)
   }, [data, setNotifications])
 
-  // Real-time socket push
   useEffect(() => {
     if (!workspace) return
     const socket = getSocket()
@@ -41,10 +55,21 @@ export function useNotifications() {
     onSuccess: () => { markAllRead(); qc.invalidateQueries({ queryKey: ['notifications'] }) },
   })
 
+  const loadMore = async (page: number) => {
+    if (!workspace) return { hasMore: false }
+    const next = await fetchNotificationsPage(workspace.id, page)
+    const hasMore = next.current_page < next.last_page
+    appendNotifications(next.data, hasMore)
+    return { hasMore }
+  }
+
   return {
     unreadCount,
     addNotification,
-    markRead: markReadMutation.mutate,
-    markAllRead: markAllReadMutation.mutate,
+    markRead: (id: string, options?: MutateOptions<unknown, unknown, string>) =>
+      markReadMutation.mutate(id, options),
+    markAllRead: (options?: MutateOptions<unknown, unknown, void>) =>
+      markAllReadMutation.mutate(undefined, options),
+    loadMore,
   }
 }

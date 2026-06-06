@@ -13,14 +13,22 @@ class NotificationController extends Controller
     // GET /workspaces/{workspace}/notifications
     public function index(Request $request, Workspace $workspace): JsonResponse
     {
-        $notifications = DB::table('notifications')
+        $perPage = (int) $request->query('per_page', 20);
+        $perPage = max(1, min(100, $perPage));
+
+        $page = DB::table('notifications')
             ->where('workspace_id', $workspace->id)
             ->where('user_id', $request->user()->id)
             ->orderBy('created_at', 'desc')
-            ->limit(50)
-            ->get();
+            ->paginate($perPage);
 
-        return response()->json(['data' => $notifications]);
+        return response()->json([
+            'data' => $page->items(),
+            'current_page' => $page->currentPage(),
+            'last_page' => $page->lastPage(),
+            'per_page' => $page->perPage(),
+            'total' => $page->total(),
+        ]);
     }
 
     // PATCH /workspaces/{workspace}/notifications/{notification}/read
