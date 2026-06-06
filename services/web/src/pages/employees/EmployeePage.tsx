@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Search, Clock, Plus, X, Upload } from 'lucide-react'
+import { PrintButton, ExportButton } from '@/components/ui'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
 import toast from 'react-hot-toast'
@@ -604,7 +605,7 @@ function ExpensesTab({ wid }: { wid: string }) {
   const role = useAuthStore((s) => s.role)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({
-    title: '', category: 'travel', amount: '', currency: 'USD',
+    title: '', category: 'travel', amount: '', currency: 'ZAR',
     expense_date: '', description: '', receipt: null as File | null,
   })
 
@@ -636,7 +637,7 @@ function ExpensesTab({ wid }: { wid: string }) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['expenses', wid] })
       setShowForm(false)
-      setForm({ title: '', category: 'travel', amount: '', currency: 'USD', expense_date: '', description: '', receipt: null })
+      setForm({ title: '', category: 'travel', amount: '', currency: 'ZAR', expense_date: '', description: '', receipt: null })
       toast.success('Expense claim submitted.')
     },
     onError: () => toast.error('Failed to submit expense.'),
@@ -837,8 +838,10 @@ export default function EmployeePage() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-6 py-4 border-b border-[var(--color-glass-border)] shrink-0">
-        <h1 className="text-lg font-semibold text-[var(--color-text-primary)]">Employees</h1>
+      <div className="px-6 py-4 border-b border-[var(--color-glass-border)] shrink-0 flex items-center gap-3">
+        <h1 className="text-lg font-semibold text-[var(--color-text-primary)] flex-1">Employees</h1>
+        <ExportButton entity="employees" />
+        <PrintButton label="Employees" />
       </div>
 
       <div className="flex gap-0 px-6 border-b border-[var(--color-glass-border)] shrink-0">

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
-import { useKnowledgeBase, useCreateKbArticle, useDeleteKbArticle, useVoteKbArticle, KnowledgeBaseArticle } from '@/lib/support'
-import { Search, Plus, ThumbsUp, ThumbsDown, Trash2, BookOpen, Ticket } from 'lucide-react'
+import { useKnowledgeBase, useCreateKbArticle, useUpdateKbArticle, useDeleteKbArticle, useVoteKbArticle, KnowledgeBaseArticle } from '@/lib/support'
+import { Search, Plus, ThumbsUp, ThumbsDown, Trash2, Pencil, X, Check, BookOpen, Ticket } from 'lucide-react'
 import { Button, Input, Badge } from '@/components/ui'
 
 export default function KnowledgeBasePage() {
@@ -84,8 +84,39 @@ export default function KnowledgeBasePage() {
 
 function ArticleCard({ article, onDelete }: { article: KnowledgeBaseArticle; onDelete: () => void }) {
   const [expanded, setExpanded] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [editForm, setEditForm] = useState({ title: article.title, content: article.content, category: article.category ?? '', is_published: article.is_published })
   const workspace = useAuthStore(s => s.workspace)
   const vote = useVoteKbArticle(workspace?.id, article.id)
+  const updateArticle = useUpdateKbArticle(workspace?.id, article.id)
+
+  const handleSave = () => {
+    if (!editForm.title.trim()) return
+    updateArticle.mutate(editForm as any, {
+      onSuccess: () => setEditing(false),
+    })
+  }
+
+  if (editing) {
+    return (
+      <div className="bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-xl p-4 space-y-3">
+        <Input placeholder="Title" value={editForm.title} onChange={e => setEditForm(f => ({ ...f, title: e.target.value }))} containerClassName="!mb-0" />
+        <textarea placeholder="Content (Markdown supported)" value={editForm.content} onChange={e => setEditForm(f => ({ ...f, content: e.target.value }))} rows={6}
+          className="w-full bg-[var(--color-bg-input)] border border-[var(--color-glass-border)] rounded-lg px-3 py-1.5 text-sm text-[var(--color-text-primary)] outline-none focus:ring-1 focus:ring-[var(--color-accent)] placeholder-[var(--color-text-muted)] resize-none font-mono" />
+        <div className="flex items-center gap-3">
+          <Input placeholder="Category" value={editForm.category} onChange={e => setEditForm(f => ({ ...f, category: e.target.value }))} containerClassName="!mb-0 flex-1" />
+          <label className="flex items-center gap-2 text-xs text-[var(--color-text-secondary)]">
+            <input type="checkbox" checked={editForm.is_published} onChange={e => setEditForm(f => ({ ...f, is_published: e.target.checked }))} className="accent-[var(--color-accent)]" />
+            Published
+          </label>
+        </div>
+        <div className="flex justify-end gap-2">
+          <Button variant="ghost" size="sm" onClick={() => setEditing(false)}>Cancel</Button>
+          <Button size="sm" onClick={handleSave} disabled={!editForm.title.trim()} loading={updateArticle.isPending}>Save</Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-xl overflow-hidden">
@@ -109,9 +140,14 @@ function ArticleCard({ article, onDelete }: { article: KnowledgeBaseArticle; onD
             {article.author && <span>By {article.author.name}</span>}
           </div>
         </div>
-        <Button variant="ghost" size="sm" iconOnly onClick={e => { e.stopPropagation(); onDelete() }} title="Delete">
-          <Trash2 size={13} />
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="sm" iconOnly onClick={e => { e.stopPropagation(); setEditing(true); setEditForm({ title: article.title, content: article.content, category: article.category ?? '', is_published: article.is_published }) }} title="Edit">
+            <Pencil size={12} />
+          </Button>
+          <Button variant="ghost" size="sm" iconOnly onClick={e => { e.stopPropagation(); onDelete() }} title="Delete">
+            <Trash2 size={13} />
+          </Button>
+        </div>
       </div>
       {expanded && (
         <div className="border-t border-[var(--color-glass-border)] px-4 py-3 space-y-3">

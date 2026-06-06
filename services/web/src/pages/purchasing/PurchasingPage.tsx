@@ -14,7 +14,7 @@ function NewPOModal({ onClose }: { onClose: () => void }) {
   const [form, setForm] = useState({
     supplier_name:  '',
     supplier_email: '',
-    currency:       'USD',
+    currency:       'ZAR',
     order_date:     today,
     expected_date:  '',
     notes:          '',

@@ -243,7 +243,7 @@ export default function ReportsPage() {
       ]
     : []
 
-  function fmtCurrency(n: number) { return formatCurrency(n, 'USD') }
+  function fmtCurrency(n: number) { return formatCurrency(n, 'ZAR') }
 
   function renderOverview() {
     if (dashLoading) return <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading reports...</div>

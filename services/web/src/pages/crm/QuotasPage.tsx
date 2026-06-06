@@ -21,7 +21,7 @@ export default function QuotasPage() {
 
   const [showForm, setShowForm] = useState(false)
   const [editing, setEditing] = useState<string | null>(null)
-  const [form, setForm] = useState({ user_id: '', period: '', target_amount: 0, currency: 'USD', pipeline_id: '' })
+  const [form, setForm] = useState({ user_id: '', period: '', target_amount: 0, currency: 'ZAR', pipeline_id: '' })
 
   const quotas = data?.data ?? []
 
@@ -35,7 +35,7 @@ export default function QuotasPage() {
       createQuota.mutate(form as any)
     }
     setShowForm(false)
-    setForm({ user_id: '', period: '', target_amount: 0, currency: 'USD', pipeline_id: '' })
+    setForm({ user_id: '', period: '', target_amount: 0, currency: 'ZAR', pipeline_id: '' })
   }
 
   const startEdit = (q: any) => {
@@ -48,7 +48,7 @@ export default function QuotasPage() {
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold text-[var(--color-text-primary)]">Quotas</h1>
-        <Button size="sm" onClick={() => { setEditing(null); setForm({ user_id: '', period: '', target_amount: 0, currency: 'USD', pipeline_id: '' }); setShowForm(v => !v) }}>
+        <Button size="sm" onClick={() => { setEditing(null); setForm({ user_id: '', period: '', target_amount: 0, currency: 'ZAR', pipeline_id: '' }); setShowForm(v => !v) }}>
           <Plus size={12} /> Add quota
         </Button>
       </div>

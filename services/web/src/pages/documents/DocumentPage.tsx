@@ -3,18 +3,30 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
+import { usePresence } from '@/hooks/usePresence'
 import { getSocket } from '@/lib/socket'
 import * as Y from 'yjs'
 import { BlockNoteEditor } from '@blocknote/core'
 import { BlockNoteViewRaw as BlockNoteView, useCreateBlockNote } from '@blocknote/react'
 import '@blocknote/react/style.css'
 
+function userIdToColor(id: string): string {
+  let hash = 0
+  for (let i = 0; i < id.length; i++) {
+    hash = ((hash << 5) - hash) + id.charCodeAt(i)
+    hash |= 0
+  }
+  return `hsl(${Math.abs(hash) % 360}, 60%, 50%)`
+}
+
 export default function DocumentPage() {
   const { docId }   = useParams<{ docId: string }>()
   const workspace   = useAuthStore(s => s.workspace)
+  const currentUser = useAuthStore(s => s.user)
   const ydoc        = useMemo(() => new Y.Doc(), [docId])
   const synced      = useRef(false)
   const [titleDraft, setTitleDraft] = useState<string | null>(null)
+  const onlineUsers = usePresence(docId ? `doc:${docId}` : null)
 
   // Load document metadata
   const { data: doc } = useQuery({
@@ -71,7 +83,7 @@ export default function DocumentPage() {
       fragment: ydoc.getXmlFragment('content'),
       user: {
         name: workspace?.name ?? 'User',
-        color: '#6366f1',
+        color: currentUser?.id ? userIdToColor(currentUser.id) : '#6366f1',
       },
     },
   })
@@ -101,25 +113,41 @@ export default function DocumentPage() {
     <div className="flex flex-col h-full bg-gray-950">
       {/* Doc header */}
       <div className="px-8 py-4 border-b border-gray-800">
-        <input
-          value={currentTitle}
-          onChange={e => setTitleDraft(e.target.value)}
-          onFocus={() => setTitleDraft(doc.title ?? '')}
-          onBlur={() => {
-            if (titleDraft !== null && titleDraft.trim() && titleDraft !== doc.title) {
-              saveTitle.mutate(titleDraft.trim())
-            }
-            setTitleDraft(null)
-          }}
-          onKeyDown={e => {
-            if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
-            if (e.key === 'Escape') { setTitleDraft(null); (e.target as HTMLInputElement).blur() }
-          }}
-          className="text-xl font-semibold text-white bg-transparent border-none outline-none w-full
-                     hover:bg-gray-800/40 focus:bg-gray-800/40 rounded px-1 -mx-1 transition-colors
-                     placeholder-gray-600"
-          placeholder="Untitled"
-        />
+        <div className="flex items-center gap-3">
+          <input
+            value={currentTitle}
+            onChange={e => setTitleDraft(e.target.value)}
+            onFocus={() => setTitleDraft(doc.title ?? '')}
+            onBlur={() => {
+              if (titleDraft !== null && titleDraft.trim() && titleDraft !== doc.title) {
+                saveTitle.mutate(titleDraft.trim())
+              }
+              setTitleDraft(null)
+            }}
+            onKeyDown={e => {
+              if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
+              if (e.key === 'Escape') { setTitleDraft(null); (e.target as HTMLInputElement).blur() }
+            }}
+            className="text-xl font-semibold text-white bg-transparent border-none outline-none flex-1
+                       hover:bg-gray-800/40 focus:bg-gray-800/40 rounded px-1 -mx-1 transition-colors
+                       placeholder-gray-600"
+            placeholder="Untitled"
+          />
+          {onlineUsers.length > 0 && (
+            <div className="flex items-center gap-1.5 shrink-0">
+              <div className="flex items-center -space-x-1.5">
+                {onlineUsers.slice(0, 5).map(u => (
+                  <div key={u.userId} className="w-6 h-6 rounded-full border-2 flex items-center justify-center text-[9px] font-bold"
+                    style={{ background: userIdToColor(u.userId), borderColor: '#030712', color: '#fff' }}
+                    title={u.name}>
+                    {u.name?.[0] ?? '?'}
+                  </div>
+                ))}
+              </div>
+              <span className="text-[10px] text-gray-500">{onlineUsers.length} online</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Editor */}

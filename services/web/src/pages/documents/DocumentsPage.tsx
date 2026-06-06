@@ -13,12 +13,14 @@ import {
 } from '@/lib/paperless'
 import {
   Plus, FileText, Upload, Download, Trash2, Search,
-  Loader2, File, ChevronRight,
+  Loader2, File, ChevronRight, Folder, FolderOpen, MoreVertical, Pencil, Check, X,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import toast from 'react-hot-toast'
 import clsx from 'clsx'
 import { Button, Input } from '@/components/ui'
+import { useDocumentFolders, useCreateFolder, useRenameFolder, useDeleteFolder, type DocumentFolder } from '@/hooks/useDocuments'
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItems, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/DropdownMenu'
 
 import PaperlessFileDrawer from '@/components/documents/PaperlessFileDrawer'
 
@@ -40,22 +42,176 @@ function fileIcon(name: string) {
   return '📎'
 }
 
-function NotesTab() {
+function FolderTree({ folders, parentId, selectedId, onSelect, onRename, onDelete, onContextEdit }:
+  { folders: DocumentFolder[]; parentId: string | null; selectedId: string | null; onSelect: (id: string | null) => void; onRename: (id: string, name: string) => void; onDelete: (id: string) => void; onContextEdit: (id: string, name: string) => void }) {
+  const children = folders.filter(f => f.parent_id === parentId).sort((a, b) => a.position - b.position)
+  if (children.length === 0) return null
+
+  return (
+    <div className="space-y-0.5">
+      {children.map(folder => (
+        <FolderItem key={folder.id} folder={folder} folders={folders} selectedId={selectedId}
+          onSelect={onSelect} onRename={onRename} onDelete={onDelete} onContextEdit={onContextEdit} />
+      ))}
+    </div>
+  )
+}
+
+function FolderItem({ folder, folders, selectedId, onSelect, onRename, onDelete, onContextEdit }:
+  { folder: DocumentFolder; folders: DocumentFolder[]; selectedId: string | null; onSelect: (id: string | null) => void; onRename: (id: string, name: string) => void; onDelete: (id: string) => void; onContextEdit: (id: string, name: string) => void }) {
+  const [renaming, setRenaming] = useState(false)
+  const [renameDraft, setRenameDraft] = useState(folder.name)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const hasChildren = folders.some(f => f.parent_id === folder.id)
+  const isSelected = selectedId === folder.id
+
+  const handleRename = () => {
+    if (renameDraft.trim() && renameDraft !== folder.name) {
+      onRename(folder.id, renameDraft.trim())
+    }
+    setRenaming(false)
+  }
+
+  return (
+    <div>
+      <div
+        className={clsx(
+          'flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-sm cursor-pointer transition-colors group',
+          isSelected
+            ? 'bg-[var(--color-accent-light)] text-[var(--color-accent-text)]'
+            : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-primary)]',
+        )}
+        onClick={() => onSelect(isSelected ? null : folder.id)}
+      >
+        {hasChildren ? <FolderOpen size={14} className="shrink-0" /> : <Folder size={14} className="shrink-0" />}
+        {renaming ? (
+          <input
+            ref={inputRef}
+            value={renameDraft}
+            onChange={e => setRenameDraft(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') handleRename(); if (e.key === 'Escape') setRenaming(false) }}
+            onBlur={handleRename}
+            className="flex-1 min-w-0 bg-transparent outline-none text-xs border-b border-[var(--color-accent)]"
+            autoFocus
+            onClick={e => e.stopPropagation()}
+          />
+        ) : (
+          <span className="flex-1 truncate text-xs">{folder.name}</span>
+        )}
+        {!renaming && (
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 flex" onClick={e => e.stopPropagation()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="p-0.5 rounded hover:bg-[var(--color-bg-hover)]">
+                  <MoreVertical size={11} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuItems align="start">
+                <DropdownMenuItem icon={Pencil} label="Rename" onClick={() => { setRenaming(true); setRenameDraft(folder.name); setTimeout(() => inputRef.current?.focus(), 0) }} />
+                <DropdownMenuSeparator />
+                <DropdownMenuItem icon={Trash2} label="Delete" onClick={() => { if (confirm('Delete this folder? Documents inside will be unlinked.')) onDelete(folder.id) }} className="text-red-400 hover:text-red-300" />
+              </DropdownMenuItems>
+            </DropdownMenu>
+          </div>
+        )}
+      </div>
+      {hasChildren && (
+        <div className="ml-3 mt-0.5 border-l border-[var(--color-glass-border)] pl-1">
+          <FolderTree folders={folders} parentId={folder.id} selectedId={selectedId} onSelect={onSelect} onRename={onRename} onDelete={onDelete} onContextEdit={onContextEdit} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function FolderSidebar({ selectedFolderId, onSelectFolder }: { selectedFolderId: string | null; onSelectFolder: (id: string | null) => void }) {
+  const { data: folders = [] } = useDocumentFolders()
+  const createFolder = useCreateFolder()
+  const renameFolder = useRenameFolder()
+  const deleteFolder = useDeleteFolder()
+  const [adding, setAdding] = useState(false)
+  const [newName, setNewName] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleCreate = () => {
+    const name = newName.trim()
+    if (!name) return
+    createFolder.mutate({ name, parent_id: selectedFolderId ?? undefined })
+    setNewName('')
+    setAdding(false)
+  }
+
+  return (
+    <div className="w-56 shrink-0 border-r flex flex-col" style={{ borderColor: 'var(--color-glass-border)', background: 'var(--color-bg-surface)' }}>
+      <div className="flex items-center justify-between px-3 py-2.5 border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
+        <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>Folders</span>
+        <button
+          onClick={() => setAdding(true)}
+          className="p-0.5 rounded hover:bg-[var(--color-bg-hover)]"
+          style={{ color: 'var(--color-text-muted)' }}
+          title="New Folder"
+        >
+          <Plus size={13} />
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-auto p-1.5 space-y-0.5">
+        <div
+          onClick={() => onSelectFolder(null)}
+          className={clsx(
+            'flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-sm cursor-pointer transition-colors',
+            selectedFolderId === null
+              ? 'bg-[var(--color-accent-light)] text-[var(--color-accent-text)]'
+              : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-primary)]',
+          )}
+        >
+          <FolderOpen size={14} className="shrink-0" />
+          <span className="text-xs">All Documents</span>
+        </div>
+
+        <FolderTree folders={folders} parentId={null} selectedId={selectedFolderId} onSelect={onSelectFolder}
+          onRename={(id, name) => renameFolder.mutate({ folderId: id, name })}
+          onDelete={(id) => deleteFolder.mutate(id)}
+          onContextEdit={() => {}} />
+
+        {adding && (
+          <div className="flex items-center gap-1 px-2 py-1">
+            <input
+              ref={inputRef}
+              value={newName}
+              onChange={e => setNewName(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') handleCreate(); if (e.key === 'Escape') { setAdding(false); setNewName('') } }}
+              placeholder="Folder name"
+              className="flex-1 min-w-0 bg-transparent text-xs outline-none border-b border-[var(--color-accent)]"
+              style={{ color: 'var(--color-text-primary)' }}
+              autoFocus
+            />
+            <button onClick={handleCreate} className="p-0.5 rounded hover:bg-[var(--color-bg-hover)]" style={{ color: 'var(--color-accent-text)' }}><Check size={11} /></button>
+            <button onClick={() => { setAdding(false); setNewName('') }} className="p-0.5 rounded hover:bg-[var(--color-bg-hover)]" style={{ color: 'var(--color-text-muted)' }}><X size={11} /></button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function NotesTab({ folderId }: { folderId: string | null }) {
   const workspace = useAuthStore(s => s.workspace)
   const navigate  = useNavigate()
   const qc        = useQueryClient()
 
   const { data: docs = [], isLoading } = useQuery({
-    queryKey: ['documents', workspace?.id],
+    queryKey: ['documents', workspace?.id, folderId],
     queryFn: async () => {
-      const res = await api.get(`/workspaces/${workspace!.id}/documents`)
+      const params = folderId ? { folder_id: folderId } : {}
+      const res = await api.get(`/workspaces/${workspace!.id}/documents`, { params })
       return res.data.data
     },
     enabled: !!workspace,
   })
 
   const createDoc = useMutation({
-    mutationFn: () => api.post(`/workspaces/${workspace!.id}/documents`, { title: 'Untitled' }),
+    mutationFn: () => api.post(`/workspaces/${workspace!.id}/documents`, { title: 'Untitled', folder_id: folderId ?? undefined }),
     onSuccess: (res) => {
       qc.invalidateQueries({ queryKey: ['documents', workspace?.id] })
       navigate(`/documents/${res.data.data.id}`)
@@ -84,7 +240,7 @@ function NotesTab() {
       ) : docs.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16" style={{ color: 'var(--color-text-muted)' }}>
           <FileText size={36} className="mb-3 opacity-30" />
-          <p className="text-sm">No notes yet. Create one to get started.</p>
+          <p className="text-sm">No notes{folderId ? ' in this folder' : ' yet'}. Create one to get started.</p>
         </div>
       ) : (
         <div className="space-y-0.5">
@@ -292,33 +448,37 @@ function FilesTab() {
 
 export default function DocumentsPage() {
   const [tab, setTab] = useState<Tab>('notes')
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="px-6 pt-5 pb-0 border-b" style={{ borderColor: 'var(--color-glass-border)' }}>
-        <h1 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>Documents</h1>
+    <div className="flex h-full">
+      <FolderSidebar selectedFolderId={selectedFolderId} onSelectFolder={setSelectedFolderId} />
+      <div className="flex flex-col flex-1 min-w-0">
+        <div className="px-6 pt-5 pb-0 border-b shrink-0" style={{ borderColor: 'var(--color-glass-border)' }}>
+          <h1 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>Documents</h1>
 
-        <div className="flex gap-0">
-          {(['notes', 'files'] as Tab[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={clsx(
-                'px-4 py-2 text-sm font-medium border-b-2 transition-colors capitalize',
-              )}
-              style={tab === t
-                ? { borderColor: 'var(--color-accent)', color: 'var(--color-text-primary)' }
-                : { borderColor: 'transparent', color: 'var(--color-text-muted)' }
-              }
-            >
-              {t}
-            </button>
-          ))}
+          <div className="flex gap-0">
+            {(['notes', 'files'] as Tab[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={clsx(
+                  'px-4 py-2 text-sm font-medium border-b-2 transition-colors capitalize',
+                )}
+                style={tab === t
+                  ? { borderColor: 'var(--color-accent)', color: 'var(--color-text-primary)' }
+                  : { borderColor: 'transparent', color: 'var(--color-text-muted)' }
+                }
+              >
+                {t}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="flex-1 overflow-auto p-6" style={{ background: 'var(--color-bg-base)' }}>
-        {tab === 'notes' ? <NotesTab /> : <FilesTab />}
+        <div className="flex-1 overflow-auto p-6" style={{ background: 'var(--color-bg-base)' }}>
+          {tab === 'notes' ? <NotesTab folderId={selectedFolderId} /> : <FilesTab />}
+        </div>
       </div>
     </div>
   )

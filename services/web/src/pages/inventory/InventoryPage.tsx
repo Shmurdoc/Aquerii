@@ -7,6 +7,7 @@ import {
 } from '@/hooks/useInventory'
 import { Product, StockItem, StockStatus, InventoryCategory, formatCurrency, formatDate } from '@/lib/erp'
 import StatusBadge from '@/components/erp/StatusBadge'
+import { PrintButton, ExportButton } from '@/components/ui'
 
 const STOCK_STATUSES: StockStatus[] = ['in_stock', 'reserved', 'sold', 'damaged', 'expired']
 
@@ -152,7 +153,7 @@ function StockPanel({ product, onClose }: { product: Product; onClose: () => voi
 function NewProductModal({ categoryId, onClose }: { categoryId?: string; onClose: () => void }) {
   const [form, setForm] = useState({
     name: '', sku: '', barcode: '', description: '',
-    unit_price: '0', unit: 'pc', currency: 'USD',
+    unit_price: '0', unit: 'pc', currency: 'ZAR',
     category_id: categoryId ?? '',
   })
   const create = useCreateProduct()
@@ -421,6 +422,8 @@ export default function InventoryPage() {
           <h1 className="text-base font-semibold text-gray-100">
             {selectedCategoryId ? (categories.find((c) => c.id === selectedCategoryId)?.name ?? 'Products') : 'All Products'}
           </h1>
+          <ExportButton entity="products" />
+          <PrintButton label="Inventory" />
           <div className="flex-1" />
           <div className="relative">
             <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500" />

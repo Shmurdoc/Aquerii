@@ -20,7 +20,11 @@ import {
   MessageSquare,
   LayoutGrid,
   type LucideIcon,
+  Sparkles,
+  ArrowRight,
 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { staggerStyle } from '@/lib/motion'
 
 interface DashboardMetrics {
   open_items: number
@@ -37,13 +41,129 @@ const defaultMetrics: DashboardMetrics = {
 function WidgetErrorFallback({ label }: { label: string }) {
   return (
     <div
-      className="rounded-xl border p-4 flex items-center justify-center min-h-[120px]"
+      className="rounded-md border border-[var(--color-glass-border)] p-4 flex items-center justify-center min-h-[120px] bg-[var(--color-glass-bg)]"
+    >
+      <p className="text-label text-[var(--color-text-muted)]">Failed to load {label}</p>
+    </div>
+  )
+}
+
+function timeAwareGreeting(date: Date, firstName: string): string {
+  const h = date.getHours()
+  if (h < 5)  return `Still up, ${firstName}?`
+  if (h < 12) return `Good morning, ${firstName}`
+  if (h < 17) return `Good afternoon, ${firstName}`
+  if (h < 22) return `Good evening, ${firstName}`
+  return `Late night, ${firstName}`
+}
+
+function formatLongDate(date: Date): string {
+  return date.toLocaleDateString(undefined, {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
+function DashboardHero() {
+  const user = useAuthStore(s => s.user)
+  const workspace = useAuthStore(s => s.workspace)
+  const navigate = useNavigate()
+  const now = new Date()
+  const firstName = user?.name?.split(' ')[0] ?? 'there'
+  const greeting = timeAwareGreeting(now, firstName)
+  const longDate = formatLongDate(now)
+
+  const hour = now.getHours()
+  const motivation =
+    hour < 9  ? 'A clean slate. Set the tone for the day.' :
+    hour < 13 ? 'Momentum is built in the morning. Knock out the hardest task first.' :
+    hour < 18 ? 'Stay sharp — keep the second half of the day as deliberate as the first.' :
+                'Wrap the day well. Anything left gets a clear tomorrow.'
+
+  return (
+    <div
+      className="relative overflow-hidden rounded-md p-6 sm:p-7 border border-[var(--color-glass-border)]"
       style={{
-        background: 'var(--color-glass-bg)',
-        borderColor: 'var(--color-glass-border)',
+        background:
+          'linear-gradient(135deg, rgba(124,58,237,0.18) 0%, rgba(168,85,247,0.10) 45%, rgba(236,72,153,0.10) 100%)',
+        boxShadow: 'var(--shadow-elevated)',
       }}
     >
-      <p className="text-xs text-gray-500">Failed to load {label}</p>
+      <div aria-hidden="true" className="absolute inset-0 ambient-mesh opacity-80" />
+      <div
+        aria-hidden="true"
+        className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[var(--color-accent)]/30 blur-3xl animate-orb-drift-slow"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-24 right-1/3 w-72 h-72 rounded-full bg-[var(--row-9)]/25 blur-3xl animate-orb-drift"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage:
+            'linear-gradient(to right, rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.6) 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+        }}
+      />
+
+      <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <p
+            className="text-micro font-semibold uppercase tracking-widest text-[var(--color-accent-text)] flex items-center gap-1.5"
+            style={staggerStyle(0)}
+          >
+            <Sparkles size={11} aria-hidden="true" />
+            {longDate}
+          </p>
+          <h1
+            className="text-display-md sm:text-display-lg font-bold tracking-tight mt-1 gradient-text"
+            style={staggerStyle(1)}
+          >
+            {greeting}
+          </h1>
+          <p
+            className="text-body text-[var(--color-text-secondary)] mt-2 max-w-lg"
+            style={staggerStyle(2)}
+          >
+            {motivation}
+          </p>
+          {workspace && (
+            <p
+              className="text-label text-[var(--color-text-muted)] mt-3 flex items-center gap-2"
+              style={staggerStyle(3)}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full bg-[var(--color-status-done)] status-dot-pulse"
+                aria-hidden="true"
+              />
+              {workspace.name}
+            </p>
+          )}
+        </div>
+
+        <div
+          className="flex items-center gap-2 shrink-0"
+          style={staggerStyle(4)}
+        >
+          <button
+            onClick={() => navigate('/boards')}
+            className="inline-flex items-center gap-1.5 h-10 px-4 rounded-md text-white text-body-sm font-medium shadow-[var(--shadow-md)] press-shrink hover:shadow-[var(--shadow-elevated)] focus:outline-none focus-visible:shadow-[var(--shadow-focus)] transition-shadow duration-200"
+            style={{ background: 'var(--gradient-accent)' }}
+          >
+            Open boards
+            <ArrowRight size={14} aria-hidden="true" />
+          </button>
+          <button
+            onClick={() => navigate('/my-day')}
+            className="inline-flex items-center gap-1.5 h-10 px-4 rounded-md text-body-sm font-medium text-[var(--color-text-primary)] bg-[var(--color-bg-elevated)] border border-[var(--color-glass-border)] hover:border-[var(--color-glass-border-hover)] press-shrink transition-colors duration-150"
+          >
+            Plan my day
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
@@ -69,30 +189,24 @@ function KpiRow() {
     staleTime: 60_000,
   })
 
-  const kpis: Array<{
-    title: string
-    value: string | number
-    icon: LucideIcon
-    trend?: 'up' | 'down' | 'neutral'
-    trendValue?: string
-    color: 'accent' | 'success' | 'warning' | 'danger' | 'info'
-    loading: boolean
-  }> = useMemo(() => [
+  const kpis = useMemo(() => [
     {
       title: 'Open Tasks',
       value: metrics.open_items,
       icon: CheckSquare,
       color: 'accent' as const,
       loading: isLoading,
+      hint: 'Across all boards',
     },
     {
       title: 'Overdue',
       value: metrics.overdue_items,
       icon: AlertCircle,
       trend: metrics.overdue_items > 0 ? 'down' as const : 'neutral' as const,
-      trendValue: metrics.overdue_items > 0 ? `${metrics.overdue_items} items` : 'None',
+      trendValue: metrics.overdue_items > 0 ? `${metrics.overdue_items} items` : 'On track',
       color: 'danger' as const,
       loading: isLoading,
+      hint: 'Past due date',
     },
     {
       title: 'Upcoming Meetings',
@@ -100,22 +214,24 @@ function KpiRow() {
       icon: Video,
       color: 'info' as const,
       loading: isLoading,
+      hint: 'Next 7 days',
     },
     {
-      title: 'Unread Notifications',
+      title: 'Unread',
       value: unreadCount,
       icon: Bell,
-      trend: unreadCount > 0 ? 'neutral' as const : 'neutral' as const,
+      trend: unreadCount > 0 ? 'neutral' as const : 'up' as const,
       trendValue: unreadCount > 0 ? `${unreadCount} new` : 'All clear',
       color: 'warning' as const,
       loading: isLoading,
+      hint: 'Notifications',
     },
   ], [metrics, unreadCount, isLoading])
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {kpis.map(kpi => (
-        <KpiCard key={kpi.title} {...kpi} />
+      {kpis.map((kpi, i) => (
+        <KpiCard key={kpi.title} index={i} {...kpi} />
       ))}
     </div>
   )
@@ -180,66 +296,48 @@ function ActivityIcon({ type }: { type: string }) {
 function DashboardSkeleton() {
   return (
     <div className="p-6 space-y-6 animate-pulse">
-      <div className="space-y-1">
-        <div className="h-6 w-64 bg-gray-800/50 rounded" />
-        <div className="h-4 w-48 bg-gray-800/50 rounded" />
+      <div className="space-y-2">
+        <div className="h-3 w-32 bg-[var(--color-bg-hover)] rounded" />
+        <div className="h-9 w-72 bg-[var(--color-bg-hover)] rounded" />
+        <div className="h-4 w-96 bg-[var(--color-bg-hover)] rounded" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="h-28 bg-gray-800/50 rounded-xl" />
+          <div key={i} className="h-28 bg-[var(--color-bg-hover)] rounded-md" />
         ))}
       </div>
-      <div className="h-64 bg-gray-800/50 rounded-xl" />
+      <div className="h-64 bg-[var(--color-bg-hover)] rounded-md" />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 h-80 bg-gray-800/50 rounded-xl" />
-        <div className="h-40 bg-gray-800/50 rounded-xl" />
+        <div className="lg:col-span-2 h-80 bg-[var(--color-bg-hover)] rounded-md" />
+        <div className="h-40 bg-[var(--color-bg-hover)] rounded-md" />
       </div>
     </div>
   )
 }
 
 export default function DashboardPage() {
-  const user = useAuthStore(s => s.user)
-  const workspace = useAuthStore(s => s.workspace)
-
   return (
-    <div className="p-6 space-y-6 overflow-auto h-full">
-      {/* Hero Header with Gradient */}
-      <div className="relative overflow-hidden rounded-2xl p-6" style={{
-        background: 'linear-gradient(135deg, var(--color-accent) 0%, rgba(124, 58, 237, 0.3) 100%)',
-      }}>
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
-        <div className="relative z-10 animate-slide-up">
-          <h1 className="text-2xl font-bold text-white mb-1">
-            Welcome back, {user?.name?.split(' ')[0] ?? 'there'} 👋
-          </h1>
-          <p className="text-white/70 text-sm">
-            Here&apos;s what&apos;s happening in {workspace?.name ?? 'your workspace'} today
-          </p>
-        </div>
-        {/* Floating decorative elements */}
-        <div className="absolute top-4 right-4 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-        <div className="absolute bottom-4 right-20 w-20 h-20 bg-white/5 rounded-full blur-xl" />
+    <div className="p-4 sm:p-6 space-y-5 overflow-auto h-full">
+      <div style={staggerStyle(0)} className="stagger-item">
+        <DashboardHero />
       </div>
 
-      {/* KPI Cards with stagger animation */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          <ErrorBoundary fallback={<WidgetErrorFallback label="metrics" />}>
-            <KpiRow />
-          </ErrorBoundary>
-        </div>
+      <div style={staggerStyle(1)} className="stagger-item">
+        <ErrorBoundary fallback={<WidgetErrorFallback label="metrics" />}>
+          <KpiRow />
+        </ErrorBoundary>
       </div>
 
-      {/* My Tasks Widget */}
-      <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+      <div style={staggerStyle(2)} className="stagger-item">
         <ErrorBoundary fallback={<WidgetErrorFallback label="tasks" />}>
           <MyTasksWidget />
         </ErrorBoundary>
       </div>
 
-      {/* Activity Feed + Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+      <div
+        className="grid grid-cols-1 lg:grid-cols-3 gap-4"
+        style={staggerStyle(3)}
+      >
         <div className="lg:col-span-2">
           <ErrorBoundary fallback={<WidgetErrorFallback label="activity feed" />}>
             <ActivityFeedWrapper />
@@ -250,8 +348,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Team Sentiment */}
-      <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
+      <div style={staggerStyle(4)} className="stagger-item">
         <ErrorBoundary fallback={<WidgetErrorFallback label="team sentiment" />}>
           <BurnoutWidget />
         </ErrorBoundary>

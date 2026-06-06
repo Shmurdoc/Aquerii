@@ -7,7 +7,7 @@ import {
   formatPermitType, formatPermitStatus, isHighRiskType,
   type Permit, type PermitType, type PermitStatus, type PermitRiskLevel, type Transition,
 } from '@/lib/ptw'
-import { Card, Badge, Button, Select } from '@/components/ui'
+import { Card, Badge, Button, Select, PrintButton, ExportButton } from '@/components/ui'
 import { Plus, FileCheck2, X, Download } from 'lucide-react'
 import { useDmrRegister } from '@/lib/ptw'
 import clsx from 'clsx'
@@ -28,6 +28,8 @@ export default function PermitsPage() {
           <h1 className="text-xl font-semibold text-[var(--color-text-primary)]">Permits to Work</h1>
         </div>
         <div className="flex gap-2">
+          <ExportButton entity="permits" />
+          <PrintButton label="Permits" />
           <Button onClick={() => setShowRegister(true)} variant="outline">
             <Download size={14} /> DMR Register
           </Button>

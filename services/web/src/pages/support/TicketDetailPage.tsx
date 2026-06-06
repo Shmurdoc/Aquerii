@@ -7,7 +7,7 @@ import { Button, Input, Badge } from '@/components/ui'
 
 const STATUS_COLORS: Record<string, string> = {
   open: 'text-green-400 bg-green-500/10',
-  pending: 'text-yellow-400 bg-yellow-500/10',
+  in_progress: 'text-yellow-400 bg-yellow-500/10',
   resolved: 'text-blue-400 bg-blue-500/10',
   closed: 'text-gray-500 bg-gray-500/10',
 }
@@ -67,14 +67,14 @@ export default function TicketDetailPage() {
           <div className="flex-1">
             <h1 className="text-lg font-semibold text-[var(--color-text-primary)]">{ticket.subject}</h1>
             <div className="flex items-center gap-2 mt-1">
-              <Badge variant={ticket.status === 'open' ? 'info' : ticket.status === 'pending' ? 'warning' : ticket.status === 'resolved' ? 'success' : 'default'}>{ticket.status}</Badge>
+              <Badge variant={ticket.status === 'open' ? 'info' : (ticket.status as string) === 'in_progress' ? 'warning' : ticket.status === 'resolved' ? 'success' : 'default'}>{ticket.status}</Badge>
               <Badge variant={ticket.priority === 'critical' ? 'error' : ticket.priority === 'high' ? 'warning' : 'default'}>{ticket.priority}</Badge>
               {ticket.contact && <span className="text-xs text-[var(--color-text-muted)]">{ticket.contact.name}</span>}
               {ticket.sla_breached_at && <Badge variant="error">SLA breached</Badge>}
             </div>
           </div>
           <div className="flex gap-1 text-xs">
-            {['open', 'pending', 'resolved', 'closed'].map(s => (
+            {['open', 'in_progress', 'resolved', 'closed'].map(s => (
               <button key={s} onClick={() => handleChangeStatus(s)} disabled={ticket.status === s}
                 className={`px-2 py-1 rounded transition-colors ${ticket.status === s ? 'bg-[var(--color-accent)] text-white' : 'bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]'}`}
               >{s}</button>

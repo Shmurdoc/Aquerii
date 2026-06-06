@@ -5,7 +5,7 @@ import {
   useJournalEntries, useCreateJournalEntry,
 } from '@/hooks/useAccounting'
 import { Account, AccountType, JournalEntry, JournalEntryLine, formatCurrency, formatDate, erpFinancialReports, TrialBalanceEntry, ProfitLossReport, BalanceSheetReport, CashFlowReport } from '@/lib/erp'
-import { Button, Input, Select, DataTable, type Column } from '@/components/ui'
+import { Button, Input, Select, DataTable, type Column, PrintButton } from '@/components/ui'
 import { useQuery } from '@tanstack/react-query'
 import { useAuthStore } from '@/stores/authStore'
 
@@ -428,6 +428,7 @@ export default function AccountingPage() {
       </div>
 
       <div className="flex items-center gap-4 px-5 py-4 border-b border-[var(--color-glass-border)] shrink-0">
+        <PrintButton label="Accounting" />
         <div className="flex gap-1 bg-[var(--color-bg-elevated)] rounded-lg p-0.5">
           {(['accounts', 'journal', 'reports'] as Tab[]).map((t) => (
             <button key={t} onClick={() => setTab(t)}

@@ -1,14 +1,15 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd'
-import { Plus, DollarSign, ChevronDown, Sparkles, Loader2, User, Building2, Settings2, Pencil, Trash2, Check, X, GripVertical, Trophy, Frown } from 'lucide-react'
+import { Plus, Banknote, ChevronDown, Sparkles, Loader2, User, Building2, Settings2, Pencil, Trash2, Check, X, GripVertical, Trophy, Frown } from 'lucide-react'
 import clsx from 'clsx'
 import toast from 'react-hot-toast'
 import DealDetailModal from '@/components/crm/DealDetailModal'
 import { Deal, Pipeline, Stage, CrmContact, CrmCompany, selectPipeline, dealsByStage, stageValue } from '@/lib/crm'
-import { Button, Input, Card, Modal, Tabs, TabList, Tab, TabPanel } from '@/components/ui'
+import { formatCurrency } from '@/lib/erp'
+import { Button, Input, Card, Modal, Tabs, TabList, Tab, TabPanel, PrintButton, ExportButton } from '@/components/ui'
 
 type CRMTab = 'deals' | 'contacts' | 'companies'
 
@@ -16,6 +17,8 @@ function ContactsTab({ workspaceId }: { workspaceId: string }) {
   const qc = useQueryClient()
   const [showAdd, setShowAdd] = useState(false)
   const [form, setForm] = useState({ first_name: '', last_name: '', email: '', phone: '' })
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState({ first_name: '', last_name: '', email: '', phone: '' })
 
   const { data: contacts = [], isLoading } = useQuery<CrmContact[]>({
     queryKey: ['crm-contacts', workspaceId],
@@ -35,6 +38,27 @@ function ContactsTab({ workspaceId }: { workspaceId: string }) {
       toast.success('Contact added.')
     },
     onError: () => toast.error('Failed to add contact.'),
+  })
+
+  const updateContact = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: typeof editForm }) =>
+      api.patch(`/workspaces/${workspaceId}/crm/contacts/${id}`, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['crm-contacts', workspaceId] })
+      setEditingId(null)
+      toast.success('Contact updated.')
+    },
+    onError: () => toast.error('Failed to update contact.'),
+  })
+
+  const deleteContact = useMutation({
+    mutationFn: (id: string) =>
+      api.delete(`/workspaces/${workspaceId}/crm/contacts/${id}`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['crm-contacts', workspaceId] })
+      toast.success('Contact deleted.')
+    },
+    onError: () => toast.error('Failed to delete contact.'),
   })
 
   return (
@@ -74,19 +98,67 @@ function ContactsTab({ workspaceId }: { workspaceId: string }) {
           <p className="text-sm">No contacts yet.</p>
         </div>
       ) : (
-        <div className="space-y-1">
-          {contacts.map((c: CrmContact) => (
-            <div key={c.id} className="flex items-center gap-3 px-4 py-2.5 bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-lg hover:border-[var(--color-glass-border-hover)] transition-colors">
-              <div className="w-8 h-8 rounded-full bg-[var(--color-accent-light)] flex items-center justify-center text-[var(--color-accent-text)] text-sm font-medium shrink-0">
-                {c.first_name?.[0] ?? '?'}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-[var(--color-text-primary)] font-medium truncate">{c.first_name} {c.last_name}</p>
-                {c.email && <p className="text-xs text-[var(--color-text-muted)] truncate">{c.email}</p>}
-              </div>
-              {c.phone && <span className="text-xs text-[var(--color-text-muted)] shrink-0">{c.phone}</span>}
-            </div>
-          ))}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--color-glass-border)]">
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">Name</th>
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">Email</th>
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">Company</th>
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">Phone</th>
+                <th className="px-3 py-2.5 text-right text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {contacts.map((c: CrmContact) => (
+                <tr key={c.id} className="border-b border-[var(--color-glass-border)] hover:bg-[var(--color-bg-hover)] transition-colors group">
+                  {editingId === c.id ? (
+                    <>
+                      <td className="px-3 py-2">
+                        <div className="flex gap-1">
+                          <Input size="sm" value={editForm.first_name} onChange={e => setEditForm(f => ({ ...f, first_name: e.target.value }))} containerClassName="!mb-0" className="!text-xs" placeholder="First" />
+                          <Input size="sm" value={editForm.last_name} onChange={e => setEditForm(f => ({ ...f, last_name: e.target.value }))} containerClassName="!mb-0" className="!text-xs" placeholder="Last" />
+                        </div>
+                      </td>
+                      <td className="px-3 py-2">
+                        <Input size="sm" value={editForm.email} onChange={e => setEditForm(f => ({ ...f, email: e.target.value }))} containerClassName="!mb-0" className="!text-xs" />
+                      </td>
+                      <td className="px-3 py-2 text-sm text-[var(--color-text-muted)]">{c.company?.name ?? '—'}</td>
+                      <td className="px-3 py-2">
+                        <Input size="sm" value={editForm.phone} onChange={e => setEditForm(f => ({ ...f, phone: e.target.value }))} containerClassName="!mb-0" className="!text-xs" />
+                      </td>
+                      <td className="px-3 py-2 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button variant="ghost" size="sm" iconOnly onClick={() => updateContact.mutate({ id: c.id, data: editForm })}><Check size={12} /></Button>
+                          <Button variant="ghost" size="sm" iconOnly onClick={() => setEditingId(null)}><X size={12} /></Button>
+                        </div>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td className="px-3 py-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-full bg-[var(--color-accent-light)] flex items-center justify-center text-[var(--color-accent-text)] text-xs font-medium shrink-0">
+                            {c.first_name?.[0] ?? '?'}
+                          </div>
+                          <span className="text-sm text-[var(--color-text-primary)] font-medium">{c.first_name} {c.last_name}</span>
+                        </div>
+                      </td>
+                      <td className="px-3 py-2 text-sm text-[var(--color-text-secondary)]">{c.email ?? '—'}</td>
+                      <td className="px-3 py-2 text-sm text-[var(--color-text-muted)]">{c.company?.name ?? '—'}</td>
+                      <td className="px-3 py-2 text-sm text-[var(--color-text-secondary)]">{c.phone ?? '—'}</td>
+                      <td className="px-3 py-2 text-right">
+                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button variant="ghost" size="sm" iconOnly onClick={() => { setEditingId(c.id); setEditForm({ first_name: c.first_name, last_name: c.last_name, email: c.email ?? '', phone: c.phone ?? '' }) }}><Pencil size={12} /></Button>
+                          <Button variant="ghost" size="sm" iconOnly onClick={() => { if (confirm('Delete this contact?')) deleteContact.mutate(c.id) }}><Trash2 size={12} /></Button>
+                        </div>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
@@ -97,6 +169,8 @@ function CompaniesTab({ workspaceId }: { workspaceId: string }) {
   const qc = useQueryClient()
   const [showAdd, setShowAdd] = useState(false)
   const [form, setForm] = useState({ name: '', domain: '', industry: '' })
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState({ name: '', domain: '', industry: '' })
 
   const { data: companies = [], isLoading } = useQuery<CrmCompany[]>({
     queryKey: ['crm-companies', workspaceId],
@@ -116,6 +190,27 @@ function CompaniesTab({ workspaceId }: { workspaceId: string }) {
       toast.success('Company added.')
     },
     onError: () => toast.error('Failed to add company.'),
+  })
+
+  const updateCompany = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: typeof editForm }) =>
+      api.patch(`/workspaces/${workspaceId}/crm/companies/${id}`, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['crm-companies', workspaceId] })
+      setEditingId(null)
+      toast.success('Company updated.')
+    },
+    onError: () => toast.error('Failed to update company.'),
+  })
+
+  const deleteCompany = useMutation({
+    mutationFn: (id: string) =>
+      api.delete(`/workspaces/${workspaceId}/crm/companies/${id}`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['crm-companies', workspaceId] })
+      toast.success('Company deleted.')
+    },
+    onError: () => toast.error('Failed to delete company.'),
   })
 
   return (
@@ -155,19 +250,60 @@ function CompaniesTab({ workspaceId }: { workspaceId: string }) {
           <p className="text-sm">No companies yet.</p>
         </div>
       ) : (
-        <div className="space-y-1">
-          {companies.map((c: CrmCompany) => (
-            <div key={c.id} className="flex items-center gap-3 px-4 py-2.5 bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-lg hover:border-[var(--color-glass-border-hover)] transition-colors">
-              <div className="w-8 h-8 rounded-lg bg-[var(--color-bg-elevated)] flex items-center justify-center text-[var(--color-text-muted)] text-sm font-bold shrink-0">
-                {c.name?.[0] ?? '?'}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-[var(--color-text-primary)] font-medium truncate">{c.name}</p>
-                {c.domain && <p className="text-xs text-[var(--color-text-muted)] truncate">{c.domain}</p>}
-              </div>
-              {c.industry && <span className="text-xs text-[var(--color-text-muted)] shrink-0">{c.industry}</span>}
-            </div>
-          ))}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--color-glass-border)]">
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">Name</th>
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">Contacts</th>
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">Deals</th>
+                <th className="px-3 py-2.5 text-right text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {companies.map((c: CrmCompany) => (
+                <tr key={c.id} className="border-b border-[var(--color-glass-border)] hover:bg-[var(--color-bg-hover)] transition-colors group">
+                  {editingId === c.id ? (
+                    <>
+                      <td className="px-3 py-2">
+                        <Input size="sm" value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} containerClassName="!mb-0" className="!text-xs" />
+                      </td>
+                      <td className="px-3 py-2 text-sm text-[var(--color-text-muted)]">{(c as any).contacts_count ?? 0}</td>
+                      <td className="px-3 py-2 text-sm text-[var(--color-text-muted)]">{(c as any).deals_count ?? 0}</td>
+                      <td className="px-3 py-2 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button variant="ghost" size="sm" iconOnly onClick={() => updateCompany.mutate({ id: c.id, data: editForm })}><Check size={12} /></Button>
+                          <Button variant="ghost" size="sm" iconOnly onClick={() => setEditingId(null)}><X size={12} /></Button>
+                        </div>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td className="px-3 py-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-lg bg-[var(--color-bg-elevated)] flex items-center justify-center text-[var(--color-text-muted)] text-xs font-bold shrink-0">
+                            {c.name?.[0] ?? '?'}
+                          </div>
+                          <div>
+                            <span className="text-sm text-[var(--color-text-primary)] font-medium">{c.name}</span>
+                            {c.domain && <span className="text-xs text-[var(--color-text-muted)] ml-2">{c.domain}</span>}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-3 py-2 text-sm text-[var(--color-text-secondary)]">{(c as any).contacts_count ?? 0}</td>
+                      <td className="px-3 py-2 text-sm text-[var(--color-text-secondary)]">{(c as any).deals_count ?? 0}</td>
+                      <td className="px-3 py-2 text-right">
+                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button variant="ghost" size="sm" iconOnly onClick={() => { setEditingId(c.id); setEditForm({ name: c.name, domain: c.domain ?? '', industry: c.industry ?? '' }) }}><Pencil size={12} /></Button>
+                          <Button variant="ghost" size="sm" iconOnly onClick={() => { if (confirm('Delete this company?')) deleteCompany.mutate(c.id) }}><Trash2 size={12} /></Button>
+                        </div>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
@@ -220,6 +356,13 @@ export default function CRMPage() {
     enabled: !!workspace,
   })
 
+  useEffect(() => {
+    if (!pipelineId && pipelines.length > 0) {
+      const defaultP = selectPipeline(pipelines, null)
+      if (defaultP) setPipelineId(defaultP.id)
+    }
+  }, [pipelines, pipelineId])
+
   const pipeline: Pipeline | undefined = selectPipeline(pipelines, pipelineId)
 
   const { data: deals = [] } = useQuery<Deal[]>({
@@ -228,7 +371,7 @@ export default function CRMPage() {
       const res = await api.get(`/workspaces/${workspace!.id}/crm/deals`, {
         params: { pipeline_id: pipeline!.id },
       })
-      return res.data.data
+      return res.data.data.data ?? res.data.data
     },
     enabled: !!workspace && !!pipeline && tab === 'deals',
   })
@@ -395,14 +538,15 @@ export default function CRMPage() {
 
   return (
     <div className="flex flex-col h-full">
+      <Tabs value={tab} onValueChange={v => setTab(v as CRMTab)}>
       <div className="px-6 py-3 border-b border-[var(--color-glass-border)] flex items-center gap-3 shrink-0">
-        <Tabs value={tab} onValueChange={v => setTab(v as CRMTab)}>
+          <ExportButton entity="deals" />
+          <PrintButton label="Deals" />
           <TabList>
             {(['deals', 'contacts', 'companies'] as CRMTab[]).map(t => (
               <Tab key={t} value={t} icon={t === 'contacts' ? User : t === 'companies' ? Building2 : undefined}>{t}</Tab>
             ))}
           </TabList>
-        </Tabs>
 
         {tab === 'deals' && pipeline && (
           <>
@@ -442,7 +586,7 @@ export default function CRMPage() {
             </Button>
             <span className="text-xs text-[var(--color-text-muted)]">{deals.length} deals</span>
             <span className="text-xs text-[var(--color-text-muted)]">
-              ${deals.reduce((s, d) => s + (d.value ?? 0), 0).toLocaleString()} total
+              {formatCurrency(deals.reduce((s, d) => s + (d.value ?? 0), 0))} total
             </span>
           </>
         )}
@@ -477,7 +621,7 @@ export default function CRMPage() {
                                 {dealsByStage(deals, stage.id).length}
                               </span>
                             </div>
-                            <span className="text-xs text-[var(--color-text-muted)]">${stageValue(deals, stage.id).toLocaleString()}</span>
+                            <span className="text-xs text-[var(--color-text-muted)]">{formatCurrency(stageValue(deals, stage.id))}</span>
                           </div>
 
                           <div
@@ -509,8 +653,8 @@ export default function CRMPage() {
                                       <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                                         {deal.value != null && (
                                           <div className="flex items-center gap-0.5 text-xs text-[var(--color-text-secondary)]">
-                                            <DollarSign size={10} />
-                                            {deal.value.toLocaleString()} {deal.currency}
+                                            <Banknote size={10} />
+                                            {formatCurrency(deal.value, deal.currency)}
                                           </div>
                                         )}
                                         {deal.ai_score != null ? (
@@ -575,6 +719,8 @@ export default function CRMPage() {
           </>
         )}
       </TabPanel>
+
+      </Tabs>
 
       {selectedDeal && (
         <DealDetailModal

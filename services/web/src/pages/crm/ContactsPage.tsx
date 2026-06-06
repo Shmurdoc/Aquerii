@@ -9,7 +9,7 @@ import clsx from 'clsx'
 import toast from 'react-hot-toast'
 import ContactDrawer from '@/components/crm/ContactDrawer'
 import { useContacts, useCreateContact, useImportContacts, useImportStatus, lifecycleColor, scoreColor, CrmContact } from '@/lib/crm'
-import { Button, Input, DataTable, type Column } from '@/components/ui'
+import { Button, Input, DataTable, type Column, PrintButton, ExportButton } from '@/components/ui'
 
 const LIFECYCLE_STAGES = ['lead', 'qualified', 'opportunity', 'customer', 'churned']
 
@@ -130,6 +130,9 @@ export default function ContactsPage() {
 
       <div className="px-6 py-4 border-b border-[var(--color-glass-border)] flex items-center gap-3 shrink-0">
         <h1 className="text-sm font-semibold text-[var(--color-text-primary)] flex-1">Contacts</h1>
+
+        <ExportButton entity="contacts" />
+        <PrintButton label="Contacts" />
 
         <div className="relative">
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" />

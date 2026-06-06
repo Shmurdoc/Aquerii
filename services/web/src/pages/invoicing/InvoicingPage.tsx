@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Search, Plus } from 'lucide-react'
+import { Search, Plus, Download, Eye } from 'lucide-react'
 import { useInvoices, useCreateInvoice } from '@/hooks/useInvoices'
 import { CreateInvoicePayload, formatCurrency, formatDate } from '@/lib/erp'
 import StatusBadge from '@/components/erp/StatusBadge'
 import InvoiceDrawer from '@/components/erp/InvoiceDrawer'
 import LineItemsEditor, { LineItem } from '@/components/erp/LineItemsEditor'
 import { Button, Input, DataTable, type Column } from '@/components/ui'
+import { api } from '@/lib/api'
+import toast from 'react-hot-toast'
 
 const STATUSES = ['', 'draft', 'sent', 'paid', 'overdue', 'cancelled']
 
@@ -31,7 +33,7 @@ function emptyForm(): NewFormState {
     billing_address: '',
     issue_date:      today,
     due_date:        today,
-    currency:        'USD',
+    currency:        'ZAR',
     notes:           '',
     items:           [{ description: '', quantity: 1, unit_price: 0, tax_rate: 0, total: 0 }],
   }
@@ -209,6 +211,49 @@ export default function InvoicingPage() {
       sortable: true,
       className: 'text-right',
       render: (inv: any) => <span className="font-mono text-[var(--color-text-primary)]">{formatCurrency(inv.total, inv.currency)}</span>,
+    },
+    {
+      key: 'actions',
+      header: '',
+      className: 'w-20',
+      render: (inv: any) => (
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            iconOnly
+            onClick={() => setSelectedId(inv.id)}
+            title="View invoice"
+          >
+            <Eye size={13} />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            iconOnly
+            onClick={async (e) => {
+              e.stopPropagation()
+              try {
+                const res = await api.get(`/workspaces/${inv.workspace_id}/invoices/${inv.id}/pdf`, { responseType: 'blob' })
+                const url = window.URL.createObjectURL(new Blob([res.data]))
+                const link = document.createElement('a')
+                link.href = url
+                link.setAttribute('download', `${inv.invoice_number}.pdf`)
+                document.body.appendChild(link)
+                link.click()
+                link.remove()
+                window.URL.revokeObjectURL(url)
+                toast.success('PDF downloaded.')
+              } catch {
+                toast.error('Failed to download PDF.')
+              }
+            }}
+            title="Download PDF"
+          >
+            <Download size={13} />
+          </Button>
+        </div>
+      ),
     },
   ]
 

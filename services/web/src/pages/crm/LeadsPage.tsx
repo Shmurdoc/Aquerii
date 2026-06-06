@@ -11,7 +11,7 @@ import {
   useLeads, useCreateLead, useUpdateLead, useDeleteLead,
   useAssignLead, useConvertLead, CrmLead, Pipeline,
 } from '@/lib/crm'
-import { Button, Input, DataTable, type Column } from '@/components/ui'
+import { Button, Input, DataTable, type Column, PrintButton, ExportButton } from '@/components/ui'
 
 const LEAD_STATUSES = ['new', 'contacted', 'qualified', 'proposal', 'won', 'lost']
 
@@ -131,6 +131,8 @@ export default function LeadsPage() {
 
       <div className="px-6 py-4 border-b border-[var(--color-glass-border)] flex items-center gap-3 shrink-0">
         <h1 className="text-sm font-semibold text-[var(--color-text-primary)] flex-1">Leads</h1>
+        <ExportButton entity="leads" />
+        <PrintButton label="Leads" />
         <div className="relative">
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" />
           <Input

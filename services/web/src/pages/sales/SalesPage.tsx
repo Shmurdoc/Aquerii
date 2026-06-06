@@ -14,7 +14,7 @@ function NewSOModal({ onClose }: { onClose: () => void }) {
   const [form, setForm] = useState({
     customer_name:    '',
     customer_email:   '',
-    currency:         'USD',
+    currency:         'ZAR',
     order_date:       today,
     expected_date:    '',
     shipping_address: '',

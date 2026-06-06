@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck — pre-existing TS debt, see WEB_TS_DEBT.md for cleanup plan
+// @ts-nocheck ï¿½ pre-existing TS debt, see WEB_TS_DEBT.md for cleanup plan
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useCrmQuotes, useCreateCrmQuote, useDeleteCrmQuote, useSendCrmQuote, useAcceptCrmQuote, useRejectCrmQuote, CrmQuote } from '@/lib/crm'
-import { Card, Badge, Button, DataTable, type Column } from '@/components/ui'
+import { Card, Badge, Button, DataTable, type Column, PrintButton, ExportButton } from '@/components/ui'
 import { Plus, Trash2, Send, Check, X, Eye } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { formatCurrency, formatDate } from '@/lib/erp'
@@ -90,7 +90,11 @@ export default function QuotesPage() {
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">CRM Quotes</h1>
-        <Button onClick={() => setShowAdd(true)}><Plus size={14} /> New Quote</Button>
+        <div className="flex items-center gap-2">
+          <ExportButton entity="quotes" />
+          <PrintButton label="Quotes" />
+          <Button onClick={() => setShowAdd(true)}><Plus size={14} /> New Quote</Button>
+        </div>
       </div>
       <Card className="p-0 overflow-hidden">
         <DataTable columns={columns} data={quotes} loading={isLoading} emptyMessage="No quotes yet" />
