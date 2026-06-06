@@ -24,7 +24,7 @@ use App\Core\Http\Controllers\Api\PluginController;
 use App\Core\Http\Controllers\Api\ReportController;
 use App\Core\Http\Controllers\Api\ReportScheduleController;
 use App\Core\Http\Controllers\Api\ScenarioController;
-use App\Core\Http\Controllers\Api\StorageController;
+use App\Core\Http\Controllers\StorageController;
 use App\Core\Http\Controllers\Api\ScimController;
 use App\Core\Http\Controllers\Api\SentimentController;
 use App\Core\Http\Controllers\Api\UserSettingsController;
