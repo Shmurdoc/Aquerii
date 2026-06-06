@@ -5,7 +5,8 @@ import { Meeting, CreateMeetingPayload, MeetingStatus, MeetingProvider } from '@
 import { useAuthStore } from '@/stores/authStore'
 import { api } from '@/lib/api'
 import clsx from 'clsx'
-import { Button, Input } from '@/components/ui'
+import { Button, Input, Modal } from '@/components/ui'
+import { JitsiMeeting } from '@/components/meetings/JitsiMeeting'
 
 const STATUSES: MeetingStatus[] = ['scheduled', 'ongoing', 'completed', 'cancelled']
 
@@ -183,7 +184,7 @@ function NewMeetingModal({ onClose }: { onClose: () => void }) {
   )
 }
 
-function MeetingDetail({ meeting, onClose }: { meeting: Meeting; onClose: () => void }) {
+function MeetingDetail({ meeting, onClose, onJoin }: { meeting: Meeting; onClose: () => void; onJoin: (id: string) => void }) {
   const user = useAuthStore(s => s.user)
   const updateAttendance = useUpdateAttendance()
   const deleteMeeting = useDeleteMeeting()
@@ -205,8 +206,7 @@ function MeetingDetail({ meeting, onClose }: { meeting: Meeting; onClose: () => 
 
   function handleJoin() {
     if (meeting.provider === 'jitsi') {
-      const roomName = `aquerii-${meeting.id}`
-      window.open(`https://meet.jit.si/${roomName}`, '_blank')
+      onJoin(meeting.id)
     } else if (meeting.meeting_url) {
       window.open(meeting.meeting_url, '_blank')
     }
@@ -402,12 +402,15 @@ export default function MeetingsPage() {
   const [statusFilter, setStatusFilter] = useState('')
   const [showNew, setShowNew] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [joinMeetingId, setJoinMeetingId] = useState<string | null>(null)
 
   const { data: meetings = [], isLoading } = useMeetings({
     status: statusFilter || undefined,
   })
 
+  const user = useAuthStore(s => s.user)
   const selected = meetings.find(m => m.id === selectedId) ?? null
+  const joinMeeting = meetings.find(m => m.id === joinMeetingId) ?? null
 
   return (
     <div className="flex flex-col h-full">
@@ -451,10 +454,18 @@ export default function MeetingsPage() {
           ) : (
             <div className="p-4 flex flex-col gap-2">
               {meetings.map(m => (
-                <button
+                <div
                   key={m.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setSelectedId(m.id)}
-                  className="w-full text-left rounded-xl p-4 transition-colors"
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      setSelectedId(m.id)
+                    }
+                  }}
+                  className="w-full text-left rounded-xl p-4 transition-colors cursor-pointer"
                   style={{
                     background: 'var(--color-bg-surface)',
                     border: selectedId === m.id
@@ -491,23 +502,67 @@ export default function MeetingsPage() {
                         </div>
                       )}
                     </div>
-                    <span className={clsx('text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0', STATUS_LABEL[m.status].classes)}
-                      style={{ background: `var(--color-bg-hover)` }}>
-                      {STATUS_LABEL[m.status].label}
-                    </span>
+                    <div className="flex flex-col items-end gap-2 shrink-0">
+                      <span className={clsx('text-[10px] font-medium px-2 py-0.5 rounded-full', STATUS_LABEL[m.status].classes)}
+                        style={{ background: `var(--color-bg-hover)` }}>
+                        {STATUS_LABEL[m.status].label}
+                      </span>
+                      {m.status === 'scheduled' && (
+                        <Button
+                          size="sm"
+                          className="gap-1.5"
+                          onClick={e => {
+                            e.stopPropagation()
+                            if (m.provider === 'jitsi') {
+                              setJoinMeetingId(m.id)
+                            } else if (m.meeting_url) {
+                              window.open(m.meeting_url, '_blank')
+                            }
+                          }}
+                        >
+                          <Video size={12} /> Join
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                </button>
+                </div>
               ))}
             </div>
           )}
         </div>
 
         {selected && (
-          <MeetingDetail meeting={selected} onClose={() => setSelectedId(null)} />
+          <MeetingDetail
+            meeting={selected}
+            onClose={() => setSelectedId(null)}
+            onJoin={id => setJoinMeetingId(id)}
+          />
         )}
       </div>
 
       {showNew && <NewMeetingModal onClose={() => setShowNew(false)} />}
+
+      <Modal
+        open={!!joinMeeting}
+        onClose={() => setJoinMeetingId(null)}
+        size="full"
+        title={joinMeeting?.title}
+        description={joinMeeting ? `Room: aquerii-${joinMeeting.id}` : undefined}
+        closeOnOutsideClick={false}
+        className="h-[85vh]"
+      >
+        {joinMeeting && (
+          <div className="h-[70vh] -mx-5 -mb-3">
+            <JitsiMeeting
+              meetingId={joinMeeting.id}
+              roomName={`aquerii-${joinMeeting.id}`}
+              displayName={user?.name ?? 'Guest'}
+              email={user?.email}
+              onEnd={() => setJoinMeetingId(null)}
+            />
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }
