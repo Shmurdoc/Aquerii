@@ -38,6 +38,7 @@ use App\Core\Http\Controllers\BoardController;
 use App\Core\Http\Controllers\BoardGroupController;
 use App\Core\Http\Controllers\ItemController;
 use App\Core\Http\Controllers\PermissionController;
+use App\Core\Http\Controllers\PersonalAccessTokenController;
 use App\Core\Http\Controllers\PushSubscriptionController;
 use App\Core\Http\Controllers\UserController;
 use App\Core\Http\Controllers\WebhookEndpointController;
@@ -139,6 +140,13 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     Route::get('me/push-subscriptions', [PushSubscriptionController::class, 'index']);
     Route::post('me/push-subscriptions', [PushSubscriptionController::class, 'store'])->middleware('idempotent');
     Route::delete('me/push-subscriptions/{id}', [PushSubscriptionController::class, 'destroy'])->middleware('idempotent');
+
+    // Personal access tokens (CLI / script access). The plaintext is only
+    // ever returned at creation — subsequent GETs expose nothing
+    // reconstructible.
+    Route::get('me/personal-access-tokens', [PersonalAccessTokenController::class, 'index']);
+    Route::post('me/personal-access-tokens', [PersonalAccessTokenController::class, 'store'])->middleware('idempotent');
+    Route::delete('me/personal-access-tokens/{id}', [PersonalAccessTokenController::class, 'destroy'])->middleware('idempotent');
 
     // User settings (Fortify-style routes)
     Route::post('user/two-factor-authentication', [UserSettingsController::class, 'enableTwoFactor']);
