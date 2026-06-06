@@ -45,7 +45,7 @@ class PersonalAccessTokenController extends Controller
         $newToken = $request->user()->createToken(
             $validated['name'],
             $abilities,
-            isset($validated['expires_at']) ? \Carbon\Carbon::parse($validated['expires_at']) : null,
+            $validated['expires_at'] ?? null ? \Carbon\Carbon::parse($validated['expires_at']) : null,
         );
 
         return response()->json([
