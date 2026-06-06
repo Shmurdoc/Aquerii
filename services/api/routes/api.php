@@ -24,6 +24,7 @@ use App\Core\Http\Controllers\Api\PluginController;
 use App\Core\Http\Controllers\Api\ReportController;
 use App\Core\Http\Controllers\Api\ReportScheduleController;
 use App\Core\Http\Controllers\Api\ScenarioController;
+use App\Core\Http\Controllers\Api\StorageController;
 use App\Core\Http\Controllers\Api\ScimController;
 use App\Core\Http\Controllers\Api\SentimentController;
 use App\Core\Http\Controllers\Api\UserSettingsController;
@@ -37,6 +38,7 @@ use App\Core\Http\Controllers\BoardController;
 use App\Core\Http\Controllers\BoardGroupController;
 use App\Core\Http\Controllers\ItemController;
 use App\Core\Http\Controllers\UserController;
+use App\Core\Http\Controllers\WebhookEndpointController;
 use App\Core\Models\Item;
 use App\Http\Controllers\Api\CalendarItemController;
 use App\Http\Controllers\Api\WorkspaceInvitationController;
@@ -193,6 +195,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::post('payfast/checkout', [BillingController::class, 'payfastCheckout'])->middleware('idempotent');
         });
 
+        // Storage usage + breakdown
+        Route::get('storage', [StorageController::class, 'show']);
+
         // Boards
         Route::apiResource('boards', BoardController::class)->except(['index'])->middleware('idempotent');
         Route::get('boards', [BoardController::class, 'index']);
@@ -337,6 +342,17 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::delete('scim/tokens/{token}', [FieldPermissionController::class, 'scimTokenRevoke'])->middleware('workspace.role:owner,admin');
         // Legacy bootstrap path kept for compatibility with existing clients.
         Route::post('scim/users', [FieldPermissionController::class, 'scimUsersProvision'])->middleware('idempotent');
+
+        // Outbound webhooks (OWNER only — not admin, for safety)
+        Route::middleware('workspace.owner')->group(function () {
+            Route::get('webhook-endpoints', [WebhookEndpointController::class, 'index']);
+            Route::post('webhook-endpoints', [WebhookEndpointController::class, 'store'])->middleware('idempotent');
+            Route::get('webhook-endpoints/{endpoint}', [WebhookEndpointController::class, 'show']);
+            Route::put('webhook-endpoints/{endpoint}', [WebhookEndpointController::class, 'update'])->middleware('idempotent');
+            Route::delete('webhook-endpoints/{endpoint}', [WebhookEndpointController::class, 'destroy'])->middleware('idempotent');
+            Route::post('webhook-endpoints/{endpoint}/rotate-secret', [WebhookEndpointController::class, 'rotateSecret'])->middleware('idempotent');
+            Route::get('webhook-endpoints/{endpoint}/deliveries', [WebhookEndpointController::class, 'deliveries']);
+        });
 
         // CRM (basic: free tier; pipelines: gated)
         Route::get('crm/pipelines', [PipelineController::class, 'index']);
