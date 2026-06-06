@@ -8,6 +8,8 @@ return new class extends Migration
     public function up(): void
     {
         DB::unprepared('
+            DROP TRIGGER IF EXISTS trg_realtime_events_sequence ON realtime_events;
+
             CREATE OR REPLACE FUNCTION update_realtime_events_sequence()
             RETURNS TRIGGER LANGUAGE plpgsql AS $$
             BEGIN
@@ -19,6 +21,8 @@ return new class extends Migration
                 RETURN NEW;
             END;
             $$;
+
+            DROP TRIGGER IF EXISTS trg_realtime_events_sequence ON realtime_events;
 
             CREATE TRIGGER trg_realtime_events_sequence
             BEFORE INSERT ON realtime_events
