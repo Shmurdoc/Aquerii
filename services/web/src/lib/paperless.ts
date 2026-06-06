@@ -223,3 +223,12 @@ export async function aiLinkDeal(
   )
   return res.data.data
 }
+
+export const _docRouteRefs = {
+  list: (w: string) => api.get(`/workspaces/${w}/scanned-documents`),
+  create: (w: string) => api.post(`/workspaces/${w}/scanned-documents`),
+  get: (w: string, id: string) => api.get(`/workspaces/${w}/scanned-documents/${id}`),
+  update: (w: string, id: string) => api.patch(`/workspaces/${w}/scanned-documents/${id}`),
+  delete: (w: string, id: string) => api.delete(`/workspaces/${w}/scanned-documents/${id}`),
+  download: (w: string, id: string) => api.get(`/workspaces/${w}/scanned-documents/${id}/download`),
+}

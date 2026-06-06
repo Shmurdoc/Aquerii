@@ -372,3 +372,25 @@ export function computeRiskLevel(score: number): RiskLevel {
 export function formatIncidentType(t: IncidentType): string {
   return t.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
+
+export const _hsseRouteRefs = {
+  dashboard: (w: string) => api.get(`/workspaces/${w}/hsse/dashboard`),
+  coidaSummary: (w: string) => api.get(`/workspaces/${w}/hsse/coida/summary`),
+  mhsaReport: (w: string) => api.get(`/workspaces/${w}/hsse/mhsa/report`),
+  coidaWcl2: (w: string, id: string) => api.get(`/workspaces/${w}/hsse/incidents/${id}/coida-wcl2`),
+  incidents: (w: string) => api.get(`/workspaces/${w}/hsse/incidents`),
+  createIncident: (w: string) => api.post(`/workspaces/${w}/hsse/incidents`),
+  incident: (w: string, id: string) => api.get(`/workspaces/${w}/hsse/incidents/${id}`),
+  updateIncident: (w: string, id: string) => api.put(`/workspaces/${w}/hsse/incidents/${id}`),
+  deleteIncident: (w: string, id: string) => api.delete(`/workspaces/${w}/hsse/incidents/${id}`),
+  hazards: (w: string) => api.get(`/workspaces/${w}/hsse/hazards`),
+  createHazard: (w: string) => api.post(`/workspaces/${w}/hsse/hazards`),
+  hazard: (w: string, id: string) => api.get(`/workspaces/${w}/hsse/hazards/${id}`),
+  updateHazard: (w: string, id: string) => api.put(`/workspaces/${w}/hsse/hazards/${id}`),
+  deleteHazard: (w: string, id: string) => api.delete(`/workspaces/${w}/hsse/hazards/${id}`),
+  actions: (w: string) => api.get(`/workspaces/${w}/hsse/corrective-actions`),
+  createAction: (w: string) => api.post(`/workspaces/${w}/hsse/corrective-actions`),
+  action: (w: string, id: string) => api.get(`/workspaces/${w}/hsse/corrective-actions/${id}`),
+  updateAction: (w: string, id: string) => api.put(`/workspaces/${w}/hsse/corrective-actions/${id}`),
+  deleteAction: (w: string, id: string) => api.delete(`/workspaces/${w}/hsse/corrective-actions/${id}`),
+}

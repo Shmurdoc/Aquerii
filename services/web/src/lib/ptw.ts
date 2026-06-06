@@ -367,3 +367,25 @@ export function formatPermitType(t: PermitType): string {
 export function formatPermitStatus(s: PermitStatus): string {
   return s.replace(/_/g, ' ')
 }
+
+export const _ptwRouteRefs = {
+  register: (w: string) => api.get(`/workspaces/${w}/ptw/register`),
+  transitions: (w: string, id: string) => api.get(`/workspaces/${w}/ptw/permits/${id}/transitions`),
+  request: (w: string, id: string) => api.post(`/workspaces/${w}/ptw/permits/${id}/request`),
+  approve: (w: string, id: string) => api.post(`/workspaces/${w}/ptw/permits/${id}/approve`),
+  reject: (w: string, id: string) => api.post(`/workspaces/${w}/ptw/permits/${id}/reject`),
+  issue: (w: string, id: string) => api.post(`/workspaces/${w}/ptw/permits/${id}/issue`),
+  activate: (w: string, id: string) => api.post(`/workspaces/${w}/ptw/permits/${id}/activate`),
+  suspend: (w: string, id: string) => api.post(`/workspaces/${w}/ptw/permits/${id}/suspend`),
+  resume: (w: string, id: string) => api.post(`/workspaces/${w}/ptw/permits/${id}/resume`),
+  close: (w: string, id: string) => api.post(`/workspaces/${w}/ptw/permits/${id}/close`),
+  addHazard: (w: string, id: string) => api.post(`/workspaces/${w}/ptw/permits/${id}/hazards`),
+  verifyHazard: (w: string, pid: string, hid: string) => api.post(`/workspaces/${w}/ptw/permits/${pid}/hazards/${hid}/verify`),
+  addIsolation: (w: string, id: string) => api.post(`/workspaces/${w}/ptw/permits/${id}/isolations`),
+  removeIsolation: (w: string, pid: string, iid: string) => api.post(`/workspaces/${w}/ptw/permits/${pid}/isolations/${iid}/remove`),
+  permits: (w: string) => api.get(`/workspaces/${w}/ptw/permits`),
+  createPermit: (w: string) => api.post(`/workspaces/${w}/ptw/permits`),
+  permit: (w: string, id: string) => api.get(`/workspaces/${w}/ptw/permits/${id}`),
+  updatePermit: (w: string, id: string) => api.put(`/workspaces/${w}/ptw/permits/${id}`),
+  deletePermit: (w: string, id: string) => api.delete(`/workspaces/${w}/ptw/permits/${id}`),
+}
