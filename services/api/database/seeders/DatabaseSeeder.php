@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
             ChartOfAccountsSeeder::class,
             FeaturesSeeder::class,
             IndustryTemplateSeeder::class,
+            RolePermissionSeeder::class,
+            DepartmentSeeder::class,
         ]);
 
         if (app()->environment('testing')) {
