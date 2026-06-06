@@ -50,3 +50,4 @@ madoc*.md
 
 # ─── K8s secrets (use Vault/SealedSecrets in prod) ───
 infra/k8s/secrets.yaml
+.gstack/

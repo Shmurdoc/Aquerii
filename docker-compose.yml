@@ -38,12 +38,12 @@ services:
   # ─── LARAVEL API ──────────────────────────────────────────────
   api:
     build:
-      context: ./services/api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: services/api/Dockerfile
       target: production
     restart: unless-stopped
     environment:
-      APP_ENV: ${APP_ENV:-production}
+      APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-false}
       APP_KEY: ${APP_KEY}
       APP_URL: ${APP_URL:-http://localhost}
@@ -110,13 +110,13 @@ services:
   # ─── HORIZON (Queue Worker) ───────────────────────────────────
   horizon:
     build:
-      context: ./services/api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: services/api/Dockerfile
       target: production
     restart: unless-stopped
     command: ["php", "artisan", "horizon"]
     environment:
-      APP_ENV: ${APP_ENV:-production}
+      APP_ENV: ${APP_ENV:-local}
       APP_KEY: ${APP_KEY}
       DB_HOST: postgres
       DB_PORT: 5432
@@ -304,7 +304,7 @@ services:
     environment:
       MEILI_MASTER_KEY: ${MEILISEARCH_KEY:-secret_meilisearch_master_key}
       MEILI_NO_ANALYTICS: "true"
-      MEILI_ENV: ${APP_ENV:-development}
+      MEILI_ENV: ${MEILI_ENV:-development}
     volumes:
       - meilisearch_data:/meili_data
     networks:
@@ -330,8 +330,6 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_SECRET:-minioadmin}
     volumes:
       - minio_data:/data
-    ports:
-      - "9001:9001"   # MinIO console (dev only)
     networks:
       - data_net
     healthcheck:
@@ -393,21 +391,16 @@ services:
           cpus: '2.0'
           memory: 2G
 
-  # ─── MAILPIT (Dev Email) ──────────────────────────────────────
-  mailpit:
-    image: axllent/mailpit:latest
-    restart: unless-stopped
-    profiles: ["dev"]  # opt-in: `docker compose --profile dev up`
+  # ─── JAEGER (Distributed Tracing) ─────────────────────────────
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
     ports:
-      - "8025:8025"   # Mailpit UI (dev only)
+      - "4317:4317"   # gRPC
+      - "4318:4318"   # HTTP
+      - "16686:16686" # UI
+    profiles: [dev]
     networks:
-      - api_net
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8025/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+      - observability_net
 
   # ─── PROMETHEUS ───────────────────────────────────────────────
   prometheus:
@@ -435,6 +428,30 @@ services:
         limits:
           cpus: '0.5'
           memory: 256M
+
+  # ─── ALERTMANAGER ─────────────────────────────────────────────
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    restart: unless-stopped
+    volumes:
+      - ./infra/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    networks:
+      - data_net
+      - observability_net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
 
   # ─── GRAFANA ──────────────────────────────────────────────────
   grafana:
@@ -493,24 +510,6 @@ services:
       - observability_net
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:13132/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
-  # ─── VAULT (Dev mode) ─────────────────────────────────────────
-  vault:
-    image: hashicorp/vault:1.16
-    restart: unless-stopped
-    environment:
-      VAULT_DEV_ROOT_TOKEN_ID: dev-root-token
-      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
-    cap_add:
-      - IPC_LOCK
-    networks:
-      - data_net
-    healthcheck:
-      test: ["CMD", "vault", "status", "-address=http://127.0.0.1:8200"]
       interval: 30s
       timeout: 10s
       retries: 3
