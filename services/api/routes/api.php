@@ -37,6 +37,7 @@ use App\Core\Http\Controllers\BoardColumnController;
 use App\Core\Http\Controllers\BoardController;
 use App\Core\Http\Controllers\BoardGroupController;
 use App\Core\Http\Controllers\ItemController;
+use App\Core\Http\Controllers\PermissionController;
 use App\Core\Http\Controllers\PushSubscriptionController;
 use App\Core\Http\Controllers\UserController;
 use App\Core\Http\Controllers\WebhookEndpointController;
@@ -131,6 +132,7 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     Route::get('me', [UserController::class, 'me']);
     Route::put('me', [UserController::class, 'update'])->middleware('idempotent');
     Route::post('me/avatar', [UserController::class, 'uploadAvatar']);
+    Route::get('me/permissions', [PermissionController::class, 'me']);
 
     // Web Push subscriptions (user-scoped, not workspace-scoped — a user
     // gets the same browser push across every workspace they belong to).
@@ -239,6 +241,14 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // Bulk actions
         Route::post('bulk', [BulkActionController::class, 'handle'])->middleware('idempotent');
+
+        // Saved views (per-user filter/sort/column presets, optionally shared workspace-wide)
+        Route::get('saved-views', [SavedViewController::class, 'index']);
+        Route::post('saved-views', [SavedViewController::class, 'store'])->middleware('idempotent');
+        Route::get('saved-views/{view}', [SavedViewController::class, 'show']);
+        Route::put('saved-views/{view}', [SavedViewController::class, 'update'])->middleware('idempotent');
+        Route::delete('saved-views/{view}', [SavedViewController::class, 'destroy'])->middleware('idempotent');
+        Route::post('saved-views/{view}/share', [SavedViewController::class, 'share'])->middleware('idempotent');
 
         // Comments
         Route::get('items/{item}/comments', [CommentController::class, 'index']);
