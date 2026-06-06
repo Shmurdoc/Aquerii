@@ -6,6 +6,7 @@ use App\Core\Http\Middleware\CheckFeatureAccess;
 use App\Core\Http\Middleware\EnforceIdempotency;
 use App\Core\Http\Middleware\EnsureEmailIsVerified;
 use App\Core\Http\Middleware\InternalSecret;
+use App\Core\Http\Middleware\RequireAccountType;
 use App\Core\Http\Middleware\RequireOwner;
 use App\Core\Http\Middleware\RequireWorkspaceRole;
 use App\Core\Http\Middleware\SecureHeaders;
@@ -34,6 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => EnsureEmailIsVerified::class,
             'workspace.role' => RequireWorkspaceRole::class,
             'workspace.owner' => RequireOwner::class,
+            'require.account_type' => RequireAccountType::class,
             'feature' => CheckFeatureAccess::class,
             'scim.token' => AuthenticateScimToken::class,
         ]);
