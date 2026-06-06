@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 
+import '@/components/ui/print.css'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { RequireAuth, RequireOnboarding } from '@/components/auth/RouteGuards'
 import { BrandingProvider } from '@/contexts/BrandingContext'
@@ -19,9 +20,10 @@ import OnboardingPage from '@/pages/onboarding/OnboardingPage'
 
 import BoardsPage    from '@/pages/boards/BoardsPage'
 import BoardPage     from '@/pages/boards/BoardPage'
-import DocumentPage  from '@/pages/documents/DocumentPage'
-import NotesPage     from '@/pages/documents/NotesPage'
-import FilesPage     from '@/pages/documents/FilesPage'
+import DocumentPage     from '@/pages/documents/DocumentPage'
+import DocumentsPage    from '@/pages/documents/DocumentsPage'
+import NotesPage        from '@/pages/documents/NotesPage'
+import FilesPage        from '@/pages/documents/FilesPage'
 import CRMPage       from '@/pages/crm/CRMPage'
 import ContactsPage  from '@/pages/crm/ContactsPage'
 import LeadsPage     from '@/pages/crm/LeadsPage'
@@ -96,9 +98,9 @@ export default function App() {
         position="bottom-right"
         toastOptions={{
           style: {
-            background: '#1f2937',
-            color:      '#f3f4f6',
-            border:     '1px solid #374151',
+            background: 'var(--color-bg-surface)',
+            color:      'var(--color-text-primary)',
+            border:     '1px solid var(--color-glass-border)',
             fontSize:   '13px',
           },
         }}
@@ -143,7 +145,7 @@ export default function App() {
           <Route path="/employees"       element={<EmployeePage />} />
           <Route path="/boards"          element={<BoardsPage />} />
           <Route path="/boards/:boardId" element={<BoardPage />} />
-          <Route path="/documents"            element={<NotesPage />} />
+          <Route path="/documents"            element={<DocumentsPage />} />
           <Route path="/documents/files"      element={<FilesPage />} />
           <Route path="/documents/:docId"     element={<DocumentPage />} />
           <Route path="/crm"              element={<CRMPage />} />

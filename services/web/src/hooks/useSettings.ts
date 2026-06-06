@@ -6,19 +6,22 @@ import toast from 'react-hot-toast'
 // ─── Members ─────────────────────────────────────────────────────────────────
 
 export function useWorkspaceMembers() {
+  const workspaceId = useAuthStore((s) => s.workspace?.id)
   return useQuery<WorkspaceMember[]>({
-    queryKey: ['workspace-members'],
+    queryKey: ['workspace', workspaceId, 'members'],
     queryFn: () => settingsApi.listMembers(),
+    enabled: !!workspaceId,
     staleTime: 30_000,
   })
 }
 
 export function useInviteMember() {
   const qc = useQueryClient()
+  const workspaceId = useAuthStore((s) => s.workspace?.id)
   return useMutation<void, Error, { email: string; role: MemberRole }>({
     mutationFn: (payload) => settingsApi.inviteMember(payload),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['workspace-members'] })
+      qc.invalidateQueries({ queryKey: ['workspace', workspaceId, 'members'] })
       toast.success('Invitation sent')
     },
     onError: (e) => toast.error(e.message),
@@ -27,10 +30,11 @@ export function useInviteMember() {
 
 export function useUpdateMemberRole() {
   const qc = useQueryClient()
+  const workspaceId = useAuthStore((s) => s.workspace?.id)
   return useMutation<void, Error, { userId: string; role: MemberRole }>({
     mutationFn: ({ userId, role }) => settingsApi.updateMemberRole(userId, role),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['workspace-members'] })
+      qc.invalidateQueries({ queryKey: ['workspace', workspaceId, 'members'] })
       toast.success('Role updated')
     },
     onError: (e) => toast.error(e.message),
@@ -39,10 +43,11 @@ export function useUpdateMemberRole() {
 
 export function useRemoveMember() {
   const qc = useQueryClient()
+  const workspaceId = useAuthStore((s) => s.workspace?.id)
   return useMutation<void, Error, string>({
     mutationFn: (userId) => settingsApi.removeMember(userId),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['workspace-members'] })
+      qc.invalidateQueries({ queryKey: ['workspace', workspaceId, 'members'] })
       toast.success('Member removed')
     },
     onError: (e) => toast.error(e.message),

@@ -351,12 +351,12 @@ export const settingsApi = {
 
   // Notification preferences
   getNotificationPreferences: async (): Promise<NotificationPreferences> => {
-    const res = await api.get('/user/notifications/preferences')
+    const res = await api.get('/me/notification-preferences')
     return res.data?.data ?? {}
   },
 
   updateNotificationPreferences: async (payload: Partial<NotificationPreferences>): Promise<NotificationPreferences> => {
-    const res = await api.put('/user/notifications/preferences', payload)
+    const res = await api.put('/me/notification-preferences', payload)
     return res.data?.data ?? {}
   },
 

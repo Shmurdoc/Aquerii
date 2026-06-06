@@ -34,6 +34,13 @@ export interface EmailThread {
   emails?: Email[]
 }
 
+export interface EmailAttachment {
+  filename?: string
+  url: string
+  size?: number
+  mime_type?: string
+}
+
 export interface Email {
   id: string
   thread_id: string
@@ -48,6 +55,7 @@ export interface Email {
   is_read: boolean
   received_at: string | null
   ai_suggestions?: EmailAiSuggestion[]
+  attachments?: EmailAttachment[]
 }
 
 export interface EmailAiSuggestion {

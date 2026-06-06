@@ -1286,10 +1286,11 @@ export const erpHR = {
   },
 }
 
-export function formatCurrency(amount: number | string, currency = 'USD'): string {
+export function formatCurrency(amount: number | string, currency = 'ZAR'): string {
   const n = typeof amount === 'string' ? parseFloat(amount) : amount
-  if (isNaN(n)) return '$0.00'
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 2 }).format(n)
+  if (isNaN(n)) return 'R0.00'
+  const locale = currency === 'ZAR' ? 'en-ZA' : 'en-US'
+  return new Intl.NumberFormat(locale, { style: 'currency', currency, minimumFractionDigits: 2 }).format(n)
 }
 
 export function formatDate(dateStr: string | null | undefined): string {
