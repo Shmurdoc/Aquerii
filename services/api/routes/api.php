@@ -40,6 +40,7 @@ use App\Core\Http\Controllers\ItemController;
 use App\Core\Http\Controllers\PermissionController;
 use App\Core\Http\Controllers\PersonalAccessTokenController;
 use App\Core\Http\Controllers\PushSubscriptionController;
+use App\Core\Http\Controllers\SavedViewController;
 use App\Core\Http\Controllers\UserController;
 use App\Core\Http\Controllers\WebhookEndpointController;
 use App\Core\Models\Item;
