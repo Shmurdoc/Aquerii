@@ -17,6 +17,8 @@ import { EventBroadcaster } from './events/EventBroadcaster'
 import { registerCatchupHandler } from './handlers/catchupHandler'
 import { registerChatHandler } from './handlers/chatHandler'
 import { connectedClients, messagesTotal, createMetricsServer } from './metrics'
+import { cursorUpdateSchema, typingSchema } from './validation/socketSchemas'
+import { validateSocketEvent } from './middleware/validateSocketEvent'
 
 // ── Zod schemas for socket event payloads ─────────────────────────────────────
 const DocUpdateSchema = z.object({
@@ -59,7 +61,7 @@ async function bootstrap(): Promise<void> {
     const response = res as ServerResponse
     if (req.url === '/health' || req.url === '/healthz') {
       response.writeHead(200, { 'Content-Type': 'application/json' })
-      ;(response as any).end(JSON.stringify({ status: 'ok', service: 'realtime', uptime: process.uptime() }))
+      ;(response as any).end(JSON.stringify({ status: 'ok', uptime: process.uptime() }))
       return
     }
     response.writeHead(404)
@@ -133,6 +135,7 @@ async function bootstrap(): Promise<void> {
     // This keeps presence alive for active connections and lets it expire naturally
     // within ~1hr of silent disconnect (presence TTL = 3600s in PresenceManager).
     socket.on('ping', async () => {
+      socket.data.lastPing = Date.now()
       const rooms: Set<string> = socket.data.rooms || new Set()
       for (const room of rooms) {
         try {
@@ -191,12 +194,64 @@ async function bootstrap(): Promise<void> {
       messagesTotal.inc({ event: 'doc:awareness' })
     })
 
+    // ── Cursor position ────────────────────────────────────────────────────
+    socket.on('cursor:update', validateSocketEvent(cursorUpdateSchema, async (data) => {
+      try {
+        await presenceManager.updateCursor(socket, data.roomId, user.sub, { x: data.x, y: data.y })
+        messagesTotal.inc({ event: 'cursor:update' })
+      } catch (err) {
+        logger.error({ err }, 'cursor:update error')
+      }
+    }))
+
+    // ── Typing indicator ───────────────────────────────────────────────────
+    socket.on('typing', validateSocketEvent(typingSchema, async (data) => {
+      try {
+        if (data.isTyping) {
+          await presenceManager.startTyping(socket, data.roomId, user.sub, user.name ?? '')
+        } else {
+          await presenceManager.stopTyping(socket, data.roomId, user.sub)
+        }
+        messagesTotal.inc({ event: 'typing' })
+      } catch (err) {
+        logger.error({ err }, 'typing error')
+      }
+    }))
+
     // ── Disconnect ──────────────────────────────────────────────────────────
     socket.on('disconnect', (reason) => {
       connectedClients.dec()
       logger.info({ userId: user.sub, reason }, 'Client disconnected')
     })
   })
+
+  // ── Stale heartbeat interval (every 30s) ────────────────────────────────
+  const HEARTBEAT_INTERVAL_MS = 30_000
+  const heartbeatTimer = (globalThis as any).setInterval(async () => {
+    try {
+      const sockets = await io.fetchSockets()
+      const now = Date.now()
+      for (const socket of sockets) {
+        const lastPing: number | undefined = socket.data.lastPing
+        if (!lastPing || now - lastPing > HEARTBEAT_INTERVAL_MS) {
+          const user = socket.data.user
+          if (user?.sub) {
+            const rooms: Set<string> = socket.data.rooms || new Set()
+            for (const room of rooms) {
+              try {
+                await presenceManager.heartbeat(user.sub, room)
+              } catch {
+                // non-fatal
+              }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      logger.warn({ err }, 'Heartbeat interval error')
+    }
+  }, HEARTBEAT_INTERVAL_MS)
+  heartbeatTimer.unref()
 
   // ── Start listening ───────────────────────────────────────────────────────
   httpServer.listen(PORT, () => {
