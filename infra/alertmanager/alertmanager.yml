@@ -1,5 +1,8 @@
 global:
   resolve_timeout: 5m
+  smtp_smarthost: localhost:25
+  smtp_from: alertmanager@aquerii.app
+  smtp_require_tls: false
 
 route:
   group_by: [alertname, severity, job]
