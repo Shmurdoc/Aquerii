@@ -140,6 +140,8 @@ class DocumentPdfController extends Controller
             'workspace' => $workspace,
             'entity' => $entity,
             'entityType' => $config['entity_type'],
+            'workspace_logo_url' => $workspace->logo_url ?? null,
+            'workspace_color' => $workspace->color ?? '#7c3aed',
         ]);
 
         return response($pdfContent, 200, [

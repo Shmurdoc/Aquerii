@@ -34,9 +34,14 @@ class InvoicePdfController extends Controller
             'address' => $invoice->billing_address,
         ];
 
-        $pdfContent = $this->pdf->renderBladeAsPdf("pdfs.invoice.{$template}", compact(
-            'invoice', 'items', 'workspace', 'customer'
-        ));
+        $pdfContent = $this->pdf->renderBladeAsPdf("pdfs.invoice.{$template}", [
+            'invoice' => $invoice,
+            'items' => $items,
+            'workspace' => $workspace,
+            'customer' => $customer,
+            'workspace_logo_url' => $workspace->logo_url ?? null,
+            'workspace_color' => $workspace->color ?? '#7c3aed',
+        ]);
 
         return response($pdfContent, 200, [
             'Content-Type' => 'application/pdf',
