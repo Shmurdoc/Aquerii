@@ -37,6 +37,7 @@ use App\Core\Http\Controllers\BoardColumnController;
 use App\Core\Http\Controllers\BoardController;
 use App\Core\Http\Controllers\BoardGroupController;
 use App\Core\Http\Controllers\ItemController;
+use App\Core\Http\Controllers\PushSubscriptionController;
 use App\Core\Http\Controllers\UserController;
 use App\Core\Http\Controllers\WebhookEndpointController;
 use App\Core\Models\Item;
@@ -130,6 +131,12 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     Route::get('me', [UserController::class, 'me']);
     Route::put('me', [UserController::class, 'update'])->middleware('idempotent');
     Route::post('me/avatar', [UserController::class, 'uploadAvatar']);
+
+    // Web Push subscriptions (user-scoped, not workspace-scoped — a user
+    // gets the same browser push across every workspace they belong to).
+    Route::get('me/push-subscriptions', [PushSubscriptionController::class, 'index']);
+    Route::post('me/push-subscriptions', [PushSubscriptionController::class, 'store'])->middleware('idempotent');
+    Route::delete('me/push-subscriptions/{id}', [PushSubscriptionController::class, 'destroy'])->middleware('idempotent');
 
     // User settings (Fortify-style routes)
     Route::post('user/two-factor-authentication', [UserSettingsController::class, 'enableTwoFactor']);
