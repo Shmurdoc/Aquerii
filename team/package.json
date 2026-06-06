@@ -1,0 +1,16 @@
+{
+  "name": "@aquerii/team-scripts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Aquerii team operations scripts (cleanup, provisioning, validation)",
+  "scripts": {
+    "cleanup:test-data": "node scripts/cleanup-test-data.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "pg": "^8.7.3"
+  }
+}
