@@ -1,7 +1,7 @@
-import { forwardRef, type ReactNode, type MouseEventHandler, type ForwardRefExoticComponent, type RefAttributes } from 'react'
+import { forwardRef, type ReactNode, type MouseEventHandler, type CSSProperties, type ForwardRefExoticComponent, type RefAttributes } from 'react'
 import { clsx } from 'clsx'
 
-type CardVariant = 'default' | 'interactive' | 'glass'
+type CardVariant = 'default' | 'interactive' | 'glass' | 'elevated' | 'outline'
 type CardPadding = 'none' | 'sm' | 'md' | 'lg'
 
 type CardProps = {
@@ -10,13 +10,22 @@ type CardProps = {
   onClick?: MouseEventHandler
   children?: ReactNode
   className?: string
-  style?: React.CSSProperties
+  style?: CSSProperties
+  role?: string
+  'aria-label'?: string
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  default: 'bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)]',
-  interactive: 'bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] cursor-pointer hover:bg-[var(--color-bg-hover)] hover:border-[var(--color-glass-border-hover)] transition-all duration-150',
-  glass: 'bg-[var(--color-glass-bg)] border border-[var(--color-glass-border)] backdrop-blur-xl',
+  default:
+    'bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)]',
+  interactive:
+    'bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] cursor-pointer hover:border-[var(--color-glass-border-hover)] hover:bg-[var(--color-bg-elevated)] active:scale-[0.998]',
+  glass:
+    'bg-[var(--color-glass-bg)] border border-[var(--color-glass-border)] backdrop-blur-md',
+  elevated:
+    'bg-[var(--color-bg-elevated)] border border-[var(--color-glass-border)] shadow-[var(--shadow-lg)]',
+  outline:
+    'bg-transparent border border-[var(--color-glass-border)]',
 }
 
 const paddingStyles: Record<CardPadding, string> = {
@@ -26,18 +35,43 @@ const paddingStyles: Record<CardPadding, string> = {
   lg: 'p-6',
 }
 
+const baseTransition =
+  'transition-[background,border-color,box-shadow,transform] duration-200 ease-out'
+
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ variant = 'default', padding = 'md', onClick, children, className, style, ...props }, ref) => {
+  (
+    {
+      variant = 'default',
+      padding = 'md',
+      onClick,
+      children,
+      className,
+      style,
+      role,
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <div
         ref={ref}
         onClick={onClick}
-        role={onClick ? 'button' : undefined}
+        role={role ?? (onClick ? 'button' : undefined)}
         tabIndex={onClick ? 0 : undefined}
-        onKeyDown={onClick ? (e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (onClick as any)(e) } } : undefined}
+        onKeyDown={
+          onClick
+            ? (e: React.KeyboardEvent) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  ;(onClick as any)(e)
+                }
+              }
+            : undefined
+        }
         style={style}
         className={clsx(
-          'rounded-xl',
+          'rounded-md',
+          baseTransition,
           variantStyles[variant],
           paddingStyles[padding],
           className,
@@ -81,7 +115,12 @@ function CardBody({ children, className }: CardSectionProps) {
 
 function CardFooter({ children, className }: CardSectionProps) {
   return (
-    <div className={clsx('flex items-center gap-3 mt-4 pt-3 border-t border-[var(--color-glass-border)]', className)}>
+    <div
+      className={clsx(
+        'flex items-center gap-3 mt-4 pt-3 border-t border-[var(--color-glass-border)]',
+        className,
+      )}
+    >
       {children}
     </div>
   )

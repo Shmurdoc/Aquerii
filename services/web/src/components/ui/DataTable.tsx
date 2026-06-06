@@ -56,9 +56,17 @@ export function DataTable<T>({
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
   const [page, setPage] = useState(0)
 
-  const sorted = useMemo(() => {
-    if (!sortKey) return data
-    return [...data].sort((a, b) => {
+  const safeData = useMemo<T[]>(() => {
+    if (Array.isArray(data)) return data
+    if (data && typeof data === 'object' && 'data' in data && Array.isArray((data as any).data)) {
+      return (data as any).data as T[]
+    }
+    return []
+  }, [data])
+
+  const sorted = useMemo<T[]>(() => {
+    if (!sortKey) return safeData
+    return [...safeData].sort((a, b) => {
       const aVal = (a as any)[sortKey]
       const bVal = (b as any)[sortKey]
       if (aVal == null) return 1
@@ -66,12 +74,12 @@ export function DataTable<T>({
       const cmp = typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal - bVal
       return sortDir === 'asc' ? cmp : -cmp
     })
-  }, [data, sortKey, sortDir])
+  }, [safeData, sortKey, sortDir])
 
   const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize))
   const safePage = Math.min(page, totalPages - 1)
   const paginated = sorted.slice(safePage * pageSize, (safePage + 1) * pageSize)
-  const allSelected = data.length > 0 && selectedRows?.size === data.length
+  const allSelected = safeData.length > 0 && selectedRows?.size === safeData.length
 
   const handleSort = (key: string) => {
     if (!sortable) return
@@ -88,7 +96,7 @@ export function DataTable<T>({
     if (allSelected) {
       onSelectionChange(new Set())
     } else {
-      onSelectionChange(new Set(data.map(keyExtractor)))
+      onSelectionChange(new Set(safeData.map(keyExtractor)))
     }
   }
 
@@ -120,7 +128,7 @@ export function DataTable<T>({
     )
   }
 
-  if (!resolvedIsLoading && data.length === 0) {
+  if (!resolvedIsLoading && safeData.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center gap-2">
         <p className="text-sm font-medium text-[var(--color-text-primary)]">{resolvedEmptyTitle}</p>

@@ -105,4 +105,47 @@ describe('DataTable', () => {
     render(<DataTable columns={columns} data={data} keyExtractor={r => r.id} emptyTitle="No data" />)
     expect(screen.queryAllByText('No data')).toHaveLength(0)
   })
+
+  // ── Regression tests for TKT-D.SLICE-001 ──────────────────────────────────
+  // The minified bundle surfaced "D.slice is not a function" because callers
+  // sometimes pass a Laravel paginated response object { data: [...] } or
+  // undefined/null during a loading race. DataTable must coerce these to a
+  // safe array rather than throwing into the ErrorBoundary.
+
+  it('unwraps a paginated response object { data: [...] } without throwing', () => {
+    const paginated = { data, current_page: 1, last_page: 1, total: 3 }
+    expect(() =>
+      render(<DataTable columns={columns} data={paginated as any} keyExtractor={r => r.id} />)
+    ).not.toThrow()
+    expect(screen.getAllByText('Alice').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('Charlie').length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('renders the empty state when data is undefined without throwing', () => {
+    expect(() =>
+      render(
+        <DataTable
+          columns={columns}
+          data={undefined as any}
+          keyExtractor={r => r.id}
+          emptyTitle="No records"
+        />
+      )
+    ).not.toThrow()
+    expect(screen.getByText('No records')).toBeInTheDocument()
+  })
+
+  it('renders the empty state when data is null without throwing', () => {
+    expect(() =>
+      render(
+        <DataTable
+          columns={columns}
+          data={null as any}
+          keyExtractor={r => r.id}
+          emptyTitle="Nothing here"
+        />
+      )
+    ).not.toThrow()
+    expect(screen.getByText('Nothing here')).toBeInTheDocument()
+  })
 })

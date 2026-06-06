@@ -1,24 +1,50 @@
 import type { LucideIcon } from 'lucide-react'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import clsx from 'clsx'
+import { Sparkline } from '@/components/ui/Sparkline'
+import { useCountUp, useReducedMotion, staggerStyle } from '@/lib/motion'
 
 interface KpiCardProps {
   title: string
-  value: string | number
+  value: number | string
   icon: LucideIcon
   trend?: 'up' | 'down' | 'neutral'
   trendValue?: string
   color?: 'accent' | 'success' | 'warning' | 'danger' | 'info'
   loading?: boolean
   onClick?: () => void
+  sparkline?: number[]
+  sparklineColor?: string
+  hint?: string
+  index?: number
 }
 
-const COLOR_MAP: Record<string, { circle: string; icon: string }> = {
-  accent:  { circle: 'bg-accent-light', icon: 'text-accent-text' },
-  success: { circle: 'bg-emerald-500/15', icon: 'text-emerald-400' },
-  warning: { circle: 'bg-yellow-500/15', icon: 'text-yellow-400' },
-  danger:  { circle: 'bg-red-500/15', icon: 'text-red-400' },
-  info:    { circle: 'bg-blue-500/15', icon: 'text-blue-400' },
+const COLOR_MAP: Record<string, { circle: string; icon: string; bar: string }> = {
+  accent:  {
+    circle: 'bg-[var(--color-accent-light)]',
+    icon: 'text-[var(--color-accent-text)]',
+    bar: 'var(--color-accent-text)',
+  },
+  success: {
+    circle: 'bg-[var(--color-status-done)]/15',
+    icon: 'text-[var(--color-status-done)]',
+    bar: 'var(--color-status-done)',
+  },
+  warning: {
+    circle: 'bg-[var(--color-status-progress)]/15',
+    icon: 'text-[var(--color-status-progress)]',
+    bar: 'var(--color-status-progress)',
+  },
+  danger:  {
+    circle: 'bg-[var(--color-status-blocked)]/15',
+    icon: 'text-[var(--color-status-blocked)]',
+    bar: 'var(--color-status-blocked)',
+  },
+  info:    {
+    circle: 'bg-[var(--color-status-review)]/15',
+    icon: 'text-[var(--color-status-review)]',
+    bar: 'var(--color-status-review)',
+  },
 }
 
 const TREND_ICON = {
@@ -28,9 +54,9 @@ const TREND_ICON = {
 }
 
 const TREND_COLOR = {
-  up: 'text-emerald-400 bg-emerald-500/15',
-  down: 'text-red-400 bg-red-500/15',
-  neutral: 'text-gray-400 bg-gray-500/15',
+  up: 'text-[var(--color-status-done)] bg-[var(--color-status-done)]/15',
+  down: 'text-[var(--color-status-blocked)] bg-[var(--color-status-blocked)]/15',
+  neutral: 'text-[var(--color-text-muted)] bg-[var(--color-bg-hover)]',
 }
 
 export function KpiCard({
@@ -42,68 +68,109 @@ export function KpiCard({
   color = 'accent',
   loading = false,
   onClick,
+  sparkline,
+  sparklineColor,
+  hint,
+  index = 0,
 }: KpiCardProps) {
   const colors = COLOR_MAP[color] ?? COLOR_MAP.accent
   const TrendIcon = trend ? TREND_ICON[trend] : null
+  const reduced = useReducedMotion()
+
+  const numericValue = typeof value === 'number' && !Number.isNaN(value) ? value : 0
+  const isNumeric = typeof value === 'number' && !Number.isNaN(value)
+  const count = useCountUp({ to: numericValue, durationMs: reduced ? 0 : 900 })
+  const display = !isNumeric
+    ? (value === '' || value === null || value === undefined ? '—' : String(value))
+    : count
 
   const content = (
     <div
       className={clsx(
-        'rounded-xl border p-4 flex items-start gap-4 transition-all',
-        onClick && 'cursor-pointer hover:border-indigo-500/40',
+        'group relative rounded-md p-4 flex items-start gap-4 overflow-hidden min-h-[112px]',
+        'border border-[var(--color-glass-border)] bg-[var(--color-glass-bg)]',
+        'backdrop-blur-md transition-[background,border-color,box-shadow,transform] duration-200 ease-out',
+        onClick && 'cursor-pointer hover:border-[var(--color-glass-border-hover)] hover:bg-[var(--color-glass-bg-strong)] hover:shadow-[var(--shadow-md)] active:scale-[0.998]',
       )}
-      style={{
-        background: 'var(--color-glass-bg)',
-        borderColor: 'var(--color-glass-border)',
-        backdropFilter: 'blur(12px)',
-      }}
     >
-      <div className={clsx('rounded-xl p-3 shrink-0', colors.circle)}>
-        <Icon size={20} className={colors.icon} />
+      <div className={clsx('rounded-md p-2.5 shrink-0', colors.circle)}>
+        <Icon size={20} className={colors.icon} aria-hidden="true" />
       </div>
 
       <div className="flex-1 min-w-0">
         {loading ? (
           <div className="space-y-2">
-            <div className="h-8 w-20 bg-gray-800/50 rounded animate-pulse" />
-            <div className="h-3 w-24 bg-gray-800/50 rounded animate-pulse" />
+            <div className="h-8 w-20 bg-[var(--color-bg-hover)] rounded animate-pulse" />
+            <div className="h-3 w-24 bg-[var(--color-bg-hover)] rounded animate-pulse" />
           </div>
         ) : (
           <>
             <p
-              className="text-2xl font-bold tracking-tight truncate"
-              style={{ color: 'var(--color-text-primary)' }}
+              className={clsx(
+                'text-display-sm font-bold tracking-tight tabular-nums truncate',
+                'text-[var(--color-text-primary)]',
+                !reduced && 'animate-count-up',
+              )}
+              title={String(value)}
             >
-              {value === '' || value === null || value === undefined ? '--' : value}
+              {display}
             </p>
-            <div className="flex items-center gap-2 mt-0.5">
-              <p
-                className="text-xs truncate"
-                style={{ color: 'var(--color-text-muted)' }}
-              >
+            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+              <p className="text-body-sm text-[var(--color-text-muted)] truncate">
                 {title}
               </p>
               {trend && TrendIcon && (
                 <span
                   className={clsx(
-                    'inline-flex items-center gap-0.5 text-xs font-medium px-1.5 py-0.5 rounded shrink-0',
+                    'inline-flex items-center gap-0.5 text-label font-medium px-1.5 py-0.5 rounded shrink-0',
                     TREND_COLOR[trend],
                   )}
                 >
-                  <TrendIcon size={10} />
+                  <TrendIcon size={10} aria-hidden="true" />
                   {trendValue ?? ''}
                 </span>
               )}
             </div>
+            {hint && (
+              <p className="text-micro text-[var(--color-text-muted)] mt-1 truncate">
+                {hint}
+              </p>
+            )}
           </>
         )}
       </div>
+
+      {sparkline && sparkline.length > 1 && (
+        <div className="absolute right-3 bottom-2 opacity-90 group-hover:opacity-100 transition-opacity">
+          <Sparkline
+            data={sparkline}
+            width={84}
+            height={28}
+            stroke={sparklineColor ?? colors.bar}
+            fill={sparklineColor ?? colors.bar}
+            ariaLabel={`${title} trend`}
+          />
+        </div>
+      )}
     </div>
   )
 
   if (onClick) {
-    return <button type="button" onClick={onClick} className="w-full text-left block">{content}</button>
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className="stagger-item w-full text-left block focus:outline-none focus-visible:shadow-[var(--shadow-focus)] rounded-md"
+        style={staggerStyle(index)}
+      >
+        {content}
+      </button>
+    )
   }
 
-  return content
+  return (
+    <div className="stagger-item" style={staggerStyle(index)}>
+      {content}
+    </div>
+  )
 }

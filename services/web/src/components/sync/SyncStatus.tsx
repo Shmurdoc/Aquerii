@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { getPendingCount } from '@/offline/MutationQueue'
 import { Wifi, WifiOff, Loader2 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -15,16 +14,9 @@ export function SyncStatus() {
     window.addEventListener('online', handleOnline)
     window.addEventListener('offline', handleOffline)
 
-    // Check pending mutations periodically
-    const interval = setInterval(async () => {
-      const count = await getPendingCount()
-      setPendingCount(count)
-    }, 5000)
-
     return () => {
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
-      clearInterval(interval)
     }
   }, [])
 

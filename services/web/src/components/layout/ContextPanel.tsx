@@ -1,8 +1,8 @@
 import { useLocation, NavLink } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import clsx from 'clsx'
+import { staggerStyle } from '@/lib/motion'
 
-// Sub-nav definitions per top-level section
 const SECTIONS: Record<string, { label: string; items: { to: string; label: string }[] }> = {
   '/dashboard': {
     label: 'Dashboard',
@@ -26,34 +26,34 @@ const SECTIONS: Record<string, { label: string; items: { to: string; label: stri
   '/crm': {
     label: 'CRM',
     items: [
-      { to: '/crm',             label: 'Deals'      },
-      { to: '/crm/contacts',    label: 'Contacts'   },
-      { to: '/crm/leads',       label: 'Leads'      },
-      { to: '/crm/forecast',    label: 'Forecast'   },
-      { to: '/crm/quotas',      label: 'Quotas'     },
-      { to: '/crm/sequences',   label: 'Sequences'  },
-      { to: '/crm/products',    label: 'Products'   },
-      { to: '/crm/quotes',      label: 'Quotes'     },
-      { to: '/crm/calendar-sync', label: 'Calendar Sync' },
-      { to: '/crm/approval-rules', label: 'Approval Rules' },
-      { to: '/crm/deal-approvals', label: 'Deal Approvals' },
+      { to: '/crm',                label: 'Deals'            },
+      { to: '/crm/contacts',       label: 'Contacts'         },
+      { to: '/crm/leads',          label: 'Leads'            },
+      { to: '/crm/forecast',       label: 'Forecast'         },
+      { to: '/crm/quotas',         label: 'Quotas'           },
+      { to: '/crm/sequences',      label: 'Sequences'        },
+      { to: '/crm/products',       label: 'Products'         },
+      { to: '/crm/quotes',         label: 'Quotes'           },
+      { to: '/crm/calendar-sync',  label: 'Calendar Sync'    },
+      { to: '/crm/approval-rules', label: 'Approval Rules'   },
+      { to: '/crm/deal-approvals', label: 'Deal Approvals'   },
       { to: '/crm/automation-rules', label: 'Automation Rules' },
     ],
   },
   '/support': {
     label: 'Support',
     items: [
-      { to: '/support/tickets',        label: 'Tickets'   },
+      { to: '/support/tickets',        label: 'Tickets'        },
       { to: '/support/knowledge-base', label: 'Knowledge Base' },
-      { to: '/support/slas',           label: 'SLAs'      },
+      { to: '/support/slas',           label: 'SLAs'           },
     ],
   },
   '/marketing': {
     label: 'Marketing',
     items: [
-      { to: '/marketing/campaigns',        label: 'Campaigns' },
-      { to: '/marketing/email-templates',  label: 'Email Templates' },
-      { to: '/marketing/segments',         label: 'Segments' },
+      { to: '/marketing/campaigns',       label: 'Campaigns'       },
+      { to: '/marketing/email-templates', label: 'Email Templates' },
+      { to: '/marketing/segments',        label: 'Segments'        },
     ],
   },
   '/settings': {
@@ -90,7 +90,6 @@ const SECTIONS: Record<string, { label: string; items: { to: string; label: stri
   },
 }
 
-// Sections that show the context panel
 const PANEL_SECTIONS = Object.keys(SECTIONS)
 
 interface Props {
@@ -108,39 +107,59 @@ export default function ContextPanel({ onNavigate }: Props) {
 
   return (
     <aside
-      style={{ background: 'var(--color-bg-base)', borderRight: '1px solid var(--color-glass-border)' }}
-      className="w-48 flex flex-col shrink-0"
+      className="w-52 flex flex-col shrink-0 z-[var(--z-raised)] bg-[var(--color-bg-base)] border-r border-[var(--color-glass-border)]"
       aria-label={`${label} sub-navigation`}
     >
-      {/* Section title */}
-      <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--color-glass-border)' }}>
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+      <div className="px-4 py-3.5 border-b border-[var(--color-glass-border)]">
+        <p className="text-micro font-semibold uppercase tracking-widest text-[var(--color-text-muted)]">
           {label}
         </p>
         {section === '/boards' && workspace && (
-          <p className="text-xs text-gray-400 mt-0.5 truncate">{workspace.name}</p>
+          <p className="text-label text-[var(--color-text-secondary)] mt-0.5 truncate">
+            {workspace.name}
+          </p>
         )}
       </div>
 
-      {/* Sub-nav */}
       <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto" aria-label={label}>
-        {items.map(({ to, label: itemLabel }) => (
+        {items.map(({ to, label: itemLabel }, idx) => (
           <NavLink
             key={to}
             to={to}
             end
             onClick={onNavigate}
             aria-label={itemLabel}
+            style={staggerStyle(idx)}
             className={({ isActive }) =>
               clsx(
-                'block px-3 py-1.5 rounded-lg text-sm transition-colors',
+                'stagger-item relative block px-3 py-1.5 rounded-md text-body-sm',
+                'transition-[background,color,transform] duration-150 ease-out press-shrink',
                 isActive
-                  ? 'bg-[var(--color-accent-light)] text-[var(--color-accent-text)] font-medium'
-                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)]'
+                  ? 'text-[var(--color-text-primary)] font-medium'
+                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)]',
               )
             }
           >
-            {itemLabel}
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-full bg-[var(--color-accent)]"
+                    style={{ boxShadow: '0 0 8px var(--color-accent)' }}
+                  />
+                )}
+                <span
+                  className={clsx(
+                    'absolute inset-0 rounded-md -z-10 transition-opacity duration-150',
+                    isActive ? 'opacity-100' : 'opacity-0',
+                  )}
+                  style={{ background: 'var(--color-accent-light)' }}
+                  aria-hidden="true"
+                />
+                <span className="relative">{itemLabel}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </nav>

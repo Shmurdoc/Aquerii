@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
-import { useItem, useUpdateItem } from '@/hooks/useItems'
+import { useItem, useUpdateItem, useDeleteItem } from '@/hooks/useItems'
 import type { Item } from '@/hooks/useItems'
 import { format } from 'date-fns'
 import { X, Calendar, User, Flag, Paperclip, MessageSquare, GitBranch, Trash2, Plus, FileText, ExternalLink, Loader2 } from 'lucide-react'
@@ -85,19 +85,18 @@ export default function ItemDetailModal({ itemId, boardId, open, onClose, onDele
   const [priority,    setPriority]    = useState('')
   const [status,      setStatus]      = useState('')
   const [comment,     setComment]     = useState('')
-  const [confirmDel,  setConfirmDel]  = useState(false)
+  const [showDelModal, setShowDelModal] = useState(false)
   const [dirty,       setDirty]       = useState(false)
 
   const updateItemMutation = useUpdateItem(boardId)
 
   const saveItem = useMutation({
     mutationFn: () =>
-      api.put(`/workspaces/${workspace!.id}/boards/${boardId}/items/${itemId}`, {
-        title, description, due_date: dueDate || null, priority, status,
-        expected_version: item?.version,
+      updateItemMutation.mutateAsync({
+        itemId,
+        data: { title, description, due_date: dueDate || null, priority, status, expected_version: item?.version },
       }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['items', boardId] })
       qc.invalidateQueries({ queryKey: ['item', workspace!.id, boardId, itemId] })
       setDirty(false)
       toast.success('Item saved.')
@@ -188,6 +187,32 @@ export default function ItemDetailModal({ itemId, boardId, open, onClose, onDele
   if (!open) return null
 
   return (
+    <>
+      <Modal
+        open={showDelModal}
+        onClose={() => setShowDelModal(false)}
+        title="Delete item"
+        description="Are you sure you want to delete this item? This action cannot be undone."
+        size="sm"
+        footer={
+          <>
+            <Button variant="secondary" size="sm" onClick={() => setShowDelModal(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={() => {
+                deleteItem.mutate()
+                setShowDelModal(false)
+              }}
+              loading={deleteItem.isPending}
+            >
+              Delete
+            </Button>
+          </>
+        }
+      />
     <Modal open={open} onClose={onClose} size="full">
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
@@ -380,42 +405,21 @@ export default function ItemDetailModal({ itemId, boardId, open, onClose, onDele
                   Save
                 </Button>
 
-                {confirmDel ? (
-                  <div className="flex gap-2">
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      fullWidth
-                      onClick={() => deleteItem.mutate()}
-                      loading={deleteItem.isPending}
-                    >
-                      Confirm delete
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      fullWidth
-                      onClick={() => setConfirmDel(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                ) : (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    fullWidth
-                    onClick={() => setConfirmDel(true)}
-                  >
-                    <Trash2 size={11} /> Delete item
-                  </Button>
-                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  fullWidth
+                  onClick={() => setShowDelModal(true)}
+                >
+                  <Trash2 size={11} /> Delete item
+                </Button>
               </div>
             </div>
           </div>
         </div>
       )}
     </Modal>
+    </>
   )
 }
 
@@ -423,6 +427,7 @@ function SubItems({ itemId, boardId, workspaceId }: { itemId: string; boardId: s
   const qc = useQueryClient()
   const [adding, setAdding] = useState(false)
   const [newTitle, setNewTitle] = useState('')
+  const updateItem = useUpdateItem(boardId)
 
   const { data: subitems = [] } = useQuery({
     queryKey: ['subitems', itemId],
@@ -445,7 +450,7 @@ function SubItems({ itemId, boardId, workspaceId }: { itemId: string; boardId: s
 
   const toggleDone = useMutation({
     mutationFn: ({ id, done }: { id: string; done: boolean }) =>
-      api.patch(`/workspaces/${workspaceId}/boards/${boardId}/items/${id}`, { done }),
+      updateItem.mutateAsync({ itemId: id, data: { done } }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['subitems', itemId] }),
   })
 

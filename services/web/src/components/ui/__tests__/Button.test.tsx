@@ -29,9 +29,9 @@ describe('Button', () => {
 
   it('applies size classes', () => {
     const { rerender } = render(<Button size="sm">Small</Button>)
-    expect(screen.getByRole('button').className).toContain('h-7')
+    expect(screen.getByRole('button').className).toContain('h-8')
 
     rerender(<Button size="lg">Large</Button>)
-    expect(screen.getByRole('button').className).toContain('h-11')
+    expect(screen.getByRole('button').className).toContain('h-12')
   })
 })

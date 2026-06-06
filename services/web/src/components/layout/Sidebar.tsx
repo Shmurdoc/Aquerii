@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-import { LayoutGrid, FileText, Users, Settings, ChevronsUpDown, Check, Plus, Mail, Copy, Shield } from 'lucide-react'
+import { LayoutGrid, FileText, Users, Settings, ChevronsUpDown, Check, Plus, Mail, Copy, Shield, Ticket } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api'
@@ -13,6 +13,7 @@ const NAV = [
   { to: '/documents', icon: FileText,   label: 'Documents' },
   { to: '/crm',       icon: Users,      label: 'CRM'       },
   { to: '/hsse',      icon: Shield,     label: 'HSSE'      },
+  { to: '/support/tickets', icon: Ticket, label: 'Support' },
   { to: '/templates', icon: Copy,       label: 'Templates'  },
   { to: '/settings',  icon: Settings,   label: 'Settings'  },
 ]

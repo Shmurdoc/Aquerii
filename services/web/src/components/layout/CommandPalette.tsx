@@ -6,9 +6,11 @@ import { useAuthStore } from '@/stores/authStore'
 import {
   LayoutGrid, CheckSquare, FileText, User, DollarSign, Building2,
   Target, TicketCheck, Mail, Video, UserCheck, Search, Clock, Wand2, ShieldCheck, BarChart3,
+  CornerDownLeft,
   type LucideIcon,
 } from 'lucide-react'
 import clsx from 'clsx'
+import { useReducedMotion } from '@/lib/motion'
 
 const ENTITY_ICONS: Record<string, LucideIcon> = {
   board: LayoutGrid,
@@ -88,7 +90,9 @@ function saveRecentItem(item: { id: string; title: string; type: string }) {
     const recent = getRecent().filter((r) => r.id !== item.id)
     recent.unshift(item)
     localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, MAX_RECENT)))
-  } catch {}
+  } catch {
+    /* ignore quota errors */
+  }
 }
 
 interface Props {
@@ -103,6 +107,7 @@ export default function CommandPalette({ onClose, onOpenItem }: Props) {
   const itemsRef = useRef<(HTMLButtonElement | null)[]>([])
   const navigate = useNavigate()
   const workspace = useAuthStore((s) => s.workspace)
+  const reduced = useReducedMotion()
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -116,7 +121,9 @@ export default function CommandPalette({ onClose, onOpenItem }: Props) {
   const { data: results } = useQuery({
     queryKey: ['search', workspace?.id, query],
     queryFn: () =>
-      api.get(`/workspaces/${workspace!.id}/search?q=${encodeURIComponent(query)}`).then((r) => r.data.data),
+      api
+        .get(`/workspaces/${workspace!.id}/search?q=${encodeURIComponent(query)}`)
+        .then((r) => r.data.data),
     enabled: !!workspace && query.length > 1,
   })
 
@@ -162,9 +169,8 @@ export default function CommandPalette({ onClose, onOpenItem }: Props) {
           navigate(`/employees?id=${r.id}`)
           break
         case 'module':
-          navigate('/dashboard')
-          break
         case 'action':
+        case 'recent':
           navigate('/dashboard')
           break
         case 'template':
@@ -172,9 +178,6 @@ export default function CommandPalette({ onClose, onOpenItem }: Props) {
           break
         case 'report':
           navigate('/reports')
-          break
-        case 'recent':
-          navigate('/dashboard')
           break
         default:
           break
@@ -243,56 +246,76 @@ export default function CommandPalette({ onClose, onOpenItem }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-24 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[var(--z-modal)] flex items-start justify-center pt-[14vh] bg-black/65 backdrop-blur-md animate-backdrop-in"
       onClick={onClose}
+      role="presentation"
     >
       <div
-        className="w-full max-w-xl bg-surface glass-border rounded-xl shadow-lg overflow-hidden animate-scale-in"
-        style={{ border: '1px solid var(--color-glass-border)' }}
+        className={clsx(
+          'w-full max-w-xl overflow-hidden',
+          'rounded-md bg-[var(--color-bg-elevated)] border border-[var(--color-glass-border)]',
+          'shadow-[var(--shadow-elevated)]',
+          !reduced && 'animate-modal-in',
+        )}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
+        role="combobox"
+        aria-expanded="true"
+        aria-haspopup="listbox"
       >
-        <input
-          ref={inputRef}
-          autoFocus
-          type="text"
-          placeholder="Search or type a command…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="w-full bg-transparent px-4 py-3 text-sm text-primary placeholder-text-muted outline-none"
-          style={{ borderBottom: '1px solid var(--color-glass-border)' }}
-        />
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-[var(--color-glass-border)]">
+          <Search size={16} className="text-[var(--color-text-muted)] shrink-0" aria-hidden="true" />
+          <input
+            ref={inputRef}
+            autoFocus
+            type="text"
+            placeholder="Search or type a command…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="flex-1 bg-transparent text-body text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none"
+            aria-label="Search commands"
+            aria-autocomplete="list"
+            aria-controls="command-palette-list"
+          />
+          <kbd className="hidden sm:inline-flex items-center gap-1 text-micro font-medium text-[var(--color-text-muted)] bg-[var(--color-bg-hover)] border border-[var(--color-glass-border)] rounded px-1.5 py-0.5">
+            ESC
+          </kbd>
+        </div>
 
-        <div className="max-h-80 overflow-y-auto py-1">
+        <div
+          id="command-palette-list"
+          role="listbox"
+          className="max-h-80 overflow-y-auto py-1"
+        >
           {!hasCommands && !hasRecent && !hasSearch && (
-            <p className="px-4 py-8 text-center text-sm text-muted">
+            <p className="px-4 py-10 text-center text-body-sm text-[var(--color-text-muted)]">
               {query.length > 0 ? 'No results found' : 'Start typing to search…'}
             </p>
           )}
 
-          {hasCommands && (
-            <SectionHeader label="Commands" />
-          )}
+          {hasCommands && <SectionHeader label="Commands" />}
           {commands.map((item, idx) => (
-              <CommandRow
-                key={item.id}
-                ref={(el: HTMLButtonElement | null) => { itemsRef.current[idx] = el }}
-                item={item}
-                highlighted={highlightedIndex === idx}
-                onHover={() => setHighlightedIndex(idx)}
-                onSelect={item.action}
-              />
-            ))}
+            <CommandRow
+              key={item.id}
+              ref={(el: HTMLButtonElement | null) => {
+                itemsRef.current[idx] = el
+              }}
+              item={item}
+              highlighted={highlightedIndex === idx}
+              onHover={() => setHighlightedIndex(idx)}
+              onSelect={item.action}
+            />
+          ))}
 
-          {hasRecent && (
-            <SectionHeader label="Recent" />
-          )}
+          {hasRecent && <SectionHeader label="Recent" />}
           {recentItems.map((item, idx) => {
             const globalIdx = commands.length + idx
             return (
               <CommandRow
                 key={item.id}
-                ref={(el: HTMLButtonElement | null) => { itemsRef.current[globalIdx] = el }}
+                ref={(el: HTMLButtonElement | null) => {
+                  itemsRef.current[globalIdx] = el
+                }}
                 item={item}
                 highlighted={highlightedIndex === globalIdx}
                 onHover={() => setHighlightedIndex(globalIdx)}
@@ -301,15 +324,15 @@ export default function CommandPalette({ onClose, onOpenItem }: Props) {
             )
           })}
 
-          {hasSearch && (
-            <SectionHeader label="Search Results" />
-          )}
+          {hasSearch && <SectionHeader label="Search Results" />}
           {searchItems.map((item, idx) => {
             const globalIdx = commands.length + recentItems.length + idx
             return (
               <CommandRow
                 key={item.id}
-                ref={(el: HTMLButtonElement | null) => { itemsRef.current[globalIdx] = el }}
+                ref={(el: HTMLButtonElement | null) => {
+                  itemsRef.current[globalIdx] = el
+                }}
                 item={item}
                 highlighted={highlightedIndex === globalIdx}
                 onHover={() => setHighlightedIndex(globalIdx)}
@@ -318,17 +341,43 @@ export default function CommandPalette({ onClose, onOpenItem }: Props) {
             )
           })}
         </div>
+
+        <div
+          className="flex items-center gap-3 px-4 py-2 border-t border-[var(--color-glass-border)] bg-[var(--color-bg-base)] text-micro text-[var(--color-text-muted)]"
+        >
+          <span className="inline-flex items-center gap-1">
+            <KbdHint label="↑↓" />
+            navigate
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <KbdHint label="↵" />
+            select
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <KbdHint label="esc" />
+            close
+          </span>
+          <span className="ml-auto inline-flex items-center gap-1">
+            <CornerDownLeft size={11} aria-hidden="true" />
+            <span className="hidden sm:inline">Powered by Aquerii</span>
+          </span>
+        </div>
       </div>
     </div>
   )
 }
 
+function KbdHint({ label }: { label: string }) {
+  return (
+    <kbd className="inline-flex items-center text-[10px] font-medium text-[var(--color-text-muted)] bg-[var(--color-bg-hover)] border border-[var(--color-glass-border)] rounded px-1.5 py-0.5">
+      {label}
+    </kbd>
+  )
+}
+
 function SectionHeader({ label }: { label: string }) {
   return (
-    <p
-      className="px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted"
-      style={{ borderBottom: '1px solid var(--color-glass-border)' }}
-    >
+    <p className="px-4 py-1.5 text-micro font-semibold uppercase tracking-widest text-[var(--color-text-muted)] border-b border-[var(--color-glass-border)]">
       {label}
     </p>
   )
@@ -341,32 +390,60 @@ interface CommandRowProps {
   onSelect: () => void
 }
 
-const CommandRow = forwardRef<HTMLButtonElement, CommandRowProps>(function CommandRow({
-  item,
-  highlighted,
-  onHover,
-  onSelect,
-}, ref) {
+const CommandRow = forwardRef<HTMLButtonElement, CommandRowProps>(function CommandRow(
+  { item, highlighted, onHover, onSelect },
+  ref,
+) {
   const Icon = item.icon
   return (
     <button
       ref={ref}
+      role="option"
+      aria-selected={highlighted}
       onClick={onSelect}
       onMouseEnter={onHover}
       className={clsx(
-        'w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors',
-        highlighted ? 'bg-hover text-primary' : 'text-secondary',
+        'w-full flex items-center gap-3 px-4 py-2.5 text-body-sm text-left',
+        'transition-[background,color] duration-100 ease-out',
+        highlighted
+          ? 'bg-[var(--color-accent-light)] text-[var(--color-text-primary)]'
+          : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]',
       )}
     >
       {Icon && (
-        <Icon size={16} className="shrink-0 text-muted" />
+        <Icon
+          size={15}
+          className={clsx(
+            'shrink-0 transition-colors',
+            highlighted ? 'text-[var(--color-accent-text)]' : 'text-[var(--color-text-muted)]',
+          )}
+          aria-hidden="true"
+        />
       )}
-      <span className="flex-1 text-left truncate">{item.label}</span>
+      <span className="flex-1 truncate">{item.label}</span>
+      {item.subtitle && (
+        <span className="text-label text-[var(--color-text-muted)] truncate hidden sm:inline">
+          {item.subtitle}
+        </span>
+      )}
       {item.badge && (
-        <span className="text-[10px] uppercase tracking-wider text-muted shrink-0">{item.badge}</span>
+        <span
+          className={clsx(
+            'text-micro uppercase tracking-widest shrink-0 px-1.5 py-0.5 rounded',
+            highlighted
+              ? 'bg-[var(--color-accent)]/20 text-[var(--color-accent-text)]'
+              : 'text-[var(--color-text-muted)]',
+          )}
+        >
+          {item.badge}
+        </span>
       )}
       {highlighted && (
-        <Clock size={14} className="shrink-0 text-accent" />
+        <CornerDownLeft
+          size={12}
+          className="shrink-0 text-[var(--color-accent-text)]"
+          aria-hidden="true"
+        />
       )}
     </button>
   )

@@ -9,5 +9,6 @@ interface Props {
 
 export function PermissionGate({ permission, fallback = null, children }: Props) {
   const { can } = usePermission()
+  if (!permission) return <>{children}</>
   return can(permission) ? <>{children}</> : <>{fallback}</>
 }

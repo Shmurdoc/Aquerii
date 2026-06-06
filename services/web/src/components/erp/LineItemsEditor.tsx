@@ -5,7 +5,7 @@
  *   items        — controlled array of line items
  *   onChange     — called with full updated array on any change
  *   quantityType — 'integer' (invoices) | 'float' (PO/SO)
- *   currency     — ISO 3-letter code for display (default USD)
+ *   currency     — ISO 3-letter code for display (default ZAR)
  *   readOnly     — disables all editing (for view drawers)
  */
 
@@ -35,7 +35,7 @@ function calcTotal(item: Omit<LineItem, 'total'>): number {
 
 const EMPTY: LineItem = { description: '', quantity: 1, unit_price: 0, tax_rate: 0, total: 0 }
 
-export default function LineItemsEditor({ items, onChange, quantityType = 'float', currency = 'USD', readOnly = false }: Props) {
+export default function LineItemsEditor({ items, onChange, quantityType = 'float', currency = 'ZAR', readOnly = false }: Props) {
   function update(index: number, patch: Partial<LineItem>) {
     const next = items.map((item, i) => {
       if (i !== index) return item
