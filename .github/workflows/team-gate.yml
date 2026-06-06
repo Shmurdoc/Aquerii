@@ -1,0 +1,150 @@
+name: Team System Gate
+
+on:
+  pull_request:
+    paths:
+      - "team/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "team/**"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate Team Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate team file formats
+        run: node team/scripts/validate.mjs --strict
+        id: validate
+
+      - name: Check heartbeat freshness
+        run: node team/scripts/enforce.mjs --heartbeat
+        id: heartbeat
+        continue-on-error: true
+
+      - name: Run crash recovery (dry-run)
+        run: node team/scripts/recover.mjs --dry-run
+        id: recovery
+        continue-on-error: true
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Team System Gate Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| File Validation | ${{ steps.validate.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Heartbeat Check | ${{ steps.heartbeat.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Recovery Scan | ${{ steps.recovery.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.validate.outcome }}" == "failure" ]; then
+            echo "### Action Required" >> $GITHUB_STEP_SUMMARY
+            echo "Fix the validation errors above before merging." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Fail if validation failed
+        if: steps.validate.outcome == 'failure'
+        run: exit 1
+
+  enforce:
+    name: Enforce Coordination Rules
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run full enforcement check
+        run: node team/scripts/enforce.mjs --check
+        id: enforce
+
+      - name: Enforce lock/state consistency
+        run: |
+          echo "Checking lock/state consistency across all members..."
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const members = ['member-01','member-02','member-03','member-04','member-05','member-06','member-07','member-08'];
+            let errors = 0;
+            for (const id of members) {
+              const statusPath = path.join('team/members', id, 'status.md');
+              if (!fs.existsSync(statusPath)) { console.log('MISSING: ' + statusPath); errors++; continue; }
+              const raw = fs.readFileSync(statusPath, 'utf-8');
+              const match = raw.match(/^---\n([\s\S]*?)\n---/);
+              if (!match) { console.log('NO FRONTMATTER: ' + statusPath); errors++; continue; }
+              const fm = {};
+              for (const line of match[1].split('\n')) {
+                const idx = line.indexOf(':');
+                if (idx === -1) continue;
+                fm[line.slice(0,idx).trim()] = line.slice(idx+1).trim();
+              }
+              if (fm.state === 'running' && fm.lock !== 'true') {
+                console.log('LOCK MISMATCH: ' + id + ' is running but lock is ' + fm.lock);
+                errors++;
+              }
+              if (fm.state === 'done' && fm.lock === 'true') {
+                console.log('LOCK MISMATCH: ' + id + ' is done but lock is true');
+                errors++;
+              }
+            }
+            if (errors > 0) { console.log(errors + ' consistency error(s)'); process.exit(1); }
+            else { console.log('All members consistent'); }
+          "
+
+      - name: Check dependency graph integrity
+        run: |
+          echo "Checking dependency graph integrity..."
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const validMembers = ['member-01','member-02','member-03','member-04','member-05','member-06','member-07','member-08'];
+            let errors = 0;
+            for (const id of validMembers) {
+              const waitPath = path.join('team/members', id, 'wait.md');
+              if (!fs.existsSync(waitPath)) continue;
+              const raw = fs.readFileSync(waitPath, 'utf-8');
+              const match = raw.match(/^---\n([\s\S]*?)\n---/);
+              if (!match) continue;
+              const fm = {};
+              for (const line of match[1].split('\n')) {
+                const idx = line.indexOf(':');
+                if (idx === -1) continue;
+                let val = line.slice(idx+1).trim();
+                if (val.startsWith('[') && val.endsWith(']')) {
+                  val = val.slice(1,-1).split(',').map(s => s.trim().replace(/[\"\\[\\]]/g, ''));
+                }
+                fm[line.slice(0,idx).trim()] = val;
+              }
+              const waitingFor = fm.waiting_for;
+              if (!Array.isArray(waitingFor)) continue;
+              for (const ref of waitingFor) {
+                if (!validMembers.includes(ref)) {
+                  console.log('INVALID DEP: ' + id + ' depends on non-existent ' + ref);
+                  errors++;
+                }
+                if (ref === id) {
+                  console.log('SELF REF: ' + id + ' depends on itself');
+                  errors++;
+                }
+              }
+            }
+            if (errors > 0) { console.log(errors + ' dependency error(s)'); process.exit(1); }
+            else { console.log('All dependencies valid'); }
+          "

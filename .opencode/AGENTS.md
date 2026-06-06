@@ -26,6 +26,30 @@ Per PROJECT_MADOC_ELITE_AI_CODING_CREW.md:
 
 ---
 
+## Team System Bootstrap (MANDATORY)
+
+Every agent session **must** check for and comply with the team orchestration system.
+
+### At Session Start
+1. Check if `team/SYSTEM.md` exists
+2. If it exists, read it — you are bound by its rules
+3. If you have a `member_id`, read your `team/members/<your-id>/` files
+4. If you are the Leader, read `team/Leader.md` and `team/DASHBOARD.md`
+
+### Rules
+- **Never** edit files outside your designated area without Leader approval
+- **Never** mark work complete without passing quality gates G1-G7
+- **Always** update your `status.md` heartbeat while working
+- **Always** follow the coordination rules in `team/SYSTEM.md`
+
+### Enforcement
+- `team/scripts/validate.mjs` — validates all team file formats
+- `team/scripts/enforce.mjs` — enforces coordination rules in real-time
+- `team/scripts/recover.mjs` — detects and recovers from crashed sessions
+- CI gate: `.github/workflows/team-gate.yml` — rejects PRs with invalid team files
+
+---
+
 ## MCP Servers
 
 | MCP | Purpose | Status |
