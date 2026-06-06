@@ -59,15 +59,29 @@ All Phase 2 gaps (DOC, THEME, EXP, MENTION, AUDIT, PILOT) resolved. Pilot worksp
 - ⚠️ Visual smoke 5/8 pass, 3/8 fail — see "Ship-blockers" below
 - ⏸️ Visual QA on boards redesign — deferred to Week 4
 
-### Ship-blockers (post-Wave-5)
-All 5 resolved ✅:
-1. ~~GAP-IMG-STALE-001~~ — aquerii-api image rebuilt
-2. ~~GAP-DOCKER-GD-001~~ — ext-gd installed (Alpine)
-3. ~~GAP-AUTOLOAD-001~~ — base Controller class created
-4. ~~GAP-FORECAST-LAZY-001~~ — `->with('stage')` added
-5. ~~GAP-CALENDAR-QUERY-001~~ — aquerii-web image rebuilt (root cause was stale bundle, not hook source)
+### Ship-readiness: SHIP-READY ✅
+All 5 ship-blockers resolved. All 14 Wave 5 fixes shipped.
 
-**Ship-readiness**: SHIP-READY ✅ (pending build-hash regression check, see CALENDAR-QUERY-001 lesson learned)
+**PR**: https://github.com/Shmurdoc/Aquerii/pull/1
+**Branch**: `feat/crm-phases-3-to-8` (31 new commits — 30 feature + 1 pilot outreach)
+**Status**: Pushed, PR body updated, ready for review/merge.
+
+### Pilot outreach — ceo delivered
+
+- File: `team/plan/PILOT-OUTREACH.md` (406 lines)
+- Top 3 candidate mines: Thungela Resources, DRDGOLD, Northam Platinum
+- 3 email templates (cold, follow-up, pilot proposal)
+- 30-day outreach plan (target: 1-2 mines in scoping call by Week 4)
+- **Top legal concern**: POPI Act clauses missing from current NDA; R0 liability cap unenforceable
+
+### 7 human decisions before outreach
+1. **CIPC incorporation** of Aquerii (Pty) Ltd — *blocker*
+2. **Domain + public URL** — `aquerii.co.za` live — *blocker*
+3. **Loom video** — 5-min PTW walkthrough — *Week 1 blocker*
+4. **BBBEE EME affidavit** — sign and file
+5. **Sender address** — `madocmhlongo05@gmail.com` vs `madoc@aquerii.co.za`
+6. **Legal rewrite** — split NDA + pilot agreement, add POPI clauses, fix liability cap
+7. **Acceptance of pilot duration** — 4 weeks? Or 6?
 
 ## Member Status
 
