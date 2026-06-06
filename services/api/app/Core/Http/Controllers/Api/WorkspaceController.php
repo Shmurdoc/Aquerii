@@ -14,6 +14,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 
 class WorkspaceController extends Controller
 {
@@ -188,7 +190,11 @@ class WorkspaceController extends Controller
     // PATCH /workspaces/{workspace}/members/{userId}
     public function updateMemberRole(Request $request, Workspace $workspace, string $userId): JsonResponse
     {
-        $validated = $request->validate(['role' => 'required|in:admin,member,viewer']);
+        $validated = $request->validate([
+            'role' => 'sometimes|required|in:admin,member,viewer',
+            'position_id' => ['sometimes', 'nullable', 'integer', Rule::exists((new Role)->getTable(), 'id')],
+            'department_role_id' => ['sometimes', 'nullable', 'integer', Rule::exists((new Role)->getTable(), 'id')],
+        ]);
 
         // Prevent demoting the sole owner
         $member = DB::table('workspace_members')
@@ -198,7 +204,7 @@ class WorkspaceController extends Controller
 
         abort_unless($member, 404);
 
-        if ($member->role === 'owner' && $validated['role'] !== 'owner') {
+        if (array_key_exists('role', $validated) && $member->role === 'owner' && $validated['role'] !== 'owner') {
             $ownerCount = DB::table('workspace_members')
                 ->where('workspace_id', $workspace->id)
                 ->where('role', 'owner')
@@ -206,10 +212,24 @@ class WorkspaceController extends Controller
             abort_if($ownerCount <= 1, 422, 'Cannot demote the sole owner. Assign another owner first.');
         }
 
+        $update = ['updated_at' => now()];
+
+        if (array_key_exists('role', $validated)) {
+            $update['role'] = $validated['role'];
+        }
+
+        if (array_key_exists('position_id', $validated)) {
+            $update['position_id'] = $validated['position_id'];
+        }
+
+        if (array_key_exists('department_role_id', $validated)) {
+            $update['department_role_id'] = $validated['department_role_id'];
+        }
+
         DB::table('workspace_members')
             ->where('workspace_id', $workspace->id)
             ->where('user_id', $userId)
-            ->update(['role' => $validated['role'], 'updated_at' => now()]);
+            ->update($update);
 
         return response()->json(['data' => ['updated' => true]]);
     }

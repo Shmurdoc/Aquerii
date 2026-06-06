@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Permission\Models\Role;
 
 class WorkspaceMember extends Model
 {
@@ -33,6 +34,7 @@ class WorkspaceMember extends Model
         'employee_group_id', 'reports_to',
         'company_id', 'is_company_owner',
         'weekly_capacity_hours', 'capacity_notes',
+        'position_id', 'department_role_id',
     ];
 
     // Salary is sensitive PII; do not leak in any JSON response.
@@ -77,5 +79,15 @@ class WorkspaceMember extends Model
     public function subordinates(): HasMany
     {
         return $this->hasMany(self::class, 'reports_to');
+    }
+
+    public function position(): BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'position_id');
+    }
+
+    public function departmentRole(): BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'department_role_id');
     }
 }
