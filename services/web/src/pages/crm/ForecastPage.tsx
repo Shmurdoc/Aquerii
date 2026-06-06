@@ -51,8 +51,8 @@ export default function ForecastPage() {
                 <div key={r.rep_id} className="flex items-center gap-3">
                   <span className="text-sm text-[var(--color-text-primary)] flex-1 truncate">{r.rep_name}</span>
                   <div className="text-right">
-                    <p className="text-sm text-[var(--color-text-primary)]">${r.amount.toLocaleString()}</p>
-                    <p className="text-xs text-[var(--color-text-muted)]">weighted: ${r.weighted.toLocaleString()}</p>
+                    <p className="text-sm text-[var(--color-text-primary)]">${(r.amount ?? 0).toLocaleString()}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">weighted: ${(r.weighted ?? 0).toLocaleString()}</p>
                   </div>
                 </div>
               ))}
@@ -70,8 +70,8 @@ export default function ForecastPage() {
                 <div key={p.pipeline_id} className="flex items-center gap-3">
                   <span className="text-sm text-[var(--color-text-primary)] flex-1 truncate">{p.pipeline_name}</span>
                   <div className="text-right">
-                    <p className="text-sm text-[var(--color-text-primary)]">${p.amount.toLocaleString()}</p>
-                    <p className="text-xs text-[var(--color-text-muted)]">weighted: ${p.weighted.toLocaleString()}</p>
+                    <p className="text-sm text-[var(--color-text-primary)]">${(p.amount ?? 0).toLocaleString()}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">weighted: ${(p.weighted ?? 0).toLocaleString()}</p>
                   </div>
                 </div>
               ))}
