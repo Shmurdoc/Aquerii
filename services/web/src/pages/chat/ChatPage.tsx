@@ -22,7 +22,9 @@ import { useBoards } from '@/hooks/useBoards'
 import { useDocuments } from '@/hooks/useDocuments'
 import { Hash, Plus, Send, ArrowLeft, Paperclip, Reply, X } from 'lucide-react'
 import clsx from 'clsx'
+import toast from 'react-hot-toast'
 import { Button, Input } from '@/components/ui'
+import { MentionText } from '@/components/chat'
 
 type SearchEntity = {
   id: string
@@ -56,8 +58,12 @@ export default function ChatPage() {
 
   const handleCreateChannel = () => {
     if (!newChannelName.trim()) return
+    if (!user?.id) {
+      toast.error('You must be signed in to create a channel')
+      return
+    }
     createChannel.mutate(
-      { name: newChannelName, type: 'group', participant_ids: [user?.id].filter(Boolean) },
+      { name: newChannelName, type: 'group', participant_ids: [user.id] },
       {
         onSuccess: (res) => {
           setActiveChannelId(res.data.data.id)
@@ -108,19 +114,24 @@ export default function ChatPage() {
         )}
 
         <div className="flex-1 overflow-y-auto">
-          {channels.map(channel => (
-            <ChannelRow
-              key={channel.id}
-              channel={channel}
-              isActive={channel.id === activeChannelId}
-              currentUserId={user?.id}
-              onClick={() => setActiveChannelId(channel.id)}
-            />
-          ))}
-          {channels.length === 0 && (
-            <div className="px-4 py-8 text-center text-xs text-[var(--color-text-muted)]">
-              No channels yet. Create one to start chatting.
+          {channels.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+              <Hash size={32} className="text-[var(--color-text-muted)] opacity-40 mb-3" />
+              <p className="text-sm text-[var(--color-text-muted)]">No channels yet</p>
+              <Button onClick={() => setShowNewChannel(true)} className="mt-3">
+                <Plus size={14} /> Create your first channel
+              </Button>
             </div>
+          ) : (
+            channels.map(channel => (
+              <ChannelRow
+                key={channel.id}
+                channel={channel}
+                isActive={channel.id === activeChannelId}
+                currentUserId={user?.id}
+                onClick={() => setActiveChannelId(channel.id)}
+              />
+            ))
           )}
         </div>
       </div>
@@ -198,22 +209,44 @@ function MessageArea({
   const { data: messagesData, refetch } = useChatMessages(workspaceId, channel.id)
   const messages = messagesData?.data ?? []
   const [input, setInput] = useState('')
+  const [cursorPos, setCursorPos] = useState(0)
   const [typingUsers, setTypingUsers] = useState<string[]>([])
   const [replyTarget, setReplyTarget] = useState<ChatMessage | null>(null)
   const [pendingAttachments, setPendingAttachments] = useState<ChatAttachment[]>([])
   const [showAttachPanel, setShowAttachPanel] = useState(false)
   const [attachType, setAttachType] = useState<ChatAttachmentType>('task')
   const [attachQuery, setAttachQuery] = useState('')
-  const [selectedMentionIds, setSelectedMentionIds] = useState<Set<string>>(new Set())
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const lastTypingSentRef = useRef(0)
+  const lastMarkReadRef = useRef<{ [channelId: string]: number }>({})
+  const TYPING_THROTTLE_MS = 200
+  const MARK_READ_DEBOUNCE_MS = 1000
 
   const { data: membersData } = useWorkspaceMembers()
   const members = membersData ?? []
   const { data: boards = [] } = useBoards()
   const { data: documents = [] } = useDocuments()
 
-  const mentionMatch = input.match(/(^|\s)@([^\s@]*)$/)
-  const mentionQuery = mentionMatch?.[2] ?? null
+  const mentionUserIds = useMemo(() => {
+    if (!input || !members) return [] as string[]
+    const tokenRegex = /@([A-Za-z][A-Za-z0-9 _.-]*?)(?=\s|$|[^\w])/g
+    const tokens: string[] = []
+    let m: RegExpExecArray | null
+    while ((m = tokenRegex.exec(input)) !== null) {
+      tokens.push(m[1].trim())
+    }
+    return tokens
+      .map((name) => members.find((mem) => mem.name?.toLowerCase() === name.toLowerCase()))
+      .filter((u): u is NonNullable<typeof u> => !!u)
+      .map((u) => u.user_id)
+  }, [input, members])
+
+  const mentionMatch = (() => {
+    const before = input.slice(0, cursorPos)
+    const match = before.match(/(^|\s)@([^\s@]*)$/)
+    return match ? { query: match[2], start: match.index! + match[1].length } : null
+  })()
+  const mentionQuery = mentionMatch?.query ?? null
 
   const mentionCandidates = useMemo(() => {
     if (mentionQuery === null) return []
@@ -237,9 +270,17 @@ function MessageArea({
     return []
   }, [searchData, attachType])
 
+  const debouncedMarkRead = (channelId: string) => {
+    const now = Date.now()
+    if (now - (lastMarkReadRef.current[channelId] ?? 0) > MARK_READ_DEBOUNCE_MS) {
+      lastMarkReadRef.current[channelId] = now
+      markChatRead(channelId)
+    }
+  }
+
   useEffect(() => {
     joinChatChannel(channel.id)
-    markChatRead(channel.id)
+    debouncedMarkRead(channel.id)
     return () => { leaveChatChannel(channel.id) }
   }, [channel.id])
 
@@ -249,7 +290,7 @@ function MessageArea({
     const handleNewMessage = (msg: ChatMessage) => {
       if (msg.channel_id === channel.id) {
         refetch()
-        markChatRead(channel.id)
+        debouncedMarkRead(channel.id)
       }
     }
 
@@ -275,7 +316,12 @@ function MessageArea({
   }, [channel.id, currentUserId, refetch])
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const container = messagesEndRef.current?.parentElement
+    if (!container) return
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight
+    if (distanceFromBottom < 50) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
   }, [messages])
 
   const addAttachment = (attachment: ChatAttachment) => {
@@ -297,24 +343,31 @@ function MessageArea({
     sendChatMessage(channel.id, text, {
       replyTo: replyTarget?.id,
       attachments: pendingAttachments,
-      mentionUserIds: Array.from(selectedMentionIds),
+      mentionUserIds: mentionUserIds,
     })
 
     setInput('')
     setReplyTarget(null)
     setPendingAttachments([])
-    setSelectedMentionIds(new Set())
     setAttachQuery('')
   }
 
-  const insertMention = (userId: string, userName: string) => {
-    setInput(prev => prev.replace(/(^|\s)@([^\s@]*)$/, `$1@${userName} `))
-    setSelectedMentionIds(prev => new Set(prev).add(userId))
+  const insertMention = (userName: string) => {
+    if (!mentionMatch) return
+    const before = input.slice(0, mentionMatch.start)
+    const after = input.slice(cursorPos)
+    setInput(`${before}@${userName} ${after}`)
+    setCursorPos(before.length + userName.length + 2)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
-    sendTypingIndicator(channel.id)
+    setCursorPos(e.target.selectionStart ?? 0)
+    const now = Date.now()
+    if (now - lastTypingSentRef.current > TYPING_THROTTLE_MS) {
+      lastTypingSentRef.current = now
+      sendTypingIndicator(channel.id)
+    }
   }
 
   const channelName = channel.name ?? 'Direct Message'
@@ -340,6 +393,7 @@ function MessageArea({
             key={msg.id}
             message={msg}
             isOwn={msg.user_id === currentUserId}
+            members={members}
             onReply={() => setReplyTarget(msg)}
           />
         ))}
@@ -502,7 +556,7 @@ function MessageArea({
                 <button
                   key={member.user_id}
                   className="w-full text-left px-2 py-1 rounded hover:bg-[var(--color-bg-hover)]"
-                  onClick={() => insertMention(member.user_id, member.name)}
+                  onClick={() => insertMention(member.name)}
                 >
                   <p className="text-xs text-[var(--color-text-primary)]">{member.name}</p>
                   <p className="text-[10px] text-[var(--color-text-muted)]">{member.email}</p>
@@ -519,10 +573,12 @@ function MessageArea({
 function MessageBubble({
   message,
   isOwn,
+  members,
   onReply,
 }: {
   message: ChatMessage
   isOwn: boolean
+  members: Array<{ user_id: string; name: string }>
   onReply: () => void
 }) {
   return (
@@ -557,7 +613,11 @@ function MessageBubble({
             </div>
           )}
 
-          {message.body && <p className="whitespace-pre-wrap">{message.body}</p>}
+          {message.body && (
+            <p className="whitespace-pre-wrap">
+              <MentionText text={message.body} members={members} />
+            </p>
+          )}
 
           {message.attachments.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
@@ -594,6 +654,6 @@ function AttachmentChip({ attachment, isOwn }: { attachment: ChatAttachment; isO
 }
 
 function attachmentLabel(attachment: ChatAttachment): string {
-  const base = attachment.label || attachment.id || attachment.url || 'attachment'
+  const base = attachment.label ?? attachment.id ?? attachment.url ?? 'attachment'
   return `${attachment.type}: ${base}`
 }
