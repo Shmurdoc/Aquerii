@@ -13,6 +13,7 @@ use App\Modules\PTW\Services\DmrPermitRegisterService;
 use App\Modules\PTW\Services\PermitWorkflowService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -246,11 +247,9 @@ class PermitController extends Controller
 
     public function approve(Request $request, Workspace $workspace, Permit $permit): JsonResponse
     {
-        $validated = $request->validate([
-            'approver_id' => 'sometimes|uuid',
-        ]);
         $meta = [];
-        if (isset($validated['approver_id'])) {
+        if ($request->has('approver_id')) {
+            $validated = $request->validate(['approver_id' => 'required|uuid']);
             $meta['approver_id'] = $validated['approver_id'];
         }
 
@@ -275,7 +274,7 @@ class PermitController extends Controller
     {
         $validated = $request->validate([
             'valid_from' => 'sometimes|date',
-            'valid_until' => 'required|date|after:valid_from',
+            'valid_until' => 'required|date|after:now',
             'max_extension_minutes' => 'sometimes|integer|min:0|max:1440',
             'holder_id' => 'sometimes|uuid',
             'recipient_id' => 'sometimes|uuid',
@@ -461,7 +460,7 @@ class PermitController extends Controller
         return response()->json(['data' => $isolation]);
     }
 
-    public function register(Request $request, Workspace $workspace): JsonResponse
+    public function register(Request $request, Workspace $workspace): Response
     {
         $this->assertMember($request, $workspace);
 
@@ -492,7 +491,7 @@ class PermitController extends Controller
             $csv = $this->dmrRegister->toCsv($register);
 
             return response($csv, 200, [
-                'Content-Type' => 'text/csv',
+                'Content-Type' => 'text/csv; charset=UTF-8',
                 'Content-Disposition' => 'attachment; filename="dmr-permit-register-'.now()->format('Ymd').'.csv"',
             ]);
         }

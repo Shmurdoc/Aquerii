@@ -230,7 +230,7 @@ export default function NewPermitPage() {
                 <div className="grid grid-cols-2 gap-2">
                   <Select
                     value={iso.energy_type}
-                    onChange={(e) => setIsolations(isolations.map((x, idx) => idx === i ? { ...x, energy_type: e.target.value } : x))}
+                    onChange={(e) => setIsolations(isolations.map((x, idx) => idx === i ? { ...x, energy_type: e.target.value as EnergyType } : x))}
                   >
                     {['electrical', 'mechanical', 'hydraulic', 'pneumatic', 'thermal', 'chemical', 'gravitational', 'radioactive'].map((e) => (
                       <option key={e} value={e}>{e}</option>

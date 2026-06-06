@@ -91,26 +91,32 @@ it('creates a permit with a unique reference and nested hazards/isolations', fun
 });
 
 it('generates a sequential reference per workspace per year', function () {
-    Permit::factory()->create([
-        'workspace_id' => $this->workspace->id,
-        'issuer_id' => $this->user->id,
-        'reference' => 'PTW-'.now()->format('Y').'-0001',
-    ]);
-
-    $response = $this->postJson(
+    $this->postJson(
         "/api/workspaces/{$this->workspace->id}/ptw/permits",
         [
             'type' => Permit::TYPE_LIFTING,
-            'title' => 'Critical lift',
+            'title' => 'First lift',
             'description' => 'Lift crusher',
             'location' => 'Workshop',
             'risk_level' => Permit::RISK_HIGH,
             'work_method_statement' => 'Plan, brief, lift, lower',
             'ppe_required' => 'Hard hat, boots',
         ]
-    );
+    )->assertStatus(201)
+        ->assertJsonPath('data.reference', 'PTW-'.now()->format('Y').'-0001');
 
-    $response->assertStatus(201)
+    $this->postJson(
+        "/api/workspaces/{$this->workspace->id}/ptw/permits",
+        [
+            'type' => Permit::TYPE_LIFTING,
+            'title' => 'Second lift',
+            'description' => 'Lift crusher again',
+            'location' => 'Workshop',
+            'risk_level' => Permit::RISK_HIGH,
+            'work_method_statement' => 'Plan, brief, lift, lower',
+            'ppe_required' => 'Hard hat, boots',
+        ]
+    )->assertStatus(201)
         ->assertJsonPath('data.reference', 'PTW-'.now()->format('Y').'-0002');
 });
 

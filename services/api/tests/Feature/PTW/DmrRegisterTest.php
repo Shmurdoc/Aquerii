@@ -99,7 +99,7 @@ it('scopes the register to a single workspace', function () {
 });
 
 it('serialises the register to CSV with the proper headers', function () {
-    Permit::factory()->create([
+    $permit = Permit::factory()->create([
         'workspace_id' => $this->workspace->id,
         'issuer_id' => $this->user->id,
         'type' => Permit::TYPE_HOT_WORK,
@@ -114,7 +114,8 @@ it('serialises the register to CSV with the proper headers', function () {
 
     $body = $response->streamedContent();
     expect($body)->toContain('Reference,Type,Status,Risk,Title,Location');
-    expect($body)->toContain('PTW-'.now()->format('Y').'-0001');
+    expect($body)->toContain($permit->reference);
+    expect($body)->toContain('Welding on conveyor');
 });
 
 it('rejects a non-member from generating a register', function () {
