@@ -1,12 +1,18 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCalendarItems, type CalendarItem } from '@/hooks/useCalendarItems'
+import { useBoards } from '@/hooks/useBoards'
+import { api } from '@/lib/api'
+import { useAuthStore } from '@/stores/authStore'
 import {
   startOfMonth, endOfMonth, startOfWeek, endOfWeek,
   addDays, addMonths, subMonths, format, parseISO, isSameMonth, isToday,
 } from 'date-fns'
-import { ChevronLeft, ChevronRight, CalendarDays, List, Loader2, RefreshCw } from 'lucide-react'
+import { ChevronLeft, ChevronRight, CalendarDays, List, Loader2, RefreshCw, Plus, X } from 'lucide-react'
 import clsx from 'clsx'
+import toast from 'react-hot-toast'
+import { Button } from '@/components/ui'
 
 const PRIORITY_DOT: Record<string, string> = {
   critical: 'bg-red-500',
@@ -33,8 +39,126 @@ function sortedDates(map: Record<string, CalendarItem[]>): string[] {
   return Object.keys(map).sort()
 }
 
-function MonthView({ items, onItemClick }: { items: CalendarItem[]; onItemClick: (id: string) => void }) {
-  const [current, setCurrent] = useState(new Date())
+function NewEventModal({ onClose }: { onClose: () => void }) {
+  const workspace = useAuthStore(s => s.workspace)
+  const qc = useQueryClient()
+  const { data: boards = [] } = useBoards()
+  const [title, setTitle] = useState('')
+  const [dueDate, setDueDate] = useState(format(new Date(), 'yyyy-MM-dd'))
+  const [priority, setPriority] = useState<string>('medium')
+  const [boardId, setBoardId] = useState('')
+
+  const createEvent = useMutation({
+    mutationFn: async () => {
+      const bid = boardId || boards[0]?.id
+      if (!bid) throw new Error('No board available')
+      const firstGroup = await api.get(`/workspaces/${workspace!.id}/boards/${bid}`).then(r => r.data.data)
+      const groupId = firstGroup.groups?.[0]?.id
+      if (!groupId) throw new Error('Board has no groups')
+      return api.post(`/workspaces/${workspace!.id}/boards/${bid}/items`, {
+        group_id: groupId,
+        title: title || 'Untitled Event',
+        column_values: { priority, due_date: dueDate },
+      })
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['calendar-items', workspace?.id] })
+      toast.success('Event created.')
+      onClose()
+    },
+    onError: () => toast.error('Failed to create event.'),
+  })
+
+  return (
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+      <div className="rounded-xl w-full max-w-md p-5 space-y-4" style={{ background: 'var(--color-bg-base)', border: '1px solid var(--color-glass-border)' }}>
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>New Event</h2>
+          <button onClick={onClose} style={{ color: 'var(--color-text-muted)' }}><X size={16} /></button>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Title</label>
+          <input value={title} onChange={e => setTitle(e.target.value)}
+            className="rounded px-2 py-1.5 text-sm outline-none"
+            style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Due Date</label>
+          <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)}
+            className="rounded px-2 py-1.5 text-sm outline-none"
+            style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Priority</label>
+          <select value={priority} onChange={e => setPriority(e.target.value)}
+            className="rounded px-2 py-1.5 text-sm outline-none"
+            style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }}>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Board</label>
+          <select value={boardId} onChange={e => setBoardId(e.target.value)}
+            className="rounded px-2 py-1.5 text-sm outline-none"
+            style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }}>
+            {boards.length === 0 && <option value="">No boards available</option>}
+            {boards.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+          </select>
+        </div>
+
+        <div className="flex justify-end gap-2 pt-2">
+          <Button size="sm" variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button size="sm" onClick={() => createEvent.mutate()} disabled={createEvent.isPending || boards.length === 0}>
+            {createEvent.isPending ? 'Creating…' : 'Create Event'}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function EventDetail({ item, onClose }: { item: CalendarItem; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="rounded-xl w-full max-w-sm p-5 space-y-3" style={{ background: 'var(--color-bg-base)', border: '1px solid var(--color-glass-border)' }} onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>{item.title}</h2>
+          <button onClick={onClose} style={{ color: 'var(--color-text-muted)' }}><X size={16} /></button>
+        </div>
+        <div className="space-y-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+          <div className="flex items-center gap-2">
+            <CalendarDays size={13} className="shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+            {item.due_date ? format(parseISO(item.due_date), 'MMMM d, yyyy') : 'No date'}
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] px-2 py-0.5 rounded font-medium"
+              style={{ backgroundColor: item.board_color ? `${item.board_color}20` : 'rgba(99,102,241,0.15)', color: item.board_color ?? '#818cf8' }}>
+              {item.board_name}
+            </span>
+            {item.priority && (
+              <span className="flex items-center gap-1 text-[10px]">
+                <span className={clsx('w-1.5 h-1.5 rounded-full', PRIORITY_DOT[item.priority] ?? 'bg-gray-500')} />
+                {item.priority}
+              </span>
+            )}
+            <span className={clsx('text-[10px] px-1.5 py-0.5 rounded', item.done ? 'text-green-400 bg-green-500/20' : 'text-yellow-400 bg-yellow-500/20')}>
+              {item.done ? 'Done' : 'Pending'}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function MonthView({ items, current, onMonthChange, onItemClick }: { items: CalendarItem[]; current: Date; onMonthChange: (d: Date) => void; onItemClick: (id: string) => void }) {
   const [expandedDay, setExpandedDay] = useState<string | null>(null)
   const popoverRef = useRef<HTMLDivElement>(null)
 
@@ -71,7 +195,7 @@ function MonthView({ items, onItemClick }: { items: CalendarItem[]; onItemClick:
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setCurrent(subMonths(current, 1))}
+            onClick={() => onMonthChange(subMonths(current, 1))}
             className="p-1.5 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors"
           >
             <ChevronLeft size={16} />
@@ -80,14 +204,14 @@ function MonthView({ items, onItemClick }: { items: CalendarItem[]; onItemClick:
             {format(current, 'MMMM yyyy')}
           </h2>
           <button
-            onClick={() => setCurrent(addMonths(current, 1))}
+            onClick={() => onMonthChange(addMonths(current, 1))}
             className="p-1.5 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors"
           >
             <ChevronRight size={16} />
           </button>
         </div>
         <button
-          onClick={() => setCurrent(new Date())}
+          onClick={() => onMonthChange(new Date())}
           className="text-xs px-2 py-1 rounded-lg bg-[var(--color-bg-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
         >
           Today
@@ -298,11 +422,24 @@ function AgendaView({ items, onItemClick }: { items: CalendarItem[]; onItemClick
 
 export default function CalendarPage() {
   const navigate = useNavigate()
-  const { data: items, isLoading, isError, refetch } = useCalendarItems()
+  const [current, setCurrent] = useState(new Date())
+  const monthStart = useMemo(() => startOfMonth(current), [current])
+  const gridEnd = useMemo(
+    () => endOfWeek(endOfMonth(current), { weekStartsOn: 1 }),
+    [current],
+  )
+  const { data: items, isLoading, isError, refetch } = useCalendarItems(monthStart, gridEnd)
   const [view, setView] = useState<ViewMode>('month')
+  const [showNewEvent, setShowNewEvent] = useState(false)
+  const [detailItem, setDetailItem] = useState<CalendarItem | null>(null)
 
   const handleItemClick = (id: string) => {
-    navigate(`/boards?item=${id}`)
+    const item = items?.find(i => i.id === id)
+    if (item) {
+      setDetailItem(item)
+    } else {
+      navigate(`/boards?item=${id}`)
+    }
   }
 
   if (isLoading) {
@@ -339,39 +476,45 @@ export default function CalendarPage() {
         <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>
           Calendar
         </h1>
-        <div
-          className="flex items-center gap-0.5 rounded-lg p-0.5 border"
-          style={{
-            background: 'var(--color-bg-surface)',
-            borderColor: 'var(--color-glass-border)',
-          }}
-        >
-          <button
-            onClick={() => setView('month')}
-            className={clsx(
-              'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors',
-              view === 'month'
-                ? 'text-[var(--color-accent-text)]'
-                : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]',
-            )}
-            style={view === 'month' ? { background: 'var(--color-accent-light)' } : undefined}
+        <div className="flex items-center gap-2">
+          <div
+            className="flex items-center gap-0.5 rounded-lg p-0.5 border"
+            style={{
+              background: 'var(--color-bg-surface)',
+              borderColor: 'var(--color-glass-border)',
+            }}
           >
-            <CalendarDays size={13} />
-            Month
-          </button>
-          <button
-            onClick={() => setView('agenda')}
-            className={clsx(
-              'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors',
-              view === 'agenda'
-                ? 'text-[var(--color-accent-text)]'
-                : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]',
-            )}
-            style={view === 'agenda' ? { background: 'var(--color-accent-light)' } : undefined}
-          >
-            <List size={13} />
-            Agenda
-          </button>
+            <button
+              onClick={() => setView('month')}
+              className={clsx(
+                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors',
+                view === 'month'
+                  ? 'text-[var(--color-accent-text)]'
+                  : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]',
+              )}
+              style={view === 'month' ? { background: 'var(--color-accent-light)' } : undefined}
+            >
+              <CalendarDays size={13} />
+              Month
+            </button>
+            <button
+              onClick={() => setView('agenda')}
+              className={clsx(
+                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors',
+                view === 'agenda'
+                  ? 'text-[var(--color-accent-text)]'
+                  : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]',
+              )}
+              style={view === 'agenda' ? { background: 'var(--color-accent-light)' } : undefined}
+            >
+              <List size={13} />
+              Agenda
+            </button>
+          </div>
+          <Button size="sm" onClick={() => setShowNewEvent(true)}>
+            <Plus size={13} />
+            New Event
+          </Button>
         </div>
       </div>
 
@@ -382,10 +525,13 @@ export default function CalendarPage() {
           <p className="text-xs mt-1 opacity-60">Create board items with due dates to see them here</p>
         </div>
       ) : view === 'month' ? (
-        <MonthView items={items} onItemClick={handleItemClick} />
+        <MonthView items={items} current={current} onMonthChange={setCurrent} onItemClick={handleItemClick} />
       ) : (
         <AgendaView items={items} onItemClick={handleItemClick} />
       )}
+
+      {showNewEvent && <NewEventModal onClose={() => setShowNewEvent(false)} />}
+      {detailItem && <EventDetail item={detailItem} onClose={() => setDetailItem(null)} />}
     </div>
   )
 }

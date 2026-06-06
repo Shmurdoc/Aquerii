@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\StockController;
 use App\Core\Http\Controllers\Api\AuditLogController;
 use App\Core\Http\Controllers\Api\BillingController;
 use App\Core\Http\Controllers\Api\BrandingController;
@@ -7,6 +9,7 @@ use App\Core\Http\Controllers\Api\BulkActionController;
 use App\Core\Http\Controllers\Api\CommentController;
 use App\Core\Http\Controllers\Api\DocumentPdfController;
 use App\Core\Http\Controllers\Api\EmployeeGroupController;
+use App\Core\Http\Controllers\Api\ExportController;
 use App\Core\Http\Controllers\Api\FieldPermissionController;
 use App\Core\Http\Controllers\Api\FileController;
 use App\Core\Http\Controllers\Api\FinancialApprovalController;
@@ -35,6 +38,7 @@ use App\Core\Http\Controllers\BoardGroupController;
 use App\Core\Http\Controllers\ItemController;
 use App\Core\Http\Controllers\UserController;
 use App\Core\Models\Item;
+use App\Http\Controllers\Api\CalendarItemController;
 use App\Http\Controllers\Api\WorkspaceInvitationController;
 use App\Modules\AI\Http\Controllers\AIController;
 use App\Modules\Automation\Http\Controllers\AutomationController;
@@ -54,7 +58,7 @@ use App\Modules\CRM\Http\Controllers\DealController;
 use App\Modules\CRM\Http\Controllers\ForecastController;
 use App\Modules\CRM\Http\Controllers\LeadController;
 use App\Modules\CRM\Http\Controllers\PipelineController;
-use App\Modules\CRM\Http\Controllers\ProductController;
+use App\Modules\CRM\Http\Controllers\ProductController as CrmProductController;
 use App\Modules\CRM\Http\Controllers\QuotaController;
 use App\Modules\CRM\Http\Controllers\QuoteController;
 use App\Modules\CRM\Http\Controllers\SequenceController;
@@ -76,15 +80,24 @@ Route::get('branding', [BrandingController::class, 'show']);
 Route::prefix('auth')->group(function () {
     $isTest = app()->environment('testing');
 
-    Route::post('register', [AuthController::class, 'register'])->middleware($isTest ? ['idempotent'] : ['throttle:10,1', 'idempotent']);
-    Route::post('login', [AuthController::class, 'login'])->middleware($isTest ? [] : ['throttle:5,1']);
-    Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->middleware($isTest ? [] : ['throttle:3,1']);
-    Route::post('reset-password', [AuthController::class, 'resetPassword'])->middleware($isTest ? ['idempotent'] : ['throttle:5,1', 'idempotent']);
-    Route::post('refresh', [AuthController::class, 'refresh'])->middleware($isTest ? [] : ['throttle:10,1']);
-    Route::post('verify-email/resend', [AuthController::class, 'resendVerification'])->middleware($isTest ? [] : ['throttle:3,1']);
+    $env = app()->environment();
+    $loginLimit = $env === 'production' ? '5,1' : ($env === 'testing' ? '600,1' : '600,1');
+    $registerLimit = $env === 'production' ? '10,1' : '600,1';
+    $forgotLimit = $env === 'production' ? '3,1' : '600,1';
+    $resetLimit = $env === 'production' ? '5,1' : '600,1';
+    $refreshLimit = $env === 'production' ? '10,1' : '600,1';
+    $resendLimit = $env === 'production' ? '3,1' : '600,1';
+    $oauthLimit = $env === 'production' ? '10,1' : '600,1';
+
+    Route::post('register', [AuthController::class, 'register'])->middleware($isTest ? ['idempotent'] : ["throttle:$registerLimit", 'idempotent']);
+    Route::post('login', [AuthController::class, 'login'])->middleware($isTest ? [] : ["throttle:$loginLimit"]);
+    Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->middleware($isTest ? [] : ["throttle:$forgotLimit"]);
+    Route::post('reset-password', [AuthController::class, 'resetPassword'])->middleware($isTest ? ['idempotent'] : ["throttle:$resetLimit", 'idempotent']);
+    Route::post('refresh', [AuthController::class, 'refresh'])->middleware($isTest ? [] : ["throttle:$refreshLimit"]);
+    Route::post('verify-email/resend', [AuthController::class, 'resendVerification'])->middleware($isTest ? [] : ["throttle:$resendLimit"]);
     Route::post('verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
-    Route::get('oauth/{provider}', [OAuthController::class, 'redirect'])->middleware($isTest ? [] : ['throttle:10,1']);
-    Route::get('oauth/{provider}/callback', [OAuthController::class, 'callback'])->middleware($isTest ? [] : ['throttle:10,1']);
+    Route::get('oauth/{provider}', [OAuthController::class, 'redirect'])->middleware($isTest ? [] : ["throttle:$oauthLimit"]);
+    Route::get('oauth/{provider}/callback', [OAuthController::class, 'callback'])->middleware($isTest ? [] : ["throttle:$oauthLimit"]);
 });
 
 // ── Workspace invitation accept (signed URL — no auth required) ──────────────
@@ -130,6 +143,8 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     Route::get('me/notifications', [NotificationController::class, 'index']);
     Route::patch('me/notifications/{id}/read', [NotificationController::class, 'markRead']);
     Route::post('me/notifications/read-all', [NotificationController::class, 'markAllRead']);
+    Route::get('me/notification-preferences', [UserSettingsController::class, 'getNotificationPreferences']);
+    Route::put('me/notification-preferences', [UserSettingsController::class, 'updateNotificationPreferences']);
 
     // Workspace creation
     Route::get('workspaces', [WorkspaceController::class, 'index']);
@@ -145,6 +160,7 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         Route::get('', [WorkspaceController::class, 'show'])->name('workspaces.show');
         Route::patch('', [WorkspaceController::class, 'update'])->middleware('idempotent');
+        Route::delete('', [WorkspaceController::class, 'destroy'])->middleware('idempotent');
 
         // Logo
         Route::post('logo', [WorkspaceLogoController::class, 'store'])->middleware('idempotent');
@@ -183,6 +199,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // My Day — aggregate view across all boards
         Route::get('my-day', [ItemController::class, 'myDay']);
+
+        // Calendar — items with due_dates in a custom date range
+        Route::get('calendar-items', [CalendarItemController::class, 'index']);
 
         Route::prefix('boards/{board}')->group(function () {
             Route::apiResource('columns', BoardColumnController::class)->middleware('idempotent');
@@ -245,6 +264,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::get('integrations/webhook-events', [IntegrationReliabilityController::class, 'index'])->middleware('workspace.role:owner,admin');
         Route::post('integrations/webhook-events/{event}/retry', [IntegrationReliabilityController::class, 'retry'])->middleware(['idempotent', 'workspace.role:owner,admin']);
         Route::post('integrations/webhook-events/{event}/replay-now', [IntegrationReliabilityController::class, 'replayNow'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+
+        // Entity exports (xlsx, csv, json)
+        Route::get('exports/{entity}/{format}', [ExportController::class, 'export']);
 
         // Audit logs (workspace admin)
         Route::get('audit-logs', [AuditLogController::class, 'index'])->middleware('workspace.role:owner,admin');
@@ -414,7 +436,7 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::post('crm/deal-approvals/{approval}/reject', [DealApprovalController::class, 'reject'])->middleware('idempotent');
 
         // CRM Products
-        Route::apiResource('crm/products', ProductController::class)->middleware('idempotent');
+        Route::apiResource('crm/products', CrmProductController::class)->middleware('idempotent');
 
         // CRM Quotes
         Route::apiResource('crm/quotes', QuoteController::class)->middleware('idempotent');
@@ -441,7 +463,7 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         });
 
         // AI (workspace-scoped, gated by plan)
-        Route::prefix('ai')->middleware(['feature:module.ai', 'idempotent', 'throttle:60,1'])->group(function () {
+        Route::prefix('ai')->middleware(['feature:module.ai', 'idempotent', 'throttle:10,1'])->group(function () {
             Route::post('chat', [AIController::class, 'chat']);
             Route::post('summarize', [AIController::class, 'summarize']);
             Route::post('score-deal', [AIController::class, 'scoreDeal']);
@@ -475,6 +497,12 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
             Route::post('anomaly-detection', [AIController::class, 'anomalyDetection']);
         });
+
+        // ── Inventory: Products, Categories, Stock ──
+        Route::apiResource('products', ProductController::class)->middleware('idempotent');
+        Route::get('products/{product}/stock', [StockController::class, 'show']);
+        Route::post('products/{product}/stock/adjust', [StockController::class, 'adjust'])->middleware('idempotent');
+        Route::get('products/{product}/stock/movements', [StockController::class, 'movements']);
 
         // ── ERP: Invoicing, Sales, Purchasing, Inventory, Accounting ──
         Route::middleware('feature:module.erp')->group(function () {
@@ -543,6 +571,12 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // ── HR module ─────────────────────────────────────────────────────
         require __DIR__.'/modules/hr.php';
+
+        // ── Equipment module ──────────────────────────────────────────────
+        require __DIR__.'/modules/equipment.php';
+
+        // ── Competency module ─────────────────────────────────────────────
+        require __DIR__.'/modules/competency.php';
     });
 
 });
