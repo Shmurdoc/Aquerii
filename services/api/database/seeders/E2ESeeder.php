@@ -21,33 +21,45 @@ class E2ESeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::firstOrCreate(
+        $user = User::withTrashed()->firstOrCreate(
             ['email' => 'test@example.com'],
             [
                 'name' => 'Test User',
                 'password_hash' => bcrypt('password123'),
             ]
         );
+        if ($user->trashed()) {
+            $user->restore();
+        }
 
-        $workspace = Workspace::firstOrCreate(
+        $workspace = Workspace::withTrashed()->firstOrCreate(
             ['name' => 'Test Workspace', 'owner_id' => $user->id],
             ['name' => 'Test Workspace', 'owner_id' => $user->id, 'slug' => 'test-workspace']
         );
+        if ($workspace->trashed()) {
+            $workspace->restore();
+        }
 
-        WorkspaceMember::firstOrCreate([
+        $member = WorkspaceMember::withTrashed()->firstOrCreate([
             'workspace_id' => $workspace->id,
             'user_id' => $user->id,
         ], [
             'role' => 'owner',
         ]);
+        if ($member->trashed()) {
+            $member->restore();
+        }
 
         // ─── Board with columns, groups, and items ────────────────────────────────
-        $board = Board::firstOrCreate([
+        $board = Board::withTrashed()->firstOrCreate([
             'workspace_id' => $workspace->id,
             'name' => 'Test Board',
         ], [
             'created_by' => $user->id,
         ]);
+        if ($board->trashed()) {
+            $board->restore();
+        }
 
         if ($board->columns()->doesntExist()) {
             $defaultColumns = [
@@ -95,13 +107,16 @@ class E2ESeeder extends Seeder
         }
 
         // ─── Document ─────────────────────────────────────────────────────────────
-        Document::firstOrCreate([
+        $document = Document::withTrashed()->firstOrCreate([
             'workspace_id' => $workspace->id,
             'title' => 'Getting Started Guide',
         ], [
             'content' => json_encode(['type' => 'doc', 'content' => []]),
             'created_by' => $user->id,
         ]);
+        if ($document->trashed()) {
+            $document->restore();
+        }
 
         // ─── CRM pipeline, company, contact, deal ─────────────────────────────────
         $pipeline = DB::table('crm_pipelines')
@@ -148,7 +163,7 @@ class E2ESeeder extends Seeder
             ->where('name', 'Lead')
             ->first();
 
-        $company = CrmCompany::firstOrCreate([
+        $company = CrmCompany::withTrashed()->firstOrCreate([
             'workspace_id' => $workspace->id,
             'name' => 'Acme Corp',
         ], [
@@ -157,8 +172,11 @@ class E2ESeeder extends Seeder
             'country' => 'US',
             'created_by' => $user->id,
         ]);
+        if ($company->trashed()) {
+            $company->restore();
+        }
 
-        $contact = CrmContact::firstOrCreate([
+        $contact = CrmContact::withTrashed()->firstOrCreate([
             'workspace_id' => $workspace->id,
             'name' => 'Jane Doe',
         ], [
@@ -167,9 +185,12 @@ class E2ESeeder extends Seeder
             'job_title' => 'CTO',
             'created_by' => $user->id,
         ]);
+        if ($contact->trashed()) {
+            $contact->restore();
+        }
 
         if ($leadStage) {
-            CrmDeal::firstOrCreate([
+            $deal = CrmDeal::withTrashed()->firstOrCreate([
                 'workspace_id' => $workspace->id,
                 'pipeline_id' => $pipeline->id,
                 'title' => 'Enterprise License',
@@ -178,10 +199,13 @@ class E2ESeeder extends Seeder
                 'contact_id' => $contact->id,
                 'company_id' => $company->id,
                 'value' => 50000,
-                'currency' => 'USD',
+                'currency' => 'ZAR',
                 'probability' => 10,
                 'created_by' => $user->id,
             ]);
+            if ($deal->trashed()) {
+                $deal->restore();
+            }
         }
     }
 }

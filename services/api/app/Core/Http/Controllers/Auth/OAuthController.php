@@ -66,7 +66,7 @@ class OAuthController extends Controller
                 return [$oauth->user, false];
             }
 
-            $user = User::firstOrCreate(
+            $user = User::withTrashed()->firstOrCreate(
                 ['email' => $social->getEmail()],
                 [
                     'name' => $social->getName() ?? $social->getNickname() ?? 'User',
@@ -74,6 +74,9 @@ class OAuthController extends Controller
                     'email_verified_at' => now(),
                 ]
             );
+            if ($user->trashed()) {
+                $user->restore();
+            }
 
             OAuthAccount::create([
                 'user_id' => $user->id,

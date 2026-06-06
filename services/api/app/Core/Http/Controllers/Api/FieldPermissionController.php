@@ -233,10 +233,13 @@ class FieldPermissionController extends Controller
         $email = $data['userName'];
         $name = ($data['name']['givenName'] ?? '').' '.($data['name']['familyName'] ?? '');
 
-        $user = User::firstOrCreate(
+        $user = User::withTrashed()->firstOrCreate(
             ['email' => $email],
             ['name' => trim($name) ?: $email]
         );
+        if ($user->trashed()) {
+            $user->restore();
+        }
 
         // Add to workspace if not already a member
         $workspaceModel = Workspace::find($workspace);

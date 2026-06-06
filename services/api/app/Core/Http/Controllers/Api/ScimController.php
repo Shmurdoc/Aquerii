@@ -168,10 +168,13 @@ class ScimController extends Controller
         $displayName = trim(($data['name']['givenName'] ?? '').' '.($data['name']['familyName'] ?? ''));
         $name = $displayName !== '' ? $displayName : $email;
 
-        $user = User::firstOrCreate(
+        $user = User::withTrashed()->firstOrCreate(
             ['email' => $email],
             ['name' => $name]
         );
+        if ($user->trashed()) {
+            $user->restore();
+        }
 
         WorkspaceMember::updateOrCreate(
             ['workspace_id' => $workspaceId, 'user_id' => $user->id],
