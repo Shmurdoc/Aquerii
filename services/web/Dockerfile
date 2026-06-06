@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
-RUN if [ -f package-lock.json ]; then npm ci --frozen-lockfile; else npm install --legacy-peer-deps; fi
+RUN npm install --legacy-peer-deps
 
 COPY . .
 

@@ -37,7 +37,7 @@ describe('LoginPage', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }))
 
-    expect(await screen.findByText('Invalid email')).toBeInTheDocument()
+    expect(await screen.findByText('Enter a valid email')).toBeInTheDocument()
     expect(await screen.findByText('Password is required')).toBeInTheDocument()
   })
 

@@ -1,4 +1,4 @@
-export const BASE = process.env.BASE_URL ?? 'http://localhost:3000'
+export const BASE = process.env.BASE_URL ?? 'https://localhost'
 
 export function loginUrl(): string {
   return `${BASE}/login`

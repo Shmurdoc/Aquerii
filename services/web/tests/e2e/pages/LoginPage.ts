@@ -33,7 +33,23 @@ export class LoginPage {
 
   async login(email: string, password: string) {
     await this.goto()
+    await this.page.waitForLoadState('load')
     await this.fill(email, password)
     await this.submit()
+  }
+
+  async loginWithRetry(email: string, password: string, retries = 3): Promise<boolean> {
+    for (let i = 0; i < retries; i++) {
+      await this.login(email, password)
+      try {
+        await this.page.waitForURL(/\/(onboarding|boards)/, { timeout: 10000 })
+        return true
+      } catch {
+        if (i < retries - 1) {
+          await this.page.waitForTimeout(1000)
+        }
+      }
+    }
+    return false
   }
 }

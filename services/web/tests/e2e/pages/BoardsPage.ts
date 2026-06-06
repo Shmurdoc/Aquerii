@@ -9,7 +9,7 @@ export class BoardsPage {
 
   constructor(page: Page) {
     this.page = page
-    this.heading = page.getByRole('heading', { name: 'Boards' })
+    this.heading = page.getByRole('heading', { name: 'Boards' }).first()
     this.newBoardButton = page.getByRole('button', { name: 'New Board' })
     this.boardCards = page.locator('[data-testid="board-card"]')
   }
