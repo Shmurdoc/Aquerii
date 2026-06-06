@@ -214,6 +214,24 @@ export interface SessionInfo {
   last_active_at: string
 }
 
+export interface StorageBreakdownItem {
+  count: number
+  bytes: number
+  last_activity: string | null
+}
+
+export interface WorkspaceStorage {
+  workspace_id: string
+  used_bytes: number
+  quota_bytes: number
+  percent_used: number
+  breakdown: {
+    files: StorageBreakdownItem
+    avatars: StorageBreakdownItem
+    exports: StorageBreakdownItem
+  }
+}
+
 export interface NotificationPreferences {
   email_invoice_sent: boolean
   email_invoice_received: boolean
@@ -283,6 +301,12 @@ export const settingsApi = {
 
   cancelSubscription: async (): Promise<void> => {
     await api.delete(`/workspaces/${wid()}/billing/subscription`)
+  },
+
+  // Storage
+  getStorage: async (): Promise<WorkspaceStorage> => {
+    const res = await api.get(`/workspaces/${wid()}/storage`)
+    return res.data?.data ?? { workspace_id: '', used_bytes: 0, quota_bytes: 0, percent_used: 0, breakdown: { files: { count: 0, bytes: 0, last_activity: null }, avatars: { count: 0, bytes: 0, last_activity: null }, exports: { count: 0, bytes: 0, last_activity: null } } }
   },
 
   // Logo

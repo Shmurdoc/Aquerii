@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { settingsApi, WorkspaceMember, BillingInfo, UserProfile, MemberRole, AuditLogEntry, SessionInfo, NotificationPreferences } from '@/lib/settings'
+import { settingsApi, WorkspaceMember, BillingInfo, UserProfile, MemberRole, AuditLogEntry, SessionInfo, NotificationPreferences, WorkspaceStorage } from '@/lib/settings'
 import { useAuthStore } from '@/stores/authStore'
 import toast from 'react-hot-toast'
 
@@ -87,6 +87,18 @@ export function useCancelSubscription() {
       toast.success('Subscription will cancel at period end')
     },
     onError: (e) => toast.error(e.message),
+  })
+}
+
+// ─── Storage ─────────────────────────────────────────────────────────────────
+
+export function useStorage() {
+  const workspaceId = useAuthStore((s) => s.workspace?.id)
+  return useQuery<WorkspaceStorage>({
+    queryKey: ['workspace', workspaceId, 'storage'],
+    queryFn: () => settingsApi.getStorage(),
+    enabled: !!workspaceId,
+    staleTime: 30_000,
   })
 }
 
