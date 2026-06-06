@@ -56,7 +56,7 @@ class ProductController extends Controller
             'description' => $request->description,
             'unit_price' => $request->unit_price ?? 0,
             'unit' => $request->unit ?? 'pc',
-            'currency' => $request->currency ?? 'USD',
+            'currency' => $request->currency ?? 'ZAR',
             'attributes' => $request->attributes ? json_decode($request->attributes, true) : null,
             'created_by' => $request->user()->id,
         ]);

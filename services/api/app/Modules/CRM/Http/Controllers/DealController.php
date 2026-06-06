@@ -64,7 +64,7 @@ class DealController extends Controller
             'owner_id' => $request->user()->id,
             'created_by' => $request->user()->id,
             'title' => $validated['title'],
-            'currency' => $validated['currency'] ?? 'USD',
+            'currency' => $validated['currency'] ?? 'ZAR',
             'position' => $maxPos + 65536,
         ]));
 

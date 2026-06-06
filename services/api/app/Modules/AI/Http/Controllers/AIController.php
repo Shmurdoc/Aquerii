@@ -28,9 +28,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
                 ->timeout(60)
-                ->post(config('services.ai.base_url').'/chat', [
+                ->post(config('services.ai.url').'/chat', [
                     'workspace_id' => $workspace->id,
                     'message' => $validated['message'],
                     'history' => $validated['history'] ?? [],
@@ -63,9 +63,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.base_url').'/documents/summarize', [
+                ->post(config('services.ai.url').'/documents/summarize', [
                     'workspace_id' => $workspace->id,
                     'text' => $validated['text'],
                 ]);
@@ -95,9 +95,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.base_url').'/crm/score', [
+                ->post(config('services.ai.url').'/crm/score', [
                     'workspace_id' => $workspace->id,
                     'deal_id' => $validated['deal_id'],
                 ]);
@@ -153,9 +153,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.base_url').'/task/generate-description', [
+                ->post(config('services.ai.url').'/task/generate-description', [
                     'workspace_id' => $workspace->id,
                     'title' => $validated['title'],
                     'context' => $validated['context'] ?? '',
@@ -188,9 +188,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(60)
-                ->post(config('services.ai.base_url').'/document/generate', [
+                ->post(config('services.ai.url').'/document/generate', [
                     'workspace_id' => $workspace->id,
                     'prompt' => $validated['prompt'],
                     'style' => $validated['style'] ?? 'professional',
@@ -222,9 +222,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.base_url').'/automation/generate', [
+                ->post(config('services.ai.url').'/automation/generate', [
                     'workspace_id' => $workspace->id,
                     'description' => $validated['description'],
                 ]);
@@ -255,9 +255,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(60)
-                ->post(config('services.ai.base_url').'/ai/flowchart/generate', [
+                ->post(config('services.ai.url').'/ai/flowchart/generate', [
                     'workspace_id' => $workspace->id,
                     'description' => $validated['description'],
                 ]);
@@ -289,9 +289,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(60)
-                ->post(config('services.ai.base_url').'/ai/document/analyze', [
+                ->post(config('services.ai.url').'/ai/document/analyze', [
                     'workspace_id' => $workspace->id,
                     'document_id' => $validated['document_id'],
                 ]);
@@ -323,9 +323,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(60)
-                ->post(config('services.ai.base_url').'/ai/document/auto-tag', [
+                ->post(config('services.ai.url').'/ai/document/auto-tag', [
                     'workspace_id' => $workspace->id,
                     'document_id' => $validated['document_id'],
                 ]);
@@ -358,9 +358,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(60)
-                ->post(config('services.ai.base_url').'/ai/document/link-deal', [
+                ->post(config('services.ai.url').'/ai/document/link-deal', [
                     'workspace_id' => $workspace->id,
                     'document_id' => $validated['document_id'],
                     'deal_id' => $validated['deal_id'],
@@ -399,9 +399,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.base_url').'/crm/deal-summary', [
+                ->post(config('services.ai.url').'/crm/deal-summary', [
                     'workspace_id' => $workspace->id,
                     'deal_title' => $validated['deal_title'],
                     'deal_value' => $validated['deal_value'] ?? null,
@@ -446,9 +446,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.base_url').'/crm/churn-risk', array_merge(
+                ->post(config('services.ai.url').'/crm/churn-risk', array_merge(
                     ['workspace_id' => $workspace->id],
                     $validated,
                 ));
@@ -486,9 +486,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.base_url').'/crm/next-action', array_merge(
+                ->post(config('services.ai.url').'/crm/next-action', array_merge(
                     ['workspace_id' => $workspace->id],
                     $validated,
                 ));
@@ -524,9 +524,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.base_url').'/crm/email-compose', array_merge(
+                ->post(config('services.ai.url').'/crm/email-compose', array_merge(
                     ['workspace_id' => $workspace->id],
                     $validated,
                 ));
@@ -558,9 +558,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(60)
-                ->post(config('services.ai.base_url').'/crm/data-clean', array_merge(
+                ->post(config('services.ai.url').'/crm/data-clean', array_merge(
                     ['workspace_id' => $workspace->id],
                     $validated,
                 ));
@@ -592,9 +592,9 @@ class AIController extends Controller
         $this->deductCredits($workspace, $cost);
 
         try {
-            $response = Http::withToken(config('services.ai.internal_token'))
+            $response = Http::withToken(config('services.ai.secret'))
                 ->timeout(60)
-                ->post(config('services.ai.base_url').'/crm/anomaly-detection', array_merge(
+                ->post(config('services.ai.url').'/crm/anomaly-detection', array_merge(
                     ['workspace_id' => $workspace->id],
                     $validated,
                 ));
@@ -734,13 +734,9 @@ LUA;
 
     private function callAIService(string $endpoint, array $data): mixed
     {
-        $aiServiceUrl = config('services.ai.url', 'http://ai:8001');
-        $internalSecret = config('services.ai.internal_secret', '');
-
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$internalSecret,
-            'Content-Type' => 'application/json',
-        ])->timeout(30)->post("{$aiServiceUrl}{$endpoint}", $data);
+        $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
+            ->timeout(30)
+            ->post(config('services.ai.url').$endpoint, $data);
 
         if ($response->failed()) {
             Log::error('AI service prediction failed', [

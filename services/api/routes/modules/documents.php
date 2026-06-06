@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Documents\Http\Controllers\DocumentController;
+use App\Modules\Documents\Http\Controllers\DocumentFolderController;
 use App\Modules\Documents\Http\Controllers\ScannedDocumentController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,6 +10,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Collaborative documents (notes)
     Route::prefix('workspaces/{workspace}')->middleware('workspace')->group(function () {
         Route::apiResource('documents', DocumentController::class)->middleware('idempotent');
+        Route::apiResource('document-folders', DocumentFolderController::class)->middleware('idempotent');
 
         // Scanned documents (paperless-ngx replacement)
         Route::get('scanned-documents', [ScannedDocumentController::class, 'index']);

@@ -60,10 +60,10 @@ class VatService
     }
 
     /**
-     * Format amount as USD currency
+     * Format amount as ZAR currency
      */
-    public function formatUSD(float $amount): string
+    public function formatZAR(float $amount): string
     {
-        return '$'.number_format($amount, 2, '.', ',');
+        return 'R'.number_format($amount, 2, '.', ',');
     }
 }

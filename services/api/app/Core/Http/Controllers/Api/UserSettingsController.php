@@ -131,15 +131,21 @@ class UserSettingsController extends Controller
         return response()->json(['data' => $prefs]);
     }
 
-    // PUT /user/notifications/preferences
+    // PUT /me/notification-preferences
     public function updateNotificationPreferences(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'email_notifications' => 'sometimes|boolean',
-            'push_notifications' => 'sometimes|boolean',
-            'mention_notifications' => 'sometimes|boolean',
-            'task_assignments' => 'sometimes|boolean',
-            'due_date_reminders' => 'sometimes|boolean',
+            'email_invoice_sent' => 'sometimes|boolean',
+            'email_invoice_received' => 'sometimes|boolean',
+            'email_invoice_paid' => 'sometimes|boolean',
+            'email_leave_submitted' => 'sometimes|boolean',
+            'email_leave_approved' => 'sometimes|boolean',
+            'email_leave_declined' => 'sometimes|boolean',
+            'email_expense_approved' => 'sometimes|boolean',
+            'email_expense_declined' => 'sometimes|boolean',
+            'email_meeting_invitation' => 'sometimes|boolean',
+            'email_member_joined' => 'sometimes|boolean',
+            'email_member_left' => 'sometimes|boolean',
         ]);
 
         $request->user()->update(['notification_preferences' => $validated]);

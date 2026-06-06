@@ -86,6 +86,14 @@ class ReportController extends Controller
             ->whereNotIn('status', ['done', 'completed', 'archived'])
             ->count();
 
+        // Upcoming meetings (next 7 days)
+        $upcomingMeetings = DB::table('meetings')
+            ->where('workspace_id', $workspaceId)
+            ->where('starts_at', '>=', now())
+            ->where('starts_at', '<=', now()->addDays(7))
+            ->whereNull('deleted_at')
+            ->count();
+
         // AR aging buckets
         $aging = $this->arAging($workspaceId);
 
@@ -98,6 +106,7 @@ class ReportController extends Controller
             'outstanding' => (float) $outstanding,
             'overdue_count' => (int) $overdue,
             'open_items' => (int) $openItems,
+            'upcoming_meetings' => (int) $upcomingMeetings,
             'revenue_by_day' => $revenueByDay,
             'invoice_status_breakdown' => $invoiceStatusBreakdown,
             'top_customers' => $topCustomers,

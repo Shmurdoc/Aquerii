@@ -39,6 +39,7 @@ class User extends Authenticatable
             'two_factor_enabled' => 'boolean',
             'last_seen_at' => 'datetime',
             'deleted_at' => 'datetime',
+            'notification_preferences' => 'array',
         ];
     }
 

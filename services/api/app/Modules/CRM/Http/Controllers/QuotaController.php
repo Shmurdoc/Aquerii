@@ -44,7 +44,7 @@ class QuotaController extends Controller
 
         $quota = CrmQuota::create(array_merge($validated, [
             'workspace_id' => $workspace->id,
-            'currency' => $validated['currency'] ?? 'USD',
+            'currency' => $validated['currency'] ?? 'ZAR',
         ]));
 
         return response()->json(['data' => $quota->load('user')], 201);

@@ -12,6 +12,8 @@ use App\Core\Policies\CommentPolicy;
 use App\Core\Policies\FilePolicy;
 use App\Core\Policies\ItemPolicy;
 use App\Core\Policies\WorkspacePolicy;
+use App\Modules\CRM\Models\CrmDeal;
+use App\Modules\CRM\Policies\CrmDealPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -27,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
         File::class => FilePolicy::class,
         Comment::class => CommentPolicy::class,
         Board::class => BoardPolicy::class,
+        CrmDeal::class => CrmDealPolicy::class,
     ];
 
     public function boot(): void

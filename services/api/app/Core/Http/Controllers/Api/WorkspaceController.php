@@ -257,6 +257,14 @@ class WorkspaceController extends Controller
         return response()->json(['data' => ['accepted' => true, 'workspace_id' => $invite->workspace_id]]);
     }
 
+    // DELETE /workspaces/{workspace}
+    public function destroy(Workspace $workspace): JsonResponse
+    {
+        $workspace->delete();
+
+        return response()->json(null, 204);
+    }
+
     // ─── Helpers ───────────────────────────────────────────────────────────────
 
     // GET /workspaces/{workspace}/search?q=...

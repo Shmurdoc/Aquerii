@@ -53,6 +53,19 @@ class AutomationController extends Controller
         return response()->json(['data' => ['id' => $id]], 201);
     }
 
+    // GET /workspaces/{workspace}/automations/{automation}
+    public function show(Workspace $workspace, string $automationId): JsonResponse
+    {
+        $automation = DB::table('automations')
+            ->where('id', $automationId)
+            ->where('workspace_id', $workspace->id)
+            ->first();
+
+        abort_unless($automation, 404);
+
+        return response()->json(['data' => $automation]);
+    }
+
     // PATCH /workspaces/{workspace}/automations/{automation}
     public function update(Request $request, Workspace $workspace, string $automationId): JsonResponse
     {

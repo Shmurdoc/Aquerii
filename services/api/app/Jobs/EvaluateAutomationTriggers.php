@@ -2,8 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Core\Jobs\SendNotification;
+use App\Core\Services\ItemService;
 use App\Models\Automation;
 use App\Models\AutomationRun;
+use App\Modules\Automation\Jobs\SendAutomationEmail;
 use App\Models\Item;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -73,13 +76,16 @@ class EvaluateAutomationTriggers implements ShouldQueue
      * Execute all actions for one automation against the triggering item.
      *
      * Supported action types:
-     *   change_status   — config: { status: string }
-     *   change_priority — config: { priority: string }
-     *   assign_user     — config: { user_id: string }
-     *   unassign_user   — config: { user_id: string }
-     *   move_item       — config: { group_id: string }
-     *   create_item     — config: { title: string, group_id: string }
-     *   notify          — config: { message: string } (logs; real notify via SendNotification)
+     *   change_status     — config: { status: string }
+     *   change_priority   — config: { priority: string }
+     *   assign_user       — config: { user_id: string }
+     *   unassign_user     — config: { user_id: string }
+     *   move_item         — config: { group_id: string }
+     *   create_item       — config: { title: string, group_id: string }
+     *   notify            — config: { message: string } (logs; real notify via SendNotification)
+     *   send_notification — config: { user_id: string, type: string, title: string, body?: string }
+     *   update_item_status — config: { status: string }
+     *   send_email        — config: { to: string, subject: string, body: string }
      */
     private function executeActions(array $actions, Item $item, string $workspaceId): void
     {
@@ -114,9 +120,43 @@ class EvaluateAutomationTriggers implements ShouldQueue
                     'message' => $config['message'] ?? '',
                 ]),
 
+                'send_notification' => $this->sendNotification($config, $item, $workspaceId),
+
+                'update_item_status' => app(ItemService::class)->update($item, [
+                    'status' => $config['status'] ?? $item->status,
+                ], null),
+
+                'send_email' => SendAutomationEmail::dispatch(
+                    $config['to'] ?? '',
+                    $config['subject'] ?? 'Automation Notification',
+                    $config['body'] ?? '',
+                    $workspaceId,
+                    $item->id,
+                ),
+
                 default => Log::warning('Unknown automation action type', ['type' => $type]),
             };
         }
+    }
+
+    private function sendNotification(array $config, Item $item, string $workspaceId): void
+    {
+        $userId = $config['user_id'] ?? $item->created_by;
+        if (! $userId) {
+            Log::warning('send_notification skipped: no user_id', ['item_id' => $item->id]);
+
+            return;
+        }
+
+        SendNotification::dispatch(
+            $workspaceId,
+            $userId,
+            $config['type'] ?? 'automation',
+            $config['title'] ?? 'Automation triggered',
+            $config['body'] ?? null,
+            'item',
+            $item->id,
+        );
     }
 
     private function createItem(array $config, Item $source, string $workspaceId): void

@@ -27,7 +27,7 @@ beforeEach(function () {
 
 it('forwards deal-summary request to AI service and deducts credits', function () {
     Http::fake([
-        config('services.ai.base_url').'/crm/deal-summary' => Http::response([
+        config('services.ai.url').'/crm/deal-summary' => Http::response([
             'summary' => 'Promising deal',
             'key_points' => ['Validated need'],
             'recommended_action' => 'Send proposal',
@@ -50,7 +50,7 @@ it('forwards deal-summary request to AI service and deducts credits', function (
 
 it('forwards churn-risk request to AI service and deducts credits', function () {
     Http::fake([
-        config('services.ai.base_url').'/crm/churn-risk' => Http::response([
+        config('services.ai.url').'/crm/churn-risk' => Http::response([
             'risk_score' => 75,
             'risk_level' => 'high',
             'reasoning' => 'Long inactivity',
@@ -73,7 +73,7 @@ it('forwards churn-risk request to AI service and deducts credits', function () 
 
 it('returns 502 when AI service fails for any CRM endpoint', function () {
     Http::fake([
-        config('services.ai.base_url').'/*' => Http::response([], 500),
+        config('services.ai.url').'/*' => Http::response([], 500),
     ]);
 
     $response = $this->postJson(

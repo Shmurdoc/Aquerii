@@ -60,7 +60,7 @@ class SalesOrderWorkflowService
                 'customer_id' => $so->customer_id ?? null,
                 'customer_name' => $so->customer_name ?? '',
                 'customer_email' => $so->customer_email ?? null,
-                'currency' => $so->currency ?? 'USD',
+                'currency' => $so->currency ?? 'ZAR',
                 'issue_date' => now()->toDateString(),
                 'due_date' => now()->addDays(30)->toDateString(),
                 'subtotal' => $so->subtotal ?? 0,

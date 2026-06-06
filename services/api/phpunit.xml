@@ -17,6 +17,15 @@
             <directory>app</directory>
         </include>
     </source>
+    <coverage cacheDirectory=".phpunit.cache"
+              includeUncoveredFiles="true"
+              ignoreDeprecatedCodeUnits="true">
+        <report>
+            <clover outputFile="coverage.xml"/>
+            <html outputDirectory="coverage/html" lowUpperBound="50" highLowerBound="90"/>
+            <text outputFile="php://stdout" showUncoveredFiles="true" showOnlySummary="false"/>
+        </report>
+    </coverage>
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_DEBUG" value="true"/>

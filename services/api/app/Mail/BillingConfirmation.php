@@ -36,7 +36,19 @@ class BillingConfirmation extends Mailable
 
     public function content(): Content
     {
-        return new Content(view: 'emails.billing.confirmation');
+        $workspaceName = $this->details['workspace_name'] ?? $this->details['workspace'] ?? 'Your Workspace';
+        $planName = $this->details['plan_name'] ?? $this->details['plan'] ?? '';
+        $amount = $this->details['amount'] ?? $this->details['total'] ?? '';
+
+        return new Content(
+            view: 'emails.billing-confirmation',
+            with: [
+                'workspaceName' => $workspaceName,
+                'planName' => $planName,
+                'amount' => $amount,
+                'eventType' => str_replace('.', '_', $this->eventType),
+            ],
+        );
     }
 
     public function attachments(): array

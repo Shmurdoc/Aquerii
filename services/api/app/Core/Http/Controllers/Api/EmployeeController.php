@@ -231,7 +231,7 @@ class EmployeeController extends Controller
             'description' => $data['description'] ?? null,
             'category' => $data['category'],
             'amount' => $data['amount'],
-            'currency' => $data['currency'] ?? 'USD',
+            'currency' => $data['currency'] ?? 'ZAR',
             'expense_date' => $data['expense_date'],
             'status' => 'pending',
             'receipt_path' => $receiptPath,

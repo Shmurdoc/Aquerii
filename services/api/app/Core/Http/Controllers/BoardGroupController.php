@@ -13,7 +13,7 @@ class BoardGroupController extends Controller
     // GET /workspaces/{workspace}/boards/{board}/groups
     public function index(Workspace $workspace, string $boardId): JsonResponse
     {
-        $groups = DB::table('groups')
+        $groups = DB::table('board_groups')
             ->where('board_id', $boardId)
             ->orderBy('position')
             ->get();
@@ -29,12 +29,13 @@ class BoardGroupController extends Controller
             'color' => 'sometimes|string|max:20',
         ]);
 
-        $maxPos = DB::table('groups')->where('board_id', $boardId)->max('position') ?? 0;
+        $maxPos = DB::table('board_groups')->where('board_id', $boardId)->max('position') ?? 0;
         $id = Str::uuid()->toString();
 
-        DB::table('groups')->insert([
+        DB::table('board_groups')->insert([
             'id' => $id,
             'board_id' => $boardId,
+            'workspace_id' => $workspace->id,
             'name' => $validated['name'],
             'color' => $validated['color'] ?? '#6366f1',
             'position' => $maxPos + 65536,
@@ -43,6 +44,19 @@ class BoardGroupController extends Controller
         ]);
 
         return response()->json(['data' => ['id' => $id]], 201);
+    }
+
+    // GET /workspaces/{workspace}/boards/{board}/groups/{group}
+    public function show(Workspace $workspace, string $boardId, string $groupId): JsonResponse
+    {
+        $group = DB::table('board_groups')
+            ->where('id', $groupId)
+            ->where('board_id', $boardId)
+            ->first();
+
+        abort_unless($group, 404);
+
+        return response()->json(['data' => $group]);
     }
 
     // PATCH /workspaces/{workspace}/boards/{board}/groups/{group}
@@ -55,7 +69,7 @@ class BoardGroupController extends Controller
         ]);
         $validated['updated_at'] = now();
 
-        DB::table('groups')
+        DB::table('board_groups')
             ->where('id', $groupId)
             ->where('board_id', $boardId)
             ->update($validated);
@@ -66,7 +80,7 @@ class BoardGroupController extends Controller
     // DELETE /workspaces/{workspace}/boards/{board}/groups/{group}
     public function destroy(Workspace $workspace, string $boardId, string $groupId): JsonResponse
     {
-        DB::table('groups')
+        DB::table('board_groups')
             ->where('id', $groupId)
             ->where('board_id', $boardId)
             ->delete();

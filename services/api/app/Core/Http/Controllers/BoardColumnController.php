@@ -13,7 +13,7 @@ class BoardColumnController extends Controller
     // GET /workspaces/{workspace}/boards/{board}/columns
     public function index(Workspace $workspace, string $boardId): JsonResponse
     {
-        $columns = DB::table('columns')
+        $columns = DB::table('board_columns')
             ->where('board_id', $boardId)
             ->orderBy('position')
             ->get();
@@ -25,17 +25,18 @@ class BoardColumnController extends Controller
     public function store(Request $request, Workspace $workspace, string $boardId): JsonResponse
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:100',
+            'name' => 'required|string|max:100',
             'type' => 'required|string|in:text,number,date,select,people,status',
         ]);
 
-        $maxPos = DB::table('columns')->where('board_id', $boardId)->max('position') ?? 0;
+        $maxPos = DB::table('board_columns')->where('board_id', $boardId)->max('position') ?? 0;
         $id = Str::uuid()->toString();
 
-        DB::table('columns')->insert([
+        DB::table('board_columns')->insert([
             'id' => $id,
             'board_id' => $boardId,
-            'title' => $validated['title'],
+            'workspace_id' => $workspace->id,
+            'name' => $validated['name'],
             'type' => $validated['type'],
             'position' => $maxPos + 65536,
             'created_at' => now(),
@@ -45,11 +46,24 @@ class BoardColumnController extends Controller
         return response()->json(['data' => ['id' => $id]], 201);
     }
 
+    // GET /workspaces/{workspace}/boards/{board}/columns/{column}
+    public function show(Workspace $workspace, string $boardId, string $columnId): JsonResponse
+    {
+        $column = DB::table('board_columns')
+            ->where('id', $columnId)
+            ->where('board_id', $boardId)
+            ->first();
+
+        abort_unless($column, 404);
+
+        return response()->json(['data' => $column]);
+    }
+
     // PATCH /workspaces/{workspace}/boards/{board}/columns/{column}
     public function update(Request $request, Workspace $workspace, string $boardId, string $columnId): JsonResponse
     {
         $validated = $request->validate([
-            'title' => 'sometimes|string|max:100',
+            'name' => 'sometimes|string|max:100',
             'position' => 'sometimes|numeric',
             'settings' => 'sometimes|array',
         ]);
@@ -59,7 +73,7 @@ class BoardColumnController extends Controller
         }
         $validated['updated_at'] = now();
 
-        DB::table('columns')
+        DB::table('board_columns')
             ->where('id', $columnId)
             ->where('board_id', $boardId)
             ->update($validated);
@@ -70,7 +84,7 @@ class BoardColumnController extends Controller
     // DELETE /workspaces/{workspace}/boards/{board}/columns/{column}
     public function destroy(Workspace $workspace, string $boardId, string $columnId): JsonResponse
     {
-        DB::table('columns')
+        DB::table('board_columns')
             ->where('id', $columnId)
             ->where('board_id', $boardId)
             ->delete();

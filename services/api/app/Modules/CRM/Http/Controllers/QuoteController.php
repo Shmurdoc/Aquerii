@@ -67,7 +67,7 @@ class QuoteController extends Controller
             'discount' => $discount,
             'tax' => $tax,
             'total' => $total,
-            'currency' => $data['currency'] ?? 'USD',
+            'currency' => $data['currency'] ?? 'ZAR',
             'notes' => $data['notes'] ?? null,
             'terms' => $data['terms'] ?? null,
             'valid_until' => $data['valid_until'] ?? null,

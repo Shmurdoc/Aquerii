@@ -68,7 +68,7 @@ class SalesOrderController extends Controller
                 'customer_name' => $request->customer_name,
                 'customer_email' => $request->customer_email,
                 'status' => 'draft',
-                'currency' => $request->currency ?? 'USD',
+                'currency' => $request->currency ?? 'ZAR',
                 'subtotal' => $subtotal,
                 'tax_total' => $taxTotal,
                 'total' => $subtotal + $taxTotal,

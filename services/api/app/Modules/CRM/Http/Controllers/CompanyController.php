@@ -45,6 +45,19 @@ class CompanyController extends Controller
         return response()->json(['data' => $data], 201);
     }
 
+    // GET /workspaces/{workspace}/crm/companies/{company}
+    public function show(Workspace $workspace, string $companyId): JsonResponse
+    {
+        $company = DB::table('crm_companies')
+            ->where('id', $companyId)
+            ->where('workspace_id', $workspace->id)
+            ->first();
+
+        abort_unless($company, 404);
+
+        return response()->json(['data' => $company]);
+    }
+
     // PATCH /workspaces/{workspace}/crm/companies/{company}
     public function update(Request $request, Workspace $workspace, string $companyId): JsonResponse
     {

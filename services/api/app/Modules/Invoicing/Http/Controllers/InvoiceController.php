@@ -70,7 +70,7 @@ class InvoiceController extends Controller
             'workspace_id' => $workspace->id,
             'invoice_number' => $validated['invoice_number'],
             'status' => 'draft',
-            'currency' => $validated['currency'] ?? 'USD',
+            'currency' => $validated['currency'] ?? 'ZAR',
             'subtotal' => $subtotal,
             'tax_total' => $taxTotal,
             'total' => $subtotal + $taxTotal,

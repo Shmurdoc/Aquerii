@@ -148,7 +148,7 @@ class LeadController extends Controller
                 'contact_id' => $contact->id,
                 'title' => $validated['deal_title'] ?? "{$lead->first_name} {$lead->last_name}",
                 'value' => $validated['deal_value'] ?? null,
-                'currency' => 'USD',
+                'currency' => 'ZAR',
                 'owner_id' => $lead->assigned_to,
                 'position' => $maxPos + 65536,
             ]);

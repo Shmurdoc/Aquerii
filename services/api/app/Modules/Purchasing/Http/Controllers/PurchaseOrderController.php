@@ -66,7 +66,7 @@ class PurchaseOrderController extends Controller
                 'supplier_name' => $request->supplier_name,
                 'supplier_email' => $request->supplier_email,
                 'status' => 'draft',
-                'currency' => $request->currency ?? 'USD',
+                'currency' => $request->currency ?? 'ZAR',
                 'subtotal' => $subtotal,
                 'tax_total' => $taxTotal,
                 'total' => $subtotal + $taxTotal,
