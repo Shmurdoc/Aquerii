@@ -69,6 +69,7 @@ import GeneralTab      from '@/components/settings/GeneralTab'
 import ProfileTab      from '@/components/settings/ProfileTab'
 import MembersTab      from '@/components/settings/MembersTab'
 import BillingTab      from '@/components/settings/BillingTab'
+import StorageTab      from '@/components/settings/StorageTab'
 import SecurityTab      from '@/components/settings/SecurityTab'
 import NotificationsTab from '@/components/settings/NotificationsTab'
 import AutomationPage  from '@/pages/automation/AutomationPage'
@@ -212,6 +213,7 @@ export default function App() {
             <Route path="profile" element={<ProfileTab />} />
             <Route path="team"    element={<MembersTab />} />
             <Route path="billing" element={<BillingTab />} />
+            <Route path="storage" element={<StorageTab />} />
             <Route path="security" element={<SecurityTab />} />
             <Route path="notifications" element={<NotificationsTab />} />
           </Route>

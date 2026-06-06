@@ -2,17 +2,19 @@ import { useState } from 'react'
 import ProfileTab from './ProfileTab'
 import TeamTab from './TeamTab'
 import BillingTab from './BillingTab'
+import StorageTab from '../../components/settings/StorageTab'
 import SecurityTab from './SecurityTab'
 import NotificationsTab from './NotificationsTab'
 import BrandingTab from './BrandingTab'
 
 const TABS = [
-  { key: 'profile',      label: 'Profile' },
-  { key: 'team',         label: 'Team' },
-  { key: 'billing',      label: 'Billing' },
-  { key: 'security',     label: 'Security' },
+  { key: 'profile',       label: 'Profile' },
+  { key: 'team',          label: 'Team' },
+  { key: 'billing',       label: 'Billing' },
+  { key: 'storage',       label: 'Storage' },
+  { key: 'security',      label: 'Security' },
   { key: 'notifications', label: 'Notifications' },
-  { key: 'branding',     label: 'Branding' },
+  { key: 'branding',      label: 'Branding' },
 ] as const
 
 export default function SettingsPage() {
@@ -48,6 +50,7 @@ export default function SettingsPage() {
         {active === 'profile' && <ProfileTab />}
         {active === 'team' && <TeamTab />}
         {active === 'billing' && <BillingTab />}
+        {active === 'storage' && <StorageTab />}
         {active === 'security' && <SecurityTab />}
         {active === 'notifications' && <NotificationsTab />}
         {active === 'branding' && <BrandingTab />}
