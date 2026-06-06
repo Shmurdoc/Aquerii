@@ -539,6 +539,38 @@ services:
           cpus: '0.25'
           memory: 64M
 
+  # ─── TOOLS (On-demand Node.js dev scripts) ──────────────────
+  # Throwaway service for running Node.js-based operational scripts that
+  # need to talk to Postgres (e.g. team/scripts/cleanup-test-data.mjs).
+  # Not started by `docker compose up` — invoke explicitly:
+  #   docker compose run --rm tools node scripts/cleanup-test-data.mjs --dry-run
+  #   docker compose run --rm tools node scripts/cleanup-test-data.mjs --execute
+  # Image is built from services/tools/Dockerfile (context = ./team) with
+  # `pg` pre-installed, so subsequent runs are instant.
+  # Intentionally NOT in any `depends_on` chain — purely ad-hoc, opt-in
+  # via the `tools` profile.
+  tools:
+    build:
+      context: ./team
+      dockerfile: ../services/tools/Dockerfile
+    image: aquerii-tools:latest
+    profiles: ["tools"]  # opt-in: only runs via `docker compose run --rm tools …
+    working_dir: /app
+    environment:
+      # Use the in-network postgres hostname (matches api container)
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-aquerii}
+      DB_USERNAME: ${DB_USERNAME:-aquerii_app}
+      DB_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - data_net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
 networks:
   public:
     driver: bridge
