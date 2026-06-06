@@ -19,6 +19,7 @@
         "league/oauth2-server": "^8.5",
         "lorisleiva/laravel-actions": "^2.8",
         "maatwebsite/excel": "*",
+        "minishlink/web-push": "^9.0",
         "meilisearch/meilisearch-php": "^1.8",
         "open-telemetry/exporter-otlp": "^1.0",
         "open-telemetry/sdk": "^1.0",
