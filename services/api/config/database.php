@@ -59,7 +59,7 @@ return [
             'username' => env('DB_SUPERADMIN_USERNAME', 'aquerii_superadmin'),
             'password' => env('DB_SUPERADMIN_PASSWORD', ''),
             'charset' => 'utf8',
-            'schema' => 'superadmin',
+            'search_path' => 'superadmin',
         ],
 
         'clickhouse' => [
