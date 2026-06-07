@@ -14,15 +14,20 @@ class SuperAdminSeeder extends Seeder
         $email = env('SUPER_ADMIN_EMAIL');
         $password = env('SUPER_ADMIN_PASSWORD');
 
-        if (app()->environment('production') && (! $email || ! $password)) {
-            throw new \RuntimeException(
-                'SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD must be set in production. '.
-                'Refusing to seed super admin with default credentials.'
-            );
-        }
+        if (! $email || ! $password) {
+            if (app()->environment('production')) {
+                // Hard fail in real production — a missing superadmin is a
+                // genuine misconfiguration that must be fixed before launch.
+                throw new \RuntimeException(
+                    'SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD must be set in production. '.
+                    'Refusing to seed super admin with default credentials.'
+                );
+            }
 
-        $email ??= 'superadmin@aquerii.local';
-        $password ??= 'aquerii-dev-only';
+            $this->command->warn('SuperAdminSeeder skipped: SUPER_ADMIN_EMAIL/PASSWORD not set (non-production env).');
+
+            return;
+        }
 
         $existing = DB::table('users')->where('email', $email)->first();
 
