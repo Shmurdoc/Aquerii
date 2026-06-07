@@ -30,6 +30,7 @@ class Handler extends ExceptionHandler
     {
         if ($e instanceof ValidationException) {
             return response()->json([
+                'errors' => $e->errors(),
                 'error' => [
                     'code' => 'VALIDATION_ERROR',
                     'message' => 'The given data was invalid.',
