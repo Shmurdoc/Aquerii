@@ -68,7 +68,7 @@
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
-        "test": "pest --parallel",
+        "test": "pest",
         "lint": "pint --test",
         "analyse": "phpstan analyse --memory-limit=512M"
     },
