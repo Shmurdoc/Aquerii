@@ -41,8 +41,8 @@ it('creates a board group', function () {
 
 it('lists board groups', function () {
     DB::table('board_groups')->insert([
-        ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'name' => 'To Do', 'color' => '#6366f1', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
-        ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'name' => 'Done', 'color' => '#22c55e', 'position' => 1, 'created_at' => now(), 'updated_at' => now()],
+        ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'workspace_id' => $this->workspace->id, 'name' => 'To Do', 'color' => '#6366f1', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
+        ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'workspace_id' => $this->workspace->id, 'name' => 'Done', 'color' => '#22c55e', 'position' => 1, 'created_at' => now(), 'updated_at' => now()],
     ]);
 
     $response = $this->getJson("/api/workspaces/{$this->workspace->id}/boards/{$this->board->id}/groups");
@@ -56,6 +56,7 @@ it('shows a specific group', function () {
     DB::table('board_groups')->insert([
         'id' => $groupId,
         'board_id' => $this->board->id,
+        'workspace_id' => $this->workspace->id,
         'name' => 'Review',
         'color' => '#f59e0b',
         'position' => 0,
@@ -74,6 +75,7 @@ it('updates a group name', function () {
     DB::table('board_groups')->insert([
         'id' => $groupId,
         'board_id' => $this->board->id,
+        'workspace_id' => $this->workspace->id,
         'name' => 'Old Name',
         'color' => '#6366f1',
         'position' => 0,
@@ -101,6 +103,7 @@ it('deletes a group', function () {
     DB::table('board_groups')->insert([
         'id' => $groupId,
         'board_id' => $this->board->id,
+        'workspace_id' => $this->workspace->id,
         'name' => 'Delete Me',
         'color' => '#ef4444',
         'position' => 0,
@@ -124,8 +127,8 @@ it('reorders groups by updating positions', function () {
     $groupA = Str::uuid()->toString();
     $groupB = Str::uuid()->toString();
     DB::table('board_groups')->insert([
-        ['id' => $groupA, 'board_id' => $this->board->id, 'name' => 'First', 'color' => '#6366f1', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
-        ['id' => $groupB, 'board_id' => $this->board->id, 'name' => 'Second', 'color' => '#22c55e', 'position' => 65536, 'created_at' => now(), 'updated_at' => now()],
+        ['id' => $groupA, 'board_id' => $this->board->id, 'workspace_id' => $this->workspace->id, 'name' => 'First', 'color' => '#6366f1', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
+        ['id' => $groupB, 'board_id' => $this->board->id, 'workspace_id' => $this->workspace->id, 'name' => 'Second', 'color' => '#22c55e', 'position' => 65536, 'created_at' => now(), 'updated_at' => now()],
     ]);
 
     $this->patchJson(
@@ -151,6 +154,7 @@ it('returns 404 for group in a different board', function () {
     DB::table('board_groups')->insert([
         'id' => $groupId,
         'board_id' => $otherBoard->id,
+        'workspace_id' => $this->workspace->id,
         'name' => 'Hidden',
         'color' => '#6366f1',
         'position' => 0,
