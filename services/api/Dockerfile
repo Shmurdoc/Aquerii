@@ -20,6 +20,14 @@ RUN pecl install redis && docker-php-ext-enable redis
 # OpenTelemetry extension
 RUN pecl install opentelemetry && docker-php-ext-enable opentelemetry
 
+# PHP runtime config: bump memory_limit for test runs / Filament boot
+RUN echo "memory_limit = 1024M" > /usr/local/etc/php/conf.d/zz-memory.ini
+
+# OPcache tuning (load last so it overrides the docker-php-ext-opcache.ini defaults).
+# validate_timestamps=0 is critical when /var/www/html is a bind mount on
+# Docker Desktop for Windows — see services/api/ENV-CONFIG-ISSUE.md.
+COPY services/api/docker/php/opcache.ini /usr/local/etc/php/conf.d/zz-opcache.ini
+
 # Composer
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
