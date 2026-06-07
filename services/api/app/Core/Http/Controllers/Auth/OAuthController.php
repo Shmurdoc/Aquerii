@@ -30,12 +30,16 @@ class OAuthController extends Controller
         return $driver->redirect();
     }
 
-    public function callback(Request $request, string $provider): RedirectResponse
+    public function callback(Request $request, string $provider)
     {
         $this->validateProvider($provider);
 
         if ($request->has('error')) {
             $error = $request->input('error');
+
+            if ($request->wantsJson()) {
+                return response()->json(['error' => ['code' => 'OAUTH_FAILED', 'message' => "OAuth error: {$error}"]], 401);
+            }
 
             return redirect($this->frontendUrl("/login?error=oauth_{$error}"));
         }
@@ -48,6 +52,10 @@ class OAuthController extends Controller
 
             $social = $driver->user();
         } catch (\Throwable $e) {
+            if ($request->wantsJson()) {
+                return response()->json(['error' => ['code' => 'OAUTH_FAILED', 'message' => 'OAuth provider failed']], 401);
+            }
+
             return redirect($this->frontendUrl('/login?error=oauth_failed'));
         }
 
@@ -105,6 +113,10 @@ class OAuthController extends Controller
 
         $expiresAt = now()->addDays(30);
         $token = $user->createToken('auth', ['*'], $expiresAt)->plainTextToken;
+
+        if ($request->wantsJson()) {
+            return response()->json(['data' => ['token' => $token, 'is_new' => $isNew, 'user' => $user]], 200);
+        }
 
         $fragment = http_build_query([
             'token' => $token,
