@@ -29,9 +29,9 @@ class CrmDealPolicy
         return $this->isMember($user, $deal->workspace_id);
     }
 
-    public function delete(User $user, Workspace $workspace, CrmDeal $deal): bool
+    public function delete(User $user, CrmDeal $deal): bool
     {
-        return $this->isAdmin($user, $workspace->id) && $deal->workspace_id === $workspace->id;
+        return $this->isAdmin($user, $deal->workspace_id);
     }
 
     private function isMember(User $user, string $workspaceId): bool

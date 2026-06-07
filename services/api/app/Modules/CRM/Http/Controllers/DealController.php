@@ -38,7 +38,7 @@ class DealController extends Controller
 
         $deals = $query->orderBy('position')->paginate(50);
 
-        return response()->json(['data' => $deals]);
+        return response()->json(['data' => $deals->items()]);
     }
 
     public function store(Request $request, Workspace $workspace): JsonResponse
