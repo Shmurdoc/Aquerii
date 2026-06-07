@@ -42,8 +42,8 @@ it('creates a board column', function () {
 
 it('lists board columns', function () {
     DB::table('board_columns')->insert([
-        ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'name' => 'Text', 'type' => 'text', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
-        ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'name' => 'Number', 'type' => 'number', 'position' => 65536, 'created_at' => now(), 'updated_at' => now()],
+        ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'workspace_id' => $this->workspace->id, 'name' => 'Text', 'type' => 'text', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
+        ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'workspace_id' => $this->workspace->id, 'name' => 'Number', 'type' => 'number', 'position' => 65536, 'created_at' => now(), 'updated_at' => now()],
     ]);
 
     $response = $this->getJson("/api/workspaces/{$this->workspace->id}/boards/{$this->board->id}/columns");
@@ -57,6 +57,7 @@ it('shows a specific column', function () {
     DB::table('board_columns')->insert([
         'id' => $columnId,
         'board_id' => $this->board->id,
+        'workspace_id' => $this->workspace->id,
         'name' => 'Assignee',
         'type' => 'people',
         'position' => 0,
@@ -75,6 +76,7 @@ it('updates a column title', function () {
     DB::table('board_columns')->insert([
         'id' => $columnId,
         'board_id' => $this->board->id,
+        'workspace_id' => $this->workspace->id,
         'name' => 'Old Title',
         'type' => 'text',
         'position' => 0,
@@ -102,6 +104,7 @@ it('deletes a column', function () {
     DB::table('board_columns')->insert([
         'id' => $columnId,
         'board_id' => $this->board->id,
+        'workspace_id' => $this->workspace->id,
         'name' => 'Delete Me',
         'type' => 'text',
         'position' => 0,
@@ -125,8 +128,8 @@ it('reorders columns by updating positions', function () {
     $colA = Str::uuid()->toString();
     $colB = Str::uuid()->toString();
     DB::table('board_columns')->insert([
-        ['id' => $colA, 'board_id' => $this->board->id, 'name' => 'First', 'type' => 'text', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
-        ['id' => $colB, 'board_id' => $this->board->id, 'name' => 'Second', 'type' => 'number', 'position' => 65536, 'created_at' => now(), 'updated_at' => now()],
+        ['id' => $colA, 'board_id' => $this->board->id, 'workspace_id' => $this->workspace->id, 'name' => 'First', 'type' => 'text', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
+        ['id' => $colB, 'board_id' => $this->board->id, 'workspace_id' => $this->workspace->id, 'name' => 'Second', 'type' => 'number', 'position' => 65536, 'created_at' => now(), 'updated_at' => now()],
     ]);
 
     $this->patchJson(
