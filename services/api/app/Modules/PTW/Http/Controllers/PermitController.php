@@ -460,7 +460,7 @@ class PermitController extends Controller
         return response()->json(['data' => $isolation]);
     }
 
-    public function register(Request $request, Workspace $workspace): Response
+    public function register(Request $request, Workspace $workspace): \Symfony\Component\HttpFoundation\Response
     {
         $this->assertMember($request, $workspace);
 
