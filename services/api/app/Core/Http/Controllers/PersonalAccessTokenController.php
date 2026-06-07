@@ -20,6 +20,8 @@ class PersonalAccessTokenController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
+        $tokens->each(fn ($token) => $token->makeVisible('last_used_at'));
+
         return response()->json(['data' => $tokens]);
     }
 
