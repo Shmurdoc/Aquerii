@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
         ]);
 
-        if (app()->environment('testing')) {
+        if (! app()->environment('production')) {
             $this->call(E2ESeeder::class);
         }
     }
