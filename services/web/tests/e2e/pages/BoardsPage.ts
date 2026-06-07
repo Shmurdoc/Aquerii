@@ -22,8 +22,10 @@ export class BoardsPage {
     return this.boardCards.filter({ hasText: name })
   }
 
-  async createBoard(): Promise<void> {
+  async createBoard(name = `Test Board ${Date.now()}`): Promise<void> {
     await this.newBoardButton.click()
+    await this.page.getByLabel('Board name').fill(name)
+    await this.page.getByRole('button', { name: 'Create board' }).click()
   }
 
   async openBoard(name?: string): Promise<void> {
