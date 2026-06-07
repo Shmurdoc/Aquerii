@@ -64,6 +64,19 @@ abstract class TestCase extends BaseTestCase
             // fire before our new listener because boot() ran at class load.
         }
 
+        // Reset the PostgreSQL RLS session variable so a stale value from
+        // the previous test (or a session-level SET in seeders) does not
+        // leak into the next test's connection.  The setUp() callback uses
+        // set_config(..., true) which is transaction-scoped, but the
+        // session-level value persists across the transaction rollback.
+        if (DB::getDriverName() === 'pgsql') {
+            try {
+                DB::statement("RESET app.current_user_id");
+            } catch (\Throwable $e) {
+                // ignore if connection cannot accept RESET (e.g. closed)
+            }
+        }
+
         parent::tearDown();
     }
 
