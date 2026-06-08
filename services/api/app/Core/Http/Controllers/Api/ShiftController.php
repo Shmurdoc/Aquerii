@@ -7,7 +7,7 @@ use App\Core\Models\Shift;
 use App\Core\Models\ShiftAssignment;
 use App\Core\Models\ShiftHandover;
 use App\Core\Models\Workspace;
-use Illuminate\Database\UniqueConstraintViolation;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -134,7 +134,7 @@ class ShiftController extends Controller
                     'status' => $validated['status'] ?? 'scheduled',
                 ]
             ));
-        } catch (UniqueConstraintViolation) {
+        } catch (UniqueConstraintViolationException) {
             return response()->json(['message' => 'This user is already assigned to a shift on this date.'], 422);
         }
 
