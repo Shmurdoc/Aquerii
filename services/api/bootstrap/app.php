@@ -40,7 +40,6 @@ $app = Application::configure(basePath: dirname(__DIR__))
         ResetAiCredits::class,
         RunDunning::class,
         SendDueReminders::class,
-        SyncStripePlans::class,
     ])
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->prepend(SecureHeaders::class);
