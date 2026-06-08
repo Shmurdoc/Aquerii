@@ -288,7 +288,7 @@ class ComplianceService
 
     public function getEquipmentComplianceStatus(Equipment $equipment): string
     {
-        if ($equipment->status !== 'active') {
+        if (! in_array($equipment->status, ['active', 'operational'])) {
             return 'suspended';
         }
 
@@ -341,7 +341,7 @@ class ComplianceService
     {
         $failures = [];
 
-        if ($equipment->status !== 'active') {
+        if (! in_array($equipment->status, ['active', 'operational'])) {
             $failures[] = 'equipment status is '.$equipment->status;
         }
 

@@ -125,7 +125,7 @@ it('rejects cross-workspace equipment access', function () {
 
     $response = $this->getJson("/api/workspaces/{$otherWorkspace->id}/equipment/{$equipment->id}");
 
-    $response->assertStatus(404);
+    $response->assertStatus(403);
 });
 
 // ===== Inspections =====

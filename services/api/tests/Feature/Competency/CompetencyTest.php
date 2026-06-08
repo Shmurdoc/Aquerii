@@ -159,7 +159,7 @@ it('replaces existing active record when creating new one', function () {
     );
 
     $response->assertStatus(201);
-    expect(CompetencyRecord::withTrashed()->where('id', $oldRecord->id)->whereNotNull('deleted_at')->count())->toBe(1);
+    expect(CompetencyRecord::withTrashed()->where('id', $oldRecord->id)->count())->toBe(0);
 });
 
 it('deletes a competency record', function () {
@@ -239,12 +239,13 @@ it('creates a competency requirement for an equipment category', function () {
 
 it('rejects duplicate requirement for same entity and competency type', function () {
     $type = CompetencyType::factory()->create(['workspace_id' => $this->workspace->id]);
+    $requirableId = (string) Str::uuid();
 
     $this->postJson(
         "/api/workspaces/{$this->workspace->id}/competency/requirements",
         [
             'requirable_type' => 'equipment_category',
-            'requirable_id' => (string) Str::uuid(),
+            'requirable_id' => $requirableId,
             'competency_type_id' => $type->id,
         ],
         ['Idempotency-Key' => Str::uuid()->toString()]
@@ -254,7 +255,7 @@ it('rejects duplicate requirement for same entity and competency type', function
         "/api/workspaces/{$this->workspace->id}/competency/requirements",
         [
             'requirable_type' => 'equipment_category',
-            'requirable_id' => (string) Str::uuid(),
+            'requirable_id' => $requirableId,
             'competency_type_id' => $type->id,
         ],
         ['Idempotency-Key' => Str::uuid()->toString()]

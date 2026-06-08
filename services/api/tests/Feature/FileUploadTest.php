@@ -4,11 +4,15 @@ use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 beforeEach(function () {
     Storage::fake('s3');
+    Http::fake([
+        '*' => Http::response(['text' => 'OCR text', 'page_count' => 1, 'engine' => 'test', 'confidence' => 0.95], 200),
+    ]);
     $this->user = User::factory()->create();
     $this->workspace = Workspace::factory()->create(['owner_id' => $this->user->id]);
     WorkspaceMember::factory()->create([

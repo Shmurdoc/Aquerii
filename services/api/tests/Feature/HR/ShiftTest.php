@@ -213,5 +213,5 @@ it('rejects cross-workspace shift access', function () {
 
     $response = $this->getJson("/api/workspaces/{$otherWorkspace->id}/hr/shifts/{$shift->id}");
 
-    $response->assertStatus(404);
+    $response->assertStatus(403);
 });

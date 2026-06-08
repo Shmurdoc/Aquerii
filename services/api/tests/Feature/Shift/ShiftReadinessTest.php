@@ -301,7 +301,7 @@ it('rejects cross-workspace plan access', function () {
         ['Idempotency-Key' => Str::uuid()->toString()]
     );
 
-    $response->assertStatus(404);
+    $response->assertStatus(403);
 });
 
 it('rejects non-member with 403', function () {

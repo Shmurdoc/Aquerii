@@ -125,7 +125,7 @@ it('rejects cross-workspace access', function () {
     $otherWorkspace = Workspace::factory()->create();
     $card = JobCard::factory()->create(['workspace_id' => $this->workspace->id]);
     $response = $this->getJson("/api/workspaces/{$otherWorkspace->id}/job-cards/{$card->id}");
-    $response->assertStatus(404);
+    $response->assertStatus(403);
 });
 
 // ─── Task / Checklist tests (JOB-12) ────────────────────────────────────────

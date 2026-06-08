@@ -7,8 +7,9 @@ use App\Core\Models\WorkspaceMember;
 use App\Modules\CRM\Models\CrmCompany;
 use App\Modules\CRM\Models\CrmContact;
 use App\Modules\CRM\Models\CrmDeal;
+use App\Modules\CRM\Models\CrmPipeline;
+use App\Modules\CRM\Models\CrmPipelineStage;
 use App\Modules\Documents\Models\Document;
-use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -117,13 +118,13 @@ it('finds soft-deleted crm contact via withTrashed()->firstOrCreate', function (
 });
 
 it('finds soft-deleted crm deal via withTrashed()->firstOrCreate', function () {
-    $pipelineId = DB::table('crm_pipelines')->insertGetId([
+    $pipeline = CrmPipeline::create([
         'workspace_id' => $this->workspace->id,
         'name' => 'Default Pipeline',
     ]);
-    $stageId = DB::table('crm_pipeline_stages')->insertGetId([
+    $stage = CrmPipelineStage::create([
         'workspace_id' => $this->workspace->id,
-        'pipeline_id' => $pipelineId,
+        'pipeline_id' => $pipeline->id,
         'name' => 'Open',
     ]);
 
@@ -133,15 +134,15 @@ it('finds soft-deleted crm deal via withTrashed()->firstOrCreate', function () {
         'value' => 1000,
         'currency' => 'USD',
         'probability' => 50,
-        'pipeline_id' => $pipelineId,
-        'stage_id' => $stageId,
+        'pipeline_id' => $pipeline->id,
+        'stage_id' => $stage->id,
     ]);
     $deal->delete();
 
     $found = CrmDeal::withTrashed()->firstOrCreate([
         'workspace_id' => $this->workspace->id,
         'title' => 'Deleted Deal',
-    ], ['value' => 1000, 'currency' => 'USD', 'probability' => 50, 'pipeline_id' => $pipelineId, 'stage_id' => $stageId]);
+    ], ['value' => 1000, 'currency' => 'USD', 'probability' => 50, 'pipeline_id' => $pipeline->id, 'stage_id' => $stage->id]);
 
     expect($found->id)->toBe($deal->id);
     expect($found->trashed())->toBeTrue();

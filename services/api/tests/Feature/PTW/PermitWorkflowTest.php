@@ -9,6 +9,7 @@ use App\Modules\Competency\Models\CompetencyType;
 use App\Modules\PTW\Models\Permit;
 use App\Modules\PTW\Services\PermitWorkflowService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {

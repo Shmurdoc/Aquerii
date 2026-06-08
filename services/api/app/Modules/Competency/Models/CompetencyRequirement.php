@@ -3,6 +3,7 @@
 namespace App\Modules\Competency\Models;
 
 use App\Core\Models\Workspace;
+use Database\Factories\Competency\CompetencyRequirementFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CompetencyRequirement extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;
+
+    protected static function newFactory(): CompetencyRequirementFactory
+    {
+        return CompetencyRequirementFactory::new();
+    }
 
     protected $table = 'competency_requirements';
 

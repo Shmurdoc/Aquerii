@@ -45,10 +45,8 @@ it('creates a scan entry returning 200 with compliant status', function () {
         'workspace_id' => $this->workspace->id,
         'user_id' => $this->worker->user_id,
         'training_name' => 'Site Induction',
-        'training_type' => 'induction',
         'date_completed' => now()->subMonths(6),
         'expiry_date' => now()->addMonths(6),
-        'status' => 'active',
         'created_at' => now(),
         'updated_at' => now(),
     ]);
@@ -180,10 +178,8 @@ it('authenticates via valid kiosk API key and rejects invalid key', function () 
         'workspace_id' => $this->workspace->id,
         'user_id' => $this->worker->user_id,
         'training_name' => 'Site Induction',
-        'training_type' => 'induction',
         'date_completed' => now()->subMonths(6),
         'expiry_date' => now()->addMonths(6),
-        'status' => 'active',
         'created_at' => now(),
         'updated_at' => now(),
     ]);

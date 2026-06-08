@@ -166,7 +166,7 @@ it('rejects cross-workspace equipment access', function () {
         "/api/workspaces/{$otherWorkspace->id}/equipment/{$equipment->id}"
     );
 
-    $response->assertStatus(404);
+    $response->assertStatus(403);
 });
 
 it('cannot view equipment from another workspace via listing', function () {

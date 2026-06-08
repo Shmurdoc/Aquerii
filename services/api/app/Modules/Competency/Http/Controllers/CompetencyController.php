@@ -137,7 +137,7 @@ class CompetencyController extends Controller
             ->first();
 
         if ($existing) {
-            $existing->delete();
+            $existing->forceDelete();
         }
 
         $record = CompetencyRecord::create(array_merge(
