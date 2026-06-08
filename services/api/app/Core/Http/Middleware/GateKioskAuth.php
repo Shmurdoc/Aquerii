@@ -11,10 +11,14 @@ class GateKioskAuth
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! Auth::guard('gate-kiosk')->check()) {
-            return response()->json(['message' => 'Invalid or missing kiosk API key.'], 401);
+        if (Auth::guard('gate-kiosk')->check()) {
+            return $next($request);
         }
 
-        return $next($request);
+        if (Auth::guard()->check()) {
+            return $next($request);
+        }
+
+        return response()->json(['message' => 'Invalid or missing kiosk API key.'], 401);
     }
 }
