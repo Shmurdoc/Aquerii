@@ -32,24 +32,24 @@ class ProductController extends Controller
         return response()->json(['data' => new ProductResource($product)], 201);
     }
 
-    public function show(string $product): JsonResponse
+    public function show(Workspace $workspace, string $product): JsonResponse
     {
-        $product = Product::findOrFail($product);
+        $product = Product::where('workspace_id', $workspace->id)->findOrFail($product);
 
         return response()->json(['data' => new ProductResource($product)]);
     }
 
-    public function update(UpdateProductRequest $request, string $product): JsonResponse
+    public function update(UpdateProductRequest $request, Workspace $workspace, string $product): JsonResponse
     {
-        $product = Product::findOrFail($product);
+        $product = Product::where('workspace_id', $workspace->id)->findOrFail($product);
         $product->update($request->validated());
 
         return response()->json(['data' => new ProductResource($product->fresh())]);
     }
 
-    public function destroy(string $product): JsonResponse
+    public function destroy(Workspace $workspace, string $product): JsonResponse
     {
-        $product = Product::findOrFail($product);
+        $product = Product::where('workspace_id', $workspace->id)->findOrFail($product);
         $product->delete();
 
         return response()->json(['data' => null], 204);
