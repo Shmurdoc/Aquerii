@@ -30,7 +30,7 @@ it('creates a permit with all required fields returning 201', function () {
             'description' => 'Hot work permit for welding repairs on main conveyor.',
             'location' => 'Processing Plant',
             'risk_level' => Permit::RISK_MEDIUM,
-            'work_method_statement' => '1. Isolate power, 2. Test gas, 3. Weld, 4. Inspect',
+            'work_method_statement' => '1. Isolate power to conveyor 2 at main breaker panel. 2. Test gas levels in work area with calibrated detector. 3. Begin welding operations with appropriate PPE. 4. Inspect all welds before de-isolation.',
             'ppe_required' => 'Hard hat, gloves, face shield, fire retardant suit',
         ]
     );
@@ -247,7 +247,7 @@ it('creates all permit types returning 201 each', function () {
                 'description' => "Testing creation of {$type} permit type.",
                 'location' => 'Test Location',
                 'risk_level' => Permit::RISK_LOW,
-                'work_method_statement' => 'Standard work method statement for testing.',
+                'work_method_statement' => 'Standard work method statement for testing that is long enough to pass the minimum length validation rule for this field.',
                 'ppe_required' => 'Hard hat, boots',
             ]
         );
@@ -471,7 +471,7 @@ it('cannot create a permit with an invalid risk_level', function () {
             'description' => 'Testing invalid risk level rejection.',
             'location' => 'Test',
             'risk_level' => 'ultra_high',
-            'work_method_statement' => 'Standard work method statement for testing the validation rules.',
+            'work_method_statement' => 'Standard work method statement for testing the validation rules that enforces a minimum character count on this important safety document.',
             'ppe_required' => 'Boots',
         ]
     );

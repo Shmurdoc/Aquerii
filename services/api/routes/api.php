@@ -675,9 +675,6 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // ── Site Access Log / Gate Kiosk ──────────────────────────────────
         Route::prefix('gate')->group(function () {
-            Route::post('scan', [GateController::class, 'scan'])
-                ->middleware('auth:sanctum,gate-kiosk');
-
             Route::get('logs', [GateController::class, 'logs'])
                 ->middleware('auth:sanctum');
 
@@ -686,24 +683,31 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
             Route::get('kiosk-tokens', [GateController::class, 'kioskTokens'])
                 ->middleware(['auth:sanctum', 'workspace.role:owner,admin']);
-
-            Route::post('scan-equipment', [GateController::class, 'scanEquipment'])
-                ->middleware('auth:sanctum,gate-kiosk');
-
-            // Visitor management
-            Route::prefix('visitors')->middleware('auth:sanctum,gate-kiosk')->group(function () {
-                Route::post('sign-in', [VisitorController::class, 'signIn']);
-                Route::get('active', [VisitorController::class, 'active']);
-                Route::get('', [VisitorController::class, 'index']);
-                Route::post('{visitor}/sign-out', [VisitorController::class, 'signOut']);
-                Route::post('{visitor}/badge-printed', [VisitorController::class, 'markBadgePrinted']);
-            });
         });
 
         // ── Client Portal — token generation (auth required) ──────────────
         Route::post('portal/token', [ClientPortalController::class, 'generateToken'])->middleware('idempotent');
     });
 
+});
+
+// ── Gate Kiosk scan routes (no sanctum — kiosk auth via API key only) ────────
+Route::prefix('workspaces/{workspace}')->middleware(['workspace', 'throttle:60,1'])->group(function () {
+    Route::prefix('gate')->group(function () {
+        Route::post('scan', [GateController::class, 'scan'])
+            ->middleware('gate-kiosk');
+
+        Route::post('scan-equipment', [GateController::class, 'scanEquipment'])
+            ->middleware('gate-kiosk');
+
+        Route::prefix('visitors')->middleware('gate-kiosk')->group(function () {
+            Route::post('sign-in', [VisitorController::class, 'signIn']);
+            Route::get('active', [VisitorController::class, 'active']);
+            Route::get('', [VisitorController::class, 'index']);
+            Route::post('{visitor}/sign-out', [VisitorController::class, 'signOut']);
+            Route::post('{visitor}/badge-printed', [VisitorController::class, 'markBadgePrinted']);
+        });
+    });
 });
 
 // ── Client Portal — read-only endpoints (portal token auth) ─────────────

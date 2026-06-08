@@ -68,7 +68,7 @@ it('creates a permit with a unique reference and nested hazards/isolations', fun
             'description' => 'Hot work permit for welding repairs',
             'location' => 'Processing Plant',
             'risk_level' => Permit::RISK_MEDIUM,
-            'work_method_statement' => '1. Isolate, 2. Test, 3. Weld, 4. Verify',
+            'work_method_statement' => '1. Isolate power at main breaker. 2. Test gas levels. 3. Perform welding. 4. Verify weld integrity before de-isolation.',
             'ppe_required' => 'Hard hat, gloves, face shield',
             'pre_conditions' => ['Gas test < 1% LEL', 'Fire watch posted'],
             'hazards' => [
@@ -99,7 +99,7 @@ it('generates a sequential reference per workspace per year', function () {
             'description' => 'Lift crusher',
             'location' => 'Workshop',
             'risk_level' => Permit::RISK_HIGH,
-            'work_method_statement' => 'Plan, brief, lift, lower',
+            'work_method_statement' => 'Plan the lift, brief the team, execute the lift, lower the load safely to ground.',
             'ppe_required' => 'Hard hat, boots',
         ]
     )->assertStatus(201)
@@ -113,7 +113,7 @@ it('generates a sequential reference per workspace per year', function () {
             'description' => 'Lift crusher again',
             'location' => 'Workshop',
             'risk_level' => Permit::RISK_HIGH,
-            'work_method_statement' => 'Plan, brief, lift, lower',
+            'work_method_statement' => 'Plan the lift, brief the team, execute the lift, lower the load safely to ground.',
             'ppe_required' => 'Hard hat, boots',
         ]
     )->assertStatus(201)
