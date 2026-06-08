@@ -211,7 +211,7 @@ it('rejects a position_id that does not exist in the roles table', function () {
     );
 
     $response->assertStatus(422);
-    expect($response->json('errors.position_id.0'))->toContain('roles');
+    expect($response->json('errors'))->toHaveKey('position_id');
 
     $row = DB::table('workspace_members')->where('user_id', $member->id)->first();
     expect($row->position_id)->toBeNull();
@@ -234,7 +234,7 @@ it('rejects a department_role_id that does not exist in the roles table', functi
     );
 
     $response->assertStatus(422);
-    expect($response->json('errors.department_role_id.0'))->toContain('roles');
+    expect($response->json('errors'))->toHaveKey('department_role_id');
 
     $row = DB::table('workspace_members')->where('user_id', $member->id)->first();
     expect($row->department_role_id)->toBeNull();

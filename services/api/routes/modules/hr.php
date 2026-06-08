@@ -1,6 +1,7 @@
 <?php
 
 use App\Core\Http\Controllers\Api\EmployeeController;
+use App\Core\Http\Controllers\Api\ShiftController;
 use App\Core\Http\Controllers\Api\TeamCapacityController;
 use App\Core\Models\AttendanceLog;
 use App\Core\Models\LeaveRequest;
@@ -93,3 +94,23 @@ Route::patch('hr/expenses/{expenseId}/action', [EmployeeController::class, 'expe
 // Team capacity
 Route::get('hr/capacity', [TeamCapacityController::class, 'index']);
 Route::patch('hr/capacity/{userId}', [TeamCapacityController::class, 'update'])->middleware('idempotent');
+
+// Shift management
+Route::get('hr/shifts', [ShiftController::class, 'indexShifts']);
+Route::post('hr/shifts', [ShiftController::class, 'storeShift'])->middleware('idempotent');
+Route::get('hr/shifts/{shift}', [ShiftController::class, 'showShift']);
+Route::patch('hr/shifts/{shift}', [ShiftController::class, 'updateShift'])->middleware('idempotent');
+Route::delete('hr/shifts/{shift}', [ShiftController::class, 'destroyShift'])->middleware('idempotent');
+
+// Shift assignments
+Route::get('hr/shifts/assignments', [ShiftController::class, 'indexAssignments']);
+Route::post('hr/shifts/assignments', [ShiftController::class, 'storeAssignment'])->middleware('idempotent');
+Route::post('hr/shifts/assignments/bulk', [ShiftController::class, 'storeAssignmentsBulk'])->middleware('idempotent');
+Route::patch('hr/shifts/assignments/{assignment}', [ShiftController::class, 'updateAssignment'])->middleware('idempotent');
+Route::delete('hr/shifts/assignments/{assignment}', [ShiftController::class, 'destroyAssignment'])->middleware('idempotent');
+
+// Shift handovers
+Route::get('hr/shifts/handovers', [ShiftController::class, 'indexHandovers']);
+Route::post('hr/shifts/handovers', [ShiftController::class, 'storeHandover'])->middleware('idempotent');
+Route::get('hr/shifts/handovers/{handover}', [ShiftController::class, 'showHandover']);
+Route::post('hr/shifts/handovers/{handover}/acknowledge', [ShiftController::class, 'acknowledgeHandover'])->middleware('idempotent');

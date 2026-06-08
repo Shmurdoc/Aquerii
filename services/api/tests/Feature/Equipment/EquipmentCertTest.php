@@ -47,12 +47,14 @@ it('creates a cert type returning 201', function () {
 
 it('lists cert types', function () {
     EquipmentCertType::create([
+        'workspace_id' => $this->workspace->id,
         'name' => 'Lifting Gear Cert',
         'slug' => 'lifting-gear-cert',
         'description' => 'Certification for lifting equipment',
         'is_mandatory' => true,
     ]);
     EquipmentCertType::create([
+        'workspace_id' => $this->workspace->id,
         'name' => 'Electrical Safety',
         'slug' => 'electrical-safety',
         'description' => 'Electrical safety certification',
@@ -69,6 +71,7 @@ it('lists cert types', function () {
 
 it('creates a cert record for equipment returning 201', function () {
     $certType = EquipmentCertType::create([
+        'workspace_id' => $this->workspace->id,
         'name' => 'Lifting Gear Cert',
         'slug' => 'lifting-gear-cert',
         'is_mandatory' => true,
@@ -92,6 +95,7 @@ it('creates a cert record for equipment returning 201', function () {
 
 it('verifies a cert record', function () {
     $certType = EquipmentCertType::create([
+        'workspace_id' => $this->workspace->id,
         'name' => 'Lifting Gear Cert',
         'slug' => 'lifting-gear-cert',
         'is_mandatory' => true,
@@ -118,6 +122,7 @@ it('verifies a cert record', function () {
 
 it('expired cert causes non_compliant compliance status', function () {
     $certType = EquipmentCertType::create([
+        'workspace_id' => $this->workspace->id,
         'name' => 'Critical Safety Cert',
         'slug' => 'critical-safety-cert',
         'is_mandatory' => true,
@@ -145,6 +150,7 @@ it('expired cert causes non_compliant compliance status', function () {
 
 it('compliant certs result in compliant overall status', function () {
     $certType = EquipmentCertType::create([
+        'workspace_id' => $this->workspace->id,
         'name' => 'Valid Safety Cert',
         'slug' => 'valid-safety-cert',
         'is_mandatory' => true,
@@ -172,6 +178,7 @@ it('compliant certs result in compliant overall status', function () {
 
 it('missing mandatory cert type triggers non_compliant', function () {
     EquipmentCertType::create([
+        'workspace_id' => $this->workspace->id,
         'name' => 'Mandatory Cert',
         'slug' => 'mandatory-cert',
         'is_mandatory' => true,
@@ -188,6 +195,7 @@ it('missing mandatory cert type triggers non_compliant', function () {
 
 it('non-mandatory cert does not affect compliance', function () {
     EquipmentCertType::create([
+        'workspace_id' => $this->workspace->id,
         'name' => 'Optional Cert',
         'slug' => 'optional-cert',
         'is_mandatory' => false,
@@ -218,6 +226,7 @@ it('fails with 422 cert record requires equipment_cert_type_id', function () {
 
 it('fails with 422 cert type requires unique slug', function () {
     EquipmentCertType::create([
+        'workspace_id' => $this->workspace->id,
         'name' => 'First',
         'slug' => 'duplicate-slug',
     ]);
