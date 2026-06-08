@@ -15,6 +15,10 @@ class GateKioskAuth
             return $next($request);
         }
 
+        if (Auth::guard('sanctum')->check()) {
+            return $next($request);
+        }
+
         if (Auth::guard()->check()) {
             return $next($request);
         }
