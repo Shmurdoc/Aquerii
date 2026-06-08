@@ -68,7 +68,7 @@ class PermitController extends Controller
             'risk_level' => 'required|string|in:'.implode(',', Permit::$riskLevels),
             'pre_conditions' => 'nullable|array',
             'pre_conditions.*' => 'string',
-            'work_method_statement' => 'required|string',
+            'work_method_statement' => 'required|string|min:100',
             'ppe_required' => 'required|string',
             'hazards' => 'nullable|array',
             'hazards.*.description' => 'required_with:hazards|string',

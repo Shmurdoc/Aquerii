@@ -118,7 +118,7 @@ it('returns non_compliant status for worker with expired competency', function (
 
     $response->assertStatus(200)
         ->assertJsonPath('status', 'non_compliant')
-        ->assertJsonCount(1, 'details.expired_certifications');
+        ->assertJsonCount(1, 'compliance.failures');
 });
 
 it('returns paginated gate logs with correct structure', function () {

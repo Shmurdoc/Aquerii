@@ -127,7 +127,10 @@ class ShiftController extends Controller
 
         $assignment = ShiftAssignment::create(array_merge(
             $validated,
-            ['workspace_id' => $workspace->id]
+            [
+                'workspace_id' => $workspace->id,
+                'status' => $validated['status'] ?? 'scheduled',
+            ]
         ));
 
         return response()->json(['data' => $assignment], 201);

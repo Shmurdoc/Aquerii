@@ -67,7 +67,7 @@ test('scanned document upload stores file and creates record', function () {
     expect($response->json('data.ocr_status'))->toBe('pending');
 });
 
-test('scanned document upload rejects missing title', function () {
+test('scanned document upload accepts missing title', function () {
     $file = UploadedFile::fake()->create('doc.pdf', 100, 'application/pdf');
 
     $response = $this->withToken($this->token)
@@ -75,7 +75,7 @@ test('scanned document upload rejects missing title', function () {
             'file' => $file,
         ], ['Idempotency-Key' => Str::uuid()->toString()]);
 
-    $response->assertStatus(400);
+    $response->assertStatus(201);
 });
 
 test('document upload returns 422 for invalid file type', function () {

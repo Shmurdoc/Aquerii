@@ -63,7 +63,7 @@ it('creates a scan entry returning 200 with compliant status', function () {
 
     $response->assertStatus(200)
         ->assertJsonPath('status', 'compliant')
-        ->assertJsonStructure(['status', 'worker', 'details']);
+        ->assertJsonStructure(['status', 'worker', 'compliance']);
 
     $this->assertDatabaseHas('site_access_logs', [
         'worker_id' => $this->worker->id,
@@ -244,5 +244,5 @@ it('returns non-compliant result for worker with expired competency', function (
 
     $response->assertStatus(200)
         ->assertJsonPath('status', 'non_compliant')
-        ->assertJsonCount(1, 'details.expired_certifications');
+        ->assertJsonCount(1, 'compliance.failures');
 });

@@ -16,12 +16,6 @@ use Illuminate\Support\Str;
 
 class GateController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:sanctum,gate-kiosk')->only(['scan', 'scanEquipment']);
-        $this->middleware('auth:sanctum')->except(['scan', 'scanEquipment']);
-    }
-
     public function scan(Request $request, string $workspaceId): JsonResponse
     {
         $workspace = Workspace::findOrFail($workspaceId);

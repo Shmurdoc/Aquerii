@@ -1,5 +1,12 @@
 <?php
 
+use App\Core\Console\Commands\CheckCertExpiry;
+use App\Core\Console\Commands\PurgeExpiredTrials;
+use App\Core\Console\Commands\RecalculateUsage;
+use App\Core\Console\Commands\ResetAiCredits;
+use App\Core\Console\Commands\RunDunning;
+use App\Core\Console\Commands\SendDueReminders;
+use App\Core\Console\Commands\SyncStripePlans;
 use App\Core\Exceptions\Handler;
 use App\Core\Http\Middleware\AuthenticateScimToken;
 use App\Core\Http\Middleware\CheckFeatureAccess;
@@ -26,6 +33,15 @@ $app = Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         apiPrefix: 'api',
     )
+    ->withCommands([
+        CheckCertExpiry::class,
+        PurgeExpiredTrials::class,
+        RecalculateUsage::class,
+        ResetAiCredits::class,
+        RunDunning::class,
+        SendDueReminders::class,
+        SyncStripePlans::class,
+    ])
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->prepend(SecureHeaders::class);
 

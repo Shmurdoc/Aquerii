@@ -50,10 +50,11 @@ it('moves a permit through the full happy path', function () {
         'workspace_id' => $this->workspace->id,
         'user_id' => $holder->id,
         'status' => 'active',
+        'issued_at' => Carbon::now()->subDay(),
         'expires_at' => Carbon::now()->addYear(),
         'verified_at' => Carbon::now(),
     ]);
-    $inductionType = CompetencyType::create(['name' => 'Site Induction']);
+    $inductionType = CompetencyType::create(['name' => 'Site Induction', 'workspace_id' => $this->workspace->id]);
     CompetencyRecord::create([
         'workspace_id' => $this->workspace->id,
         'user_id' => $holder->id,

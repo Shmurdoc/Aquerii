@@ -54,7 +54,8 @@ it('updates a shift type', function () {
 
     $response = $this->patchJson(
         "/api/workspaces/{$this->workspace->id}/hr/shifts/{$shift->id}",
-        ['name' => 'Early Shift']
+        ['name' => 'Early Shift'],
+        ['Idempotency-Key' => Str::uuid()->toString()]
     );
 
     $response->assertStatus(200)
@@ -64,7 +65,11 @@ it('updates a shift type', function () {
 it('deletes a shift type', function () {
     $shift = Shift::factory()->create(['workspace_id' => $this->workspace->id]);
 
-    $response = $this->deleteJson("/api/workspaces/{$this->workspace->id}/hr/shifts/{$shift->id}");
+    $response = $this->deleteJson(
+        "/api/workspaces/{$this->workspace->id}/hr/shifts/{$shift->id}",
+        [],
+        ['Idempotency-Key' => Str::uuid()->toString()]
+    );
 
     $response->assertStatus(204);
 });
@@ -179,6 +184,11 @@ it('creates a shift handover', function () {
 
 it('acknowledges a shift handover', function () {
     $incomingUser = User::factory()->create();
+    WorkspaceMember::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $incomingUser->id,
+        'role' => 'member',
+    ]);
     $handover = ShiftHandover::factory()->create([
         'workspace_id' => $this->workspace->id,
         'departing_user_id' => $this->user->id,

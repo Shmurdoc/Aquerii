@@ -107,7 +107,7 @@ it('activates a permit from issued to active returning 200', function () {
         'expires_at' => Carbon::now()->addYear(),
         'verified_at' => Carbon::now(),
     ]);
-    $inductionType = CompetencyType::create(['name' => 'Site Induction']);
+    $inductionType = CompetencyType::create(['name' => 'Site Induction', 'workspace_id' => $this->workspace->id]);
     CompetencyRecord::create([
         'workspace_id' => $this->workspace->id,
         'user_id' => $holder->id,
@@ -328,7 +328,7 @@ it('cannot issue permit when holder is non-compliant — missing COF verified_at
         // verified_at deliberately omitted — should make holder non-compliant
     ]);
 
-    $inductionType = CompetencyType::create(['name' => 'Site Induction']);
+    $inductionType = CompetencyType::create(['name' => 'Site Induction', 'workspace_id' => $this->workspace->id]);
     CompetencyRecord::create([
         'workspace_id' => $this->workspace->id,
         'user_id' => $holder->id,
@@ -510,7 +510,7 @@ it('cannot activate an expired permit', function () {
         'verified_at' => Carbon::now(),
     ]);
 
-    $inductionType = CompetencyType::create(['name' => 'Site Induction']);
+    $inductionType = CompetencyType::create(['name' => 'Site Induction', 'workspace_id' => $this->workspace->id]);
     CompetencyRecord::create([
         'workspace_id' => $this->workspace->id,
         'user_id' => $holder->id,
