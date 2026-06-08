@@ -583,6 +583,11 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::patch('plugins/{plugin}/settings', [PluginController::class, 'updateSettings'])->middleware('idempotent');
 
             Route::post('anomaly-detection', [AIController::class, 'anomalyDetection']);
+
+            // Predictions (rule-based)
+            Route::post('predictions/task-duration', [AIController::class, 'predictTaskDuration']);
+            Route::post('predictions/delay-risk', [AIController::class, 'predictDelayRisk']);
+            Route::post('predictions/okr-progress', [AIController::class, 'predictOKRProgress']);
         });
 
         // ── Inventory: Products, Categories, Stock ──
@@ -672,6 +677,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // ── Documents module ──────────────────────────────────────────────
         require __DIR__.'/modules/documents.php';
+
+        // ── Meetings module ──────────────────────────────────────────────
+        require __DIR__.'/modules/meetings.php';
 
         // ── Site Access Log / Gate Kiosk ──────────────────────────────────
         Route::prefix('gate')->group(function () {
