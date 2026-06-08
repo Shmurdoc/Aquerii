@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class PermitController extends Controller
 {
@@ -459,7 +460,7 @@ class PermitController extends Controller
         return response()->json(['data' => $isolation]);
     }
 
-    public function register(Request $request, Workspace $workspace): \Symfony\Component\HttpFoundation\Response
+    public function register(Request $request, Workspace $workspace): Response
     {
         $this->assertMember($request, $workspace);
 
