@@ -85,20 +85,20 @@
             "pestphp/pest-plugin": true,
             "php-http/discovery": true,
             "tbachert/spi": true
-        },
-        "policy": {
-            "advisories": {
-                "ignore-id": [
-                    "PKSA-mdq4-51ck-6kdq",
-                    "PKSA-8qx3-n5y5-vvnd",
-                    "PKSA-q46n-4fdk-zjr4",
-                    "PKSA-qzrn-rnz3-85w1",
-                    "PKSA-w7xr-vk7n-rstm",
-                    "PKSA-p3rx-dfwp-73ny",
-                    "PKSA-ckwp-rt7t-c46m",
-                    "PKSA-njrm-6dtg-m2pc"
-                ]
-            }
+        }
+    },
+    "policy": {
+        "advisories": {
+            "ignore-id": [
+                "PKSA-mdq4-51ck-6kdq",
+                "PKSA-8qx3-n5y5-vvnd",
+                "PKSA-q46n-4fdk-zjr4",
+                "PKSA-qzrn-rnz3-85w1",
+                "PKSA-w7xr-vk7n-rstm",
+                "PKSA-p3rx-dfwp-73ny",
+                "PKSA-ckwp-rt7t-c46m",
+                "PKSA-njrm-6dtg-m2pc"
+            ]
         }
     }
 }

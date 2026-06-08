@@ -51,7 +51,7 @@ function SummaryCard({
 }: {
   label: string
   value: string | number
-  icon: React.ComponentType<{ size?: number; className?: string }>
+  icon: React.ElementType
   color: string
   subtitle?: string
 }) {
@@ -194,6 +194,7 @@ export default function ROIDashboardPage() {
     )
   }
 
+  const d = data!
   const TrendIcon = trendDirection === 'up' ? TrendingUp
     : trendDirection === 'down' ? TrendingDown : Minus
   const trendColor = trendDirection === 'up' ? 'text-emerald-400'
@@ -201,12 +202,12 @@ export default function ROIDashboardPage() {
   const trendLabel = trendDirection === 'up' ? 'Improving'
     : trendDirection === 'down' ? 'Declining' : 'Stable'
 
-  const barData = data.compliance_rate_trend.map(d => ({
-    label: formatWeekLabel(d.week),
-    value: d.rate,
+  const barData = d.compliance_rate_trend.map(x => ({
+    label: formatWeekLabel(x.week),
+    value: x.rate,
   }))
 
-  const totalHours = data.avoided_downtime_hours + data.time_saved_ptw
+  const totalHours = d.avoided_downtime_hours + d.time_saved_ptw
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">
@@ -215,30 +216,30 @@ export default function ROIDashboardPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 px-6 py-4">
         <SummaryCard
           label="Access Denials Prevented"
-          value={data.access_denials_prevented}
+          value={d.access_denials_prevented}
           icon={Shield}
           color="text-emerald-400"
         />
         <SummaryCard
           label="Compliance Rate"
-          value={`${data.compliance_rate}%`}
+          value={`${d.compliance_rate}%`}
           icon={TrendIcon}
           color={trendColor}
           subtitle={trendLabel}
         />
         <SummaryCard
           label="Downtime Avoided"
-          value={`${data.avoided_downtime_hours}h`}
+          value={`${d.avoided_downtime_hours}h`}
           icon={Clock}
           color="text-blue-400"
-          subtitle={formatZAR(data.avoided_downtime_cost)}
+          subtitle={formatZAR(d.avoided_downtime_cost)}
         />
         <SummaryCard
           label="ROI Ratio"
-          value={data.roi_ratio.toFixed(2)}
+          value={d.roi_ratio.toFixed(2)}
           icon={Wallet}
           color="text-amber-400"
-          subtitle={`R${data.roi_ratio.toFixed(2)} saved per R1 spent`}
+          subtitle={`R${d.roi_ratio.toFixed(2)} saved per R1 spent`}
         />
       </div>
 
@@ -275,17 +276,17 @@ export default function ROIDashboardPage() {
               <tr className="border-b border-[var(--color-glass-border)]">
                 <td className="py-2.5 text-sm text-[var(--color-text-primary)]">Access Denials Prevented</td>
                 <td className="py-2.5 text-right text-sm text-[var(--color-text-muted)]">—</td>
-                <td className="py-2.5 text-right text-sm text-[var(--color-text-primary)] tabular-nums">{formatZAR(data.avoided_downtime_cost)}</td>
+                <td className="py-2.5 text-right text-sm text-[var(--color-text-primary)] tabular-nums">{formatZAR(d.avoided_downtime_cost)}</td>
               </tr>
               <tr className="border-b border-[var(--color-glass-border)]">
                 <td className="py-2.5 text-sm text-[var(--color-text-primary)]">PTW Processing Time Saved</td>
-                <td className="py-2.5 text-right text-sm text-[var(--color-text-primary)] tabular-nums">{data.time_saved_ptw}h</td>
+                <td className="py-2.5 text-right text-sm text-[var(--color-text-primary)] tabular-nums">{d.time_saved_ptw}h</td>
                 <td className="py-2.5 text-right text-sm text-[var(--color-text-muted)]">—</td>
               </tr>
               <tr>
                 <td className="py-2.5 text-sm font-semibold text-[var(--color-text-primary)]">Total Potential Savings</td>
                 <td className="py-2.5 text-right text-sm font-semibold text-[var(--color-text-primary)] tabular-nums">{totalHours}h</td>
-                <td className="py-2.5 text-right text-sm font-semibold text-emerald-400 tabular-nums">{formatZAR(data.total_potential_savings)}</td>
+                <td className="py-2.5 text-right text-sm font-semibold text-emerald-400 tabular-nums">{formatZAR(d.total_potential_savings)}</td>
               </tr>
             </tbody>
           </table>
@@ -301,24 +302,24 @@ export default function ROIDashboardPage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wide mb-1">Subscription Cost</p>
-              <p className="text-lg font-bold text-[var(--color-text-primary)] tabular-nums">{formatZAR(data.platform_cost)}</p>
+              <p className="text-lg font-bold text-[var(--color-text-primary)] tabular-nums">{formatZAR(d.platform_cost)}</p>
             </div>
             <div className="text-right">
               <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wide mb-1">Total Savings</p>
-              <p className="text-lg font-bold text-emerald-400 tabular-nums">{formatZAR(data.total_potential_savings)}</p>
+              <p className="text-lg font-bold text-emerald-400 tabular-nums">{formatZAR(d.total_potential_savings)}</p>
             </div>
           </div>
           <div className="mt-4 pt-4 border-t border-[var(--color-glass-border)]">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-[var(--color-text-muted)]">Net return</span>
               <span className="text-base font-bold text-emerald-400 tabular-nums">
-                {formatZAR(data.total_potential_savings - data.platform_cost)}
+                {formatZAR(d.total_potential_savings - d.platform_cost)}
               </span>
             </div>
             <div className="progress-bar">
               <div
                 className="progress-bar-fill"
-                style={{ width: `${Math.min(100, (data.total_potential_savings / Math.max(data.platform_cost, 1)) * 50)}%` }}
+                style={{ width: `${Math.min(100, (d.total_potential_savings / Math.max(d.platform_cost, 1)) * 50)}%` }}
               />
             </div>
           </div>

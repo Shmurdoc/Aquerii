@@ -179,7 +179,6 @@ function ActionFormModal({ action, onClose, onSubmit }: ActionFormProps) {
           <div>
             <label className="text-xs text-[var(--color-text-muted)]">Description</label>
             <MentionInput
-              required
               value={form.description ?? ''}
               onChange={(val, ids) => { setForm({ ...form, description: val }); setMentionUserIds(ids) }}
               rows={3}
