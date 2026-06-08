@@ -34,6 +34,20 @@ beforeEach(function () {
         'status' => 'active',
         'issued_at' => now()->subMonth(),
         'expires_at' => now()->addYear(),
+        'verified_at' => now(),
+    ]);
+
+    DB::table('training_records')->insert([
+        'id' => Str::uuid()->toString(),
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $this->worker->user_id,
+        'training_name' => 'Site Induction',
+        'training_type' => 'induction',
+        'date_completed' => now()->subMonths(6),
+        'expiry_date' => now()->addMonths(6),
+        'status' => 'active',
+        'created_at' => now(),
+        'updated_at' => now(),
     ]);
 });
 

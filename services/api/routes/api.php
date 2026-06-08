@@ -662,12 +662,16 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         // ── Equipment Compliance ──────────────────────────────────────────
         Route::apiResource('equipment.cert-types', EquipmentCertTypeController::class);
         Route::apiResource('equipment.cert-records', EquipmentCertRecordController::class);
+        Route::post('equipment/{equipment}/cert-records/{cert_record}/verify', [EquipmentCertRecordController::class, 'verify']);
 
         // ── Equipment module ──────────────────────────────────────────────
         require __DIR__.'/modules/equipment.php';
 
         // ── Competency module ─────────────────────────────────────────────
         require __DIR__.'/modules/competency.php';
+
+        // ── Documents module ──────────────────────────────────────────────
+        require __DIR__.'/modules/documents.php';
 
         // ── Site Access Log / Gate Kiosk ──────────────────────────────────
         Route::prefix('gate')->group(function () {

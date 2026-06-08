@@ -52,11 +52,11 @@ it('returns zeros when no data exists', function () {
 
     expect($data['certificates_prevented_expiring'])->toBe(0);
     expect($data['access_denials_prevented'])->toBe(0);
-    expect($data['avoided_downtime_hours'])->toBe(0.0);
-    expect($data['avoided_downtime_cost'])->toBe(0.0);
-    expect($data['compliance_rate'])->toBe(0.0);
-    expect($data['ptw_processing_time_avg'])->toBe(0.0);
-    expect($data['time_saved_ptw'])->toBe(0.0);
+    expect($data['avoided_downtime_hours'])->toEqual(0.0);
+    expect($data['avoided_downtime_cost'])->toEqual(0.0);
+    expect($data['compliance_rate'])->toEqual(0.0);
+    expect($data['ptw_processing_time_avg'])->toEqual(0.0);
+    expect($data['time_saved_ptw'])->toEqual(0.0);
 });
 
 it('returns ROI dashboard with from and to date parameters', function () {

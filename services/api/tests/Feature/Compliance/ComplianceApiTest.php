@@ -34,6 +34,7 @@ it('returns compliance data via API endpoint', function () {
         'user_id' => $worker->user_id,
         'status' => 'active',
         'expires_at' => Carbon::now()->addYear(),
+        'verified_at' => Carbon::now(),
     ]);
 
     $inductionType = CompetencyType::factory()->create([
@@ -55,6 +56,7 @@ it('returns compliance data via API endpoint', function () {
         'user_id' => $this->user->id,
         'status' => 'active',
         'expires_at' => Carbon::now()->addYear(),
+        'verified_at' => Carbon::now(),
     ]);
     CompetencyRecord::factory()->create([
         'workspace_id' => $this->workspace->id,
@@ -88,6 +90,7 @@ it('returns compliance dashboard stats', function () {
         'user_id' => $worker->user_id,
         'status' => 'active',
         'expires_at' => Carbon::now()->addYear(),
+        'verified_at' => Carbon::now(),
     ]);
 
     $inductionType = CompetencyType::factory()->create([
@@ -109,6 +112,7 @@ it('returns compliance dashboard stats', function () {
         'user_id' => $this->user->id,
         'status' => 'active',
         'expires_at' => Carbon::now()->addYear(),
+        'verified_at' => Carbon::now(),
     ]);
     CompetencyRecord::factory()->create([
         'workspace_id' => $this->workspace->id,
@@ -144,6 +148,7 @@ it('shows worker as compliant when all certifications are valid', function () {
         'user_id' => $worker->user_id,
         'status' => 'active',
         'expires_at' => Carbon::now()->addYear(),
+        'verified_at' => Carbon::now(),
     ]);
 
     $inductionType = CompetencyType::factory()->create([
@@ -196,6 +201,7 @@ it('shows worker as expiring_soon when certification expires within 30 days', fu
         'user_id' => $worker->user_id,
         'status' => 'active',
         'expires_at' => Carbon::now()->addDays(15),
+        'verified_at' => Carbon::now(),
     ]);
 
     $inductionType = CompetencyType::factory()->create([

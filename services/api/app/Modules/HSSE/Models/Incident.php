@@ -75,6 +75,7 @@ class Incident extends Model
         'reporter_id', 'investigator_id',
         'root_cause', 'immediate_cause', 'contributing_factors',
         'closed_at',
+        'updated_at',
     ];
 
     protected static function newFactory(): IncidentFactory

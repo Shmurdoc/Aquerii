@@ -5,6 +5,7 @@ use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use App\Models\GateKiosk;
 use App\Models\SiteAccessLog;
+use App\Modules\Competency\Models\CofRecord;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
@@ -28,6 +29,7 @@ beforeEach(function () {
 });
 
 it('rejects scan with invalid kiosk API key returning 401', function () {
+    $this->app['auth']->forgetGuards();
     $response = $this->postJson(
         "/api/workspaces/{$this->workspace->id}/gate/scan",
         [
@@ -41,6 +43,31 @@ it('rejects scan with invalid kiosk API key returning 401', function () {
 });
 
 it('authenticates via valid kiosk API key returning 200', function () {
+    $this->app['auth']->forgetGuards();
+
+    CofRecord::create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $this->worker->user_id,
+        'type' => 'fitness',
+        'status' => 'active',
+        'issued_at' => now()->subMonth(),
+        'expires_at' => now()->addYear(),
+        'verified_at' => now(),
+    ]);
+
+    DB::table('training_records')->insert([
+        'id' => Str::uuid()->toString(),
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $this->worker->user_id,
+        'training_name' => 'Site Induction',
+        'training_type' => 'induction',
+        'date_completed' => now()->subMonths(6),
+        'expiry_date' => now()->addMonths(6),
+        'status' => 'active',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
     $plaintextKey = Str::random(32);
     $hashedKey = hash('sha256', $plaintextKey);
 
@@ -93,7 +120,7 @@ it('returns non_compliant status for worker with expired competency', function (
 
     $response->assertStatus(200)
         ->assertJsonPath('status', 'non_compliant')
-        ->assertJsonCount(1, 'details.expired_certs');
+        ->assertJsonCount(1, 'details.expired_certifications');
 });
 
 it('returns paginated gate logs with correct structure', function () {

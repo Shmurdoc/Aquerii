@@ -109,15 +109,26 @@ it('creates a competency record', function () {
 
 it('lists competency records with filtering by status', function () {
     $type = CompetencyType::factory()->create(['workspace_id' => $this->workspace->id]);
-    CompetencyRecord::factory()->count(2)->active()->create([
+    $user2 = User::factory()->create();
+    WorkspaceMember::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $user2->id,
+        'role' => 'member',
+    ]);
+    CompetencyRecord::factory()->active()->create([
         'workspace_id' => $this->workspace->id,
         'user_id' => $this->user->id,
+        'competency_type_id' => $type->id,
+    ]);
+    CompetencyRecord::factory()->active()->create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $user2->id,
         'competency_type_id' => $type->id,
     ]);
     CompetencyRecord::factory()->expired()->create([
         'workspace_id' => $this->workspace->id,
         'user_id' => $this->user->id,
-        'competency_type_id' => $type->id,
+        'competency_type_id' => CompetencyType::factory()->create(['workspace_id' => $this->workspace->id])->id,
     ]);
 
     $response = $this->getJson(
@@ -130,7 +141,7 @@ it('lists competency records with filtering by status', function () {
 
 it('replaces existing active record when creating new one', function () {
     $type = CompetencyType::factory()->create(['workspace_id' => $this->workspace->id]);
-    CompetencyRecord::factory()->active()->create([
+    $oldRecord = CompetencyRecord::factory()->active()->create([
         'workspace_id' => $this->workspace->id,
         'user_id' => $this->user->id,
         'competency_type_id' => $type->id,
@@ -148,7 +159,7 @@ it('replaces existing active record when creating new one', function () {
     );
 
     $response->assertStatus(201);
-    expect(CompetencyRecord::where('workspace_id', $this->workspace->id)->where('status', 'replaced')->count())->toBe(1);
+    expect(CompetencyRecord::withTrashed()->where('id', $oldRecord->id)->whereNotNull('deleted_at')->count())->toBe(1);
 });
 
 it('deletes a competency record', function () {
@@ -295,7 +306,7 @@ it('lists training records for a user', function () {
 
 it('returns compliance stats', function () {
     $type = CompetencyType::factory()->create(['workspace_id' => $this->workspace->id]);
-    CompetencyRecord::factory()->count(3)->active()->create([
+    CompetencyRecord::factory()->active()->create([
         'workspace_id' => $this->workspace->id,
         'user_id' => $this->user->id,
         'competency_type_id' => $type->id,

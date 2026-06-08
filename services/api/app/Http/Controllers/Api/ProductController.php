@@ -11,7 +11,6 @@ use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -23,7 +22,6 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request, Workspace $workspace): JsonResponse
     {
         $validated = $request->validated();
-        $validated['id'] = Str::uuid()->toString();
         $validated['workspace_id'] = $workspace->id;
         $validated['created_by'] = $request->user()->id;
 
@@ -34,20 +32,24 @@ class ProductController extends Controller
         return response()->json(['data' => new ProductResource($product)], 201);
     }
 
-    public function show(Product $product): JsonResponse
+    public function show(string $product): JsonResponse
     {
+        $product = Product::findOrFail($product);
+
         return response()->json(['data' => new ProductResource($product)]);
     }
 
-    public function update(UpdateProductRequest $request, Product $product): JsonResponse
+    public function update(UpdateProductRequest $request, string $product): JsonResponse
     {
+        $product = Product::findOrFail($product);
         $product->update($request->validated());
 
         return response()->json(['data' => new ProductResource($product->fresh())]);
     }
 
-    public function destroy(Product $product): JsonResponse
+    public function destroy(string $product): JsonResponse
     {
+        $product = Product::findOrFail($product);
         $product->delete();
 
         return response()->json(['data' => null], 204);

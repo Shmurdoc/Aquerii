@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('issued_at');
             $table->date('expires_at')->nullable();
             $table->timestampTz('verified_at')->nullable();
+            $table->string('verified_by')->nullable();
             $table->string('file_path')->nullable();
             $table->text('notes')->nullable();
             $table->timestampsTz();

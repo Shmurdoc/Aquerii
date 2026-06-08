@@ -6,6 +6,7 @@ use App\Core\Models\WorkspaceMember;
 use App\Modules\PTW\Models\Permit;
 use App\Modules\PTW\Models\PermitHazard;
 use App\Modules\PTW\Models\PermitIsolation;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
@@ -112,7 +113,7 @@ it('serialises the register to CSV with the proper headers', function () {
     $response->assertStatus(200)
         ->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
 
-    $body = $response->streamedContent();
+    $body = $response->content();
     expect($body)->toContain('Reference,Type,Status,Risk,Title,Location');
     expect($body)->toContain($permit->reference);
     expect($body)->toContain('Welding on conveyor');

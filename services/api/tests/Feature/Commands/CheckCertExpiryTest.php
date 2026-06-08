@@ -7,7 +7,6 @@ use App\Modules\Competency\Models\CofRecord;
 use App\Modules\Competency\Models\CompetencyRecord;
 use App\Modules\Competency\Models\CompetencyType;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 beforeEach(function () {
     $this->workspace = Workspace::factory()->create();
@@ -38,12 +37,15 @@ beforeEach(function () {
         'status' => 'active',
     ]);
 
-    $hsseRoleId = (string) Str::uuid();
-    $adminRoleId = (string) Str::uuid();
-
-    DB::table('roles')->insert([
-        ['id' => $hsseRoleId, 'name' => 'contractor_hsse_officer', 'guard_name' => 'web', 'workspace_id' => $this->workspace->id],
-        ['id' => $adminRoleId, 'name' => 'contractor_admin', 'guard_name' => 'web', 'workspace_id' => $this->workspace->id],
+    $hsseRoleId = DB::table('roles')->insertGetId([
+        'name' => 'contractor_hsse_officer',
+        'guard_name' => 'web',
+        'workspace_id' => $this->workspace->id,
+    ]);
+    $adminRoleId = DB::table('roles')->insertGetId([
+        'name' => 'contractor_admin',
+        'guard_name' => 'web',
+        'workspace_id' => $this->workspace->id,
     ]);
 
     DB::table('model_has_roles')->insert([

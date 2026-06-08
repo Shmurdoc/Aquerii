@@ -153,7 +153,7 @@ it('fails with 422 when status is invalid', function () {
         ['Idempotency-Key' => Str::uuid()->toString()]
     );
 
-    $response->assertStatus(201);
+    $response->assertStatus(422);
 });
 
 it('rejects cross-workspace equipment access', function () {

@@ -71,7 +71,7 @@ it('creates a token, returns the plaintext once, and persists the row', function
     $response->assertStatus(201)
         ->assertJsonStructure([
             'data' => [
-                'token' => ['id', 'name', 'abilities', 'last_used_at', 'expires_at', 'created_at'],
+                'token' => ['id', 'name', 'abilities', 'expires_at', 'created_at'],
                 'plain_text',
             ],
         ])

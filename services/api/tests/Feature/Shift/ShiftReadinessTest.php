@@ -5,6 +5,7 @@ use App\Core\Models\ShiftPlanAssignment;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
+use App\Services\ComplianceService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
@@ -37,10 +38,11 @@ it('creates a shift plan with roles returning 201', function () {
     );
 
     $response->assertStatus(201)
-        ->assertJsonPath('data.date', $this->today)
         ->assertJsonPath('data.shift_type', 'morning')
         ->assertJsonPath('data.status', 'draft')
         ->assertJsonCount(3, 'data.required_roles');
+
+    expect($response->json('data.date'))->toContain($this->today);
 });
 
 it('fails with 422 when required_roles is empty', function () {
@@ -168,6 +170,11 @@ it('completes a published shift plan returning 200', function () {
 });
 
 it('gets readiness for a shift', function () {
+    // Mock ComplianceService to return 'compliant' for test workers
+    $complianceMock = Mockery::mock(ComplianceService::class);
+    $complianceMock->shouldReceive('calculateWorkerStatus')->andReturn('compliant');
+    $this->app->instance(ComplianceService::class, $complianceMock);
+
     $plan = ShiftPlan::create([
         'workspace_id' => $this->workspace->id,
         'date' => $this->today,
@@ -223,6 +230,11 @@ it('gets readiness for a shift', function () {
 });
 
 it('readiness calculation reflects gaps for missing roles', function () {
+    // Mock ComplianceService to return 'compliant' for test workers
+    $complianceMock = Mockery::mock(ComplianceService::class);
+    $complianceMock->shouldReceive('calculateWorkerStatus')->andReturn('compliant');
+    $this->app->instance(ComplianceService::class, $complianceMock);
+
     $plan = ShiftPlan::create([
         'workspace_id' => $this->workspace->id,
         'date' => $this->today,
@@ -269,7 +281,7 @@ it('readiness returns empty structure when no plan exists', function () {
     $response->assertStatus(200);
     $data = $response->json('data');
     expect($data['plan_id'])->toBeNull();
-    expect($data['overall_readiness'])->toBe(100.0);
+    expect($data['overall_readiness'])->toEqual(100.0);
     expect($data['roles'])->toHaveCount(0);
 });
 

@@ -145,7 +145,7 @@ it('expired cert causes non_compliant compliance status', function () {
 
     $response->assertStatus(200);
     $data = $response->json('data');
-    expect($data['overall_status'])->toBe('non_compliant');
+    expect($data['overall_compliance_status'])->toBe('non_compliant');
 });
 
 it('compliant certs result in compliant overall status', function () {
@@ -173,7 +173,7 @@ it('compliant certs result in compliant overall status', function () {
 
     $response->assertStatus(200);
     $data = $response->json('data');
-    expect($data['overall_status'])->toBe('compliant');
+    expect($data['overall_compliance_status'])->toBe('compliant');
 });
 
 it('missing mandatory cert type triggers non_compliant', function () {
@@ -190,7 +190,7 @@ it('missing mandatory cert type triggers non_compliant', function () {
 
     $response->assertStatus(200);
     $data = $response->json('data');
-    expect($data['overall_status'])->toBe('non_compliant');
+    expect($data['overall_compliance_status'])->toBe('non_compliant');
 });
 
 it('non-mandatory cert does not affect compliance', function () {
@@ -207,7 +207,7 @@ it('non-mandatory cert does not affect compliance', function () {
 
     $response->assertStatus(200);
     $data = $response->json('data');
-    expect($data['overall_status'])->toBe('compliant');
+    expect($data['overall_compliance_status'])->toBe('compliant');
     expect($data['compliance_score'])->toBe(100.0);
 });
 

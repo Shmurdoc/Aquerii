@@ -98,16 +98,17 @@ Route::patch('hr/capacity/{userId}', [TeamCapacityController::class, 'update'])-
 // Shift management
 Route::get('hr/shifts', [ShiftController::class, 'indexShifts']);
 Route::post('hr/shifts', [ShiftController::class, 'storeShift'])->middleware('idempotent');
-Route::get('hr/shifts/{shift}', [ShiftController::class, 'showShift']);
-Route::patch('hr/shifts/{shift}', [ShiftController::class, 'updateShift'])->middleware('idempotent');
-Route::delete('hr/shifts/{shift}', [ShiftController::class, 'destroyShift'])->middleware('idempotent');
 
-// Shift assignments
+// Shift assignments (MUST be before {shift} routes so "assignments" isn't matched as a shift UUID)
 Route::get('hr/shifts/assignments', [ShiftController::class, 'indexAssignments']);
 Route::post('hr/shifts/assignments', [ShiftController::class, 'storeAssignment'])->middleware('idempotent');
 Route::post('hr/shifts/assignments/bulk', [ShiftController::class, 'storeAssignmentsBulk'])->middleware('idempotent');
 Route::patch('hr/shifts/assignments/{assignment}', [ShiftController::class, 'updateAssignment'])->middleware('idempotent');
 Route::delete('hr/shifts/assignments/{assignment}', [ShiftController::class, 'destroyAssignment'])->middleware('idempotent');
+
+Route::get('hr/shifts/{shift}', [ShiftController::class, 'showShift']);
+Route::patch('hr/shifts/{shift}', [ShiftController::class, 'updateShift'])->middleware('idempotent');
+Route::delete('hr/shifts/{shift}', [ShiftController::class, 'destroyShift'])->middleware('idempotent');
 
 // Shift handovers
 Route::get('hr/shifts/handovers', [ShiftController::class, 'indexHandovers']);

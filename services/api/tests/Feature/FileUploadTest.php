@@ -5,6 +5,7 @@ use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 beforeEach(function () {
     Storage::fake('s3');
@@ -54,7 +55,7 @@ test('scanned document upload stores file and creates record', function () {
         ->postJson("/api/workspaces/{$this->workspace->id}/scanned-documents", [
             'file' => $file,
             'title' => 'Test Invoice',
-        ]);
+        ], ['Idempotency-Key' => Str::uuid()->toString()]);
 
     $response->assertStatus(201);
     $response->assertJsonStructure(['data' => ['id', 'title', 'original_filename', 'file_size', 'ocr_status']]);
@@ -68,7 +69,7 @@ test('scanned document upload rejects missing title', function () {
     $response = $this->withToken($this->token)
         ->postJson("/api/workspaces/{$this->workspace->id}/scanned-documents", [
             'file' => $file,
-        ]);
+        ], ['Idempotency-Key' => Str::uuid()->toString()]);
 
     $response->assertStatus(400);
 });
@@ -80,7 +81,7 @@ test('document upload returns 422 for invalid file type', function () {
         ->postJson("/api/workspaces/{$this->workspace->id}/scanned-documents", [
             'file' => $file,
             'title' => 'Malicious File',
-        ]);
+        ], ['Idempotency-Key' => Str::uuid()->toString()]);
 
     $response->assertStatus(422);
 });
@@ -94,6 +95,6 @@ test('unauthenticated upload returns 401', function () {
     $response2 = $this->postJson("/api/workspaces/{$this->workspace->id}/scanned-documents", [
         'file' => $file,
         'title' => 'Test',
-    ]);
+    ], ['Idempotency-Key' => Str::uuid()->toString()]);
     $response2->assertStatus(401);
 });

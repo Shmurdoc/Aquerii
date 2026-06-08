@@ -9,6 +9,7 @@ use App\Core\Models\ShiftHandover;
 use App\Core\Models\Workspace;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ShiftController extends Controller
 {
@@ -114,7 +115,12 @@ class ShiftController extends Controller
         $validated = $request->validate([
             'shift_id' => 'required|string|exists:shifts,id',
             'user_id' => 'required|string|exists:users,id',
-            'date' => 'required|date',
+            'date' => [
+                'required', 'date',
+                Rule::unique('shift_assignments')->where(fn ($query) => $query
+                    ->where('workspace_id', $workspace->id)
+                    ->where('user_id', $request->input('user_id'))),
+            ],
             'status' => 'sometimes|string|max:30',
             'notes' => 'nullable|string|max:1000',
         ]);

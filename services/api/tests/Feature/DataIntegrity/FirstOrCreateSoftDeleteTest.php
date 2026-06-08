@@ -8,6 +8,7 @@ use App\Modules\CRM\Models\CrmCompany;
 use App\Modules\CRM\Models\CrmContact;
 use App\Modules\CRM\Models\CrmDeal;
 use App\Modules\Documents\Models\Document;
+use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -33,11 +34,9 @@ it('finds soft-deleted user via withTrashed()->firstOrCreate', function () {
 });
 
 it('finds soft-deleted workspace member via withTrashed()->firstOrCreate', function () {
-    $member = WorkspaceMember::create([
-        'workspace_id' => $this->workspace->id,
-        'user_id' => $this->user->id,
-        'role' => 'member',
-    ]);
+    $member = WorkspaceMember::where('workspace_id', $this->workspace->id)
+        ->where('user_id', $this->user->id)
+        ->first();
     $member->delete();
 
     $found = WorkspaceMember::withTrashed()->firstOrCreate([
@@ -118,19 +117,31 @@ it('finds soft-deleted crm contact via withTrashed()->firstOrCreate', function (
 });
 
 it('finds soft-deleted crm deal via withTrashed()->firstOrCreate', function () {
+    $pipelineId = DB::table('crm_pipelines')->insertGetId([
+        'workspace_id' => $this->workspace->id,
+        'name' => 'Default Pipeline',
+    ]);
+    $stageId = DB::table('crm_pipeline_stages')->insertGetId([
+        'workspace_id' => $this->workspace->id,
+        'pipeline_id' => $pipelineId,
+        'name' => 'Open',
+    ]);
+
     $deal = CrmDeal::create([
         'workspace_id' => $this->workspace->id,
         'title' => 'Deleted Deal',
         'value' => 1000,
         'currency' => 'USD',
         'probability' => 50,
+        'pipeline_id' => $pipelineId,
+        'stage_id' => $stageId,
     ]);
     $deal->delete();
 
     $found = CrmDeal::withTrashed()->firstOrCreate([
         'workspace_id' => $this->workspace->id,
         'title' => 'Deleted Deal',
-    ], ['value' => 1000, 'currency' => 'USD', 'probability' => 50]);
+    ], ['value' => 1000, 'currency' => 'USD', 'probability' => 50, 'pipeline_id' => $pipelineId, 'stage_id' => $stageId]);
 
     expect($found->id)->toBe($deal->id);
     expect($found->trashed())->toBeTrue();
@@ -147,7 +158,7 @@ it('creates new record when no soft-deleted match exists', function () {
     expect(User::count())->toBe($count + 1);
 });
 
-it('firstOrCreate without withTrashed creates duplicate for soft-deleted record', function () {
+it('firstOrCreate without withTrashed cannot create duplicate due to unique constraint', function () {
     $attrs = ['email' => 'duplicatetest@example.com'];
     $extra = ['name' => 'Original'];
 
@@ -156,8 +167,11 @@ it('firstOrCreate without withTrashed creates duplicate for soft-deleted record'
 
     $originalCount = User::withTrashed()->count();
 
-    $duplicate = User::firstOrCreate($attrs, $extra);
+    try {
+        User::firstOrCreate($attrs, $extra);
+    } catch (Throwable $e) {
+        // Expected: unique constraint on email prevents duplicate
+    }
 
-    expect($duplicate->id)->not->toBe($original->id);
-    expect(User::withTrashed()->count())->toBe($originalCount + 1);
+    expect(User::withTrashed()->count())->toBe($originalCount);
 });

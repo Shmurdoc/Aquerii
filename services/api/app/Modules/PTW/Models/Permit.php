@@ -90,6 +90,7 @@ class Permit extends Model
         'requested_at', 'approved_at', 'issued_at', 'activated_at',
         'suspended_at', 'closed_at', 'closed_by', 'closure_notes',
         'rejection_reason', 'suspension_reason',
+        'updated_at',
     ];
 
     protected static function newFactory(): PermitFactory

@@ -34,21 +34,21 @@ class ROIDashboardService
         $avoidedDowntimeHours = $accessDenials * 8;
         $avoidedDowntimeCost = $avoidedDowntimeHours * self::AVG_CREW_COST_PER_HOUR;
 
-        $timeSavedPtw = max(0, (self::PTW_BASELINE_HOURS - $ptwData['avg_hours']) * $ptwData['total_ptws']);
+        $timeSavedPtw = (float) max(0, (self::PTW_BASELINE_HOURS - $ptwData['avg_hours']) * $ptwData['total_ptws']);
 
-        $totalPotentialSavings = $avoidedDowntimeCost + $timeSavedPtw;
+        $totalPotentialSavings = (float) $avoidedDowntimeCost + $timeSavedPtw;
 
         $workspace = Workspace::findOrFail($workspaceId);
         $plan = SubscriptionPlan::fromWorkspace($workspace);
         $platformCost = $plan->monthlyPriceCents() / 100;
 
-        $roiRatio = $platformCost > 0 ? round($totalPotentialSavings / $platformCost, 2) : 0;
+        $roiRatio = $platformCost > 0 ? round($totalPotentialSavings / $platformCost, 2) : 0.0;
 
         $result = [
-            'certificates_prevented_expiring' => $certsPrevented,
-            'access_denials_prevented' => $accessDenials,
-            'avoided_downtime_hours' => round($avoidedDowntimeHours, 1),
-            'avoided_downtime_cost' => round($avoidedDowntimeCost, 2),
+            'certificates_prevented_expiring' => (float) $certsPrevented,
+            'access_denials_prevented' => (float) $accessDenials,
+            'avoided_downtime_hours' => round((float) $avoidedDowntimeHours, 1),
+            'avoided_downtime_cost' => round((float) $avoidedDowntimeCost, 2),
             'compliance_rate' => $complianceRate,
             'compliance_rate_trend' => $complianceTrend,
             'ptw_processing_time_avg' => round($ptwData['avg_hours'], 1),
