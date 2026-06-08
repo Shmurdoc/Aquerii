@@ -103,6 +103,7 @@ it('activates a permit from issued to active returning 200', function () {
         'workspace_id' => $this->workspace->id,
         'user_id' => $holder->id,
         'status' => 'active',
+        'issued_at' => Carbon::now()->subDay(),
         'expires_at' => Carbon::now()->addYear(),
         'verified_at' => Carbon::now(),
     ]);
@@ -322,6 +323,7 @@ it('cannot issue permit when holder is non-compliant — missing COF verified_at
         'workspace_id' => $this->workspace->id,
         'user_id' => $holder->id,
         'status' => 'active',
+        'issued_at' => Carbon::now()->subDay(),
         'expires_at' => Carbon::now()->addYear(),
         // verified_at deliberately omitted — should make holder non-compliant
     ]);
@@ -503,6 +505,7 @@ it('cannot activate an expired permit', function () {
         'workspace_id' => $this->workspace->id,
         'user_id' => $holder->id,
         'status' => 'active',
+        'issued_at' => Carbon::now()->subDay(),
         'expires_at' => Carbon::now()->addYear(),
         'verified_at' => Carbon::now(),
     ]);

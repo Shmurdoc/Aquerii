@@ -16,7 +16,7 @@ class SiteAccessLog extends Model
     use HasUuids, SoftDeletes;
 
     protected $fillable = [
-        'workspace_id', 'worker_id', 'equipment_id', 'direction', 'timestamp',
+        'id', 'workspace_id', 'worker_id', 'equipment_id', 'direction', 'timestamp',
         'method', 'compliance_snapshot', 'override_reason', 'override_by_user_id',
     ];
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Core\Models\Workspace;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -19,10 +20,11 @@ class ProductController extends Controller
         return ProductResource::collection(Product::paginate(50));
     }
 
-    public function store(StoreProductRequest $request): JsonResponse
+    public function store(StoreProductRequest $request, Workspace $workspace): JsonResponse
     {
         $validated = $request->validated();
         $validated['id'] = Str::uuid()->toString();
+        $validated['workspace_id'] = $workspace->id;
         $validated['created_by'] = $request->user()->id;
 
         $product = DB::transaction(function () use ($validated) {

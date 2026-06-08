@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Resolves the current workspace from the JWT claim or request header,
@@ -63,7 +64,11 @@ class SetWorkspaceTenant
                 return $this->validateAndReturn((string) $routeParam->id);
             }
             if (is_string($routeParam)) {
-                return $this->validateAndReturn($routeParam);
+                $workspaceId = $this->validateAndReturn($routeParam);
+                if ($workspaceId === null) {
+                    throw new NotFoundHttpException('Workspace not found.');
+                }
+                return $workspaceId;
             }
         }
 
