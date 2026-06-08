@@ -2,9 +2,9 @@
 
 namespace Database\Factories\Competency;
 
-use App\Modules\Competency\Models\CofRecord;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
+use App\Modules\Competency\Models\CofRecord;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CofRecordFactory extends Factory

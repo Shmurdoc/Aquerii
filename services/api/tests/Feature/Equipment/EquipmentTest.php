@@ -4,7 +4,9 @@ use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use App\Modules\Equipment\Models\Equipment;
+use App\Modules\Equipment\Models\EquipmentBreakdown;
 use App\Modules\Equipment\Models\EquipmentCategory;
+use App\Modules\Equipment\Models\MaintenanceSchedule;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
@@ -181,7 +183,7 @@ it('reports a breakdown', function () {
 
 it('resolves a breakdown', function () {
     $equipment = Equipment::factory()->create(['workspace_id' => $this->workspace->id]);
-    $breakdown = \App\Modules\Equipment\Models\EquipmentBreakdown::factory()->create([
+    $breakdown = EquipmentBreakdown::factory()->create([
         'workspace_id' => $this->workspace->id,
         'equipment_id' => $equipment->id,
         'status' => 'in_progress',
@@ -222,7 +224,7 @@ it('creates a maintenance schedule', function () {
 
 it('lists maintenance schedules for equipment', function () {
     $equipment = Equipment::factory()->create(['workspace_id' => $this->workspace->id]);
-    \App\Modules\Equipment\Models\MaintenanceSchedule::factory()->create([
+    MaintenanceSchedule::factory()->create([
         'workspace_id' => $this->workspace->id,
         'equipment_id' => $equipment->id,
     ]);

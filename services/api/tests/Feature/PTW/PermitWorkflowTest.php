@@ -3,9 +3,9 @@
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
+use App\Modules\Competency\Models\CofRecord;
 use App\Modules\Competency\Models\CompetencyRecord;
 use App\Modules\Competency\Models\CompetencyType;
-use App\Modules\Competency\Models\CofRecord;
 use App\Modules\PTW\Models\Permit;
 use App\Modules\PTW\Services\PermitWorkflowService;
 use Carbon\Carbon;
@@ -242,10 +242,10 @@ it('refuses to issue a permit when the holder is non-compliant', function () {
             'holder_id' => $holder->id,
         ]
     )
-    ->assertStatus(422)
-    ->assertJsonStructure(['message', 'errors' => ['workers']])
-    ->assertJsonPath('message', fn ($m) => str_contains($m, 'Cannot issue permit'))
-    ->assertJsonPath('errors.workers.0', fn ($e) => str_contains($e, (string) $holder->id));
+        ->assertStatus(422)
+        ->assertJsonStructure(['message', 'errors' => ['workers']])
+        ->assertJsonPath('message', fn ($m) => str_contains($m, 'Cannot issue permit'))
+        ->assertJsonPath('errors.workers.0', fn ($e) => str_contains($e, (string) $holder->id));
 });
 
 it('refuses to activate a permit when the holder is non-compliant', function () {
@@ -270,10 +270,10 @@ it('refuses to activate a permit when the holder is non-compliant', function () 
     $this->postJson(
         "/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/activate"
     )
-    ->assertStatus(422)
-    ->assertJsonStructure(['message', 'errors' => ['workers']])
-    ->assertJsonPath('message', fn ($m) => str_contains($m, 'Cannot activate permit'))
-    ->assertJsonPath('errors.workers.0', fn ($e) => str_contains($e, (string) $holder->id));
+        ->assertStatus(422)
+        ->assertJsonStructure(['message', 'errors' => ['workers']])
+        ->assertJsonPath('message', fn ($m) => str_contains($m, 'Cannot activate permit'))
+        ->assertJsonPath('errors.workers.0', fn ($e) => str_contains($e, (string) $holder->id));
 });
 
 it('exposes a service-level canTransition helper', function () {

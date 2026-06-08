@@ -2,8 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Core\Models\Shift;
-use App\Core\Models\ShiftAssignment;
 use App\Core\Models\ShiftHandover;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;

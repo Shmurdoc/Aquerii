@@ -61,7 +61,7 @@ it('returns zeros when no data exists', function () {
 
 it('returns ROI dashboard with from and to date parameters', function () {
     $response = $this->getJson(
-        "/api/workspaces/{$this->workspace->id}/roi/dashboard?" . http_build_query([
+        "/api/workspaces/{$this->workspace->id}/roi/dashboard?".http_build_query([
             'from' => Carbon::now()->subDays(60)->toDateString(),
             'to' => Carbon::now()->toDateString(),
         ])
@@ -77,7 +77,7 @@ it('returns message when less than 30 days of data', function () {
     $this->freezeTime();
 
     $response = $this->getJson(
-        "/api/workspaces/{$this->workspace->id}/roi/dashboard?" . http_build_query([
+        "/api/workspaces/{$this->workspace->id}/roi/dashboard?".http_build_query([
             'from' => Carbon::now()->subDays(7)->toDateString(),
             'to' => Carbon::now()->toDateString(),
         ])

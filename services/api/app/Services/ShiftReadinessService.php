@@ -3,10 +3,7 @@
 namespace App\Services;
 
 use App\Core\Models\ShiftPlan;
-use App\Core\Models\ShiftPlanAssignment;
-use App\Core\Models\WorkspaceMember;
 use App\Models\SiteAccessLog;
-use App\Services\ComplianceService;
 
 class ShiftReadinessService
 {

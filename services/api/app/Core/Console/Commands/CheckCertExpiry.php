@@ -7,6 +7,7 @@ use App\Core\Models\WorkspaceMember;
 use App\Modules\Competency\Models\CofRecord;
 use App\Modules\Competency\Models\CompetencyRecord;
 use App\Notifications\CertExpiryNotification;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -26,16 +27,16 @@ class CheckCertExpiry extends Command
         return self::SUCCESS;
     }
 
-    private function processRecords(string $recordType, string $modelClass, \Carbon\Carbon $now): void
+    private function processRecords(string $recordType, string $modelClass, Carbon $now): void
     {
         $records = $modelClass::whereNotNull('expires_at')
             ->whereNull('deleted_at')
             ->get();
 
         foreach ($records as $record) {
-            $expiresAt = $record->expires_at instanceof \Carbon\Carbon
+            $expiresAt = $record->expires_at instanceof Carbon
                 ? $record->expires_at->copy()->startOfDay()
-                : \Carbon\Carbon::parse($record->expires_at)->startOfDay();
+                : Carbon::parse($record->expires_at)->startOfDay();
 
             $daysUntilExpiry = (int) $now->diffInDays($expiresAt, false);
 

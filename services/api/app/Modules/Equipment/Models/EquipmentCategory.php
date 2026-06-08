@@ -3,6 +3,7 @@
 namespace App\Modules\Equipment\Models;
 
 use App\Core\Models\Workspace;
+use Database\Factories\Equipment\EquipmentCategoryFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ class EquipmentCategory extends Model
 
     protected static function newFactory()
     {
-        return \Database\Factories\Equipment\EquipmentCategoryFactory::new();
+        return EquipmentCategoryFactory::new();
     }
 
     protected $table = 'equipment_categories';

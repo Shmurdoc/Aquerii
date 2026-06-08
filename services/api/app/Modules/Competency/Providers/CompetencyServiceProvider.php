@@ -3,7 +3,6 @@
 namespace App\Modules\Competency\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
 
 class CompetencyServiceProvider extends ServiceProvider
 {

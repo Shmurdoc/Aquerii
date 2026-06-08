@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class CleanupTestData extends Command
@@ -19,8 +20,11 @@ class CleanupTestData extends Command
      *   - any email ending in @aquerii.co.za
      */
     private const TEST_USER_EMAIL_REGEX = '/^test-\d+@example\.com$/';
+
     private const TEST_WORKSPACE_NAME = 'Test Workspace';
+
     private const STALE_DAYS = 30;
+
     private const PROTECTED_EMAIL_SUFFIXES = [
         '@pilot.example.com',
         '@aquerii.co.za',
@@ -70,11 +74,13 @@ class CleanupTestData extends Command
 
         if (! $execute) {
             $this->info('  ℹ  Dry-run only. Re-run with --execute to soft-delete.');
+
             return self::SUCCESS;
         }
 
         if (count($safeUsers) === 0 && count($workspaces) === 0) {
             $this->info('  Nothing to clean. Done.');
+
             return self::SUCCESS;
         }
 
@@ -82,6 +88,7 @@ class CleanupTestData extends Command
             $answer = $this->ask(sprintf('  Soft-delete %d user(s) and %d workspace(s)?', count($safeUsers), count($workspaces)), 'no');
             if (! preg_match('/^y(es)?$/i', trim((string) $answer))) {
                 $this->info('  Aborted.');
+
                 return self::SUCCESS;
             }
         }
@@ -95,6 +102,7 @@ class CleanupTestData extends Command
     private function findTestUsers()
     {
         $regex = self::TEST_USER_EMAIL_REGEX;
+
         return User::query()
             ->whereNull('deleted_at')
             ->whereRaw('email ~ ?', [$regex])
@@ -103,7 +111,7 @@ class CleanupTestData extends Command
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, object>
+     * @return Collection<int, object>
      */
     private function findTestWorkspaces(bool $includeRecent)
     {
@@ -123,7 +131,7 @@ class CleanupTestData extends Command
                 'w.updated_at',
                 DB::raw('MAX(wm.joined_at) as member_last_seen'),
                 DB::raw(sprintf(
-                    "GREATEST(w.updated_at, COALESCE(MAX(wm.joined_at), w.created_at)) AS last_activity_at"
+                    'GREATEST(w.updated_at, COALESCE(MAX(wm.joined_at), w.created_at)) AS last_activity_at'
                 )),
             );
 
@@ -143,6 +151,7 @@ class CleanupTestData extends Command
         $this->line(sprintf('─── Test users (test-{n}@example.com) (%d) ───', count($users)));
         if ($users->isEmpty()) {
             $this->line('  (none)');
+
             return;
         }
         foreach ($users as $u) {
@@ -157,6 +166,7 @@ class CleanupTestData extends Command
         $this->line(sprintf("─── Test workspaces (name='%s', stale >= %dd) (%d) ───", self::TEST_WORKSPACE_NAME, self::STALE_DAYS, count($workspaces)));
         if ($workspaces->isEmpty()) {
             $this->line('  (none)');
+
             return;
         }
         foreach ($workspaces as $w) {
@@ -196,6 +206,7 @@ class CleanupTestData extends Command
 
         $elapsed = number_format(microtime(true) - $t0, 2);
         $this->line("  Done in {$elapsed}s.");
+
         return self::SUCCESS;
     }
 
@@ -207,15 +218,19 @@ class CleanupTestData extends Command
                 return true;
             }
         }
+
         return false;
     }
 
     private function fmtDate($d): string
     {
-        if (! $d) return '(never)';
+        if (! $d) {
+            return '(never)';
+        }
         if ($d instanceof \DateTimeInterface) {
             return $d->format('Y-m-d H:i:sO');
         }
+
         return (string) $d;
     }
 }

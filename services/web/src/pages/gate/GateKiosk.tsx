@@ -5,6 +5,7 @@ import { Card, Button, Input, Tabs, TabList, Tab, TabPanel } from '@/components/
 import { Shield, CheckCircle, XCircle, AlertTriangle, ScanLine, User, Wrench } from 'lucide-react'
 import clsx from 'clsx'
 import toast from 'react-hot-toast'
+import { VisitorFlow } from './VisitorFlow'
 
 type EquipScanResult = {
   status: 'compliant' | 'non_compliant'
@@ -310,20 +311,24 @@ export default function GateKiosk() {
         </div>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Site Access Gate</h1>
-          <p className="text-sm text-[var(--color-text-muted)]">Verify compliance for workers and equipment</p>
+          <p className="text-sm text-[var(--color-text-muted)]">Digital gate compliance &amp; visitor management</p>
         </div>
       </div>
 
       <Tabs defaultValue="worker" className="w-full max-w-lg">
         <TabList className="mb-6">
-          <Tab value="worker" icon={User}>Worker Scan</Tab>
+          <Tab value="worker" icon={ScanLine}>Worker Scan</Tab>
           <Tab value="equipment" icon={Wrench}>Equipment Scan</Tab>
+          <Tab value="visitor" icon={User}>Visitor</Tab>
         </TabList>
         <TabPanel value="worker">
           <WorkerScanPanel />
         </TabPanel>
         <TabPanel value="equipment">
           <EquipmentScanPanel />
+        </TabPanel>
+        <TabPanel value="visitor">
+          <VisitorFlow />
         </TabPanel>
       </Tabs>
     </div>

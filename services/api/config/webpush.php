@@ -1,8 +1,5 @@
 <?php
 
-use Minishlink\WebPush\Subscription;
-use Minishlink\WebPush\WebPush;
-
 return [
 
     /*

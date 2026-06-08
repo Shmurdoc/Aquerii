@@ -4,6 +4,7 @@ use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceInvitation;
 use App\Core\Models\WorkspaceMember;
+use App\Mail\WorkspaceInvite;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
@@ -35,7 +36,7 @@ it('creates an invitation and queues the email', function () {
         'email' => 'test@example.com',
     ]);
 
-    Mail::assertQueued(\App\Mail\WorkspaceInvite::class);
+    Mail::assertQueued(WorkspaceInvite::class);
 });
 
 it('lists pending invitations', function () {
@@ -98,7 +99,7 @@ it('revokes an invitation', function () {
 
 it('returns 404 when revoking a non-existent invitation', function () {
     $response = $this->deleteJson(
-        "/api/workspaces/{$this->workspace->id}/invitations/" . Str::uuid(),
+        "/api/workspaces/{$this->workspace->id}/invitations/".Str::uuid(),
         [],
         ['Idempotency-Key' => Str::uuid()->toString()]
     );

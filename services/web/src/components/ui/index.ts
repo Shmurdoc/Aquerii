@@ -20,5 +20,6 @@ export {
 } from './DropdownMenu'
 export { PrintButton } from './PrintButton'
 export { ExportButton } from './ExportButton'
+export { Skeleton } from './Skeleton'
 export { DataTable, type Column } from './DataTable'
 export { MentionInput, type MentionInputProps } from './MentionInput'

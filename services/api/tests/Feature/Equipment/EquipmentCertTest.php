@@ -4,11 +4,10 @@ use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use App\Modules\Equipment\Models\Equipment;
-use App\Modules\Equipment\Models\EquipmentCertType;
-use App\Modules\Equipment\Models\EquipmentCertRecord;
 use App\Modules\Equipment\Models\EquipmentCategory;
+use App\Modules\Equipment\Models\EquipmentCertRecord;
+use App\Modules\Equipment\Models\EquipmentCertType;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {

@@ -2,8 +2,8 @@
 
 namespace Database\Factories\Competency;
 
-use App\Modules\Competency\Models\CompetencyType;
 use App\Core\Models\Workspace;
+use App\Modules\Competency\Models\CompetencyType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CompetencyTypeFactory extends Factory

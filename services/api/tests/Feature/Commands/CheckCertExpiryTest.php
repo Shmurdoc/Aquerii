@@ -3,9 +3,9 @@
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
+use App\Modules\Competency\Models\CofRecord;
 use App\Modules\Competency\Models\CompetencyRecord;
 use App\Modules\Competency\Models\CompetencyType;
-use App\Modules\Competency\Models\CofRecord;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 

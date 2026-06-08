@@ -4,6 +4,7 @@ namespace App\Modules\Competency\Models;
 
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
+use Database\Factories\Competency\TrainingRecordFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ class TrainingRecord extends Model
 
     protected static function newFactory()
     {
-        return \Database\Factories\Competency\TrainingRecordFactory::new();
+        return TrainingRecordFactory::new();
     }
 
     protected $table = 'training_records';

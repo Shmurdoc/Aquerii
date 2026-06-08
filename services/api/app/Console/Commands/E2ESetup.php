@@ -43,6 +43,7 @@ class E2ESetup extends Command
             $this->line(Artisan::output());
             if ($exit !== 0) {
                 $this->error("  ✗ Migration failed (exit {$exit})");
+
                 return self::FAILURE;
             }
         } else {
@@ -57,12 +58,14 @@ class E2ESetup extends Command
         $this->line(Artisan::output());
         if ($exit !== 0) {
             $this->error("  ✗ E2ESeeder failed (exit {$exit})");
+
             return self::FAILURE;
         }
 
         $this->newLine();
         $this->info('  ✓ E2E test data ready (test@example.com / password123)');
         $this->newLine();
+
         return self::SUCCESS;
     }
 }

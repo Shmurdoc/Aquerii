@@ -189,7 +189,7 @@ return new class extends Migration
 
         $existing = collect(DB::select(
             $driver === 'pgsql'
-                ? "SELECT conname FROM pg_constraint WHERE conname IN (?, ?)"
+                ? 'SELECT conname FROM pg_constraint WHERE conname IN (?, ?)'
                 : "SELECT name FROM sqlite_master WHERE type = 'index' AND name IN (?, ?)",
             [$positionFk, $deptFk]
         ))->pluck($driver === 'pgsql' ? 'conname' : 'name')->all();
@@ -237,8 +237,8 @@ return new class extends Migration
             if (! isset($positionIds[$slug])) {
                 continue;
             }
-            $positionCases[] = "WHEN LOWER(TRIM(job_title)) = ".$this->quote($needle)
-                ." THEN ".(int) $positionIds[$slug];
+            $positionCases[] = 'WHEN LOWER(TRIM(job_title)) = '.$this->quote($needle)
+                .' THEN '.(int) $positionIds[$slug];
         }
 
         $departmentCases = [];
@@ -246,8 +246,8 @@ return new class extends Migration
             if (! isset($departmentIds[$slug])) {
                 continue;
             }
-            $departmentCases[] = "WHEN LOWER(TRIM(department)) = ".$this->quote($needle)
-                ." THEN ".(int) $departmentIds[$slug];
+            $departmentCases[] = 'WHEN LOWER(TRIM(department)) = '.$this->quote($needle)
+                .' THEN '.(int) $departmentIds[$slug];
         }
 
         $posCount = 0;
@@ -256,8 +256,8 @@ return new class extends Migration
         $unmatchedDepartments = [];
 
         if (! empty($positionCases)) {
-            $sql = "UPDATE workspace_members
-                    SET position_id = CASE ".implode(' ', $positionCases).' ELSE position_id END
+            $sql = 'UPDATE workspace_members
+                    SET position_id = CASE '.implode(' ', $positionCases).' ELSE position_id END
                     WHERE position_id IS NULL
                       AND job_title IS NOT NULL
                       AND TRIM(job_title) <> \'\'';
@@ -276,8 +276,8 @@ return new class extends Migration
         }
 
         if (! empty($departmentCases)) {
-            $sql = "UPDATE workspace_members
-                    SET department_role_id = CASE ".implode(' ', $departmentCases).' ELSE department_role_id END
+            $sql = 'UPDATE workspace_members
+                    SET department_role_id = CASE '.implode(' ', $departmentCases).' ELSE department_role_id END
                     WHERE department_role_id IS NULL
                       AND department IS NOT NULL
                       AND TRIM(department) <> \'\'';

@@ -13,6 +13,7 @@ use App\Core\Http\Middleware\RequireWorkspaceRole;
 use App\Core\Http\Middleware\SecureHeaders;
 use App\Core\Http\Middleware\SetWorkspaceTenant;
 use App\Core\Http\Middleware\ThrottleRequests;
+use App\Providers\AuthServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -54,6 +55,6 @@ $app = Application::configure(basePath: dirname(__DIR__))
     })
     ->create();
 
-$app->register(\App\Providers\AuthServiceProvider::class);
+$app->register(AuthServiceProvider::class);
 
 return $app;

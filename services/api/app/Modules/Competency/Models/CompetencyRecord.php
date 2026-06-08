@@ -4,6 +4,7 @@ namespace App\Modules\Competency\Models;
 
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
+use Database\Factories\Competency\CompetencyRecordFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ class CompetencyRecord extends Model
 
     protected static function newFactory()
     {
-        return \Database\Factories\Competency\CompetencyRecordFactory::new();
+        return CompetencyRecordFactory::new();
     }
 
     protected $table = 'competency_records';

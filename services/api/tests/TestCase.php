@@ -71,7 +71,7 @@ abstract class TestCase extends BaseTestCase
         // session-level value persists across the transaction rollback.
         if (DB::getDriverName() === 'pgsql') {
             try {
-                DB::statement("RESET app.current_user_id");
+                DB::statement('RESET app.current_user_id');
             } catch (\Throwable $e) {
                 // ignore if connection cannot accept RESET (e.g. closed)
             }

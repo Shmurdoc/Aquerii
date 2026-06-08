@@ -5,6 +5,7 @@ use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
+use Laravel\Sanctum\Sanctum;
 
 // The CI test database is pre-migrated by the deployment pipeline, so the
 // RefreshDatabase trait does not need to run `migrate:fresh` between test
@@ -21,7 +22,7 @@ beforeEach(function () {
 // Helper: act as the given user via the test framework's Sanctum helper.
 function actAsUser(User $user): void
 {
-    \Laravel\Sanctum\Sanctum::actingAs($user);
+    Sanctum::actingAs($user);
 }
 
 // ─── index ───────────────────────────────────────────────────────────────────

@@ -10,11 +10,11 @@ use App\Modules\Competency\Models\CofRecord;
 use App\Modules\Competency\Models\CompetencyRecord;
 use App\Modules\PTW\Models\Permit;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class ROIDashboardService
 {
     private const AVG_CREW_COST_PER_HOUR = 450;
+
     private const PTW_BASELINE_HOURS = 48;
 
     public function getDashboard(string $workspaceId, ?string $fromDate, ?string $toDate): array

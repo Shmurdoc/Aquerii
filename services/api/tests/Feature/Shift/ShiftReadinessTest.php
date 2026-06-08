@@ -1,10 +1,10 @@
 <?php
 
+use App\Core\Models\ShiftPlan;
+use App\Core\Models\ShiftPlanAssignment;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
-use App\Core\Models\ShiftPlan;
-use App\Core\Models\ShiftPlanAssignment;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;

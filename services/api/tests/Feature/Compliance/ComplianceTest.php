@@ -3,15 +3,13 @@
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
+use App\Modules\Competency\Models\CofRecord;
 use App\Modules\Competency\Models\CompetencyRecord;
 use App\Modules\Competency\Models\CompetencyRequirement;
 use App\Modules\Competency\Models\CompetencyType;
-use App\Modules\Competency\Models\CofRecord;
-use App\Modules\Competency\Models\TrainingRecord;
 use App\Modules\CRM\Models\CrmCompany;
 use App\Services\ComplianceService;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {

@@ -8,6 +8,7 @@ use App\Core\Models\WorkspaceMember;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class EnsureTestUser extends Command
 {
@@ -73,7 +74,7 @@ class EnsureTestUser extends Command
 
     private function uniqueSlug(string $name, string $userId): string
     {
-        $base = \Illuminate\Support\Str::slug($name) ?: 'workspace';
+        $base = Str::slug($name) ?: 'workspace';
         if (! Workspace::withTrashed()->where('slug', $base)->exists()) {
             return $base;
         }
@@ -81,6 +82,7 @@ class EnsureTestUser extends Command
         if (! Workspace::withTrashed()->where('slug', $suffixed)->exists()) {
             return $suffixed;
         }
-        return $base.'-'.\Illuminate\Support\Str::random(6);
+
+        return $base.'-'.Str::random(6);
     }
 }

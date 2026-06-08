@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\StockController;
 use App\Core\Http\Controllers\Api\AuditLogController;
 use App\Core\Http\Controllers\Api\BillingController;
 use App\Core\Http\Controllers\Api\BrandingController;
 use App\Core\Http\Controllers\Api\BulkActionController;
-use App\Core\Http\Controllers\Api\ComplianceController;
-use App\Core\Http\Controllers\Api\ShiftReadinessController;
+use App\Core\Http\Controllers\Api\ClientPortalController;
 use App\Core\Http\Controllers\Api\CommentController;
+use App\Core\Http\Controllers\Api\ComplianceController;
 use App\Core\Http\Controllers\Api\DocumentPdfController;
 use App\Core\Http\Controllers\Api\EmployeeGroupController;
+use App\Core\Http\Controllers\Api\EquipmentCertRecordController;
+use App\Core\Http\Controllers\Api\EquipmentCertTypeController;
 use App\Core\Http\Controllers\Api\ExportController;
 use App\Core\Http\Controllers\Api\FieldPermissionController;
 use App\Core\Http\Controllers\Api\FileController;
@@ -23,16 +23,16 @@ use App\Core\Http\Controllers\Api\MeetingOutcomeController;
 use App\Core\Http\Controllers\Api\NotificationController;
 use App\Core\Http\Controllers\Api\OfflineSyncController;
 use App\Core\Http\Controllers\Api\PluginController;
-use App\Core\Http\Controllers\Api\ROIController;
 use App\Core\Http\Controllers\Api\ReportController;
 use App\Core\Http\Controllers\Api\ReportScheduleController;
+use App\Core\Http\Controllers\Api\ROIController;
 use App\Core\Http\Controllers\Api\ScenarioController;
-use App\Core\Http\Controllers\StorageController;
 use App\Core\Http\Controllers\Api\ScimController;
 use App\Core\Http\Controllers\Api\SentimentController;
+use App\Core\Http\Controllers\Api\ShiftReadinessController;
 use App\Core\Http\Controllers\Api\UserSettingsController;
+use App\Core\Http\Controllers\Api\VisitorController;
 use App\Core\Http\Controllers\Api\WebhookController;
-use App\Core\Http\Controllers\Api\ClientPortalController;
 use App\Core\Http\Controllers\Api\WorkspaceController;
 use App\Core\Http\Controllers\Api\WorkspaceLogoController;
 use App\Core\Http\Controllers\Auth\AuthController;
@@ -45,10 +45,14 @@ use App\Core\Http\Controllers\PermissionController;
 use App\Core\Http\Controllers\PersonalAccessTokenController;
 use App\Core\Http\Controllers\PushSubscriptionController;
 use App\Core\Http\Controllers\SavedViewController;
+use App\Core\Http\Controllers\StorageController;
 use App\Core\Http\Controllers\UserController;
 use App\Core\Http\Controllers\WebhookEndpointController;
 use App\Core\Models\Item;
 use App\Http\Controllers\Api\CalendarItemController;
+use App\Http\Controllers\Api\GateController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\WorkspaceInvitationController;
 use App\Modules\AI\Http\Controllers\AIController;
 use App\Modules\Automation\Http\Controllers\AutomationController;
@@ -59,6 +63,7 @@ use App\Modules\CRM\Http\Controllers\CompanyController;
 use App\Modules\CRM\Http\Controllers\ConsentController;
 use App\Modules\CRM\Http\Controllers\ContactController;
 use App\Modules\CRM\Http\Controllers\ContactImportController;
+use App\Modules\CRM\Http\Controllers\ContractMilestoneController;
 use App\Modules\CRM\Http\Controllers\CrmActivityController;
 use App\Modules\CRM\Http\Controllers\CrmAnalyticsController;
 use App\Modules\CRM\Http\Controllers\CrmAutomationRuleController;
@@ -73,6 +78,7 @@ use App\Modules\CRM\Http\Controllers\QuotaController;
 use App\Modules\CRM\Http\Controllers\QuoteController;
 use App\Modules\CRM\Http\Controllers\SequenceController;
 use App\Modules\CRM\Http\Controllers\StageController;
+use App\Modules\CRM\Http\Controllers\WorkOrderController;
 use App\Modules\Email\Http\Controllers\InboundEmailController;
 use App\Modules\Email\Http\Controllers\ProjectEmailAddressController;
 use Illuminate\Http\Request;
@@ -520,6 +526,22 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         // CRM Telephony
         Route::post('crm/telephony', [CalendarSyncController::class, 'telephony'])->middleware('idempotent');
 
+        // Contract Milestones (scoped under deals)
+        Route::get('crm/deals/{deal}/milestones', [ContractMilestoneController::class, 'index']);
+        Route::post('crm/deals/{deal}/milestones', [ContractMilestoneController::class, 'store'])->middleware('idempotent');
+        Route::put('crm/milestones/{milestone}', [ContractMilestoneController::class, 'update'])->middleware('idempotent');
+        Route::delete('crm/milestones/{milestone}', [ContractMilestoneController::class, 'destroy'])->middleware('idempotent');
+        Route::post('crm/milestones/{milestone}/complete', [ContractMilestoneController::class, 'complete'])->middleware('idempotent');
+
+        // Work Orders
+        Route::get('crm/work-orders', [WorkOrderController::class, 'index']);
+        Route::post('crm/work-orders', [WorkOrderController::class, 'store'])->middleware('idempotent');
+        Route::get('crm/work-orders/{workOrder}', [WorkOrderController::class, 'show']);
+        Route::put('crm/work-orders/{workOrder}', [WorkOrderController::class, 'update'])->middleware('idempotent');
+        Route::delete('crm/work-orders/{workOrder}', [WorkOrderController::class, 'destroy'])->middleware('idempotent');
+        Route::post('crm/work-orders/{workOrder}/issue', [WorkOrderController::class, 'issue'])->middleware('idempotent');
+        Route::post('crm/work-orders/{workOrder}/complete', [WorkOrderController::class, 'complete'])->middleware('idempotent');
+
         // Automations (gated by plan)
         Route::middleware('feature:module.automation')->group(function () {
             Route::get('automation-templates', [AutomationController::class, 'templates']);
@@ -638,8 +660,8 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         require __DIR__.'/modules/hr.php';
 
         // ── Equipment Compliance ──────────────────────────────────────────
-        Route::apiResource('equipment.cert-types', \App\Core\Http\Controllers\Api\EquipmentCertTypeController::class);
-        Route::apiResource('equipment.cert-records', \App\Core\Http\Controllers\Api\EquipmentCertRecordController::class);
+        Route::apiResource('equipment.cert-types', EquipmentCertTypeController::class);
+        Route::apiResource('equipment.cert-records', EquipmentCertRecordController::class);
 
         // ── Equipment module ──────────────────────────────────────────────
         require __DIR__.'/modules/equipment.php';
@@ -649,20 +671,29 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // ── Site Access Log / Gate Kiosk ──────────────────────────────────
         Route::prefix('gate')->group(function () {
-            Route::post('scan', [App\Http\Controllers\Api\GateController::class, 'scan'])
+            Route::post('scan', [GateController::class, 'scan'])
                 ->middleware('auth:sanctum,gate-kiosk');
 
-            Route::get('logs', [App\Http\Controllers\Api\GateController::class, 'logs'])
+            Route::get('logs', [GateController::class, 'logs'])
                 ->middleware('auth:sanctum');
 
-            Route::get('stats', [App\Http\Controllers\Api\GateController::class, 'stats'])
+            Route::get('stats', [GateController::class, 'stats'])
                 ->middleware('auth:sanctum');
 
-            Route::get('kiosk-tokens', [App\Http\Controllers\Api\GateController::class, 'kioskTokens'])
+            Route::get('kiosk-tokens', [GateController::class, 'kioskTokens'])
                 ->middleware(['auth:sanctum', 'workspace.role:owner,admin']);
 
-            Route::post('scan-equipment', [App\Http\Controllers\Api\GateController::class, 'scanEquipment'])
+            Route::post('scan-equipment', [GateController::class, 'scanEquipment'])
                 ->middleware('auth:sanctum,gate-kiosk');
+
+            // Visitor management
+            Route::prefix('visitors')->middleware('auth:sanctum,gate-kiosk')->group(function () {
+                Route::post('sign-in', [VisitorController::class, 'signIn']);
+                Route::get('active', [VisitorController::class, 'active']);
+                Route::get('', [VisitorController::class, 'index']);
+                Route::post('{visitor}/sign-out', [VisitorController::class, 'signOut']);
+                Route::post('{visitor}/badge-printed', [VisitorController::class, 'markBadgePrinted']);
+            });
         });
 
         // ── Client Portal — token generation (auth required) ──────────────

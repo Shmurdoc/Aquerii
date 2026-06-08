@@ -5,8 +5,6 @@ use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use App\Models\GateKiosk;
 use App\Models\SiteAccessLog;
-use App\Modules\Competency\Models\CompetencyType;
-use App\Modules\Competency\Models\CompetencyRecord;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;

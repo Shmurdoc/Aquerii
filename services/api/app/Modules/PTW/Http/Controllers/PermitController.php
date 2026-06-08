@@ -13,7 +13,6 @@ use App\Modules\PTW\Services\DmrPermitRegisterService;
 use App\Modules\PTW\Services\PermitWorkflowService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;

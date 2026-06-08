@@ -2,9 +2,7 @@
 
 namespace App\Core\Models;
 
-use App\Core\Models\Workspace;
-use App\Core\Models\User;
-use App\Core\Models\Shift;
+use Database\Factories\ShiftAssignmentFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +14,7 @@ class ShiftAssignment extends Model
 
     protected static function newFactory()
     {
-        return \Database\Factories\ShiftAssignmentFactory::new();
+        return ShiftAssignmentFactory::new();
     }
 
     protected $table = 'shift_assignments';

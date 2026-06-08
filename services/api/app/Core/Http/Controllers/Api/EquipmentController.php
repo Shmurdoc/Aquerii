@@ -29,7 +29,7 @@ class EquipmentController extends Controller
             $search = $this->escapeLike($request->search);
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', "%{$search}%")
-                  ->orWhere('registration_number', 'ilike', "%{$search}%");
+                    ->orWhere('registration_number', 'ilike', "%{$search}%");
             });
         }
 
@@ -43,7 +43,7 @@ class EquipmentController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'equipment_type' => 'required|string|max:255',
-            'registration_number' => 'required|string|max:255|unique:equipment,registration_number,NULL,id,workspace_id,' . $workspace,
+            'registration_number' => 'required|string|max:255|unique:equipment,registration_number,NULL,id,workspace_id,'.$workspace,
             'manufacturer' => 'nullable|string|max:255',
             'model' => 'nullable|string|max:255',
             'year' => 'nullable|integer|min:1900|max:2099',
@@ -74,7 +74,7 @@ class EquipmentController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'equipment_type' => 'sometimes|required|string|max:255',
-            'registration_number' => 'sometimes|required|string|max:255|unique:equipment,registration_number,' . $equipment->id . ',id,workspace_id,' . $workspace,
+            'registration_number' => 'sometimes|required|string|max:255|unique:equipment,registration_number,'.$equipment->id.',id,workspace_id,'.$workspace,
             'manufacturer' => 'nullable|string|max:255',
             'model' => 'nullable|string|max:255',
             'year' => 'nullable|integer|min:1900|max:2099',

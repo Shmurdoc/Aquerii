@@ -5,7 +5,6 @@ use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use App\Modules\HSSE\Models\CorrectiveAction;
 use App\Modules\HSSE\Models\Incident;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {

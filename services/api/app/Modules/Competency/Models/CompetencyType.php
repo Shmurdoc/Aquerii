@@ -3,6 +3,7 @@
 namespace App\Modules\Competency\Models;
 
 use App\Core\Models\Workspace;
+use Database\Factories\Competency\CompetencyTypeFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ class CompetencyType extends Model
 
     protected static function newFactory()
     {
-        return \Database\Factories\Competency\CompetencyTypeFactory::new();
+        return CompetencyTypeFactory::new();
     }
 
     protected $table = 'competency_types';

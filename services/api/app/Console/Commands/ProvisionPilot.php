@@ -158,11 +158,13 @@ class ProvisionPilot extends Command
                 DB::commit();
 
                 $this->outputSummary($workspace, $crew, $password);
+
                 return Command::SUCCESS;
             } catch (\Throwable $e) {
                 DB::rollBack();
                 $this->error("Provisioning failed: {$e->getMessage()}");
                 $this->error("File: {$e->getFile()}:{$e->getLine()}");
+
                 return Command::FAILURE;
             }
         }
@@ -173,7 +175,7 @@ class ProvisionPilot extends Command
     private function createWorkspace(string $name, string $slug): Workspace
     {
         $owner = User::firstOrCreate(
-            ['email' => "owner@" . self::PILOT_DOMAIN],
+            ['email' => 'owner@'.self::PILOT_DOMAIN],
             [
                 'name' => 'System Owner',
                 'password_hash' => bcrypt('password'),
@@ -209,7 +211,7 @@ class ProvisionPilot extends Command
     {
         $crew = [];
         foreach ($this->users as $i => $spec) {
-            $email = sprintf("%s@%s", Str::slug($spec['name']), self::PILOT_DOMAIN);
+            $email = sprintf('%s@%s', Str::slug($spec['name']), self::PILOT_DOMAIN);
 
             $user = User::firstOrCreate(
                 ['email' => $email],
@@ -277,6 +279,7 @@ class ProvisionPilot extends Command
         if (empty($filtered)) {
             $filtered = $crew;
         }
+
         return $filtered[array_rand($filtered)]['user'];
     }
 
@@ -287,6 +290,7 @@ class ProvisionPilot extends Command
                 return $c['user'];
             }
         }
+
         return $crew[0]['user'];
     }
 
@@ -297,7 +301,7 @@ class ProvisionPilot extends Command
             ->where('name', 'Sales Pipeline')
             ->first();
 
-        if (!$pipeline) {
+        if (! $pipeline) {
             $pipelineId = Str::uuid()->toString();
             DB::table('crm_pipelines')->insert([
                 'id' => $pipelineId,
@@ -339,7 +343,9 @@ class ProvisionPilot extends Command
             ->where('is_default', true)
             ->first();
 
-        if (!$pipeline) return null;
+        if (! $pipeline) {
+            return null;
+        }
 
         return DB::table('crm_pipeline_stages')
             ->where('pipeline_id', $pipeline->id)
@@ -360,7 +366,8 @@ class ProvisionPilot extends Command
             }
             $companies[] = $company;
         }
-        $this->line('  ' . count($companies) . ' CRM companies seeded');
+        $this->line('  '.count($companies).' CRM companies seeded');
+
         return $companies;
     }
 
@@ -369,7 +376,7 @@ class ProvisionPilot extends Command
         $contactData = [
             ['first_name' => 'Johannes', 'last_name' => 'Pretorius', 'email' => 'j.pretorius@amshipping.co.za', 'job_title' => 'Procurement Director'],
             ['first_name' => 'Maria',    'last_name' => 'Chauke',    'email' => 'm.chauke@rsablast.co.za',      'job_title' => 'Operations Manager'],
-            ['first_name' => 'Eugene',   'last_name' => 'Terblanche','email' => 'e.terblanche@mponeng.co.za',   'job_title' => 'Chief Engineer'],
+            ['first_name' => 'Eugene',   'last_name' => 'Terblanche', 'email' => 'e.terblanche@mponeng.co.za',   'job_title' => 'Chief Engineer'],
             ['first_name' => 'Naledi',   'last_name' => 'Moeketsi',  'email' => 'n.moeketsi@ventcool.co.za',    'job_title' => 'Sales Executive'],
             ['first_name' => 'Shaun',    'last_name' => 'Naidoo',    'email' => 's.naidoo@steadfastppe.co.za',  'job_title' => 'Account Manager'],
             ['first_name' => 'Pauline',  'last_name' => 'Mbatha',    'email' => 'p.mbatha@shaftsinkers.co.za',  'job_title' => 'Contracts Manager'],
@@ -394,7 +401,8 @@ class ProvisionPilot extends Command
             }
             $contacts[] = $contact;
         }
-        $this->line('  ' . count($contacts) . ' CRM contacts seeded');
+        $this->line('  '.count($contacts).' CRM contacts seeded');
+
         return $contacts;
     }
 
@@ -402,7 +410,9 @@ class ProvisionPilot extends Command
     {
         foreach ($this->deals as $i => $spec) {
             $stage = $this->stageForName($workspace, $spec['stage']);
-            if (!$stage) continue;
+            if (! $stage) {
+                continue;
+            }
 
             $pipeline = DB::table('crm_pipelines')
                 ->where('workspace_id', $workspace->id)
@@ -426,13 +436,13 @@ class ProvisionPilot extends Command
                 ]
             );
         }
-        $this->line('  ' . count($this->deals) . ' CRM deals seeded');
+        $this->line('  '.count($this->deals).' CRM deals seeded');
     }
 
     private function seedLeads(Workspace $workspace, array $crew): void
     {
         foreach ($this->leads as $spec) {
-            $email = sprintf("%s.%s@%s", $spec['first_name'], $spec['last_name'], self::PILOT_DOMAIN);
+            $email = sprintf('%s.%s@%s', $spec['first_name'], $spec['last_name'], self::PILOT_DOMAIN);
 
             CrmLead::withTrashed()->firstOrCreate(
                 ['workspace_id' => $workspace->id, 'email' => $email],
@@ -445,7 +455,7 @@ class ProvisionPilot extends Command
                 ]
             );
         }
-        $this->line('  ' . count($this->leads) . ' CRM leads seeded');
+        $this->line('  '.count($this->leads).' CRM leads seeded');
     }
 
     private function seedProducts(Workspace $workspace, User $owner): void
@@ -455,7 +465,7 @@ class ProvisionPilot extends Command
             CrmProduct::withTrashed()->firstOrCreate(
                 ['workspace_id' => $workspace->id, 'name' => $catName],
                 [
-                    'sku' => 'CAT-' . strtoupper(Str::slug($catName)),
+                    'sku' => 'CAT-'.strtoupper(Str::slug($catName)),
                     'unit_price' => 0,
                     'currency' => 'ZAR',
                     'is_active' => true,
@@ -463,7 +473,7 @@ class ProvisionPilot extends Command
                 ]
             );
         }
-        $this->line('  ' . count($categories) . ' CRM product categories seeded');
+        $this->line('  '.count($categories).' CRM product categories seeded');
     }
 
     private function seedHazards(Workspace $workspace, array $crew): void
@@ -476,8 +486,8 @@ class ProvisionPilot extends Command
             Hazard::withTrashed()->firstOrCreate(
                 ['workspace_id' => $workspace->id, 'title' => $spec['title']],
                 [
-                    'reference' => 'HAZ-' . now()->format('Y') . '-' . str_pad((string) rand(1, 9999), 4, '0', STR_PAD_LEFT),
-                    'description' => 'Identified during routine inspection at ' . $spec['location'],
+                    'reference' => 'HAZ-'.now()->format('Y').'-'.str_pad((string) rand(1, 9999), 4, '0', STR_PAD_LEFT),
+                    'description' => 'Identified during routine inspection at '.$spec['location'],
                     'category' => $spec['category'],
                     'location' => $spec['location'],
                     'source' => 'Routine safety inspection',
@@ -505,7 +515,7 @@ class ProvisionPilot extends Command
                 ]
             );
         }
-        $this->line('  ' . count($this->miningHazards) . ' hazards seeded');
+        $this->line('  '.count($this->miningHazards).' hazards seeded');
     }
 
     private function seedIncidents(Workspace $workspace, array $crew): void
@@ -515,8 +525,8 @@ class ProvisionPilot extends Command
             Incident::withTrashed()->firstOrCreate(
                 ['workspace_id' => $workspace->id, 'title' => $spec['title']],
                 [
-                    'reference' => 'INC-' . now()->format('Y') . '-' . str_pad((string) rand(1, 9999), 4, '0', STR_PAD_LEFT),
-                    'description' => 'Incident reported at ' . $spec['location'],
+                    'reference' => 'INC-'.now()->format('Y').'-'.str_pad((string) rand(1, 9999), 4, '0', STR_PAD_LEFT),
+                    'description' => 'Incident reported at '.$spec['location'],
                     'type' => $spec['type'],
                     'severity' => $spec['severity'],
                     'status' => Incident::STATUS_OPEN,
@@ -528,7 +538,7 @@ class ProvisionPilot extends Command
                 ]
             );
         }
-        $this->line('  ' . count($this->miningIncidents) . ' incidents seeded');
+        $this->line('  '.count($this->miningIncidents).' incidents seeded');
     }
 
     private function seedCorrectiveActions(Workspace $workspace, array $crew): void
@@ -543,7 +553,7 @@ class ProvisionPilot extends Command
             CorrectiveAction::withTrashed()->firstOrCreate(
                 ['workspace_id' => $workspace->id, 'description' => $spec['description']],
                 [
-                    'reference' => 'CA-' . now()->format('Y') . '-' . str_pad((string) rand(1, 9999), 4, '0', STR_PAD_LEFT),
+                    'reference' => 'CA-'.now()->format('Y').'-'.str_pad((string) rand(1, 9999), 4, '0', STR_PAD_LEFT),
                     'source_type' => $spec['source_type'],
                     'assigned_to' => $this->pickUser($crew, titleContains: 'Safety')->id,
                     'priority' => CorrectiveAction::PRIORITY_HIGH,
@@ -552,7 +562,7 @@ class ProvisionPilot extends Command
                 ]
             );
         }
-        $this->line('  ' . count($actions) . ' corrective actions seeded');
+        $this->line('  '.count($actions).' corrective actions seeded');
     }
 
     private function seedPermits(Workspace $workspace, array $crew): void
@@ -573,10 +583,10 @@ class ProvisionPilot extends Command
             Permit::withTrashed()->firstOrCreate(
                 ['workspace_id' => $workspace->id, 'title' => $spec['title']],
                 [
-                    'reference' => 'PTW-' . now()->format('Y') . '-' . str_pad((string) rand(1, 9999), 4, '0', STR_PAD_LEFT),
+                    'reference' => 'PTW-'.now()->format('Y').'-'.str_pad((string) rand(1, 9999), 4, '0', STR_PAD_LEFT),
                     'type' => $spec['type'],
                     'status' => $spec['status'],
-                    'description' => 'Permit for ' . $spec['title'],
+                    'description' => 'Permit for '.$spec['title'],
                     'location' => ['Shaft 1 - Level 3', 'Processing Plant', 'Substation SS-12', 'Open Pit - Bench 4'][array_rand(['Shaft 1 - Level 3', 'Processing Plant', 'Substation SS-12', 'Open Pit - Bench 4'])],
                     'risk_level' => $spec['risk'],
                     'issuer_id' => $safetyOfficer->id,
@@ -584,12 +594,12 @@ class ProvisionPilot extends Command
                     'valid_from' => $now,
                     'valid_until' => $now->copy()->addHours(8),
                     'pre_conditions' => ['Gas test < 1% LEL', 'Area barricaded', 'PPE inspected and issued'],
-                    'work_method_statement' => 'Standard operating procedure for ' . $spec['type'] . ' work',
+                    'work_method_statement' => 'Standard operating procedure for '.$spec['type'].' work',
                     'ppe_required' => 'Hard hat, safety boots, hi-viz, ear plugs, gloves, safety glasses',
                 ]
             );
         }
-        $this->line('  ' . count($permits) . ' PTW permits seeded');
+        $this->line('  '.count($permits).' PTW permits seeded');
     }
 
     private function seedTickets(Workspace $workspace, array $contacts, array $crew): void
@@ -601,7 +611,7 @@ class ProvisionPilot extends Command
                 ['workspace_id' => $workspace->id, 'subject' => $spec['subject']],
                 [
                     'contact_id' => $contact->id,
-                    'description' => 'Reported issue: ' . $spec['subject'],
+                    'description' => 'Reported issue: '.$spec['subject'],
                     'status' => $spec['status'],
                     'priority' => $spec['priority'],
                     'channel' => 'email',
@@ -610,7 +620,7 @@ class ProvisionPilot extends Command
                 ]
             );
         }
-        $this->line('  ' . count($this->tickets) . ' support tickets seeded');
+        $this->line('  '.count($this->tickets).' support tickets seeded');
     }
 
     private function seedBoardItems(Workspace $workspace, User $owner): void
@@ -656,14 +666,14 @@ class ProvisionPilot extends Command
                 ]
             );
         }
-        $this->line('  ' . count($this->boardItems) . ' board items seeded');
+        $this->line('  '.count($this->boardItems).' board items seeded');
     }
 
     private function seedInventory(Workspace $workspace, User $owner): void
     {
         $categoryMap = [];
         foreach ($this->inventoryProducts as $spec) {
-            if (!isset($categoryMap[$spec['category']])) {
+            if (! isset($categoryMap[$spec['category']])) {
                 $cat = InventoryCategory::withTrashed()->firstOrCreate(
                     ['workspace_id' => $workspace->id, 'name' => $spec['category']],
                     ['created_by' => $owner->id]
@@ -686,7 +696,7 @@ class ProvisionPilot extends Command
                 ]
             );
         }
-        $this->line('  ' . count($this->inventoryProducts) . ' inventory products seeded');
+        $this->line('  '.count($this->inventoryProducts).' inventory products seeded');
     }
 
     private function outputSummary(Workspace $workspace, array $crew, string $password): void
@@ -703,23 +713,23 @@ class ProvisionPilot extends Command
         $this->newLine();
         $this->warn('  Users:');
         foreach ($crew as $c) {
-            $email = sprintf("%s@%s", Str::slug($c['user']->name), self::PILOT_DOMAIN);
+            $email = sprintf('%s@%s', Str::slug($c['user']->name), self::PILOT_DOMAIN);
             $this->info("    {$c['title']}: {$c['user']->name} / {$email} / password: {$password} / role: {$c['role']}");
         }
         $this->newLine();
         $this->warn('  Seeded data:');
-        $this->info('    HSSE Hazards: ' . count($this->miningHazards));
-        $this->info('    HSSE Incidents: ' . count($this->miningIncidents));
+        $this->info('    HSSE Hazards: '.count($this->miningHazards));
+        $this->info('    HSSE Incidents: '.count($this->miningIncidents));
         $this->info('    Corrective Actions: 3');
-        $this->info('    CRM Deals: ' . count($this->deals));
-        $this->info('    CRM Leads: ' . count($this->leads));
+        $this->info('    CRM Deals: '.count($this->deals));
+        $this->info('    CRM Leads: '.count($this->leads));
         $this->info('    CRM Contacts: 8');
-        $this->info('    CRM Companies: ' . count($this->companies));
+        $this->info('    CRM Companies: '.count($this->companies));
         $this->info('    CRM Product Categories: 5');
-        $this->info('    Inventory Products: ' . count($this->inventoryProducts));
+        $this->info('    Inventory Products: '.count($this->inventoryProducts));
         $this->info('    PTW Permits: 5');
-        $this->info('    Support Tickets: ' . count($this->tickets));
-        $this->info('    Board Items: ' . count($this->boardItems));
+        $this->info('    Support Tickets: '.count($this->tickets));
+        $this->info('    Board Items: '.count($this->boardItems));
         $this->newLine();
         $this->warn('  Login URL: http://localhost/login');
         $this->newLine();

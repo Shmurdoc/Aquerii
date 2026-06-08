@@ -180,7 +180,7 @@ class GateController extends Controller
                 'status' => 'error',
                 'compliance' => [
                     'status' => 'error',
-                    'failures' => ['Compliance check failed: ' . $e->getMessage()],
+                    'failures' => ['Compliance check failed: '.$e->getMessage()],
                     'checked_at' => now()->toIso8601String(),
                 ],
             ], 500);
@@ -232,7 +232,7 @@ class GateController extends Controller
             return [
                 'is_compliant' => false,
                 'status' => 'error',
-                'failures' => ['Compliance check failed: ' . $e->getMessage()],
+                'failures' => ['Compliance check failed: '.$e->getMessage()],
                 'checked_at' => now()->toIso8601String(),
             ];
         }

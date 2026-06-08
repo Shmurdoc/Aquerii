@@ -4,6 +4,7 @@ namespace App\Modules\Equipment\Models;
 
 use App\Core\Models\Workspace;
 use App\Modules\JobCards\Models\JobCardTemplate;
+use Database\Factories\Equipment\MaintenanceScheduleFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ class MaintenanceSchedule extends Model
 
     protected static function newFactory()
     {
-        return \Database\Factories\Equipment\MaintenanceScheduleFactory::new();
+        return MaintenanceScheduleFactory::new();
     }
 
     protected $table = 'equipment_maintenance_schedules';

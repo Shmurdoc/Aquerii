@@ -27,11 +27,11 @@ class DmrExportController extends Controller
             'witnesses' => $witnesses,
         ]);
 
-        $filename = 'dmr-section23-' . ($incident->reference ?? $incident->id) . '.pdf';
+        $filename = 'dmr-section23-'.($incident->reference ?? $incident->id).'.pdf';
 
         return response($pdfContent, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            'Content-Disposition' => 'inline; filename="'.$filename.'"',
         ]);
     }
 
@@ -55,11 +55,11 @@ class DmrExportController extends Controller
             'workspace' => $incident->workspace,
         ]);
 
-        $filename = 'coida-wcl2-' . ($incident->reference ?? $incident->id) . '.pdf';
+        $filename = 'coida-wcl2-'.($incident->reference ?? $incident->id).'.pdf';
 
         return response($pdfContent, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            'Content-Disposition' => 'inline; filename="'.$filename.'"',
         ]);
     }
 }

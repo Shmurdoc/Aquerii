@@ -248,6 +248,7 @@ class ComplianceService
                 $company = $worker->company;
                 if ($company === null || $company->trashed()) {
                     $nonCompliant[] = $worker;
+
                     continue;
                 }
             }
@@ -256,6 +257,7 @@ class ComplianceService
             $workerCofs = $cofByUser->get($worker->user_id);
             if ($workerCofs === null || $workerCofs->isEmpty()) {
                 $nonCompliant[] = $worker;
+
                 continue;
             }
 
@@ -264,6 +266,7 @@ class ComplianceService
             $hasInductionTraining = $inductionTrainingsByUser->has($worker->user_id);
             if (! $hasInductionCert && ! $hasInductionTraining) {
                 $nonCompliant[] = $worker;
+
                 continue;
             }
 
@@ -274,6 +277,7 @@ class ComplianceService
                 $missing = $mandatoryTypeIds->diff($workerValid);
                 if ($missing->isNotEmpty()) {
                     $nonCompliant[] = $worker;
+
                     continue;
                 }
             }
@@ -305,11 +309,13 @@ class ComplianceService
 
             if ($latest === null) {
                 $worst = $this->worsenStatus($worst, 'non_compliant');
+
                 continue;
             }
 
             if ($latest->verified_at === null) {
                 $worst = $this->worsenStatus($worst, 'non_compliant');
+
                 continue;
             }
 
@@ -319,6 +325,7 @@ class ComplianceService
 
             if ($latest->expires_at < $now) {
                 $worst = $this->worsenStatus($worst, 'non_compliant');
+
                 continue;
             }
 
@@ -335,7 +342,7 @@ class ComplianceService
         $failures = [];
 
         if ($equipment->status !== 'active') {
-            $failures[] = 'equipment status is ' . $equipment->status;
+            $failures[] = 'equipment status is '.$equipment->status;
         }
 
         $now = Carbon::now();
@@ -350,22 +357,25 @@ class ComplianceService
                 ->first();
 
             if ($latest === null) {
-                $failures[] = $certType->name . ' — no record found';
+                $failures[] = $certType->name.' — no record found';
+
                 continue;
             }
 
             if ($latest->verified_at === null) {
-                $failures[] = $certType->name . ' — not yet verified by HSSE (issued ' . $latest->issued_at?->toDateString() . ')';
+                $failures[] = $certType->name.' — not yet verified by HSSE (issued '.$latest->issued_at?->toDateString().')';
+
                 continue;
             }
 
             if ($latest->expires_at !== null && $latest->expires_at < $now) {
-                $failures[] = $certType->name . ' — expired ' . $latest->expires_at->toDateString();
+                $failures[] = $certType->name.' — expired '.$latest->expires_at->toDateString();
+
                 continue;
             }
 
             if ($latest->expires_at !== null && $latest->expires_at <= $now->copy()->addDays(30)) {
-                $failures[] = $certType->name . ' — expiring ' . $latest->expires_at->toDateString();
+                $failures[] = $certType->name.' — expiring '.$latest->expires_at->toDateString();
             }
         }
 

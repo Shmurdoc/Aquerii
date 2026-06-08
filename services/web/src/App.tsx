@@ -33,6 +33,8 @@ import CalendarSyncPage from '@/pages/crm/CalendarSyncPage'
 import ApprovalRulesPage from '@/pages/crm/ApprovalRulesPage'
 import DealApprovalsPage from '@/pages/crm/DealApprovalsPage'
 import AutomationRulesPage from '@/pages/crm/AutomationRulesPage'
+import ContractMilestonesPage from '@/pages/crm/ContractMilestonesPage'
+import WorkOrdersPage from '@/pages/crm/WorkOrdersPage'
 import ForecastPage  from '@/pages/crm/ForecastPage'
 import QuotasPage    from '@/pages/crm/QuotasPage'
 import SequencesPage from '@/pages/crm/SequencesPage'
@@ -176,6 +178,8 @@ export default function App() {
           <Route path="/crm/approval-rules" element={<ApprovalRulesPage />} />
           <Route path="/crm/deal-approvals" element={<DealApprovalsPage />} />
           <Route path="/crm/automation-rules" element={<AutomationRulesPage />} />
+          <Route path="/crm/contract-milestones" element={<ContractMilestonesPage />} />
+          <Route path="/crm/work-orders" element={<WorkOrdersPage />} />
           <Route path="/support" element={<Navigate to="/support/tickets" replace />} />
           <Route path="/support/tickets"         element={<TicketsPage />} />
           <Route path="/support/tickets/:ticketId" element={<TicketDetailPage />} />

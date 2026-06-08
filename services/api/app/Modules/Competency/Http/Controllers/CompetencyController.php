@@ -4,13 +4,12 @@ namespace App\Modules\Competency\Http\Controllers;
 
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
-use App\Modules\Competency\Models\CompetencyType;
-use App\Modules\Competency\Models\CompetencyRecord;
 use App\Modules\Competency\Models\CofRecord;
+use App\Modules\Competency\Models\CompetencyRecord;
 use App\Modules\Competency\Models\CompetencyRequirement;
+use App\Modules\Competency\Models\CompetencyType;
 use App\Modules\Competency\Models\TrainingRecord;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -31,7 +30,7 @@ class CompetencyController extends Controller
     public function storeType(Request $request, Workspace $workspace): JsonResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:competency_types,name,NULL,id,workspace_id,' . $workspace->id,
+            'name' => 'required|string|max:255|unique:competency_types,name,NULL,id,workspace_id,'.$workspace->id,
             'description' => 'nullable|string|max:1000',
             'category' => 'nullable|string|max:100',
             'issuing_body' => 'nullable|string|max:255',
@@ -64,7 +63,7 @@ class CompetencyController extends Controller
         $type = CompetencyType::where('workspace_id', $workspace->id)->findOrFail($type);
 
         $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255|unique:competency_types,name,' . $type->id . ',id,workspace_id,' . $workspace->id,
+            'name' => 'sometimes|required|string|max:255|unique:competency_types,name,'.$type->id.',id,workspace_id,'.$workspace->id,
             'description' => 'nullable|string|max:1000',
             'category' => 'nullable|string|max:100',
             'issuing_body' => 'nullable|string|max:255',

@@ -2,6 +2,7 @@
 
 namespace App\Core\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -47,7 +48,7 @@ class PersonalAccessTokenController extends Controller
         $newToken = $request->user()->createToken(
             $validated['name'],
             $abilities,
-            $validated['expires_at'] ?? null ? \Carbon\Carbon::parse($validated['expires_at']) : null,
+            $validated['expires_at'] ?? null ? Carbon::parse($validated['expires_at']) : null,
         );
 
         return response()->json([

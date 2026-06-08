@@ -5,14 +5,13 @@ namespace App\Modules\Equipment\Http\Controllers;
 use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
 use App\Modules\Equipment\Models\Equipment;
+use App\Modules\Equipment\Models\EquipmentBreakdown;
 use App\Modules\Equipment\Models\EquipmentCategory;
 use App\Modules\Equipment\Models\EquipmentInspection;
 use App\Modules\Equipment\Models\EquipmentInspectionItem;
-use App\Modules\Equipment\Models\EquipmentBreakdown;
 use App\Modules\Equipment\Models\MaintenanceSchedule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class EquipmentController extends Controller
 {
@@ -31,7 +30,7 @@ class EquipmentController extends Controller
     public function storeCategory(Request $request, Workspace $workspace): JsonResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:equipment_categories,name,NULL,id,workspace_id,' . $workspace->id,
+            'name' => 'required|string|max:255|unique:equipment_categories,name,NULL,id,workspace_id,'.$workspace->id,
             'description' => 'nullable|string|max:1000',
             'color' => 'nullable|string|max:20',
             'icon' => 'nullable|string|max:100',
@@ -98,8 +97,8 @@ class EquipmentController extends Controller
             $q = $request->search;
             $query->where(function ($b) use ($q) {
                 $b->where('equipment.name', 'ilike', "%{$q}%")
-                  ->orWhere('equipment.plant_number', 'ilike', "%{$q}%")
-                  ->orWhere('equipment.serial_number', 'ilike', "%{$q}%");
+                    ->orWhere('equipment.plant_number', 'ilike', "%{$q}%")
+                    ->orWhere('equipment.serial_number', 'ilike', "%{$q}%");
             });
         }
 

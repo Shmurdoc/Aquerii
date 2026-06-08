@@ -180,7 +180,7 @@ it('retrieves folder tree structure', function () {
 
 it('returns 404 when updating a non-existent folder', function () {
     $response = $this->patchJson(
-        "/api/workspaces/{$this->workspace->id}/document-folders/" . Str::uuid(),
+        "/api/workspaces/{$this->workspace->id}/document-folders/".Str::uuid(),
         ['name' => 'Ghost'],
         ['Idempotency-Key' => Str::uuid()->toString()]
     );
@@ -190,7 +190,7 @@ it('returns 404 when updating a non-existent folder', function () {
 
 it('returns 404 when deleting a non-existent folder', function () {
     $response = $this->deleteJson(
-        "/api/workspaces/{$this->workspace->id}/document-folders/" . Str::uuid(),
+        "/api/workspaces/{$this->workspace->id}/document-folders/".Str::uuid(),
         [],
         ['Idempotency-Key' => Str::uuid()->toString()]
     );

@@ -41,7 +41,7 @@ class EquipmentCertTypeController extends Controller
 
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'slug' => 'sometimes|required|string|max:255|unique:equipment_cert_types,slug,' . $certType->id,
+            'slug' => 'sometimes|required|string|max:255|unique:equipment_cert_types,slug,'.$certType->id,
             'description' => 'nullable|string|max:1000',
             'is_mandatory' => 'sometimes|boolean',
             'frequency_days' => 'nullable|integer|min:1',

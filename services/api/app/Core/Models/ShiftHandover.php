@@ -2,8 +2,7 @@
 
 namespace App\Core\Models;
 
-use App\Core\Models\Workspace;
-use App\Core\Models\User;
+use Database\Factories\ShiftHandoverFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +14,7 @@ class ShiftHandover extends Model
 
     protected static function newFactory()
     {
-        return \Database\Factories\ShiftHandoverFactory::new();
+        return ShiftHandoverFactory::new();
     }
 
     protected $table = 'shift_handovers';

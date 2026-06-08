@@ -2,9 +2,9 @@
 
 namespace Database\Factories\Equipment;
 
+use App\Core\Models\Workspace;
 use App\Modules\Equipment\Models\Equipment;
 use App\Modules\Equipment\Models\EquipmentBreakdown;
-use App\Core\Models\Workspace;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EquipmentBreakdownFactory extends Factory

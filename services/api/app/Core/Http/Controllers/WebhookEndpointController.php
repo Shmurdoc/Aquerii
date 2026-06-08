@@ -8,7 +8,6 @@ use App\Core\Models\Workspace;
 use App\Core\Services\AuditService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class WebhookEndpointController extends Controller
 {

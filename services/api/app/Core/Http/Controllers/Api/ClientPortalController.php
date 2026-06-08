@@ -9,7 +9,6 @@ use App\Core\Models\WorkspaceMember;
 use App\Modules\Competency\Models\CofRecord;
 use App\Modules\Competency\Models\CompetencyRecord;
 use App\Modules\Competency\Models\CompetencyType;
-use App\Modules\Competency\Models\TrainingRecord;
 use App\Modules\CRM\Models\CrmCompany;
 use App\Services\ComplianceService;
 use Carbon\Carbon;
@@ -29,7 +28,7 @@ class ClientPortalController extends Controller
             'label' => 'required|string|max:255',
         ]);
 
-        $plaintext = 'portal_' . Str::random(60);
+        $plaintext = 'portal_'.Str::random(60);
         $hash = hash('sha256', $plaintext);
 
         $token = PortalToken::create([
@@ -191,7 +190,7 @@ class ClientPortalController extends Controller
         $companies = CrmCompany::where('workspace_id', $workspace->id)->get();
         $members = $workspace->members()->with(['user', 'company'])->get();
 
-        $data = $companies->map(function (CrmCompany $company) use ($members, $workspace) {
+        $data = $companies->map(function (CrmCompany $company) use ($members) {
             $companyMembers = $members->where('company_id', $company->id);
             $total = $companyMembers->count();
             $compliantCount = 0;

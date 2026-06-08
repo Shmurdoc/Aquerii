@@ -5,7 +5,6 @@ use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use App\Modules\Equipment\Models\Equipment;
 use App\Modules\Equipment\Models\EquipmentCategory;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 

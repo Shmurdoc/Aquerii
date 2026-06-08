@@ -2,9 +2,6 @@
 
 namespace App\Core\Models;
 
-use App\Core\Models\Workspace;
-use App\Core\Models\ShiftPlan;
-use App\Core\Models\WorkspaceMember;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

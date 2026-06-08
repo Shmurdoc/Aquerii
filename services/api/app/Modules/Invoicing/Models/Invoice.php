@@ -22,6 +22,7 @@ class Invoice extends Model
         'workspace_id', 'invoice_number', 'status', 'currency',
         'subtotal', 'tax_total', 'total',
         'customer_id', 'customer_name', 'customer_email', 'billing_address',
+        'crm_deal_id', 'work_order_id', 'milestone_id',
         'issue_date', 'due_date', 'paid_at', 'posted_at', 'reversed_at', 'reversal_reason', 'notes', 'created_by',
     ];
 

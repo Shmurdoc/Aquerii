@@ -4,6 +4,7 @@ namespace App\Modules\Competency\Models;
 
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
+use Database\Factories\Competency\CofRecordFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ class CofRecord extends Model
 
     protected static function newFactory()
     {
-        return \Database\Factories\Competency\CofRecordFactory::new();
+        return CofRecordFactory::new();
     }
 
     protected $table = 'cof_records';

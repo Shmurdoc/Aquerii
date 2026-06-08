@@ -104,7 +104,7 @@ test('callback returns 401 when OAuth provider throws', function () {
         ->andReturnSelf();
 
     Socialite::shouldReceive('user')
-        ->andThrow(new \Exception('Provider unavailable'));
+        ->andThrow(new Exception('Provider unavailable'));
 
     $response = $this->getJson('/api/auth/oauth/google/callback');
     $response->assertStatus(401);

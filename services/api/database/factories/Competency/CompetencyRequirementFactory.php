@@ -2,9 +2,9 @@
 
 namespace Database\Factories\Competency;
 
+use App\Core\Models\Workspace;
 use App\Modules\Competency\Models\CompetencyRequirement;
 use App\Modules\Competency\Models\CompetencyType;
-use App\Core\Models\Workspace;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CompetencyRequirementFactory extends Factory

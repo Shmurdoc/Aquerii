@@ -3,6 +3,7 @@
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -92,11 +93,9 @@ it('backfills position_id and department_role_id from legacy job_title and depar
     ]);
 
     // Run the same SQL the migration does.
-    $migration = new class extends \Illuminate\Database\Migrations\Migration
+    $migration = new class extends Migration
     {
-        public function up(): void
-        {
-        }
+        public function up(): void {}
     };
 
     // Invoke the backfill portion of the production migration by

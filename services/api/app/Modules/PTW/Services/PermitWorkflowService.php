@@ -112,7 +112,7 @@ class PermitWorkflowService
             $to = $this->resolveTarget($action);
             $this->assertTransitionAllowed($permit, $from, $to, $action, $user, $reason);
             $this->assertRoleAllowed($permit, $action, $user);
-        } catch (ValidationException | AuthorizationException) {
+        } catch (ValidationException|AuthorizationException) {
             return false;
         }
 

@@ -140,7 +140,7 @@ it('scores a deal via AI service', function () {
     ]);
 
     Http::fake([
-        config('services.ai.url') . '/internal/score-deal' => Http::response([
+        config('services.ai.url').'/internal/score-deal' => Http::response([
             'score' => 85,
             'recommendation' => 'pursue',
         ]),
@@ -163,7 +163,7 @@ it('returns 502 when AI scoring service fails', function () {
     ]);
 
     Http::fake([
-        config('services.ai.url') . '/internal/score-deal' => Http::response([], 500),
+        config('services.ai.url').'/internal/score-deal' => Http::response([], 500),
     ]);
 
     $response = $this->postJson(

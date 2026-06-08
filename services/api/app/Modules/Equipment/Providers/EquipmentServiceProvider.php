@@ -3,7 +3,6 @@
 namespace App\Modules\Equipment\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
 
 class EquipmentServiceProvider extends ServiceProvider
 {

@@ -16,12 +16,12 @@ return new class extends Migration
     public function up(): void
     {
         DB::statement("ALTER TABLE users ADD COLUMN account_type VARCHAR(32) NOT NULL DEFAULT 'employee' CHECK (account_type IN ('superadmin_creator', 'platform_admin', 'subscriber', 'employee'))");
-        DB::statement("CREATE INDEX users_account_type_idx ON users (account_type)");
+        DB::statement('CREATE INDEX users_account_type_idx ON users (account_type)');
     }
 
     public function down(): void
     {
-        DB::statement("DROP INDEX IF EXISTS users_account_type_idx");
-        DB::statement("ALTER TABLE users DROP COLUMN IF EXISTS account_type");
+        DB::statement('DROP INDEX IF EXISTS users_account_type_idx');
+        DB::statement('ALTER TABLE users DROP COLUMN IF EXISTS account_type');
     }
 };

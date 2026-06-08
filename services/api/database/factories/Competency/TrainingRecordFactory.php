@@ -2,10 +2,10 @@
 
 namespace Database\Factories\Competency;
 
-use App\Modules\Competency\Models\TrainingRecord;
-use App\Modules\Competency\Models\CompetencyType;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
+use App\Modules\Competency\Models\CompetencyType;
+use App\Modules\Competency\Models\TrainingRecord;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TrainingRecordFactory extends Factory

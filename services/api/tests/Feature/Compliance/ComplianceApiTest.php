@@ -3,11 +3,10 @@
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
-use App\Modules\Competency\Models\CompetencyRecord;
-use App\Modules\Competency\Models\CompetencyRequirement;
-use App\Modules\Competency\Models\CompetencyType;
 use App\Modules\Competency\Models\CofRecord;
-use App\Modules\Competency\Models\TrainingRecord;
+use App\Modules\Competency\Models\CompetencyRecord;
+use App\Modules\Competency\Models\CompetencyType;
+use App\Services\ComplianceService;
 use Carbon\Carbon;
 use Laravel\Sanctum\Sanctum;
 
@@ -161,7 +160,7 @@ it('shows worker as compliant when all certifications are valid', function () {
         'verified_at' => Carbon::now(),
     ]);
 
-    $status = app(\App\Services\ComplianceService::class)->calculateWorkerStatus($worker);
+    $status = app(ComplianceService::class)->calculateWorkerStatus($worker);
 
     expect($status)->toBe('compliant');
 });
@@ -180,7 +179,7 @@ it('shows worker as non_compliant when certification is expired', function () {
         'expires_at' => Carbon::now()->subMonth(),
     ]);
 
-    $status = app(\App\Services\ComplianceService::class)->calculateWorkerStatus($worker);
+    $status = app(ComplianceService::class)->calculateWorkerStatus($worker);
 
     expect($status)->toBe('non_compliant');
 });
@@ -213,7 +212,7 @@ it('shows worker as expiring_soon when certification expires within 30 days', fu
         'verified_at' => Carbon::now(),
     ]);
 
-    $status = app(\App\Services\ComplianceService::class)->calculateWorkerStatus($worker);
+    $status = app(ComplianceService::class)->calculateWorkerStatus($worker);
 
     expect($status)->toBe('expiring_soon');
 });
