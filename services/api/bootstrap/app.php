@@ -6,7 +6,6 @@ use App\Core\Console\Commands\RecalculateUsage;
 use App\Core\Console\Commands\ResetAiCredits;
 use App\Core\Console\Commands\RunDunning;
 use App\Core\Console\Commands\SendDueReminders;
-use App\Core\Console\Commands\SyncStripePlans;
 use App\Core\Exceptions\Handler;
 use App\Core\Http\Middleware\AuthenticateScimToken;
 use App\Core\Http\Middleware\CheckFeatureAccess;
