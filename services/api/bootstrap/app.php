@@ -7,6 +7,7 @@ use App\Core\Console\Commands\ResetAiCredits;
 use App\Core\Console\Commands\RunDunning;
 use App\Core\Console\Commands\SendDueReminders;
 use App\Core\Exceptions\Handler;
+use App\Core\Http\Middleware\GateKioskAuth;
 use App\Core\Http\Middleware\AuthenticateScimToken;
 use App\Core\Http\Middleware\CheckFeatureAccess;
 use App\Core\Http\Middleware\EnforceIdempotency;
@@ -54,6 +55,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
             'workspace.owner' => RequireOwner::class,
             'require.account_type' => RequireAccountType::class,
             'feature' => CheckFeatureAccess::class,
+            'gate-kiosk' => GateKioskAuth::class,
             'scim.token' => AuthenticateScimToken::class,
         ]);
     })

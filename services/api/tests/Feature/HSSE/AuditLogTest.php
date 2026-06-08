@@ -35,7 +35,7 @@ it('writes an audit log when an incident is reported', function () {
     );
 
     $response->assertStatus(201);
-    $incident = Incident::firstOrFail();
+    $incident = Incident::withoutGlobalScopes()->firstOrFail();
 
     $log = AuditLog::where('resource_type', 'incident')
         ->where('resource_id', $incident->id)

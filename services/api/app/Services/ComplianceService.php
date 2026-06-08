@@ -123,6 +123,18 @@ class ComplianceService
             $failures[] = 'missing required certifications';
         }
 
+        $expiredCompetency = CompetencyRecord::where('workspace_id', $worker->workspace_id)
+            ->where('user_id', $worker->user_id)
+            ->where('status', 'active')
+            ->where('expires_at', '<=', $now)
+            ->with('competencyType')
+            ->first();
+
+        if ($expiredCompetency) {
+            $name = $expiredCompetency->competencyType?->name ?? 'Competency';
+            $failures[] = strtolower($name).' expired '.$expiredCompetency->expires_at->toDateString();
+        }
+
         return $failures;
     }
 

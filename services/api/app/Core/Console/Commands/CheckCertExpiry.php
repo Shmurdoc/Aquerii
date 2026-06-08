@@ -238,5 +238,33 @@ class CheckCertExpiry extends Command
             'expires_at' => $record->expires_at,
             'notified_at' => now(),
         ]);
+
+        foreach ($notifiedUserIds as $userId) {
+            DB::table('notifications')->insert([
+                'id' => (string) Str::uuid(),
+                'workspace_id' => $record->workspace_id,
+                'user_id' => $userId,
+                'type' => 'cert_expiry',
+                'title' => $this->buildNotificationTitle($tier, $record),
+                'body' => $this->buildNotificationBody($tier, $record),
+                'entity_type' => get_class($record),
+                'entity_id' => $record->id,
+                'read_at' => null,
+                'created_at' => now(),
+            ]);
+        }
+    }
+
+    private function buildNotificationTitle(string $tier, $record): string
+    {
+        $days = $tier === '0' ? 'EXPIRED' : "expires in {$tier} days";
+        return "Certificate {$days}";
+    }
+
+    private function buildNotificationBody(string $tier, $record): string
+    {
+        $name = $record->competencyType?->name ?? $record->type ?? 'Certificate';
+        $days = $tier === '0' ? 'has expired' : "expires in {$tier} days";
+        return "{$name} {$days}. Immediate action may be required.";
     }
 }

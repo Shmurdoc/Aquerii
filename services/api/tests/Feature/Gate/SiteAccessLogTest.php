@@ -217,6 +217,38 @@ it('authenticates via valid kiosk API key and rejects invalid key', function () 
 });
 
 it('returns non-compliant result for worker with expired competency', function () {
+    CofRecord::create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $this->worker->user_id,
+        'type' => 'fitness',
+        'status' => 'active',
+        'issued_at' => now()->subMonth(),
+        'expires_at' => now()->addYear(),
+        'verified_at' => now(),
+    ]);
+
+    DB::table('training_records')->insert([
+        'id' => Str::uuid()->toString(),
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $this->worker->user_id,
+        'training_name' => 'Site Induction',
+        'date_completed' => now()->subMonths(6),
+        'expiry_date' => now()->addMonths(6),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $plaintextKey = Str::random(32);
+    $hashedKey = hash('sha256', $plaintextKey);
+
+    GateKiosk::create([
+        'id' => Str::uuid()->toString(),
+        'workspace_id' => $this->workspace->id,
+        'name' => 'Main Gate',
+        'api_key' => $hashedKey,
+        'allowed_sites' => ['main_gate'],
+    ]);
+
     $competencyTypeId = Str::uuid()->toString();
     DB::table('competency_types')->insert([
         'id' => $competencyTypeId,
@@ -239,7 +271,7 @@ it('returns non-compliant result for worker with expired competency', function (
             'worker_id' => $this->worker->id,
             'direction' => 'entry',
         ],
-        ['Idempotency-Key' => Str::uuid()->toString()]
+        ['X-API-Key' => $plaintextKey]
     );
 
     $response->assertStatus(200)

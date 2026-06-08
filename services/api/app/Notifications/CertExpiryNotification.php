@@ -21,7 +21,7 @@ class CertExpiryNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        $channels = ['database', 'mail'];
+        $channels = ['mail'];
 
         if ($this->daysRemaining <= 7) {
             $channels[] = 'sms';

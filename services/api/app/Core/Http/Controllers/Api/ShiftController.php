@@ -7,6 +7,7 @@ use App\Core\Models\Shift;
 use App\Core\Models\ShiftAssignment;
 use App\Core\Models\ShiftHandover;
 use App\Core\Models\Workspace;
+use Illuminate\Database\UniqueConstraintViolation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -125,13 +126,17 @@ class ShiftController extends Controller
             'notes' => 'nullable|string|max:1000',
         ]);
 
-        $assignment = ShiftAssignment::create(array_merge(
-            $validated,
-            [
-                'workspace_id' => $workspace->id,
-                'status' => $validated['status'] ?? 'scheduled',
-            ]
-        ));
+        try {
+            $assignment = ShiftAssignment::create(array_merge(
+                $validated,
+                [
+                    'workspace_id' => $workspace->id,
+                    'status' => $validated['status'] ?? 'scheduled',
+                ]
+            ));
+        } catch (UniqueConstraintViolation) {
+            return response()->json(['message' => 'This user is already assigned to a shift on this date.'], 422);
+        }
 
         return response()->json(['data' => $assignment], 201);
     }
