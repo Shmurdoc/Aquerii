@@ -130,10 +130,10 @@ class CompetencyController extends Controller
             'notes' => 'nullable|string|max:2000',
         ]);
 
+        // Check for ANY existing record (not just active) due to unique constraint on [user_id, competency_type_id]
         $existing = CompetencyRecord::where('workspace_id', $workspace->id)
             ->where('user_id', $validated['user_id'])
             ->where('competency_type_id', $validated['competency_type_id'])
-            ->where('status', 'active')
             ->first();
 
         if ($existing) {

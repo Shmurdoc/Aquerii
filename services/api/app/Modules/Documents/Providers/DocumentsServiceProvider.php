@@ -16,12 +16,8 @@ class DocumentsServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        $route = base_path('routes/modules/documents.php');
-        if (file_exists($route)) {
-            Route::middleware('api')->prefix('api')->group(function () use ($route) {
-                $this->app->make('files')->requireOnce($route);
-            });
-        }
+        // Document routes are loaded via api.php inside the workspaces/{workspace} prefix group.
+        // Only load internal routes here (not workspace-scoped).
 
         Route::middleware('api')->prefix('api')->group(function () {
             Route::prefix('internal')->middleware(InternalSecret::class)->group(function () {

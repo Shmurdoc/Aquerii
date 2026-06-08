@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('verified_by')->nullable();
             $table->string('file_path')->nullable();
             $table->text('notes')->nullable();
+            $table->string('status')->default('pending');
+            $table->json('metadata')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
             $table->index(['equipment_id', 'equipment_cert_type_id']);
