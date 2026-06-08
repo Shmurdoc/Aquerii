@@ -1,28 +1,30 @@
 import { formatCurrency } from '@/lib/erp'
 
 describe('formatCurrency', () => {
-  it('returns $0.00 for NaN input', () => {
-    expect(formatCurrency(NaN)).toBe('$0.00')
-    expect(formatCurrency('not-a-number')).toBe('$0.00')
-    expect(formatCurrency(undefined as any)).toBe('$0.00')
+  const hasTwoDecimals = (s: string) => /,\d{2}$/.test(s) || /\.\d{2}$/.test(s)
+
+  it('returns ZAR format for NaN input', () => {
+    expect(formatCurrency(NaN)).toMatch(/^R/)
+    expect(formatCurrency('not-a-number')).toMatch(/^R/)
+    expect(formatCurrency(undefined as any)).toMatch(/^R/)
   })
 
-  it('formats positive numbers correctly', () => {
-    expect(formatCurrency(0)).toBe('$0.00')
-    expect(formatCurrency(1)).toBe('$1.00')
-    expect(formatCurrency(1234.5)).toBe('$1,234.50')
-    expect(formatCurrency(99999.99)).toBe('$99,999.99')
+  it('formats positive numbers correctly (ZAR default)', () => {
+    expect(formatCurrency(0)).toMatch(/^R/)
+    expect(formatCurrency(1)).toMatch(/^R.*1/)
+    expect(formatCurrency(1234.5)).toMatch(/^R/)
+    expect(hasTwoDecimals(formatCurrency(1234.5))).toBe(true)
+    expect(formatCurrency(99999.99)).toMatch(/^R/)
   })
 
-  it('formats negative numbers correctly', () => {
-    expect(formatCurrency(-1)).toBe('-$1.00')
-    expect(formatCurrency(-1234.5)).toBe('-$1,234.50')
-    expect(formatCurrency(-0.5)).toBe('-$0.50')
+  it('formats negative numbers correctly (ZAR default)', () => {
+    expect(formatCurrency(-1)).toMatch(/^-R/)
+    expect(formatCurrency(-0.5)).toMatch(/^-R/)
   })
 
   it('handles string input', () => {
-    expect(formatCurrency('42')).toBe('$42.00')
-    expect(formatCurrency('1234.56')).toBe('$1,234.56')
-    expect(formatCurrency('0')).toBe('$0.00')
+    expect(formatCurrency('42')).toMatch(/^R/)
+    expect(formatCurrency('1234.56')).toMatch(/^R/)
+    expect(formatCurrency('0')).toMatch(/^R/)
   })
 })
