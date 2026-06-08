@@ -10,7 +10,11 @@ import toast from 'react-hot-toast'
 const schema = z.object({
   name:           z.string().min(1, 'Name is required').max(255),
   email:          z.string().email('Invalid email'),
-  password:       z.string().min(8, 'Minimum 8 characters'),
+  password:       z.string()
+    .min(8, 'Minimum 8 characters')
+    .regex(/[a-z]/, 'Must contain at least one lowercase letter')
+    .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
+    .regex(/[0-9]/, 'Must contain at least one number'),
   password_confirmation: z.string(),
   workspace_name: z.string().min(1, 'Workspace name is required').max(255),
 }).refine(d => d.password === d.password_confirmation, {

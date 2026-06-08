@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -21,15 +22,19 @@ type FormData = z.infer<typeof schema>
 export default function LoginPage() {
   const navigate    = useNavigate()
   const setAuth     = useAuthStore(s => s.setAuth)
+  const [mfaToken, setMfaToken] = useState<string | null>(null)
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
 
-  const mutation = useMutation({
+  const loginMutation = useMutation({
     mutationFn: (data: FormData) => api.post('/auth/login', data),
     onSuccess: (res) => {
-      const { user, token, workspace, role, mfa_required } = res.data.data
-      if (mfa_required) return
+      const { user, token, workspace, role, mfa_required, mfa_token } = res.data.data
+      if (mfa_required) {
+        setMfaToken(mfa_token)
+        return
+      }
       setAuth(token, user, workspace, role)
       navigate('/boards')
     },
@@ -38,11 +43,32 @@ export default function LoginPage() {
     },
   })
 
-  const mfaRequired = !!mutation.data?.data?.data?.mfa_required
+  const verifyMfaMutation = useMutation({
+    mutationFn: (data: { mfa_token: string; code: string }) =>
+      api.post('/auth/mfa/verify-token', data),
+    onSuccess: (res) => {
+      const { user, token, workspace, role } = res.data.data
+      setAuth(token, user, workspace, role)
+      navigate('/boards')
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.error?.message ?? 'Invalid MFA code.')
+    },
+  })
+
+  const mfaRequired = !!mfaToken
+
+  const onSubmit = (data: FormData) => {
+    if (mfaToken && data.mfa_code) {
+      verifyMfaMutation.mutate({ mfa_token: mfaToken, code: data.mfa_code })
+    } else {
+      loginMutation.mutate(data)
+    }
+  }
 
   return (
     <form
-      onSubmit={handleSubmit((d) => mutation.mutate(d))}
+      onSubmit={handleSubmit(onSubmit)}
       className="space-y-4"
       noValidate
     >
@@ -95,7 +121,8 @@ export default function LoginPage() {
             autoComplete="one-time-code"
             icon={KeyRound}
             placeholder="6-digit code"
-            {...register('mfa_code')}
+            error={errors.mfa_code?.message}
+            {...register('mfa_code', { required: 'MFA code is required' })}
           />
         </div>
       )}
@@ -106,11 +133,11 @@ export default function LoginPage() {
           variant="gradient"
           size="md"
           fullWidth
-          loading={mutation.isPending}
+          loading={loginMutation.isPending || verifyMfaMutation.isPending}
           className="group/btn"
         >
-          <span>{mutation.isPending ? 'Signing in…' : 'Sign in'}</span>
-          {!mutation.isPending && (
+          <span>{loginMutation.isPending ? 'Signing in…' : verifyMfaMutation.isPending ? 'Verifying…' : 'Sign in'}</span>
+          {!loginMutation.isPending && !verifyMfaMutation.isPending && (
             <ArrowRight
               size={16}
               className="transition-transform duration-200 group-hover/btn:translate-x-0.5"
