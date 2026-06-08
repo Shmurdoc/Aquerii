@@ -942,7 +942,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
-			count: 14
+			count: 15
 			path: app/Core/Http/Controllers/Api/ShiftController.php
 
 		-
