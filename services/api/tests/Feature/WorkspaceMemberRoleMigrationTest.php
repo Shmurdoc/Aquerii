@@ -22,7 +22,7 @@ beforeEach(function () {
     // Seed the system role taxonomy that the migration would normally
     // populate via RolePermissionSeeder. We do it inline so the test does
     // not depend on the seeder having run.
-    $this->seedSystemRoles();
+    seedSystemRoles();
 });
 
 /**

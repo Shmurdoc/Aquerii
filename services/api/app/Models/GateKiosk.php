@@ -13,7 +13,7 @@ class GateKiosk extends Model
     use HasUuids, SoftDeletes;
 
     protected $fillable = [
-        'workspace_id', 'name', 'api_key', 'allowed_sites',
+        'id', 'workspace_id', 'name', 'api_key', 'allowed_sites',
         'last_used_at', 'rotated_at',
     ];
 
