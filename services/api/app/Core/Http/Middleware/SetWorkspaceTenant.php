@@ -68,6 +68,7 @@ class SetWorkspaceTenant
                 if ($workspaceId === null) {
                     throw new NotFoundHttpException('Workspace not found.');
                 }
+
                 return $workspaceId;
             }
         }
