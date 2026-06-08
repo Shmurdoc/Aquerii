@@ -258,6 +258,7 @@ class CheckCertExpiry extends Command
     private function buildNotificationTitle(string $tier, $record): string
     {
         $days = $tier === '0' ? 'EXPIRED' : "expires in {$tier} days";
+
         return "Certificate {$days}";
     }
 
@@ -265,6 +266,7 @@ class CheckCertExpiry extends Command
     {
         $name = $record->competencyType?->name ?? $record->type ?? 'Certificate';
         $days = $tier === '0' ? 'has expired' : "expires in {$tier} days";
+
         return "{$name} {$days}. Immediate action may be required.";
     }
 }

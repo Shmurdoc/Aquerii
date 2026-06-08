@@ -69,7 +69,7 @@ describe('LoginPage', () => {
   it('reveals MFA field when server requires it', async () => {
     const mockMfaResponse = {
       data: {
-        data: { mfa_required: true },
+        data: { mfa_required: true, mfa_token: 'mfa-tok-123' },
       },
     }
 
