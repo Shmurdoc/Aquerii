@@ -61,4 +61,13 @@ return [
         'url' => env('GOTENBERG_URL', 'http://gotenberg:3000'),
     ],
 
+    'internal_jwt' => [
+        'secret' => env('INTERNAL_JWT_SECRET'),
+    ],
+
+    'vonage' => [
+        'key' => env('VONAGE_KEY'),
+        'secret' => env('VONAGE_SECRET'),
+    ],
+
 ];

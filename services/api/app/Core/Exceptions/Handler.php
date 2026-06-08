@@ -17,6 +17,20 @@ class Handler extends ExceptionHandler
 {
     protected $dontFlash = ['current_password', 'password', 'password_confirmation'];
 
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->is('api/*') || $request->expectsJson()) {
+            return self::renderJson($exception, $request);
+        }
+
+        $redirectTo = $exception->redirectTo($request);
+        if ($redirectTo) {
+            return redirect()->guest($redirectTo);
+        }
+
+        return self::renderJson($exception, $request);
+    }
+
     public function register(): void
     {
         $this->renderable(function (Throwable $e, Request $request) {

@@ -38,3 +38,6 @@ Schedule::command('workspace:recalculate-usage')->dailyAt('02:00');
 
 // Purge expired trials daily
 Schedule::command('app:purge-expired-trials')->daily();
+
+// Check certificate expiry and send tiered notifications
+Schedule::command('app:check-cert-expiry')->dailyAt('04:00');

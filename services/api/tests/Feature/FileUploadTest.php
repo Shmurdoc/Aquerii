@@ -70,7 +70,7 @@ test('scanned document upload rejects missing title', function () {
             'file' => $file,
         ]);
 
-    $response->assertStatus(201);
+    $response->assertStatus(400);
 });
 
 test('document upload returns 422 for invalid file type', function () {

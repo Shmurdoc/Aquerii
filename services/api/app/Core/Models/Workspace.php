@@ -4,6 +4,7 @@ namespace App\Core\Models;
 
 use App\Core\Enums\SubscriptionPlan;
 use App\Modules\Documents\Models\Document;
+use App\Modules\Equipment\Models\Equipment;
 use Database\Factories\WorkspaceFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -64,6 +65,11 @@ class Workspace extends Model
     public function documents()
     {
         return $this->hasMany(Document::class);
+    }
+
+    public function equipment()
+    {
+        return $this->hasMany(Equipment::class);
     }
 
     public function storageUsedPercent(): float

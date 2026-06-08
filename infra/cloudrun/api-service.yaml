@@ -1,0 +1,162 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: aquerii-api
+  annotations:
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "10"
+        run.googleapis.com/cpu-throttling: "false"
+        run.googleapis.com/startup-cpu-boost: "true"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      serviceAccountName: aquerii-api-sa@${PROJECT_ID}.iam.gserviceaccount.com
+      containers:
+      - image: gcr.io/${PROJECT_ID}/aquerii-api:latest
+        ports:
+        - containerPort: 8080
+          name: http1
+        env:
+        - name: APP_ENV
+          value: production
+        - name: APP_URL
+          value: https://api.aquerii.co.za
+        - name: APP_DEBUG
+          value: "false"
+        - name: DB_CONNECTION
+          value: pgsql
+        - name: DB_HOST
+          value: /cloudsql/${PROJECT_ID}:africa-south1:aquerii-primary
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_DATABASE
+          value: aquerii
+        - name: DB_USERNAME
+          value: aquerii_app
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: db-password
+        - name: DB_SSLMODE
+          value: require
+        - name: REDIS_HOST
+          value: 10.0.0.3
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: redis-password
+        - name: REDIS_CLUSTER
+          value: "false"
+        - name: CACHE_DRIVER
+          value: redis
+        - name: SESSION_DRIVER
+          value: redis
+        - name: QUEUE_CONNECTION
+          value: redis
+        - name: MAIL_MAILER
+          value: smtp
+        - name: MAIL_HOST
+          value: smtp.billionmail.com
+        - name: MAIL_PORT
+          value: "587"
+        - name: MAIL_ENCRYPTION
+          value: tls
+        - name: MAIL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: billionmail-api-key
+        - name: MAIL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: billionmail-api-key
+        - name: MAIL_FROM_ADDRESS
+          value: noreply@aquerii.co.za
+        - name: MAIL_FROM_NAME
+          value: "Aquerii"
+        - name: STORAGE_DRIVER
+          value: gcs
+        - name: GOOGLE_CLOUD_STORAGE_BUCKET
+          value: aquerii-production
+        - name: APP_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: laravel-app-key
+        - name: INTERNAL_JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: internal-jwt-secret
+        - name: GOTENBERG_URL
+          value: http://gotenberg:3000
+        - name: VONAGE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: vonage-key
+        - name: VONAGE_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: vonage-secret
+        - name: SCOUT_DRIVER
+          value: meilisearch
+        - name: MEILISEARCH_HOST
+          value: http://meilisearch:7700
+        - name: MEILISEARCH_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: meilisearch-key
+        - name: LOG_CHANNEL
+          value: stack
+        - name: LOG_STACK
+          value: stderr
+        - name: TELESCOPE_ENABLED
+          value: "false"
+        - name: HORIZON_ENABLED
+          value: "true"
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+        startupProbe:
+          httpGet:
+            path: /api/healthz
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 6
+        livenessProbe:
+          httpGet:
+            path: /api/healthz
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aquerii-api
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http1
+  selector:
+    serving.knative.dev/service: aquerii-api

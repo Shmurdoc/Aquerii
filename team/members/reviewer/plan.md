@@ -1,54 +1,34 @@
 ---
-member_id: "reviewer"
-type: "reviewer"
-ticket: "TKT-REVIEW-001"
-owner: "Code quality and review (Senior Lead) Agent"
-status: running
-lock: true
+ticket: PROD-REVIEW-WAVE1+2
 priority: high
-review_required: false
-time_estimate: "1h"
-time_spent: ""
-context_files:
-  - "services/web/src/components/ui/DataTable.tsx"
-  - "services/web/src/components/ui/__tests__/DataTable.test.tsx"
-  - "services/web/src/pages/DashboardPage.tsx"
-  - "services/web/src/pages/support/TicketDetailPage.tsx"
-  - "services/api/app/Core/Http/Controllers/Api/ReportController.php"
-strict_scope: false
-artifact_refs: []
-created_at: "2026-06-04T21:17:47.572Z"
-updated_by: "Leader"
-updated_at: "2026-06-06T00:15:00Z"
+est_hours: 2
+state: assigned
 ---
 
-# Plan — reviewer (TKT-REVIEW-001)
+# reviewer — Review All Wave 1+2 Output
 
-## Ticket Summary
-Review all changes from Waves 5 and 6:
-- **TKT-D.SLICE-001**: DataTable defensive coercion (safeData), DashboardPage double-grid removal, TicketDetailPage TS2367 fix, 3 regression tests
-- **TKT-API-001**: `upcoming_meetings` field added to `ReportController::dashboard()`
-
-## Deliverables
-- [ ] Review `DataTable.tsx` — verify safeData coercion handles array, paginated object {data:[]}, undefined, null
-- [ ] Review `DashboardPage.tsx` — verify outer grid removed correctly, KpiRow layout delegation
-- [ ] Review `TicketDetailPage.tsx:70` — verify TS2367 fix is correct (as string cast vs type union expansion)
-- [ ] Review `DataTable.test.tsx` — verify 3 regression tests cover paginated object, undefined, null cases
-- [ ] Review `ReportController.php` — verify upcoming_meetings query is correct (scope, date range, soft deletes)
-- [ ] Run `validate.mjs` to confirm team files pass
-- [ ] Update `status.md` → state: done with verdict summary
+## Objective
+Review all code from Wave 1 (Compliance Engine, Site Access Log, Worker Model) and Wave 2 (PTW frontend, Pest tests, DMR exports, JWT auth).
 
 ## Acceptance Criteria
-- [ ] Each file reviewed with verdict (pass/fail/needs-changes)
-- [ ] No SQL injection, XSS, or security issues found
-- [ ] TypeScript types are correct (no implicit any, no unsafe casts)
-- [ ] Team files are valid
+1. Review ComplianceService for correctness and edge cases
+2. Review GateController for security (auth, input validation)
+3. Review SaIdNumber rule for correctness
+4. Review PTW frontend components for adherence to design system
+5. Review Pest tests for completeness and correct assertions
+6. Review DMR/COIDA templates for regulatory accuracy
+7. Review JWT auth middleware for security
+8. Generate review verdict with score and any issues found
 
 ## Context Files
-Read the 5 context_files listed above. You may also read test files and other sources to verify behavior.
+- C:\Users\madoc\source\repos\Aquerii\team\members\builder-1\plan.md
+- C:\Users\madoc\source\repos\Aquerii\team\members\builder-2\plan.md
+- C:\Users\madoc\source\repos\Aquerii\team\members\builder-3\plan.md
+- C:\Users\madoc\source\repos\Aquerii\team\members\designer\plan.md
+- C:\Users\madoc\source\repos\Aquerii\team\members\qa-lead-backend\plan.md
+- C:\Users\madoc\source\repos\Aquerii\team\members\release-engineer\plan.md
 
-## Strict Scope
-`strict_scope: false` — read broadly as needed for review.
-
-## Completed Tasks
-(none)
+## Quality Gates
+- Review verdict includes: score, issues found, recommendations
+- No security issues pass review
+- No data integrity issues pass review

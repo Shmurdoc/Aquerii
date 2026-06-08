@@ -7,7 +7,11 @@ use App\Core\Models\Comment;
 use App\Core\Models\Item;
 use App\Core\Observers\BoardObserver;
 use App\Core\Observers\CommentObserver;
+use App\Core\Observers\ComplianceObserver;
 use App\Core\Observers\ItemObserver;
+use App\Modules\Competency\Models\CofRecord;
+use App\Modules\Competency\Models\CompetencyRecord;
+use App\Modules\Competency\Models\TrainingRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -23,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
         Item::observe(ItemObserver::class);
         Board::observe(BoardObserver::class);
         Comment::observe(CommentObserver::class);
+
+        CompetencyRecord::observe(ComplianceObserver::class);
+        CofRecord::observe(ComplianceObserver::class);
+        TrainingRecord::observe(ComplianceObserver::class);
 
         // Core route files (Meetings, Reports) — always-on, not module-gated.
         // HR is loaded via require in routes/api.php inside the workspace group.

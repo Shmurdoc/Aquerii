@@ -1,43 +1,51 @@
 ---
-project: "Aquerii"
-purpose: "Member plan — current task objectives and deliverables"
-member_id: "qa-lead-backend"
-type: "qa-lead"
-ticket: ""
-owner: "QA — Backend (PHP/Pest, API integration) Agent"
-status: idle
-lock: false
-priority: medium
-review_required: false
-time_estimate: ""
-time_spent: ""
-context_files: []
-strict_scope: false
-artifact_refs: []
-created_at: "2026-06-04T21:17:47.692Z"
-updated_by: ""
-updated_at: "2026-06-04T21:17:47.692Z"
+ticket: PROD-PEST-PTW-001
+priority: high
+est_hours: 5
+state: assigned
 ---
 
-# Plan — qa-lead-backend (qa-lead)
+# qa-lead-backend — Pest Tests for Existing Modules
 
-## Current Task
-(unassigned)
-
-## Deliverables
-(none)
-
-## Preconditions
-(none)
+## Objective
+Write comprehensive Pest tests for the existing PTW module (Permit lifecycle), HSSE module (Incidents), and the new Compliance endpoints.
 
 ## Acceptance Criteria
-(none)
+1. **PTW Permit lifecycle tests** (minimum 12 tests):
+   - Create permit with all required fields
+   - Submit permit (draft -> submitted)
+   - Approve permit (submitted -> approved)
+   - Reject permit with reason
+   - Activate permit (approved -> active)
+   - Close permit (active -> closed)
+   - Cannot submit with non-compliant worker (validation)
+   - Cannot skip required fields (work description < 100 chars, no hazards, etc.)
+   - Permit list filtered by status
+   - Permit types (hot_work, confined_space, etc.) all creatable
+2. **HSSE Incident lifecycle tests** (minimum 8 tests):
+   - Create incident (all types: fatality, LTI, MTC, near_miss, etc.)
+   - Assign investigator
+   - Add corrective actions
+   - Close incident
+   - DMR reportable flag set correctly
+3. **Compliance API tests** (minimum 5 tests):
+   - GET /workspaces/{id}/compliance returns valid response
+   - GET /workspaces/{id}/compliance/dashboard returns stats
+   - Worker correctly shows compliant/non_compliant
+4. **Site Access Log tests** (minimum 5 tests):
+   - POST /workspaces/{id}/gate/scan returns compliance result
+   - GET /workspaces/{id}/gate/logs returns paginated results
+   - Non-compliant scan returns correct error
 
 ## Context Files
-Read ONLY the files listed in the frontmatter `context_files` field, plus your own 4 files. Nothing else.
+- C:\Users\madoc\source\repos\Aquerii\services\api\app\Modules\PTW\ (directory)
+- C:\Users\madoc\source\repos\Aquerii\services\api\app\Modules\HSSE\ (directory)
+- C:\Users\madoc\source\repos\Aquerii\services\api\routes\api.php
+- C:\Users\madoc\source\repos\Aquerii\services\api\tests\ (directory)
+- C:\Users\madoc\source\repos\Aquerii\ALIGNED-PLAN.md
 
-## Strict Scope
-`strict_scope: false` — if `true`, you may only read files listed in `context_files` plus your own 4 files. If you need more, request scope expansion from eng-manager.
-
-## Completed Tasks
-(none)
+## Quality Gates
+- All tests pass (or pre-existing failures documented)
+- Minimum 30 new tests
+- Tests cover happy path + error cases
+- Tests use factories where possible

@@ -3,6 +3,7 @@
 namespace App\Core\Models;
 
 use App\Modules\CRM\Models\CrmCompany;
+use App\Services\ComplianceService;
 use Database\Factories\WorkspaceMemberFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,6 +36,11 @@ class WorkspaceMember extends Model
         'company_id', 'is_company_owner',
         'weekly_capacity_hours', 'capacity_notes',
         'position_id', 'department_role_id',
+        'badge_id', 'employment_type', 'labour_broker_company',
+        'union_membership', 'blood_type',
+        'emergency_contact_name', 'emergency_contact_phone',
+        'site_induction_date', 'site_induction_expiry',
+        'overall_compliance_status',
     ];
 
     // Salary is sensitive PII; do not leak in any JSON response.
@@ -48,6 +54,8 @@ class WorkspaceMember extends Model
         return [
             'joined_at' => 'datetime',
             'is_company_owner' => 'boolean',
+            'site_induction_date' => 'date',
+            'site_induction_expiry' => 'date',
         ];
     }
 
@@ -89,5 +97,10 @@ class WorkspaceMember extends Model
     public function departmentRole(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'department_role_id');
+    }
+
+    public function getOverallComplianceStatusAttribute(): string
+    {
+        return app(ComplianceService::class)->calculateWorkerStatus($this);
     }
 }

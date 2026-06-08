@@ -23,7 +23,7 @@ class CofRecord extends Model
 
     protected $fillable = [
         'workspace_id', 'user_id', 'type', 'reference_number', 'status',
-        'issued_at', 'expires_at', 'medical_notes', 'issued_by', 'document_url',
+        'issued_at', 'expires_at', 'verified_at', 'medical_notes', 'issued_by', 'document_url',
     ];
 
     protected function casts(): array
@@ -31,6 +31,7 @@ class CofRecord extends Model
         return [
             'issued_at' => 'date',
             'expires_at' => 'date',
+            'verified_at' => 'datetime',
         ];
     }
 

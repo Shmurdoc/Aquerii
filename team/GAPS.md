@@ -23,6 +23,47 @@ Anyone can add gaps. Leader triages and assigns.
 ```
 
 ## Open Gaps
+### GAP-EQUIPMENT-001: Equipment Compliance Module — data model + API
+- **Severity**: high
+- **Status**: resolved
+- **Assign Type**: builder
+- **Owner**: builder-1,2,3, designer
+- **Description**: CEO expansion proposal 1 — Built in Wave 5 Batch 2. 3 models (Equipment, EquipmentCertType, EquipmentCertRecord), 3 migrations (000011/000012/000010), 4 controllers (CRUD + compliance), ComplianceService extension, GateController scanEquipment, full UI (list/detail/dashboard/gate tab). Resolved 2026-06-08.
+- **Resolution**: ✅ COMPLETE — Equipment is now a first-class compliance entity alongside workers.
+
+### GAP-SHIFT-001: Shift Planning / Workforce Readiness Dashboard
+- **Severity**: high
+- **Status**: resolved
+- **Assign Type**: builder
+- **Owner**: builder-2,3
+- **Description**: CEO expansion proposal 2 — Built in Wave 5 Batch 3. ShiftPlan + ShiftPlanAssignment models, ShiftReadinessService, 6 endpoints, glanceable UI with gauge/table/gap alerts. Resolved 2026-06-08.
+- **Resolution**: ✅ COMPLETE — Supervisors can answer "Do I have enough compliant workers?"
+
+### GAP-ROI-001: ROI Dashboard — business value visibility
+- **Severity**: critical
+- **Status**: resolved
+- **Assign Type**: builder
+- **Owner**: builder-1, designer
+- **Description**: CEO expansion proposal 3 — Built in Wave 5 Batch 3. ROIDashboardService (7 metrics: certs prevented expiring, access denials, downtime, compliance trend, PTW time saved, platform cost, ROI ratio), ROIController, full UI with charts + date picker. Resolved 2026-06-08.
+- **Resolution**: ✅ COMPLETE — Customers can now see R x.xx saved per R1 spent.
+
+### GAP-PORTAL-001: Client Portal for mine operators (PMC/Foskor)
+- **Severity**: medium
+- **Status**: resolved
+- **Assign Type**: builder
+- **Owner**: builder-1, designer
+- **Description**: CEO expansion proposal 4 — Built in Wave 5 Batch 4. ClientPortalController (5 endpoints), PortalToken (SHA256 hash), Blade SPA views, React portal UI with contractor cards/drill-down/heatmap/export. Resolved 2026-06-08.
+- **Resolution**: ✅ COMPLETE — Mine ops can audit contractor compliance with a shareable link.
+
+### GAP-VISITOR-001: Visitor Management at gate
+- **Severity**: low
+- **Status**: designed, pending implementation
+- **Assign Type**: designer
+- **Owner**: designer
+- **Description**: CEO expansion proposal 5 — Design spec at team/designs/VISITOR-MGMT-DESIGN.md covers full flow. Implementation deferred as lowest priority expansion.
+- **Resolution**: Design complete. Build when capacity permits (est: 1-2 weeks).
+
+### GAP-API-AUTH-001: API returns 500 "Route [login] not defined." for unauthenticated requests (pre-existing, not blocking pilot)
 ### GAP-FORECAST-001: ForecastPage.toLocaleString crashes on null amount/weighted
 - **Severity**: critical
 - **Status**: in-progress

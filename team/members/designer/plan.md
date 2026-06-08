@@ -1,47 +1,50 @@
 ---
-member_id: "designer"
-type: "designer"
-ticket: "GAP-DOC-001"
-owner: "UX and product-design decisions Agent"
-status: running
-lock: true
-priority: critical
-review_required: false
-reviews_by: []
-time_estimate: "4d"
-time_spent: ""
-context_files:
-  - "services/web/src/"
-  - "services/api/resources/views/"
-strict_scope: false
-artifact_refs:
-  - "services/web/src/"
-created_at: "2026-06-06T15:00:00Z"
-updated_by: "Leader"
-updated_at: "2026-06-06T15:00:00Z"
+ticket: PROD-PTW-FRONTEND-001
+priority: high
+est_hours: 6
+state: assigned
 ---
 
-# Plan — designer (GAP-DOC-001)
+# designer — PTW Frontend UI Components
 
-YOU ARE WORKING WITH builder-3. builder-3 HANDLES BACKEND. YOU HANDLE UI/UX.
-
-## Ticket Summary
-30 entity pages have no Print button. No `@media print` stylesheet. PDFs show no logo. Invoice PDF download not wired.
-
-## Your Deliverables
-- [ ] **PrintButton design**: Propose a PrintButton component placement on entity pages. Use existing Button component.
-- [ ] **@media print stylesheet**: Write `@media print` CSS rules that hide navigation, sidebar, action buttons on print. Show full content with proper margins.
-- [ ] **Print layout**: Ensure entity pages look good when printed (proper spacing, readable text, branded header/footer).
-- [ ] Coordinate with builder-3 on: which pages get PrintButton, .xlsx export UI, PDF logo placement.
+## Objective
+Build the PTW (Permit to Work) frontend UI components: permit wizard, approval queue, permit register view, and DMR export interface.
 
 ## Acceptance Criteria
-- [ ] Print preview shows clean layout without nav/sidebar/buttons
-- [ ] Print layout includes company name
-- [ ] Consistent with existing design system
+1. **Permit Creation Wizard** — multi-step form:
+   - Step 1: Permit type + location (shaft, level, section)
+   - Step 2: Work description (minimum 100 chars enforced), hazards identified, controls applied
+   - Step 3: Worker assignment (select from compliance-filtered list)
+   - Step 4: Review + submit (server-side validation blocks non-compliant workers)
+   - Real-time inline validation on each step
+   - Cannot advance without filling required fields
+2. **Approval Queue** — for HSSE leads:
+   - List of submitted permits awaiting review
+   - Detail view with all permit data, hazard/control mapping, assigned workers
+   - Approve/Reject buttons with reason field for rejections
+   - Escalation badge (if pending > 4 hours)
+3. **Permit Register** — sortable/filterable list:
+   - Filter by: permit type, date range, status, contractor
+   - Sort by: date, status, type
+   - Export button (PDF + Excel) — use existing ExportButton component
+4. **Compliance Dashboard** — frontend for the compliance engine:
+   - Company-wide compliance summary (green/amber/red donut or bar)
+   - Worker list with compliance status badges
+   - Click to see detailed compliance breakdown per worker
+   - Expiry calendar showing upcoming expirations
+5. **Gate Scan Kiosk UI** — simple kiosk mode:
+   - Worker ID/QR input field
+   - Green/Red result display with worker photo
+   - Details of non-compliance (expired certs, missing docs)
+
+## Context Files
+- C:\Users\madoc\source\repos\Aquerii\services\web\src\pages\ (directory)
+- C:\Users\madoc\source\repos\Aquerii\services\web\src\components\ (directory)
+- C:\Users\madoc\source\repos\Aquerii\services\web\src\lib\ (directory)
+- C:\Users\madoc\source\repos\Aquerii\ALIGNED-PLAN.md
 
 ## Quality Gates
-- [ ] Visual consistency with existing pages
-- [ ] No regressions in interactive view
-
-## Strict Scope
-You may read any files needed for design decisions.
+- `npm run build` passes
+- All new components follow existing design patterns
+- No hardcoded grays (use CSS variables)
+- Components are responsive (mobile-friendly)

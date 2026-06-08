@@ -3,8 +3,12 @@
 namespace App\Modules\PTW\Services;
 
 use App\Core\Models\User;
+use App\Core\Models\WorkspaceMember;
 use App\Core\Services\AuditService;
 use App\Modules\PTW\Models\Permit;
+use App\Services\ComplianceService;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -40,6 +44,7 @@ class PermitWorkflowService
 
     public function __construct(
         private AuditService $audit,
+        private ComplianceService $compliance,
     ) {}
 
     /**
@@ -62,6 +67,10 @@ class PermitWorkflowService
 
         $this->assertTransitionAllowed($permit, $from, $to, $action, $user, $reason);
         $this->assertRoleAllowed($permit, $action, $user);
+
+        if (in_array($action, [self::TRANSITION_ISSUE, self::TRANSITION_ACTIVATE], true)) {
+            $this->assertWorkersCompliant($permit, $action);
+        }
 
         return DB::transaction(function () use ($permit, $action, $user, $reason, $meta, $from) {
             $locked = Permit::where('id', $permit->id)->lockForUpdate()->first();
@@ -103,7 +112,7 @@ class PermitWorkflowService
             $to = $this->resolveTarget($action);
             $this->assertTransitionAllowed($permit, $from, $to, $action, $user, $reason);
             $this->assertRoleAllowed($permit, $action, $user);
-        } catch (ValidationException) {
+        } catch (ValidationException | AuthorizationException) {
             return false;
         }
 
@@ -203,9 +212,53 @@ class PermitWorkflowService
         };
 
         if (! $allowed) {
-            throw ValidationException::withMessages([
-                'actor' => "Your role ({$role}) is not permitted to perform '{$action}'.",
-            ]);
+            throw new AuthorizationException(
+                "Your role ({$role}) is not permitted to perform '{$action}'."
+            );
+        }
+    }
+
+    private function assertWorkersCompliant(Permit $permit, string $action): void
+    {
+        $workerIds = array_filter([$permit->holder_id, $permit->recipient_id]);
+        if (empty($workerIds)) {
+            return;
+        }
+
+        $members = WorkspaceMember::where('workspace_id', $permit->workspace_id)
+            ->whereIn('user_id', $workerIds)
+            ->with('user')
+            ->get()
+            ->keyBy('user_id');
+
+        $nonCompliant = [];
+        foreach ($workerIds as $uid) {
+            $member = $members->get($uid);
+            if ($member === null) {
+                continue;
+            }
+            $failures = $this->compliance->getWorkerComplianceFailures($member);
+            if ($failures !== []) {
+                $user = $member->user;
+                $name = $user->name ?? $user->email ?? 'Unknown';
+                $failureStr = implode('; ', $failures);
+                $nonCompliant[] = "{$name} (ID: {$uid}): {$failureStr}";
+            }
+        }
+
+        if ($nonCompliant !== []) {
+            $actionLabel = match ($action) {
+                self::TRANSITION_ISSUE => 'issue',
+                self::TRANSITION_ACTIVATE => 'activate',
+                default => 'process',
+            };
+            $count = count($nonCompliant);
+            throw new HttpResponseException(
+                response()->json([
+                    'message' => "Cannot {$actionLabel} permit: {$count} worker(s) are non-compliant",
+                    'errors' => ['workers' => $nonCompliant],
+                ], 422)
+            );
         }
     }
 

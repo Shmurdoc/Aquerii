@@ -6,6 +6,8 @@ use App\Core\Http\Controllers\Api\AuditLogController;
 use App\Core\Http\Controllers\Api\BillingController;
 use App\Core\Http\Controllers\Api\BrandingController;
 use App\Core\Http\Controllers\Api\BulkActionController;
+use App\Core\Http\Controllers\Api\ComplianceController;
+use App\Core\Http\Controllers\Api\ShiftReadinessController;
 use App\Core\Http\Controllers\Api\CommentController;
 use App\Core\Http\Controllers\Api\DocumentPdfController;
 use App\Core\Http\Controllers\Api\EmployeeGroupController;
@@ -21,6 +23,7 @@ use App\Core\Http\Controllers\Api\MeetingOutcomeController;
 use App\Core\Http\Controllers\Api\NotificationController;
 use App\Core\Http\Controllers\Api\OfflineSyncController;
 use App\Core\Http\Controllers\Api\PluginController;
+use App\Core\Http\Controllers\Api\ROIController;
 use App\Core\Http\Controllers\Api\ReportController;
 use App\Core\Http\Controllers\Api\ReportScheduleController;
 use App\Core\Http\Controllers\Api\ScenarioController;
@@ -29,6 +32,7 @@ use App\Core\Http\Controllers\Api\ScimController;
 use App\Core\Http\Controllers\Api\SentimentController;
 use App\Core\Http\Controllers\Api\UserSettingsController;
 use App\Core\Http\Controllers\Api\WebhookController;
+use App\Core\Http\Controllers\Api\ClientPortalController;
 use App\Core\Http\Controllers\Api\WorkspaceController;
 use App\Core\Http\Controllers\Api\WorkspaceLogoController;
 use App\Core\Http\Controllers\Auth\AuthController;
@@ -203,6 +207,25 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::apiResource('employee-groups', EmployeeGroupController::class)->middleware('idempotent');
         Route::get('invitations', [WorkspaceInvitationController::class, 'index']);
         Route::delete('invitations/{token}', [WorkspaceInvitationController::class, 'destroy'])->middleware('idempotent');
+
+        // Compliance engine
+        Route::get('compliance', [ComplianceController::class, 'index']);
+        Route::get('compliance/dashboard', [ComplianceController::class, 'dashboard']);
+        Route::get('compliance/equipment', [ComplianceController::class, 'equipmentIndex']);
+        Route::get('compliance/equipment/{equipment}', [ComplianceController::class, 'equipmentShow']);
+
+        // ROI Dashboard
+        Route::get('roi/dashboard', [ROIController::class, 'dashboard']);
+
+        // Shift planning / workforce readiness
+        Route::prefix('shift-readiness')->group(function () {
+            Route::get('', [ShiftReadinessController::class, 'readiness']);
+            Route::get('plans', [ShiftReadinessController::class, 'plans']);
+            Route::post('plans', [ShiftReadinessController::class, 'storePlan'])->middleware('idempotent');
+            Route::post('plans/{plan}/assign', [ShiftReadinessController::class, 'assign'])->middleware('idempotent');
+            Route::post('plans/{plan}/publish', [ShiftReadinessController::class, 'publish'])->middleware('idempotent');
+            Route::post('plans/{plan}/complete', [ShiftReadinessController::class, 'complete'])->middleware('idempotent');
+        });
 
         // Billing
         Route::prefix('billing')->group(function () {
@@ -614,13 +637,46 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         // ── HR module ─────────────────────────────────────────────────────
         require __DIR__.'/modules/hr.php';
 
+        // ── Equipment Compliance ──────────────────────────────────────────
+        Route::apiResource('equipment.cert-types', \App\Core\Http\Controllers\Api\EquipmentCertTypeController::class);
+        Route::apiResource('equipment.cert-records', \App\Core\Http\Controllers\Api\EquipmentCertRecordController::class);
+
         // ── Equipment module ──────────────────────────────────────────────
         require __DIR__.'/modules/equipment.php';
 
         // ── Competency module ─────────────────────────────────────────────
         require __DIR__.'/modules/competency.php';
+
+        // ── Site Access Log / Gate Kiosk ──────────────────────────────────
+        Route::prefix('gate')->group(function () {
+            Route::post('scan', [App\Http\Controllers\Api\GateController::class, 'scan'])
+                ->middleware('auth:sanctum,gate-kiosk');
+
+            Route::get('logs', [App\Http\Controllers\Api\GateController::class, 'logs'])
+                ->middleware('auth:sanctum');
+
+            Route::get('stats', [App\Http\Controllers\Api\GateController::class, 'stats'])
+                ->middleware('auth:sanctum');
+
+            Route::get('kiosk-tokens', [App\Http\Controllers\Api\GateController::class, 'kioskTokens'])
+                ->middleware(['auth:sanctum', 'workspace.role:owner,admin']);
+
+            Route::post('scan-equipment', [App\Http\Controllers\Api\GateController::class, 'scanEquipment'])
+                ->middleware('auth:sanctum,gate-kiosk');
+        });
+
+        // ── Client Portal — token generation (auth required) ──────────────
+        Route::post('portal/token', [ClientPortalController::class, 'generateToken'])->middleware('idempotent');
     });
 
+});
+
+// ── Client Portal — read-only endpoints (portal token auth) ─────────────
+Route::prefix('workspaces/{workspace}')->middleware(['throttle:60,1', 'workspace'])->group(function () {
+    Route::get('portal/contractors', [ClientPortalController::class, 'contractors']);
+    Route::get('portal/contractors/{companyId}/workers', [ClientPortalController::class, 'workers']);
+    Route::get('portal/heatmap', [ClientPortalController::class, 'heatmap']);
+    Route::get('portal/export', [ClientPortalController::class, 'export']);
 });
 
 // ── Inbound email webhook (no auth — verified by webhook signature) ──────────

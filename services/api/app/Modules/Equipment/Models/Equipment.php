@@ -18,7 +18,7 @@ class Equipment extends Model
     protected $table = 'equipment';
 
     protected $fillable = [
-        'workspace_id', 'category_id', 'plant_number', 'name',
+        'workspace_id', 'category_id', 'plant_number', 'registration_number', 'name',
         'make', 'model', 'serial_number', 'year', 'location',
         'status', 'purchase_date', 'purchase_cost', 'warranty_expiry',
         'notes', 'metadata',
@@ -62,5 +62,10 @@ class Equipment extends Model
     public function maintenanceSchedules(): HasMany
     {
         return $this->hasMany(MaintenanceSchedule::class, 'equipment_id');
+    }
+
+    public function certRecords(): HasMany
+    {
+        return $this->hasMany(EquipmentCertRecord::class, 'equipment_id');
     }
 }

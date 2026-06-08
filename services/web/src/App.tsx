@@ -80,7 +80,14 @@ import CorrectiveActionsPage from '@/pages/hsse/CorrectiveActionsPage'
 import PermitsPage           from '@/pages/ptw/PermitsPage'
 import PermitDetailPage      from '@/pages/ptw/PermitDetailPage'
 import NewPermitPage         from '@/pages/ptw/NewPermitPage'
+import PermitApprovalQueue   from '@/pages/ptw/PermitApprovalQueue'
+import PermitRegister        from '@/pages/ptw/PermitRegister'
+import ComplianceDashboard   from '@/pages/compliance/ComplianceDashboard'
+import GateKiosk             from '@/pages/gate/GateKiosk'
+import EquipmentListPage     from '@/pages/equipment/EquipmentListPage'
+import EquipmentDetailPage   from '@/pages/equipment/EquipmentDetailPage'
 import ReportsPage      from '@/pages/reports/ReportsPage'
+import ROIDashboardPage from '@/pages/roi/ROIDashboardPage'
 import AIChatPage       from '@/pages/ai/AIChatPage'
 import ChatPage         from '@/pages/chat/ChatPage'
 import ScenariosPage    from '@/pages/scenarios/ScenariosPage'
@@ -88,6 +95,9 @@ import MarketplacePage  from '@/pages/plugins/MarketplacePage'
 import EmailPage        from '@/pages/email/EmailPage'
 import MyDayPage        from '@/pages/my-day/MyDayPage'
 import CalendarPage     from '@/pages/calendar/CalendarPage'
+import ShiftReadinessPage from '@/pages/shift/ShiftReadinessPage'
+import PortalLayout       from '@/pages/portal/PortalLayout'
+import PortalPage         from '@/pages/portal/PortalPage'
 import NotFoundPage      from '@/pages/NotFoundPage'
 
 export default function App() {
@@ -118,6 +128,11 @@ export default function App() {
         {/* 2FA pages (standalone layout) */}
         <Route path="/auth/2fa-setup"     element={<TwoFactorSetup />} />
         <Route path="/auth/2fa-challenge" element={<TwoFactorChallenge />} />
+
+        {/* Portal (public, token-based access) */}
+        <Route element={<PortalLayout />}>
+          <Route path="/portal/:token" element={<PortalPage />} />
+        </Route>
 
         {/* Onboarding (auth required, workspace not yet set) */}
         <Route
@@ -202,7 +217,15 @@ export default function App() {
           <Route path="/ptw/permits"       element={<PermitsPage />} />
           <Route path="/ptw/permits/new"   element={<NewPermitPage />} />
           <Route path="/ptw/permits/:permitId" element={<PermitDetailPage />} />
+          <Route path="/ptw/approval-queue" element={<PermitApprovalQueue />} />
+          <Route path="/ptw/register"       element={<PermitRegister />} />
+          <Route path="/compliance"         element={<ComplianceDashboard />} />
+          <Route path="/shift-readiness"   element={<ShiftReadinessPage />} />
+          <Route path="/equipment"          element={<EquipmentListPage />} />
+          <Route path="/equipment/:id"      element={<EquipmentDetailPage />} />
+          <Route path="/gate"               element={<GateKiosk />} />
           <Route path="/reports"       element={<ReportsPage />} />
+          <Route path="/roi"           element={<ROIDashboardPage />} />
           <Route path="/ai/chat"       element={<AIChatPage />} />
           <Route path="/chat"          element={<ChatPage />} />
           <Route path="/scenarios"     element={<ScenariosPage />} />

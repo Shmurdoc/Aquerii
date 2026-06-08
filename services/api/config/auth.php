@@ -25,6 +25,11 @@ return [
             'driver' => 'session',
             'provider' => 'super_admins',
         ],
+
+        'gate-kiosk' => [
+            'driver' => 'gate-kiosk',
+            'provider' => 'users',
+        ],
     ],
 
     'providers' => [

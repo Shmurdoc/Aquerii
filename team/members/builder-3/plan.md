@@ -1,63 +1,50 @@
 ---
-member_id: "builder-3"
-type: "builder"
-ticket: "GAP-DOC-001"
-owner: "Implementation — Feature Modules (Billing/Inventory) Agent"
-status: running
-lock: true
-priority: critical
-review_required: true
-reviews_by: ["reviewer"]
-time_estimate: "4d"
-time_spent: ""
-context_files:
-  - "services/web/src/"
-  - "services/api/app/Core/Http/Controllers/Api/DocumentPdfController.php"
-  - "services/api/app/Core/Http/Controllers/Api/InvoicePdfController.php"
-  - "services/api/app/Core/Http/Controllers/Api/BrandingController.php"
-  - "services/api/app/Core/Services/PdfService.php"
-  - "services/api/resources/views/"
-strict_scope: true
-artifact_refs:
-  - "services/web/src/"
-  - "services/api/app/"
-  - "services/api/resources/"
-created_at: "2026-06-06T15:00:00Z"
-updated_by: "Leader"
-updated_at: "2026-06-06T15:00:00Z"
+ticket: PROD-WORKER-001
+priority: high
+est_hours: 5
+state: assigned
 ---
 
-# Plan — builder-3 (GAP-DOC-001)
+# builder-3 — Worker Model Enhancement + Expiry Notification Pipeline
 
-YOU ARE WORKING WITH THE DESIGNER. THE DESIGNER HANDLES ALL UI/UX STYLES AND LAYOUT. YOU HANDLE THE BACKEND LOGIC AND WIRING.
-
-## Ticket Summary
-30 entity pages have no Print button, no `@media print` CSS, PDF logo not passed to Blade views, invoice PDF download not wired to UI.
-
-## Deliverables
-- [ ] **PrintButton**: Build a shared `<PrintButton>` component that calls `window.print()`
-- [ ] **@media print stylesheet**: Add print-specific CSS (hide nav, sidebar, buttons; show full content; page margins)
-- [ ] **Wire PrintButton to top entities**: CRM deal, board, contact, employee, document, hazard, permit, ticket, invoice, account (10 pages)
-- [ ] **PDF logo fix**: Read `BrandingController` to get `workspace->logo_url`. Pass it to Blade PDF views. Verify it renders on PDF output.
-- [ ] **Invoice PDF download**: Wire `InvoicePdfController` route to the existing invoice download button in `InvoicingPage` (check `lib/erp.ts` for the endpoint)
-- [ ] Verify `npm run build` passes
+## Objective
+Extend WorkspaceMember with mining-specific fields, build SA ID validation, build the tiered expiry notification pipeline.
 
 ## Acceptance Criteria
-- [ ] `<PrintButton>` renders on 10+ entity pages
-- [ ] `window.print()` in browser shows clean print layout (no nav, no buttons, readable content)
-- [ ] PDF download from invoice page actually triggers download
-- [ ] PDF output includes workspace logo
-- [ ] `npm run build` passes
+1. Add migration to extend workspace_members:
+   - badge_id (string, nullable)
+   - employment_type (enum: permanent, fixed_term, labour_broker, subcontractor)
+   - labour_broker_company (string, nullable)
+   - union_membership (string, nullable)
+   - blood_type (string, nullable)
+   - emergency_contact_name, emergency_contact_phone (string)
+   - site_induction_date (date, nullable)
+   - site_induction_expiry (date, nullable)
+2. Create `App\Rules\SaIdNumber` validation rule:
+   - 13-digit SA ID validation with Luhn checksum
+   - Date of birth extraction (digits 0-5)
+   - Gender detection (digit 6)
+   - Citizenship detection (digit 10)
+3. Add `overall_compliance_status` to workspace_members table (enum, nullable)
+4. Build tiered expiry notification system:
+   - `app:check-cert-expiry` command that checks ALL certs daily
+   - 90 days: email to HSSE officer
+   - 30 days: email + SMS to HSSE officer + contractor admin
+   - 7 days: email + SMS + in-app notification to supervisor
+   - 0 days: auto-flip worker to non_compliant, notify all parties
+5. Create notification templates for each tier
+6. Add SMS delivery via Vonage/Twilio (use existing notification channel)
+7. Write Pest tests (minimum 8) covering SA ID validation, expiry notifications
+
+## Context Files
+- C:\Users\madoc\source\repos\Aquerii\services\api\app\Core\Models\WorkspaceMember.php
+- C:\Users\madoc\source\repos\Aquerii\services\api\database\migrations\
+- C:\Users\madoc\source\repos\Aquerii\services\api\routes\console.php
+- C:\Users\madoc\source\repos\Aquerii\services\api\config\notifications.php (or mail.php)
+- C:\Users\madoc\source\repos\Aquerii\ALIGNED-PLAN.md
 
 ## Quality Gates
-- [ ] `npm run build` passes
-- [ ] `node team/scripts/validate.mjs` passes
-
-## Out of Scope
-- Export (GAP-EXP-001 — separate task)
-- @Mentions (GAP-MENTION-001 — separate task)
-- Theme (GAP-THEME-001 — separate task)
-- Logo upload UI (handled by builder-1 in GAP-THEME-001)
-
-## Strict Scope
-Read ONLY context_files plus your own 4 files.
+- `php artisan migrate` runs clean
+- `composer test` doesn't break existing tests
+- SA ID validation: correct IDs pass, incorrect IDs fail
+- Notification command sends correct tiered alerts

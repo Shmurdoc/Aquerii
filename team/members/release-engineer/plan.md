@@ -1,83 +1,49 @@
 ---
-member_id: "release-engineer"
-type: "release-engineer"
-ticket: "GAP-CRIT-001+002+003+006"
-owner: "Release readiness and publishing flow Agent"
-status: running
-lock: true
-priority: critical
-review_required: true
-reviews_by: ["reviewer"]
-time_estimate: "4h"
-time_spent: ""
-context_files:
-  - "services/api/Dockerfile"
-  - "services/web/Dockerfile"
-  - "docker-compose.yml"
-  - "infra/docker/"
-  - "infra/caddy/"
-  - "infra/prometheus/"
-  - ".github/workflows/"
-  - "PRODUCTION_READINESS_PLAN.md"
-strict_scope: true
-artifact_refs:
-  - "services/api/Dockerfile"
-  - "docker-compose.yml"
-  - ".github/workflows/"
-created_at: "2026-06-06T12:00:00Z"
-updated_by: "Leader"
-updated_at: "2026-06-06T12:00:00Z"
+ticket: PROD-RELEASE-001
+priority: high
+est_hours: 5
+state: assigned
 ---
 
-# Plan — release-engineer (GAP-CRIT-001+002+003+006)
+# release-engineer — DMR Exports, Security Hardening, Production Infrastructure
 
-## Ticket Summary
-The `aquerii/api:latest` Docker image is stale. The running container has been patched with `docker cp` band-aids. Any force-recreate loses all fixes. We need:
-- GAP-CRIT-001: Re-bake API image so it includes all current code
-- GAP-CRIT-002: HSSE and PTW module files baked into image (not missing)
-- GAP-CRIT-003: CI pipeline rebuilds image on every push to main
-- GAP-CRIT-006: Close H17 (CD), H18 (alertmanager routing), H19 (Caddy AI port)
-
-## Deliverables
-### Image and CI
-- [x] Audit the `services/api/Dockerfile` — ensure all module files are included (HSSE, PTW, Equipment, Competency, JobCards)
-- [x] Audit `docker-compose.yml` — ensure `build:` context covers all needed directories
-- [x] Add or verify CI workflow in `.github/workflows/` that builds and pushes the API image on push to main
-- [ ] Verify `docker compose up -d --build` from a clean checkout produces a working stack
-- [x] Document: "no more `docker cp`" — the image is the source of truth
-
-### H17 CD
-- [x] Review `PRODUCTION_READINESS_PLAN.md` H17 — assess current CD state
-- [x] Document the CD plan or add the missing pieces
-
-### H18 Alertmanager
-- [x] Review `infra/prometheus/alertmanager.yml` — wire correct routing (mounted config is `infra/alertmanager/alertmanager.yml`)
-- [x] Ensure alerts can reach the right channels
-
-### H19 Caddy AI Port
-- [x] Review `infra/caddy/Caddyfile` — ensure AI service port is correctly mapped
-- [x] Verify proxy to AI service works through Caddy
+## Objective
+Build DMR Section 23 export PDF, COIDA form pre-population, replace X-Internal-Secret with short-lived JWTs, set up cloud infrastructure config.
 
 ## Acceptance Criteria
-- [x] Build context fixed — `COPY services/api/ .` covers all modules (HSSE, PTW, Equipment, Competency, JobCards confirmed present)
-- [x] CI workflow updated with conditional root context for `api` service
-- [x] H17/H18/H19 documented as resolved in PRODUCTION_READINESS_PLAN.md
-- [x] Caddy routes AI to `ai:8002` — already correct, no change needed
-
-## Quality Gates
-- [ ] `docker compose up -d --build` exits 0 (requires Docker engine — skipped in agent mode)
-- [x] CI workflow syntax is valid YAML
-- [x] `validate.mjs` passes for release-engineer files
-- [x] No regressions in infrastructure
-
-## Out of Scope
-- Application code changes
-- Frontend changes
-- Database migrations
-- Secrets management (deferred to GAP-SECRET-001 in Phase 3)
+1. **DMR Section 23 Export** (Dangerous Occurrence Report):
+   - Create Blade template matching official DMRE form fields
+   - `GET /workspaces/{id}/hsse/incidents/{incident}/export/dmr` — returns PDF
+   - Pre-filled from incident data (title, type, date, location, description, injured workers, witnesses, causes, actions)
+   - Uses Gotenberg or DomPDF for rendering
+2. **COIDA Form Pre-population** (W.Cl.2 First Medical Report):
+   - Create Blade template matching Compensation Fund format
+   - `GET /workspaces/{id}/hsse/incidents/{incident}/export/coida` — returns PDF
+   - Pre-filled with worker data, incident data, employer info
+3. **Service-to-Service JWT Auth**:
+   - Create `App\Services\InternalAuthService` — issues short-lived JWTs (5-min TTL)
+   - Create middleware `auth.internal-jwt` — validates JWT signature on internal routes
+   - Replace X-Internal-Secret usage on web.php internal routes with JWT
+   - Auth service has its own key pair (configurable via env)
+4. **Cloud Run Deployment Config**:
+   - Create `infra/cloudrun/` directory with service YAML files:
+     - `api-service.yaml` — Cloud Run service for Laravel API
+     - `worker-service.yaml` — Cloud Run job for queue worker
+     - `scheduler-service.yaml` — Cloud Run job for scheduled tasks
+   - Each with: region (africa-south1), memory limits, concurrency, environment variable mapping
+   - Add `.github/workflows/deploy-cloudrun.yml` — deploy workflow triggered on merge to master
+5. **Update CI pipeline**: Add DMR/COIDA PDF generation tests
 
 ## Context Files
-Read ONLY the files in the frontmatter `context_files` field, plus your own 4 files. Nothing else.
+- C:\Users\madoc\source\repos\Aquerii\services\api\routes\web.php
+- C:\Users\madoc\source\repos\Aquerii\services\api\app\Modules\HSSE\Models\Incident.php
+- C:\Users\madoc\source\repos\Aquerii\services\api\config\services.php
+- C:\Users\madoc\source\repos\Aquerii\infra\ (directory)
+- C:\Users\madoc\source\repos\Aquerii\.github\workflows\ci.yml
+- C:\Users\madoc\source\repos\Aquerii\ALIGNED-PLAN.md
 
-## Strict Scope
-`strict_scope: true` — infrastructure and Docker only. Request scope expansion from Leader if needed.
+## Quality Gates
+- PDF generation works (test via curl or PHP)
+- JWT auth works: valid token passes, invalid/expired token returns 401
+- Cloud Run config is syntactically valid YAML
+- CI is updated with deploy workflow

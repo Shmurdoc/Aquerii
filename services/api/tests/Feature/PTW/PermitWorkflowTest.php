@@ -3,8 +3,12 @@
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
+use App\Modules\Competency\Models\CompetencyRecord;
+use App\Modules\Competency\Models\CompetencyType;
+use App\Modules\Competency\Models\CofRecord;
 use App\Modules\PTW\Models\Permit;
 use App\Modules\PTW\Services\PermitWorkflowService;
+use Carbon\Carbon;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
@@ -39,6 +43,22 @@ it('moves a permit through the full happy path', function () {
         'workspace_id' => $this->workspace->id,
         'user_id' => $holder->id,
         'role' => 'member',
+    ]);
+
+    CofRecord::create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $holder->id,
+        'status' => 'active',
+        'expires_at' => Carbon::now()->addYear(),
+        'verified_at' => Carbon::now(),
+    ]);
+    $inductionType = CompetencyType::create(['name' => 'Site Induction']);
+    CompetencyRecord::create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $holder->id,
+        'competency_type_id' => $inductionType->id,
+        'status' => 'active',
+        'verified_at' => Carbon::now(),
     ]);
 
     $this->postJson(
@@ -164,8 +184,7 @@ it('rejects a viewer from performing any state transition', function () {
     ]);
 
     $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/request")
-        ->assertStatus(422)
-        ->assertJsonValidationErrors(['actor']);
+        ->assertStatus(403);
 });
 
 it('lists the available transitions for the current user', function () {
@@ -199,6 +218,62 @@ it('writes an audit log entry on every transition', function () {
     expect($log)->not->toBeNull();
     expect($log->user_id)->toBe($this->user->id);
     expect($log->workspace_id)->toBe($this->workspace->id);
+});
+
+it('refuses to issue a permit when the holder is non-compliant', function () {
+    $holder = User::factory()->create();
+    WorkspaceMember::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $holder->id,
+        'role' => 'member',
+    ]);
+
+    $permit = Permit::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'issuer_id' => $this->user->id,
+        'status' => Permit::STATUS_APPROVED,
+        'approved_at' => now(),
+    ]);
+
+    $this->postJson(
+        "/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/issue",
+        [
+            'valid_until' => now()->addHours(8)->toIso8601String(),
+            'holder_id' => $holder->id,
+        ]
+    )
+    ->assertStatus(422)
+    ->assertJsonStructure(['message', 'errors' => ['workers']])
+    ->assertJsonPath('message', fn ($m) => str_contains($m, 'Cannot issue permit'))
+    ->assertJsonPath('errors.workers.0', fn ($e) => str_contains($e, (string) $holder->id));
+});
+
+it('refuses to activate a permit when the holder is non-compliant', function () {
+    $holder = User::factory()->create();
+    WorkspaceMember::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $holder->id,
+        'role' => 'member',
+    ]);
+
+    $permit = Permit::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'issuer_id' => $this->user->id,
+        'holder_id' => $holder->id,
+        'status' => Permit::STATUS_ISSUED,
+        'valid_from' => now(),
+        'valid_until' => now()->addHours(8),
+    ]);
+
+    Sanctum::actingAs($holder);
+
+    $this->postJson(
+        "/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/activate"
+    )
+    ->assertStatus(422)
+    ->assertJsonStructure(['message', 'errors' => ['workers']])
+    ->assertJsonPath('message', fn ($m) => str_contains($m, 'Cannot activate permit'))
+    ->assertJsonPath('errors.workers.0', fn ($e) => str_contains($e, (string) $holder->id));
 });
 
 it('exposes a service-level canTransition helper', function () {

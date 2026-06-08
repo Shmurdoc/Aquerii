@@ -5,6 +5,7 @@ use App\Core\Http\Middleware\AuthenticateScimToken;
 use App\Core\Http\Middleware\CheckFeatureAccess;
 use App\Core\Http\Middleware\EnforceIdempotency;
 use App\Core\Http\Middleware\EnsureEmailIsVerified;
+use App\Core\Http\Middleware\InternalJwt;
 use App\Core\Http\Middleware\InternalSecret;
 use App\Core\Http\Middleware\RequireAccountType;
 use App\Core\Http\Middleware\RequireOwner;
@@ -17,7 +18,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
-return Application::configure(basePath: dirname(__DIR__))
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         api: __DIR__.'/../routes/api.php',
         web: __DIR__.'/../routes/web.php',
@@ -32,6 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'throttle' => ThrottleRequests::class,
             'workspace' => SetWorkspaceTenant::class,
             'internal.secret' => InternalSecret::class,
+            'internal.jwt' => InternalJwt::class,
             'verified' => EnsureEmailIsVerified::class,
             'workspace.role' => RequireWorkspaceRole::class,
             'workspace.owner' => RequireOwner::class,
@@ -51,3 +53,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
     ->create();
+
+$app->register(\App\Providers\AuthServiceProvider::class);
+
+return $app;
