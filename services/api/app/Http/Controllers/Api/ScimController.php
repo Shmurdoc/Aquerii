@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Core\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Core\Http\Controllers\Controller;
 use App\Core\Models\EmployeeGroup;
 use App\Core\Models\ScimIdentity;
 use App\Core\Models\ScimToken;
 use App\Core\Models\User;
 use App\Core\Models\WorkspaceMember;
 use App\Core\Services\AuditService;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

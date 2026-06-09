@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Core\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
 use App\Core\Exports\EntityExport;
-use App\Core\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Models\Account;
 use App\Modules\Accounting\Models\JournalEntry;
 use App\Modules\CRM\Models\CrmCompany;

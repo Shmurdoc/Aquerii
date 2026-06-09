@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Core\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Board;
 use App\Core\Models\Item;
 use App\Core\Models\SyncConflict;
+use App\Http\Controllers\Controller;
 use App\Modules\Documents\Models\Document;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

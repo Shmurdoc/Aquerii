@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Core\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Goal;
 use App\Core\Models\Item;
 use App\Core\Models\Scenario;
 use App\Core\Models\ScenarioAdjustment;
 use App\Core\Models\WorkspaceMember;
+use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

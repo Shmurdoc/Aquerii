@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Http\Controllers;
+namespace App\Http\Controllers;
 
 use App\Core\Models\PushSubscription;
 use Illuminate\Http\JsonResponse;

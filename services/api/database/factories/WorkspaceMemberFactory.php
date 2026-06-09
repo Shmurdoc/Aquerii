@@ -12,11 +12,11 @@ class WorkspaceMemberFactory extends Factory
     {
         return [
             'workspace_id' => Workspace::factory(),
-            'user_id'      => User::factory(),
-            'role'         => 'member',
-            'status'       => 'active',
-            'joined_at'    => now(),
-            'created_at'   => now(),
+            'user_id' => User::factory(),
+            'role' => 'member',
+            'status' => 'active',
+            'joined_at' => now(),
+            'created_at' => now(),
         ];
     }
 }

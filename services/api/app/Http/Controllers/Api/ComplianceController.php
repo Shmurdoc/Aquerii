@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Core\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
+use App\Http\Controllers\Controller;
 use App\Modules\Competency\Models\CofRecord;
 use App\Modules\Competency\Models\CompetencyRecord;
 use App\Modules\Competency\Models\CompetencyRequirement;

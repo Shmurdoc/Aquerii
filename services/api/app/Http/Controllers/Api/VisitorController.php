@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Core\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Core\Http\Controllers\Controller;
 use App\Core\Models\User;
 use App\Core\Models\VisitorLog;
 use App\Core\Models\Workspace;
+use App\Http\Controllers\Controller;
 use App\Notifications\VisitorArrivedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;

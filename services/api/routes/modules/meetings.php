@@ -1,6 +1,6 @@
 <?php
 
-use App\Core\Http\Controllers\Api\MeetingController;
+use App\Http\Controllers\Api\MeetingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('meetings', [MeetingController::class, 'index']);

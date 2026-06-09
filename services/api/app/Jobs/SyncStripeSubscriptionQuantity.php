@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Workspace;
+use App\Models\WorkspaceMember;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -15,6 +16,7 @@ class SyncStripeSubscriptionQuantity implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 5;
+
     public int $backoff = 30;
 
     public function __construct(public readonly string $workspaceId) {}
@@ -22,10 +24,12 @@ class SyncStripeSubscriptionQuantity implements ShouldQueue
     public function handle(): void
     {
         $workspace = Workspace::find($this->workspaceId);
-        if (!$workspace || !$workspace->stripe_subscription_id) return;
+        if (! $workspace || ! $workspace->stripe_subscription_id) {
+            return;
+        }
 
-        $stripe      = new StripeClient(config('services.stripe.secret'));
-        $memberCount = \App\Models\WorkspaceMember::where('workspace_id', $this->workspaceId)->count();
+        $stripe = new StripeClient(config('services.stripe.secret'));
+        $memberCount = WorkspaceMember::where('workspace_id', $this->workspaceId)->count();
 
         $stripe->subscriptions->update($workspace->stripe_subscription_id, [
             'items' => [['id' => $workspace->stripe_subscription_item_id, 'quantity' => max(1, $memberCount)]],

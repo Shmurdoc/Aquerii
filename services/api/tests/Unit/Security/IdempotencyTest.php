@@ -3,6 +3,7 @@
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceMember;
+use Illuminate\Support\Str;
 
 /**
  * Helper: obtain a real Sanctum token by logging in.
@@ -13,24 +14,25 @@ function loginAndGetToken(string $email, string $password): string
 {
     $response = test()->postJson('/api/auth/login', compact('email', 'password'));
     $response->assertStatus(200);
+
     return $response->json('data.token');
 }
 
 it('returns same response for repeated idempotency key', function () {
     $user = User::factory()->create([
-        'email'         => 'idempotency1@example.com',
+        'email' => 'idempotency1@example.com',
         'password_hash' => bcrypt('SecurePass123!'),
     ]);
     $workspace = Workspace::factory()->create(['owner_id' => $user->id]);
     WorkspaceMember::factory()->create([
         'workspace_id' => $workspace->id,
-        'user_id'      => $user->id,
-        'role'         => 'owner',
+        'user_id' => $user->id,
+        'role' => 'owner',
     ]);
 
     $token = loginAndGetToken('idempotency1@example.com', 'SecurePass123!');
 
-    $key  = \Illuminate\Support\Str::uuid()->toString();
+    $key = Str::uuid()->toString();
     $body = ['name' => 'Idempotent Board'];
 
     $r1 = $this->withToken($token)->postJson(
@@ -54,14 +56,14 @@ it('returns same response for repeated idempotency key', function () {
 
 it('returns 400 when Idempotency-Key header is missing on a mutating request', function () {
     $user = User::factory()->create([
-        'email'         => 'idempotency2@example.com',
+        'email' => 'idempotency2@example.com',
         'password_hash' => bcrypt('SecurePass123!'),
     ]);
     $workspace = Workspace::factory()->create(['owner_id' => $user->id]);
     WorkspaceMember::factory()->create([
         'workspace_id' => $workspace->id,
-        'user_id'      => $user->id,
-        'role'         => 'owner',
+        'user_id' => $user->id,
+        'role' => 'owner',
     ]);
 
     $token = loginAndGetToken('idempotency2@example.com', 'SecurePass123!');
@@ -71,23 +73,23 @@ it('returns 400 when Idempotency-Key header is missing on a mutating request', f
     ]);
 
     $response->assertStatus(400)
-             ->assertJsonPath('error.code', 'MISSING_IDEMPOTENCY_KEY');
+        ->assertJsonPath('error.code', 'MISSING_IDEMPOTENCY_KEY');
 });
 
 it('returns 409 when same key is reused with a different payload', function () {
     $user = User::factory()->create([
-        'email'         => 'idempotency3@example.com',
+        'email' => 'idempotency3@example.com',
         'password_hash' => bcrypt('SecurePass123!'),
     ]);
     $workspace = Workspace::factory()->create(['owner_id' => $user->id]);
     WorkspaceMember::factory()->create([
         'workspace_id' => $workspace->id,
-        'user_id'      => $user->id,
-        'role'         => 'owner',
+        'user_id' => $user->id,
+        'role' => 'owner',
     ]);
 
     $token = loginAndGetToken('idempotency3@example.com', 'SecurePass123!');
-    $key   = \Illuminate\Support\Str::uuid()->toString();
+    $key = Str::uuid()->toString();
 
     $this->withToken($token)->postJson(
         "/api/workspaces/{$workspace->id}/boards",
@@ -102,5 +104,5 @@ it('returns 409 when same key is reused with a different payload', function () {
     );
 
     $response->assertStatus(409)
-             ->assertJsonPath('error.code', 'IDEMPOTENCY_CONFLICT');
+        ->assertJsonPath('error.code', 'IDEMPOTENCY_CONFLICT');
 });

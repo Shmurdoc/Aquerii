@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Core\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Core\Http\Controllers\Controller;
 use App\Core\Models\ShiftPlan;
 use App\Core\Models\ShiftPlanAssignment;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
+use App\Http\Controllers\Controller;
 use App\Services\ShiftReadinessService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

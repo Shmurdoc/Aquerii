@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Core\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Core\Http\Controllers\Controller;
 use App\Core\Models\WorkspaceMember;
+use App\Http\Controllers\Controller;
 use App\Modules\Equipment\Models\Equipment;
 use App\Modules\Equipment\Models\EquipmentCertRecord;
 use Illuminate\Http\JsonResponse;

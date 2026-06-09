@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Core\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use App\Modules\Equipment\Models\Equipment;
 use App\Modules\Equipment\Models\EquipmentCertRecord;
 use App\Modules\Equipment\Models\EquipmentCertType;

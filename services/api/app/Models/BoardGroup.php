@@ -2,6 +2,36 @@
 
 namespace App\Models;
 
-if (! class_exists(BoardGroup::class, false)) {
-    class_alias(\App\Core\Models\BoardGroup::class, BoardGroup::class);
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class BoardGroup extends Model
+{
+    use HasFactory, HasUuids;
+
+    protected $table = 'board_groups';
+
+    protected $fillable = [
+        'board_id', 'workspace_id', 'name', 'color', 'collapsed', 'is_collapsed', 'position',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'collapsed' => 'boolean',
+            'is_collapsed' => 'boolean',
+            'position' => 'float',
+        ];
+    }
+
+    public function board()
+    {
+        return $this->belongsTo(Board::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(Item::class, 'group_id');
+    }
 }
