@@ -132,6 +132,8 @@ jobs:
           # CI service containers expose ports on localhost, not via hostname
           sed -i 's|value="postgres"|value="127.0.0.1"|' phpunit.xml
           sed -i 's|REDIS_HOST" value="redis"|REDIS_HOST" value="127.0.0.1"|' phpunit.xml
+          # Disable SSL for local connections in CI
+          sed -i '/<php>/a\        <env name="DB_SSLMODE" value="prefer" force="true"/>' phpunit.xml
 
       - run: vendor/bin/pest --coverage-clover coverage.xml
 
