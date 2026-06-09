@@ -130,7 +130,7 @@ jobs:
           mkdir -p bootstrap/cache
           php artisan key:generate --env=testing
 
-      - run: composer test -- --coverage-clover coverage.xml
+      - run: vendor/bin/pest --coverage-clover coverage.xml
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
@@ -251,7 +251,7 @@ jobs:
 
       - name: Run API integration tests
         working-directory: services/api
-        run: composer test -- --group=integration
+        run: vendor/bin/pest --group=integration
 
       - name: Tear down
         if: always()
