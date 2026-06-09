@@ -992,7 +992,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ShiftAssignment\\:\\:where\\(\\)\\.$#"
-			count: 4
+			count: 3
 			path: app/Core/Http/Controllers/Api/ShiftController.php
 
 		-

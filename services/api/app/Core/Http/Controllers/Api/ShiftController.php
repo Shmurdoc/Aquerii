@@ -9,6 +9,7 @@ use App\Core\Models\ShiftHandover;
 use App\Core\Models\Workspace;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ShiftController extends Controller
 {
@@ -119,9 +120,10 @@ class ShiftController extends Controller
             'notes' => 'nullable|string|max:1000',
         ]);
 
-        $duplicate = ShiftAssignment::where('workspace_id', $workspace->id)
+        $duplicate = DB::table('shift_assignments')
+            ->where('workspace_id', $workspace->id)
             ->where('user_id', $validated['user_id'])
-            ->where('date', $validated['date'])
+            ->whereDate('date', $validated['date'])
             ->exists();
 
         if ($duplicate) {
