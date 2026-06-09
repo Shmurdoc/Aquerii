@@ -8,7 +8,7 @@ Thumbs.db
 # ─── Node ─────────────────────────────────────────────
 node_modules/
 npm-debug.log*
-services/realtime/package-lock.json
+# removed: services/realtime/package-lock.json
 
 # ─── PHP / Composer ───────────────────────────────────
 /vendor/

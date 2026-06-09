@@ -14,9 +14,7 @@ parameters:
         - app/Modules/Documents
         - app/Modules/Sales
         - app/Modules/Email
-        - app/Core/Models/User.php
-        - app/Core/Models/Meeting.php
-        - app/Core/Models/MeetingAttendee.php
+        - app/Core/Models
         - app/Core/Jobs/ProcessAutomations.php
         - app/Core/Http/Controllers/Auth/OAuthController.php
         - app/Core/Services/VatService.php
