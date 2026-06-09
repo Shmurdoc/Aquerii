@@ -592,9 +592,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // ── Inventory: Products, Categories, Stock ──
         Route::apiResource('products', ProductController::class)->middleware('idempotent');
-        Route::get('products/{product}/stock', [StockController::class, 'show']);
-        Route::post('products/{product}/stock/adjust', [StockController::class, 'adjust'])->middleware('idempotent');
-        Route::get('products/{product}/stock/movements', [StockController::class, 'movements']);
+        Route::get('products/{productId}/stock', [StockController::class, 'show']);
+        Route::post('products/{productId}/stock/adjust', [StockController::class, 'adjust'])->middleware('idempotent');
+        Route::get('products/{productId}/stock/movements', [StockController::class, 'movements']);
 
         // ── ERP: Invoicing, Sales, Purchasing, Inventory, Accounting ──
         Route::middleware('feature:module.erp')->group(function () {
@@ -740,16 +740,16 @@ Route::prefix('scim/v2')
         Route::get('ResourceTypes', [ScimController::class, 'resourceTypes']);
 
         Route::get('Users', [ScimController::class, 'listUsers']);
-        Route::post('Users', [ScimController::class, 'createUser'])->middleware('idempotent');
+        Route::post('Users', [ScimController::class, 'createUser']);
         Route::get('Users/{id}', [ScimController::class, 'showUser']);
-        Route::put('Users/{id}', [ScimController::class, 'replaceUser'])->middleware('idempotent');
-        Route::patch('Users/{id}', [ScimController::class, 'patchUser'])->middleware('idempotent');
+        Route::put('Users/{id}', [ScimController::class, 'replaceUser']);
+        Route::patch('Users/{id}', [ScimController::class, 'patchUser']);
         Route::delete('Users/{id}', [ScimController::class, 'deleteUser']);
 
         Route::get('Groups', [ScimController::class, 'listGroups']);
-        Route::post('Groups', [ScimController::class, 'createGroup'])->middleware('idempotent');
+        Route::post('Groups', [ScimController::class, 'createGroup']);
         Route::get('Groups/{id}', [ScimController::class, 'showGroup']);
-        Route::put('Groups/{id}', [ScimController::class, 'replaceGroup'])->middleware('idempotent');
-        Route::patch('Groups/{id}', [ScimController::class, 'patchGroup'])->middleware('idempotent');
+        Route::put('Groups/{id}', [ScimController::class, 'replaceGroup']);
+        Route::patch('Groups/{id}', [ScimController::class, 'patchGroup']);
         Route::delete('Groups/{id}', [ScimController::class, 'deleteGroup']);
     });

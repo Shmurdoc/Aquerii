@@ -12,9 +12,9 @@ use Illuminate\Support\Str;
 
 class StockController extends Controller
 {
-    public function show(string $product): JsonResponse
+    public function show(string $productId): JsonResponse
     {
-        $product = Product::findOrFail($product);
+        $product = Product::findOrFail($productId);
 
         $in = (int) StockMovement::where('product_id', $product->id)
             ->where('type', 'in')
@@ -41,9 +41,9 @@ class StockController extends Controller
         ]);
     }
 
-    public function adjust(Request $request, string $product): JsonResponse
+    public function adjust(Request $request, string $productId): JsonResponse
     {
-        $product = Product::findOrFail($product);
+        $product = Product::findOrFail($productId);
 
         $validated = $request->validate([
             'type' => 'required|string|in:in,out,adjustment',
@@ -68,9 +68,9 @@ class StockController extends Controller
         return response()->json(['data' => $movement], 201);
     }
 
-    public function movements(string $product): JsonResponse
+    public function movements(string $productId): JsonResponse
     {
-        $product = Product::findOrFail($product);
+        $product = Product::findOrFail($productId);
 
         $movements = StockMovement::where('product_id', $product->id)
             ->orderBy('created_at', 'desc')
