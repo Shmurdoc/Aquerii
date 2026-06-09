@@ -1,6 +1,5 @@
 <?php
 
-use App\Modules\Email\Jobs\SyncAllEmailAccounts;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -17,9 +16,6 @@ Schedule::command('app:send-due-reminders')->hourly();
 
 // Revoke expired Sanctum tokens daily
 Schedule::command('sanctum:prune-expired')->daily();
-
-// Sync all email accounts every 5 minutes
-Schedule::job(new SyncAllEmailAccounts)->everyFiveMinutes();
 
 // Alert stale contacts daily
 Schedule::command('crm:alert-stale-contacts')->daily();
