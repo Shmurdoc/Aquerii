@@ -25,9 +25,6 @@ return new class extends Migration
             $table->string('customer_name')->nullable();
             $table->string('customer_email')->nullable();
             $table->text('billing_address')->nullable();
-            $table->uuid('crm_deal_id')->nullable();
-            $table->uuid('work_order_id')->nullable();
-            $table->uuid('milestone_id')->nullable();
             $table->date('issue_date')->nullable();
             $table->date('due_date')->nullable();
             $table->timestampTz('paid_at')->nullable();
