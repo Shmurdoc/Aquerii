@@ -197,10 +197,10 @@ class ComplianceController extends Controller
                 'status' => $record->status,
             ]);
 
-        $totalCertTypes = $certTypes->count();
-        $compliantCertTypes = $requirements->whereIn('status', ['compliant', 'valid'])->count();
-        $complianceScore = $totalCertTypes > 0
-            ? round(($compliantCertTypes / $totalCertTypes) * 100, 1)
+        $totalCerts = $certBreakdown->count();
+        $compliantCerts = $certBreakdown->whereIn('status', ['active', 'verified'])->count();
+        $complianceScore = $totalCerts > 0
+            ? round(($compliantCerts / $totalCerts) * 100, 1)
             : 100.0;
 
         return response()->json([
