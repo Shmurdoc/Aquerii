@@ -7,10 +7,8 @@ use App\Core\Models\Shift;
 use App\Core\Models\ShiftAssignment;
 use App\Core\Models\ShiftHandover;
 use App\Core\Models\Workspace;
-use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class ShiftController extends Controller
 {
@@ -116,27 +114,27 @@ class ShiftController extends Controller
         $validated = $request->validate([
             'shift_id' => 'required|string|exists:shifts,id',
             'user_id' => 'required|string|exists:users,id',
-            'date' => [
-                'required', 'date',
-                Rule::unique('shift_assignments')->where(fn ($query) => $query
-                    ->where('workspace_id', $workspace->id)
-                    ->where('user_id', $request->input('user_id'))),
-            ],
+            'date' => 'required|date',
             'status' => 'sometimes|string|max:30',
             'notes' => 'nullable|string|max:1000',
         ]);
 
-        try {
-            $assignment = ShiftAssignment::create(array_merge(
-                $validated,
-                [
-                    'workspace_id' => $workspace->id,
-                    'status' => $validated['status'] ?? 'scheduled',
-                ]
-            ));
-        } catch (UniqueConstraintViolationException) {
+        $duplicate = ShiftAssignment::where('workspace_id', $workspace->id)
+            ->where('user_id', $validated['user_id'])
+            ->where('date', $validated['date'])
+            ->exists();
+
+        if ($duplicate) {
             return response()->json(['message' => 'This user is already assigned to a shift on this date.'], 422);
         }
+
+        $assignment = ShiftAssignment::create(array_merge(
+            $validated,
+            [
+                'workspace_id' => $workspace->id,
+                'status' => $validated['status'] ?? 'scheduled',
+            ]
+        ));
 
         return response()->json(['data' => $assignment], 201);
     }
