@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\ScenarioController;
 use App\Core\Models\ScenarioAdjustment;
+use App\Http\Controllers\Api\ScenarioController;
 use Illuminate\Support\Collection;
 
 function invokeApplyAdjustment(ScenarioAdjustment $adj, Collection &$tasks, Collection &$teamCapacity): void
