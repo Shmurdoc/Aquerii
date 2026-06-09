@@ -27,7 +27,6 @@ return new class extends Migration
 
             $table->foreign('workspace_id')->references('id')->on('workspaces')->cascadeOnDelete();
             $table->index('workspace_id');
-            $table->index('status');
         });
     }
 
