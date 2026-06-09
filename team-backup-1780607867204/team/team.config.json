@@ -1,0 +1,95 @@
+{
+    "members":  [
+                    {
+                        "id":  "member-01",
+                        "quality_gates":  [
+                                              "project tests"
+                                          ],
+                        "tech":  "any",
+                        "type":  "builder",
+                        "strict_scope":  false,
+                        "role":  "Member 01",
+                        "area":  "src/"
+                    },
+                    {
+                        "id":  "member-02",
+                        "quality_gates":  [
+                                              "project tests"
+                                          ],
+                        "tech":  "any",
+                        "type":  "builder",
+                        "strict_scope":  false,
+                        "role":  "Member 02",
+                        "area":  "src/"
+                    },
+                    {
+                        "id":  "member-03",
+                        "quality_gates":  [
+                                              "project tests"
+                                          ],
+                        "tech":  "any",
+                        "type":  "builder",
+                        "strict_scope":  false,
+                        "role":  "Member 03",
+                        "area":  "src/"
+                    },
+                    {
+                        "id":  "member-04",
+                        "quality_gates":  [
+                                              "project tests"
+                                          ],
+                        "tech":  "any",
+                        "type":  "builder",
+                        "strict_scope":  false,
+                        "role":  "Member 04",
+                        "area":  "src/"
+                    },
+                    {
+                        "id":  "member-05",
+                        "quality_gates":  [
+                                              "project tests"
+                                          ],
+                        "tech":  "any",
+                        "type":  "builder",
+                        "strict_scope":  false,
+                        "role":  "Member 05",
+                        "area":  "src/"
+                    },
+                    {
+                        "id":  "member-06",
+                        "quality_gates":  [
+                                              "project tests"
+                                          ],
+                        "tech":  "any",
+                        "type":  "builder",
+                        "strict_scope":  false,
+                        "role":  "Member 06",
+                        "area":  "src/"
+                    },
+                    {
+                        "id":  "member-07",
+                        "quality_gates":  [
+                                              "project tests"
+                                          ],
+                        "tech":  "any",
+                        "type":  "builder",
+                        "strict_scope":  false,
+                        "role":  "Member 07",
+                        "area":  "src/"
+                    },
+                    {
+                        "id":  "member-08",
+                        "quality_gates":  [
+                                              "project tests"
+                                          ],
+                        "tech":  "any",
+                        "type":  "builder",
+                        "strict_scope":  false,
+                        "role":  "Member 08",
+                        "area":  "src/"
+                    }
+                ],
+    "version":  "2.0",
+    "project_type":  "api",
+    "project_name":  "Aquerii"
+}

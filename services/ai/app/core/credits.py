@@ -38,7 +38,7 @@ async def consume_credits(workspace_id: str, cost: int) -> bool:
         return bool(result)
     except ResponseError as exc:
         # Some test doubles (fakeredis without Lua extras) do not support EVAL.
-        if 'unknown command `eval`' not in str(exc).lower():
+        if 'unknown command' not in str(exc).lower():
             raise
 
         quota_raw = await r.get(quota_key)

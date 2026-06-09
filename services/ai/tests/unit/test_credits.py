@@ -100,7 +100,7 @@ async def _eval_or_skip(fake_redis, script, numkeys, *args):
     try:
         return await fake_redis.eval(script, numkeys, *args)
     except ResponseError as exc:
-        if 'unknown command `eval`' in str(exc).lower():
+        if 'unknown command `eval`' in str(exc).lower() or "unknown command 'eval'" in str(exc).lower():
             pytest.skip('fakeredis in this environment does not support EVAL')
         raise
 
