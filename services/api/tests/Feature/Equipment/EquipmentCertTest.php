@@ -208,7 +208,7 @@ it('non-mandatory cert does not affect compliance', function () {
     $response->assertStatus(200);
     $data = $response->json('data');
     expect($data['overall_compliance_status'])->toBe('compliant');
-    expect($data['compliance_score'])->toBe(100.0);
+    expect((float) $data['compliance_score'])->toBe(100.0);
 });
 
 it('fails with 422 cert record requires equipment_cert_type_id', function () {

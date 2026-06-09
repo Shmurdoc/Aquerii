@@ -22,7 +22,7 @@ class StockMovement extends Model
     use HasUuids;
 
     protected $fillable = [
-        'workspace_id', 'product_id', 'quantity', 'type',
+        'id', 'workspace_id', 'product_id', 'quantity', 'type',
         'reference', 'notes', 'created_by',
     ];
 

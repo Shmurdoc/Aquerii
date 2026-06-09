@@ -142,8 +142,6 @@ it('rejects duplicate assignment for same user and date', function () {
         'status' => 'scheduled',
     ]);
 
-    $this->app['auth']->forgetGuards();
-
     $response = $this->postJson(
         "/api/workspaces/{$this->workspace->id}/hr/shifts/assignments",
         [
