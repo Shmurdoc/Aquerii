@@ -10,7 +10,7 @@ use Laravel\Scout\Searchable;
 
 class Item extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes, Searchable;
+    use HasFactory, HasUuids, Searchable, SoftDeletes;
 
     protected $fillable = [
         'workspace_id', 'board_id', 'group_id', 'parent_id',

@@ -10,7 +10,7 @@ use Laravel\Scout\Searchable;
 
 class Board extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes, Searchable;
+    use HasFactory, HasUuids, Searchable, SoftDeletes;
 
     protected $table = 'boards';
 
