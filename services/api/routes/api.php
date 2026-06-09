@@ -592,9 +592,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         // ── Inventory: Products, Categories, Stock ──
         Route::apiResource('products', ProductController::class)->middleware('idempotent');
-        Route::get('products/{productId}/stock', [StockController::class, 'show']);
-        Route::post('products/{productId}/stock/adjust', [StockController::class, 'adjust'])->middleware('idempotent');
-        Route::get('products/{productId}/stock/movements', [StockController::class, 'movements']);
+        Route::get('products/{product}/stock', [StockController::class, 'show']);
+        Route::post('products/{product}/stock/adjust', [StockController::class, 'adjust'])->middleware('idempotent');
+        Route::get('products/{product}/stock/movements', [StockController::class, 'movements']);
 
         // ── ERP: Invoicing, Sales, Purchasing, Inventory, Accounting ──
         Route::middleware('feature:module.erp')->group(function () {

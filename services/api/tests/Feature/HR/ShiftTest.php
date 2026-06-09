@@ -139,7 +139,10 @@ it('rejects duplicate assignment for same user and date', function () {
         'shift_id' => $shift->id,
         'user_id' => $this->user->id,
         'date' => $date,
+        'status' => 'scheduled',
     ]);
+
+    $this->app['auth']->forgetGuards();
 
     $response = $this->postJson(
         "/api/workspaces/{$this->workspace->id}/hr/shifts/assignments",

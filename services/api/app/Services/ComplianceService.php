@@ -73,6 +73,16 @@ class ComplianceService
             return 'expiring_soon';
         }
 
+        $expiredCert = CompetencyRecord::where('workspace_id', $worker->workspace_id)
+            ->where('user_id', $worker->user_id)
+            ->where('status', 'active')
+            ->where('expires_at', '<=', $now)
+            ->exists();
+
+        if ($expiredCert) {
+            return 'non_compliant';
+        }
+
         $expiringInduction = TrainingRecord::where('workspace_id', $worker->workspace_id)
             ->where('user_id', $worker->user_id)
             ->where('training_name', 'ilike', '%induction%')

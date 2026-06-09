@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Core\Models\Workspace;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\StockMovement;
@@ -12,9 +13,9 @@ use Illuminate\Support\Str;
 
 class StockController extends Controller
 {
-    public function show(string $productId): JsonResponse
+    public function show(Workspace $workspace, string $product): JsonResponse
     {
-        $product = Product::findOrFail($productId);
+        $product = Product::where('workspace_id', $workspace->id)->findOrFail($product);
 
         $in = (int) StockMovement::where('product_id', $product->id)
             ->where('type', 'in')
@@ -41,9 +42,9 @@ class StockController extends Controller
         ]);
     }
 
-    public function adjust(Request $request, string $productId): JsonResponse
+    public function adjust(Request $request, Workspace $workspace, string $product): JsonResponse
     {
-        $product = Product::findOrFail($productId);
+        $product = Product::where('workspace_id', $workspace->id)->findOrFail($product);
 
         $validated = $request->validate([
             'type' => 'required|string|in:in,out,adjustment',
@@ -68,9 +69,9 @@ class StockController extends Controller
         return response()->json(['data' => $movement], 201);
     }
 
-    public function movements(string $productId): JsonResponse
+    public function movements(Workspace $workspace, string $product): JsonResponse
     {
-        $product = Product::findOrFail($productId);
+        $product = Product::where('workspace_id', $workspace->id)->findOrFail($product);
 
         $movements = StockMovement::where('product_id', $product->id)
             ->orderBy('created_at', 'desc')

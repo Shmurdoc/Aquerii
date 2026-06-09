@@ -205,6 +205,7 @@ it('authenticates via valid kiosk API key and rejects invalid key', function () 
         ['X-API-Key' => 'invalid-key-that-will-not-match']
     )->assertStatus(401);
 
+    $this->app['auth']->forgetGuards();
     $this->postJson(
         "/api/workspaces/{$this->workspace->id}/gate/scan",
         [
