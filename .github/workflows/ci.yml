@@ -127,6 +127,7 @@ jobs:
           sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env.testing
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env.testing
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
+          mkdir -p bootstrap/cache
           php artisan key:generate --env=testing
 
       - run: composer test -- --coverage-clover coverage.xml
