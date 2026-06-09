@@ -1,0 +1,12 @@
+{
+  "name": "tdd-workflow",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Yeni \u00f6zellikler yazarken, hata d\u00fczeltirken veya kod refactor ederken bu skill'i kullan\u0131n. Unit, integration ve E2E testlerini i\u00e7eren %80+ kapsam ile test g\u00fcd\u00fcml\u00fc geli\u015ftirmeyi zorlar."
+}

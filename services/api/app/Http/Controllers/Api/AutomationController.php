@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Workspace;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -26,7 +26,7 @@ class AutomationController extends Controller
     public function store(Request $request, Workspace $workspace): JsonResponse
     {
         $validated = $request->validate([
-            'name'    => 'required|string|max:150',
+            'name' => 'required|string|max:150',
             'trigger' => 'required|array',
             'actions' => 'required|array|min:1',
             'enabled' => 'sometimes|boolean',
@@ -34,15 +34,15 @@ class AutomationController extends Controller
 
         $id = Str::uuid()->toString();
         DB::table('automations')->insert([
-            'id'           => $id,
+            'id' => $id,
             'workspace_id' => $workspace->id,
-            'name'         => $validated['name'],
-            'trigger'      => json_encode($validated['trigger']),
-            'actions'      => json_encode($validated['actions']),
-            'enabled'      => $validated['enabled'] ?? true,
-            'created_by'   => $request->user()->id,
-            'created_at'   => now(),
-            'updated_at'   => now(),
+            'name' => $validated['name'],
+            'trigger' => json_encode($validated['trigger']),
+            'actions' => json_encode($validated['actions']),
+            'enabled' => $validated['enabled'] ?? true,
+            'created_by' => $request->user()->id,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         return response()->json(['data' => ['id' => $id]], 201);
@@ -65,7 +65,7 @@ class AutomationController extends Controller
     public function update(Request $request, Workspace $workspace, string $automationId): JsonResponse
     {
         $validated = $request->validate([
-            'name'    => 'sometimes|string|max:150',
+            'name' => 'sometimes|string|max:150',
             'trigger' => 'sometimes|array',
             'actions' => 'sometimes|array|min:1',
             'enabled' => 'sometimes|boolean',
@@ -73,10 +73,14 @@ class AutomationController extends Controller
 
         $update = [];
         foreach (['name', 'enabled'] as $field) {
-            if (isset($validated[$field])) $update[$field] = $validated[$field];
+            if (isset($validated[$field])) {
+                $update[$field] = $validated[$field];
+            }
         }
         foreach (['trigger', 'actions'] as $field) {
-            if (isset($validated[$field])) $update[$field] = json_encode($validated[$field]);
+            if (isset($validated[$field])) {
+                $update[$field] = json_encode($validated[$field]);
+            }
         }
         $update['updated_at'] = now();
 

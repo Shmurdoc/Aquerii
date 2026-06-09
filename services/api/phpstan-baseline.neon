@@ -1,0 +1,4096 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$email\\.$#"
+			count: 1
+			path: app/Console/Commands/CleanupTestData.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_filter expects array, Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Core\\\\Models\\\\User\\> given\\.$#"
+			count: 1
+			path: app/Console/Commands/CleanupTestData.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$email\\.$#"
+			count: 1
+			path: app/Console/Commands/EnsureTestUser.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 4
+			path: app/Console/Commands/EnsureTestUser.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Console/Commands/EnsureTestUser.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$password_hash\\.$#"
+			count: 1
+			path: app/Console/Commands/EnsureTestUser.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Console/Commands/EnsureTestUser.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Console/Commands/EnsureTestUser.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$slug\\.$#"
+			count: 2
+			path: app/Console/Commands/EnsureTestUser.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Console/Commands/EnsureTestUser.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$joined_at\\.$#"
+			count: 1
+			path: app/Console/Commands/EnsureTestUser.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$role\\.$#"
+			count: 1
+			path: app/Console/Commands/EnsureTestUser.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Console/Commands/EnsureTestUser.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Console/Commands/ProvisionPilot.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 15
+			path: app/Console/Commands/ProvisionPilot.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 25
+			path: app/Console/Commands/ProvisionPilot.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$name\\.$#"
+			count: 2
+			path: app/Console/Commands/ProvisionPilot.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$slug\\.$#"
+			count: 1
+			path: app/Console/Commands/ProvisionPilot.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Inventory\\\\Models\\\\InventoryCategory\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Console/Commands/ProvisionPilot.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\BoardColumn\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Console/Commands/ProvisionPilot.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\BoardGroup\\:\\:firstOrCreate\\(\\)\\.$#"
+			count: 1
+			path: app/Console/Commands/ProvisionPilot.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\User\\:\\:firstOrCreate\\(\\)\\.$#"
+			count: 2
+			path: app/Console/Commands/ProvisionPilot.php
+
+		-
+			message: "#^Using nullsafe property access on non\\-nullable type App\\\\Core\\\\Models\\\\User\\. Use \\-\\> instead\\.$#"
+			count: 2
+			path: app/Console/Commands/ProvisionPilot.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Models\\\\GateKiosk\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Auth/GateKioskGuard.php
+
+		-
+			message: "#^Method App\\\\Core\\\\Auth\\\\GateKioskGuard\\:\\:user\\(\\) should return App\\\\Models\\\\GateKiosk\\|null but returns Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\.$#"
+			count: 1
+			path: app/Core/Auth/GateKioskGuard.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$reports_to\\.$#"
+			count: 2
+			path: app/Core/Console/Commands/CheckCertExpiry.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\User\\:\\:find\\(\\)\\.$#"
+			count: 9
+			path: app/Core/Console/Commands/CheckCertExpiry.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Core/Console/Commands/CheckCertExpiry.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Console/Commands/PurgeExpiredTrials.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 7
+			path: app/Core/Console/Commands/RecalculateUsage.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Core/Console/Commands/ResetAiCredits.php
+
+		-
+			message: "#^Call to an undefined static method Illuminate\\\\Support\\\\Facades\\\\Redis\\:\\:del\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Console/Commands/ResetAiCredits.php
+
+		-
+			message: "#^Call to an undefined static method Illuminate\\\\Support\\\\Facades\\\\Redis\\:\\:get\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Console/Commands/ResetAiCredits.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: app/Core/Console/Commands/ResetAiCredits.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Console/Commands/RunDunning.php
+
+		-
+			message: "#^Access to an undefined property Stripe\\\\StripeObject\\:\\:\\$interval\\.$#"
+			count: 1
+			path: app/Core/Console/Commands/SyncStripePlans.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$plan\\.$#"
+			count: 1
+			path: app/Core/Enums/SubscriptionPlan.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/AuditLogController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$ai_credits_used\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/BillingController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/Api/BillingController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/BillingController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$seat_count\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/BillingController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$storage_used_bytes\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/BillingController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$stripe_customer_id\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/BillingController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$stripe_subscription_id\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/BillingController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/BrandingController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 12
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$badge_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$user_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\CRM\\\\Models\\\\CrmCompany\\:\\:\\$id\\.$#"
+			count: 5
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\CRM\\\\Models\\\\CrmCompany\\:\\:\\$name\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Competency\\\\Models\\\\CofRecord\\:\\:\\$expires_at\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyRecord\\:\\:\\$expires_at\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyType\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyType\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\PortalToken\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\PortalToken\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\CRM\\\\Models\\\\CrmCompany\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CofRecord\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyRecord\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyType\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ClientPortalController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/CommentController.php
+
+		-
+			message: "#^Offset 1 on array\\{array\\<int, string\\>, array\\<int, non\\-falsy\\-string\\>\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/CommentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 9
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$company\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$overall_compliance_status\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$role\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$user\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:\\$user_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:\\$category\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:\\$make\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:\\$model\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:\\$name\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:\\$plant_number\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:\\$registration_number\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:\\$status\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CofRecord\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyRecord\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyRequirement\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyType\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\TrainingRecord\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ComplianceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/DmrExportController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$workspace\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/DmrExportController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$workspace_id\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/DmrExportController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EmployeeController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\EmployeeGroup\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/EmployeeGroupController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/EmployeeGroupController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EquipmentCertRecordController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:where\\(\\)\\.$#"
+			count: 5
+			path: app/Core/Http/Controllers/Api/EquipmentCertRecordController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentCertRecord\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EquipmentCertRecordController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentCertRecord\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/Api/EquipmentCertRecordController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentCertType\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EquipmentCertTypeController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentCertType\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/EquipmentCertTypeController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EquipmentComplianceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentCertRecord\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EquipmentComplianceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentCertType\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EquipmentComplianceController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$compliance_status\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$equipment_type\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$search\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/Api/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\ScimToken\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/FieldPermissionController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$email\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/FieldPermissionController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/FieldPermissionController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/FieldPermissionController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\FieldPermission\\:\\:updateOrCreate\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/FieldPermissionController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\FieldPermission\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/FieldPermissionController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ScimToken\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/Api/FieldPermissionController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/FieldPermissionController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/FieldPermissionController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 7
+			path: app/Core/Http/Controllers/Api/FileController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Filesystem\\\\Filesystem\\:\\:temporaryUrl\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/FileController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/FileController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_if expects bool, object\\|null given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/FinancialApprovalController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/Api/FinancialApprovalController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/FinancialApprovalController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Goal\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/GoalController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Goal\\:\\:where\\(\\)\\.$#"
+			count: 5
+			path: app/Core/Http/Controllers/Api/GoalController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/IntegrationReliabilityController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/IntegrationReliabilityController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/InvoicePdfController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Invoicing\\\\Models\\\\Invoice\\:\\:\\$billing_address\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/InvoicePdfController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Invoicing\\\\Models\\\\Invoice\\:\\:\\$customer_email\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/InvoicePdfController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Invoicing\\\\Models\\\\Invoice\\:\\:\\$customer_name\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/InvoicePdfController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Invoicing\\\\Models\\\\Invoice\\:\\:\\$invoice_number\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/InvoicePdfController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Invoicing\\\\Models\\\\Invoice\\:\\:\\$items\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/InvoicePdfController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Invoicing\\\\Models\\\\Invoice\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/InvoicePdfController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, int given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/InvoiceWorkflowController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/InvoiceWorkflowController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Meeting\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/MeetingController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Meeting\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/Api/MeetingController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\MeetingAttendee\\:\\:whereHas\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/MeetingController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\MeetingOutcome\\:\\:\\$effectiveness_score\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/MeetingOutcomeController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\MeetingOutcome\\:\\:\\$linked_goal_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/MeetingOutcomeController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Goal\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/MeetingOutcomeController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\MeetingOutcome\\:\\:updateOrCreate\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/MeetingOutcomeController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\MeetingOutcome\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/MeetingOutcomeController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/NotificationController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/NotificationController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\SyncConflict\\:\\:\\$entity_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/OfflineSyncController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\SyncConflict\\:\\:\\$entity_type\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/OfflineSyncController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\SyncConflict\\:\\:\\$local_data\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/OfflineSyncController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\SyncConflict\\:\\:\\$merged_data\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/OfflineSyncController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\SyncConflict\\:\\:\\$resolution\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/OfflineSyncController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\SyncConflict\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/OfflineSyncController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$category\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/PluginController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$search\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/PluginController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Plugin\\:\\:active\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/PluginController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Plugin\\:\\:findOrFail\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/PluginController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Plugin\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/PluginController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\PluginInstallation\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/PluginController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\PluginInstallation\\:\\:where\\(\\)\\.$#"
+			count: 6
+			path: app/Core/Http/Controllers/Api/PluginController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ReportScheduleController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ReportScheduleController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Scenario\\:\\:\\$simulation_results\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScenarioController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Scenario\\:\\:\\$snapshot_data\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScenarioController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\ScenarioAdjustment\\:\\:\\$adjustment_type\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ScenarioController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\ScenarioAdjustment\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScenarioController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\ScenarioAdjustment\\:\\:\\$parameters\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ScenarioController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\ScenarioAdjustment\\:\\:\\$position\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScenarioController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Goal\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScenarioController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Item\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScenarioController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Scenario\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScenarioController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Scenario\\:\\:where\\(\\)\\.$#"
+			count: 8
+			path: app/Core/Http/Controllers/Api/ScenarioController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScenarioController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\EmployeeGroup\\:\\:\\$id\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\EmployeeGroup\\:\\:\\$members\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\EmployeeGroup\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\ScimIdentity\\:\\:\\$external_id\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$email\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\EmployeeGroup\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\EmployeeGroup\\:\\:where\\(\\)\\.$#"
+			count: 5
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ScimIdentity\\:\\:updateOrCreate\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ScimIdentity\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\User\\:\\:find\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:updateOrCreate\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 14
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/ScimController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\BurnoutScore\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/SentimentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\TeamActivityMetric\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/SentimentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 15
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$date\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$from\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$shift_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$to\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$user_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Shift\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Shift\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ShiftAssignment\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ShiftAssignment\\:\\:firstOrCreate\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ShiftAssignment\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ShiftHandover\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ShiftHandover\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/ShiftController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\ShiftPlan\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftReadinessController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\ShiftPlan\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/ShiftReadinessController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 6
+			path: app/Core/Http/Controllers/Api/ShiftReadinessController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ShiftPlan\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftReadinessController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ShiftPlan\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftReadinessController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ShiftPlanAssignment\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftReadinessController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/ShiftReadinessController.php
+
+		-
+			message: "#^Parameter \\#2 \\$counter of method App\\\\Core\\\\Http\\\\Controllers\\\\Api\\\\UserSettingsController\\:\\:generateCode\\(\\) expects int, float given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/UserSettingsController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\VisitorLog\\:\\:\\$signed_out_at\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/VisitorController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\VisitorLog\\:\\:\\$workspace_id\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/VisitorController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$date\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/VisitorController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$signed_in\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/VisitorController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/VisitorController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\User\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/VisitorController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\VisitorLog\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/VisitorController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\VisitorLog\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/VisitorController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:findOrFail\\(\\)\\.$#"
+			count: 5
+			path: app/Core/Http/Controllers/Api/VisitorController.php
+
+		-
+			message: "#^Access to an undefined property Stripe\\\\StripeObject\\:\\:\\$object\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/Api/WebhookController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/WebhookController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/Api/WebhookController.php
+
+		-
+			message: "#^Method App\\\\Core\\\\Http\\\\Controllers\\\\Api\\\\WebhookController\\:\\:stripeClient\\(\\) is unused\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/WebhookController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 9
+			path: app/Core/Http/Controllers/Api/WorkspaceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/WorkspaceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/WorkspaceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:findOrFail\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/WorkspaceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/WorkspaceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/WorkspaceController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/Api/WorkspaceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/WorkspaceLogoController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$logo_url\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/Api/WorkspaceLogoController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Filesystem\\\\Filesystem\\:\\:url\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/WorkspaceLogoController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Api/WorkspaceLogoController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$avatar_url\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$email\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$locale\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$timezone\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$two_factor_enabled\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$plan\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$slug\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/BoardColumnController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/BoardColumnController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:findOrFail\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/BoardController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Board\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/BoardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/BoardGroupController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/BoardGroupController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\RealtimeEvent\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/Internal/RealtimeEventController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$board\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$board_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$due_date\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$priority\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$title\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:findOrFail\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:whereHas\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Board\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\BoardGroup\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Item\\:\\:where\\(\\)\\.$#"
+			count: 8
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Item\\:\\:whereHas\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between bool and 'done' will always evaluate to false\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/ItemDocumentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/ItemDocumentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/ItemDocumentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Documents\\\\Models\\\\Document\\:\\:findOrFail\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/ItemDocumentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Documents\\\\Models\\\\Document\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/ItemDocumentController.php
+
+		-
+			message: "#^Cannot access property \\$roles on class\\-string\\|object\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/PermissionController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\PushSubscription\\:\\:updateOrCreate\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/PushSubscriptionController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\PushSubscription\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/PushSubscriptionController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\SavedView\\:\\:\\$is_shared\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/SavedViewController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\SavedView\\:\\:\\$user_id\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/SavedViewController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\SavedView\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/SavedViewController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Core/Http/Controllers/SavedViewController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\SavedView\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/SavedViewController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\SavedView\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/SavedViewController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 4
+			path: app/Core/Http/Controllers/StorageController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$storage_quota_bytes\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/StorageController.php
+
+		-
+			message: "#^Result of && is always true\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/StorageController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Filesystem\\\\Filesystem\\:\\:url\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Http/Controllers/UserController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WebhookEndpoint\\:\\:\\$events\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/WebhookEndpointController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WebhookEndpoint\\:\\:\\$id\\.$#"
+			count: 5
+			path: app/Core/Http/Controllers/WebhookEndpointController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WebhookEndpoint\\:\\:\\$is_active\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/WebhookEndpointController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WebhookEndpoint\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/WebhookEndpointController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WebhookEndpoint\\:\\:\\$url\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/WebhookEndpointController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WebhookEndpoint\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/WebhookEndpointController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 7
+			path: app/Core/Http/Controllers/WebhookEndpointController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WebhookDelivery\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/WebhookEndpointController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WebhookEndpoint\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/WebhookEndpointController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WebhookEndpoint\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/WebhookEndpointController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Core/Http/Controllers/WebhookEndpointController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\ScimToken\\:\\:\\$is_active\\.$#"
+			count: 1
+			path: app/Core/Http/Middleware/AuthenticateScimToken.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\ScimToken\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Http/Middleware/AuthenticateScimToken.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Middleware/CheckFeatureAccess.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 1
+			path: app/Core/Http/Middleware/RequireOwner.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 1
+			path: app/Core/Http/Middleware/RequireWorkspaceRole.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$board_type\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$color\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$description\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$excalidraw_state\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$icon\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$is_archived\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$position\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$settings\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\BoardResource\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/BoardResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\CommentResource\\:\\:\\$body\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/CommentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\CommentResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/CommentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\CommentResource\\:\\:\\$edited_at\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/CommentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\CommentResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/CommentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\CommentResource\\:\\:\\$item_id\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/CommentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$board_id\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$description\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$done\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$due_date\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$group_id\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$position\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$priority\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$title\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$updated_at\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\ItemResource\\:\\:\\$version\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/ItemResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\NotificationResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/NotificationResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\NotificationResource\\:\\:\\$data\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/NotificationResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\NotificationResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/NotificationResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\NotificationResource\\:\\:\\$read_at\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/NotificationResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\NotificationResource\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/NotificationResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\UserResource\\:\\:\\$avatar_url\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/UserResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\UserResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/UserResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\UserResource\\:\\:\\$email\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/UserResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\UserResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/UserResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\UserResource\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/UserResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\WorkspaceResource\\:\\:\\$color\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/WorkspaceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\WorkspaceResource\\:\\:\\$cover_url\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/WorkspaceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\WorkspaceResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/WorkspaceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\WorkspaceResource\\:\\:\\$icon\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/WorkspaceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\WorkspaceResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/WorkspaceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\WorkspaceResource\\:\\:\\$logo_url\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/WorkspaceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\WorkspaceResource\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/WorkspaceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\WorkspaceResource\\:\\:\\$owner_id\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/WorkspaceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\WorkspaceResource\\:\\:\\$plan\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/WorkspaceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Http\\\\Resources\\\\WorkspaceResource\\:\\:\\$slug\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/WorkspaceResource.php
+
+		-
+			message: "#^Call to an undefined method App\\\\Core\\\\Http\\\\Resources\\\\WorkspaceResource\\:\\:members\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Http/Resources/WorkspaceResource.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\BurnoutScore\\:\\:updateOrCreate\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Jobs/BurnoutDetector.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Item\\:\\:where\\(\\)\\.$#"
+			count: 5
+			path: app/Core/Jobs/BurnoutDetector.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\TeamActivityMetric\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Jobs/BurnoutDetector.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\TeamActivityMetric\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Jobs/BurnoutDetector.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Jobs/BurnoutDetector.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Jobs/BurnoutDetector.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Chat\\\\Models\\\\ChatMessage\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Core/Jobs/BurnoutDetector.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Jobs/EvaluateAutomationTriggers.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\User\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Jobs/PurgeUserData.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Jobs/PurgeUserData.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Jobs/SyncStripeSubscriptionQuantity.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Jobs/SyncStripeSubscriptionQuantity.php
+
+		-
+			message: "#^Parameter \\#2 \\$data of method Illuminate\\\\Http\\\\Client\\\\PendingRequest\\:\\:post\\(\\) expects array, string given\\.$#"
+			count: 1
+			path: app/Core/Jobs/UpdateClickHouseAnalytics.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Core/Models/Board.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$description\\.$#"
+			count: 1
+			path: app/Core/Models/Board.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Models/Board.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Core/Models/Board.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/Core/Models/Board.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$updated_at\\.$#"
+			count: 1
+			path: app/Core/Models/Board.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$visibility\\.$#"
+			count: 1
+			path: app/Core/Models/Board.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Models/Board.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\FeatureFlag\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Models/FeatureFlag.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\FieldPermission\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Models/FieldPermission.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Goal\\:\\:\\$keyResults\\.$#"
+			count: 1
+			path: app/Core/Models/Goal.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$board_id\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$created_by\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$description\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$due_date\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$group_id\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$priority\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$title\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$updated_at\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$version\\.$#"
+			count: 2
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Models/Item.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\KeyResult\\:\\:\\$current_value\\.$#"
+			count: 1
+			path: app/Core/Models/KeyResult.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\KeyResult\\:\\:\\$target_value\\.$#"
+			count: 1
+			path: app/Core/Models/KeyResult.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\OAuthAccount\\:\\:\\$access_token\\.$#"
+			count: 1
+			path: app/Core/Models/OAuthAccount.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\PortalToken\\:\\:\\$expires_at\\.$#"
+			count: 1
+			path: app/Core/Models/PortalToken.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\ScimToken\\:\\:\\$scope\\.$#"
+			count: 1
+			path: app/Core/Models/ScimToken.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ScimToken\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Models/ScimToken.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\ScimToken\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Models/ScimToken.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\VisitorLog\\:\\:\\$signed_in_at\\.$#"
+			count: 1
+			path: app/Core/Models/VisitorLog.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\VisitorLog\\:\\:\\$signed_out_at\\.$#"
+			count: 1
+			path: app/Core/Models/VisitorLog.php
+
+		-
+			message: "#^Class App\\\\Core\\\\Models\\\\GateKiosk not found\\.$#"
+			count: 1
+			path: app/Core/Models/VisitorLog.php
+
+		-
+			message: "#^Parameter \\#1 \\$related of method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:belongsTo\\(\\) expects class\\-string\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>, string given\\.$#"
+			count: 1
+			path: app/Core/Models/VisitorLog.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$plan_status\\.$#"
+			count: 1
+			path: app/Core/Models/Workspace.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$storage_quota_bytes\\.$#"
+			count: 2
+			path: app/Core/Models/Workspace.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$storage_used_bytes\\.$#"
+			count: 2
+			path: app/Core/Models/Workspace.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceInvitation\\:\\:\\$accepted_at\\.$#"
+			count: 1
+			path: app/Core/Models/WorkspaceInvitation.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceInvitation\\:\\:\\$expires_at\\.$#"
+			count: 1
+			path: app/Core/Models/WorkspaceInvitation.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Core/Observers/BoardObserver.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Comment\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Observers/CommentObserver.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Competency\\\\Models\\\\CofRecord\\|App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyRecord\\|App\\\\Modules\\\\Competency\\\\Models\\\\TrainingRecord\\:\\:\\$user_id\\.$#"
+			count: 1
+			path: app/Core/Observers/ComplianceObserver.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Competency\\\\Models\\\\CofRecord\\|App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyRecord\\|App\\\\Modules\\\\Competency\\\\Models\\\\TrainingRecord\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Observers/ComplianceObserver.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Observers/ComplianceObserver.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$id\\.$#"
+			count: 5
+			path: app/Core/Observers/ItemObserver.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Core/Observers/ItemObserver.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Core/Policies/BoardPolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Core/Policies/BoardPolicy.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Policies/BoardPolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Comment\\:\\:\\$user_id\\.$#"
+			count: 2
+			path: app/Core/Policies/CommentPolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Comment\\:\\:\\$workspace_id\\.$#"
+			count: 2
+			path: app/Core/Policies/CommentPolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 4
+			path: app/Core/Policies/CommentPolicy.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Policies/CommentPolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\File\\:\\:\\$uploaded_by\\.$#"
+			count: 1
+			path: app/Core/Policies/FilePolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\File\\:\\:\\$workspace_id\\.$#"
+			count: 2
+			path: app/Core/Policies/FilePolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Core/Policies/FilePolicy.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Policies/FilePolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Core/Policies/ItemPolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Core/Policies/ItemPolicy.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Policies/ItemPolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Core/Policies/WorkspacePolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 4
+			path: app/Core/Policies/WorkspacePolicy.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Core/Policies/WorkspacePolicy.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\AuditLog\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/AuditService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$email\\.$#"
+			count: 1
+			path: app/Core/Services/AuthService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$two_factor_recovery_codes\\.$#"
+			count: 1
+			path: app/Core/Services/AuthService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$two_factor_secret\\.$#"
+			count: 1
+			path: app/Core/Services/AuthService.php
+
+		-
+			message: "#^Access to an undefined property Laravel\\\\Sanctum\\\\PersonalAccessToken\\:\\:\\$tokenable\\.$#"
+			count: 1
+			path: app/Core/Services/AuthService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\User\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/AuthService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\User\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/AuthService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\User\\:\\:findOrFail\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/AuthService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\User\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Core/Services/AuthService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/AuthService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/AuthService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/AuthService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Board\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/BoardService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Board\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/BoardService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\BoardGroup\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/BoardService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:findOrFail\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/BoardService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Services/FeatureService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:find\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Services/IntegrationWebhookReplayService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Core/Services/IntegrationWebhookReplayService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Core/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Core/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\BoardGroup\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Core/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$board_id\\.$#"
+			count: 3
+			path: app/Core/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$group_id\\.$#"
+			count: 1
+			path: app/Core/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$id\\.$#"
+			count: 6
+			path: app/Core/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$title\\.$#"
+			count: 1
+			path: app/Core/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$version\\.$#"
+			count: 2
+			path: app/Core/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$workspace_id\\.$#"
+			count: 6
+			path: app/Core/Services/ItemService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Item\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/ItemService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Item\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\PluginInstallation\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Core/Services/PluginEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\PluginInstallation\\:\\:\\$plugin\\.$#"
+			count: 4
+			path: app/Core/Services/PluginEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\PluginInstallation\\:\\:\\$settings\\.$#"
+			count: 1
+			path: app/Core/Services/PluginEngine.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\PluginHookLog\\:\\:create\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Services/PluginEngine.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\PluginInstallation\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/PluginEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\PushSubscription\\:\\:\\$auth_key\\.$#"
+			count: 1
+			path: app/Core/Services/PushNotificationService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\PushSubscription\\:\\:\\$endpoint\\.$#"
+			count: 1
+			path: app/Core/Services/PushNotificationService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\PushSubscription\\:\\:\\$p256dh_key\\.$#"
+			count: 1
+			path: app/Core/Services/PushNotificationService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Core/Services/PushNotificationService.php
+
+		-
+			message: "#^Call to an undefined method Minishlink\\\\WebPush\\\\WebPush\\:\\:sendNotification\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Services/PushNotificationService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\PushSubscription\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Core/Services/PushNotificationService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\PushSubscription\\:\\:whereIn\\(\\)\\.$#"
+			count: 2
+			path: app/Core/Services/PushNotificationService.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 2
+			path: app/Core/Services/SalesOrderWorkflowService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 5
+			path: app/Core/Services/UsageService.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: app/Core/Services/UsageService.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between int and null will always evaluate to false\\.$#"
+			count: 1
+			path: app/Core/Services/UsageService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceInvitation\\:\\:\\$expires_at\\.$#"
+			count: 1
+			path: app/Mail/WorkspaceInvite.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceInvitation\\:\\:\\$role\\.$#"
+			count: 1
+			path: app/Mail/WorkspaceInvite.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceInvitation\\:\\:\\$token\\.$#"
+			count: 1
+			path: app/Mail/WorkspaceInvite.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\WorkspaceInvitation\\:\\:\\$workspace\\.$#"
+			count: 2
+			path: app/Mail/WorkspaceInvite.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 22
+			path: app/Modules/AI/Http/Controllers/AIController.php
+
+		-
+			message: "#^Call to an undefined static method Illuminate\\\\Support\\\\Facades\\\\Redis\\:\\:decrby\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/AI/Http/Controllers/AIController.php
+
+		-
+			message: "#^Call to an undefined static method Illuminate\\\\Support\\\\Facades\\\\Redis\\:\\:eval\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/AI/Http/Controllers/AIController.php
+
+		-
+			message: "#^Call to an undefined static method Illuminate\\\\Support\\\\Facades\\\\Redis\\:\\:get\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/AI/Http/Controllers/AIController.php
+
+		-
+			message: "#^Call to an undefined static method Illuminate\\\\Support\\\\Facades\\\\Redis\\:\\:set\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/AI/Http/Controllers/AIController.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: app/Modules/AI/Http/Controllers/AIController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 6
+			path: app/Modules/Accounting/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Accounting\\\\Models\\\\Account\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Modules/Accounting/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Factory\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Accounting/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Accounting\\\\Models\\\\Account\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Accounting/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Accounting\\\\Models\\\\Account\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Accounting/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 5
+			path: app/Modules/Accounting/Http/Controllers/JournalEntryController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Factory\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Accounting/Http/Controllers/JournalEntryController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Accounting\\\\Models\\\\JournalEntry\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Accounting/Http/Controllers/JournalEntryController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Accounting\\\\Models\\\\JournalEntry\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Modules/Accounting/Http/Controllers/JournalEntryController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Modules/Accounting/Http/Controllers/JournalEntryController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Accounting\\\\Models\\\\JournalEntry\\:\\:\\$status\\.$#"
+			count: 2
+			path: app/Modules/Accounting/Models/JournalEntry.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$storage_quota_bytes\\.$#"
+			count: 1
+			path: app/Modules/Admin/Filament/Pages/StorageAnalytics.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$storage_used_bytes\\.$#"
+			count: 1
+			path: app/Modules/Admin/Filament/Pages/StorageAnalytics.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Admin/Filament/Pages/StorageAnalytics.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$enabled\\.$#"
+			count: 1
+			path: app/Modules/Admin/Filament/Resources/FeatureFlagResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Support\\\\Models\\\\Ticket\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Modules/Admin/Filament/Resources/TicketResource.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Factory\\:\\:id\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Admin/Filament/Resources/TicketResource.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:selectRaw\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Admin/Filament/Widgets/PlanDistributionWidget.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\User\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Admin/Filament/Widgets/StatsOverviewWidget.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Admin/Filament/Widgets/StatsOverviewWidget.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Admin/Filament/Widgets/StatsOverviewWidget.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Workspace\\:\\:whereIn\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Admin/Filament/Widgets/StatsOverviewWidget.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Admin\\\\Models\\\\SuperAdmin\\:\\:\\$level\\.$#"
+			count: 1
+			path: app/Modules/Admin/Models/SuperAdmin.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 6
+			path: app/Modules/Automation/Http/Controllers/AutomationController.php
+
+		-
+			message: "#^Parameter \\#1 \\$boolean of function abort_unless expects bool, object\\|null given\\.$#"
+			count: 1
+			path: app/Modules/Automation/Http/Controllers/AutomationController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Automation\\\\Models\\\\Automation\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Automation/Http/Controllers/RecommendationController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Automation\\\\Models\\\\AutomationRecommendation\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Modules/Automation/Http/Controllers/RecommendationController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Modules/Automation/Policies/AutomationPolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Automation\\\\Models\\\\Automation\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Modules/Automation/Policies/AutomationPolicy.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/Automation/Policies/AutomationPolicy.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$board\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$board_id\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$group\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$group_id\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$id\\.$#"
+			count: 4
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$title\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Automation\\\\Models\\\\Automation\\:\\:\\$actions\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Automation\\\\Models\\\\Automation\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Automation\\\\Models\\\\Automation\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Automation\\\\Models\\\\Automation\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Automation\\\\Models\\\\AutomationRun\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Call to protected method increment\\(\\) of class Illuminate\\\\Database\\\\Eloquent\\\\Model\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/AutomationEngine.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\BoardGroup\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Modules/Automation/Services/ItemService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$version\\.$#"
+			count: 2
+			path: app/Modules/Automation/Services/ItemService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Item\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/ItemService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Item\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/ItemService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\Item\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/Modules/Automation/Services/PatternDetector.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Automation\\\\Models\\\\Automation\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/PatternDetector.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Automation\\\\Models\\\\AutomationRecommendation\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/PatternDetector.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Automation\\\\Models\\\\AutomationRecommendation\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Automation/Services/PatternDetector.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\User\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Billing/Jobs/SendBillingConfirmationEmail.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$before\\.$#"
+			count: 1
+			path: app/Modules/Chat/Http/Controllers/ChatController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Chat\\\\Models\\\\ChatChannel\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Chat/Http/Controllers/ChatController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Chat\\\\Models\\\\ChatChannel\\:\\:where\\(\\)\\.$#"
+			count: 6
+			path: app/Modules/Chat/Http/Controllers/ChatController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Chat\\\\Models\\\\ChatMessage\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Chat/Http/Controllers/ChatController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Chat\\\\Models\\\\ChatMessage\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/Chat/Http/Controllers/ChatController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Chat\\\\Models\\\\ChatParticipant\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Chat/Http/Controllers/ChatController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Chat\\\\Models\\\\ChatParticipant\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Modules/Chat/Http/Controllers/ChatController.php
+
+		-
+			message: "#^Offset 1 on array\\{array\\<int, string\\>, array\\<int, non\\-falsy\\-string\\>\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: app/Modules/Chat/Http/Controllers/ChatController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 36
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$competency_type_id\\.$#"
+			count: 1
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$expiring_soon\\.$#"
+			count: 2
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$requirable_id\\.$#"
+			count: 1
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$requirable_type\\.$#"
+			count: 1
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$result\\.$#"
+			count: 1
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$status\\.$#"
+			count: 2
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$user_id\\.$#"
+			count: 3
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CofRecord\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CofRecord\\:\\:where\\(\\)\\.$#"
+			count: 6
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyRecord\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyRecord\\:\\:where\\(\\)\\.$#"
+			count: 8
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyRequirement\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyRequirement\\:\\:where\\(\\)\\.$#"
+			count: 5
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyType\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\CompetencyType\\:\\:where\\(\\)\\.$#"
+			count: 5
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\TrainingRecord\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Competency\\\\Models\\\\TrainingRecord\\:\\:where\\(\\)\\.$#"
+			count: 5
+			path: app/Modules/Competency/Http/Controllers/CompetencyController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Board\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Modules/Delegation/Http/Controllers/DelegationController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$board_id\\.$#"
+			count: 3
+			path: app/Modules/Delegation/Http/Controllers/DelegationController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$created_by\\.$#"
+			count: 1
+			path: app/Modules/Delegation/Http/Controllers/DelegationController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$id\\.$#"
+			count: 4
+			path: app/Modules/Delegation/Http/Controllers/DelegationController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Item\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Modules/Delegation/Http/Controllers/DelegationController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 5
+			path: app/Modules/Delegation/Http/Controllers/DelegationController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Delegation\\\\Models\\\\Delegation\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Delegation/Http/Controllers/DelegationController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Delegation\\\\Models\\\\Delegation\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Modules/Delegation/Http/Controllers/DelegationController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Modules/Delegation/Http/Controllers/DelegationController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 24
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$category_id\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$search\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\Equipment\\:\\:where\\(\\)\\.$#"
+			count: 10
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentBreakdown\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentBreakdown\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentBreakdown\\:\\:whereHas\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentCategory\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentCategory\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentInspection\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentInspection\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentInspection\\:\\:whereHas\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\EquipmentInspectionItem\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\MaintenanceSchedule\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\MaintenanceSchedule\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Equipment\\\\Models\\\\MaintenanceSchedule\\:\\:whereHas\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/Equipment/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 14
+			path: app/Modules/HSSE/Http/Controllers/CorrectiveActionController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\CorrectiveAction\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Http/Controllers/CorrectiveActionController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\CorrectiveAction\\:\\:\\$reference\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Http/Controllers/CorrectiveActionController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\CorrectiveAction\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/CorrectiveActionController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\CorrectiveAction\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Modules/HSSE/Http/Controllers/CorrectiveActionController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\HSSE\\\\Models\\\\CorrectiveAction\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/CorrectiveActionController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\HSSE\\\\Models\\\\CorrectiveAction\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/CorrectiveActionController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 9
+			path: app/Modules/HSSE/Http/Controllers/HSSEController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/HSSEController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\HSSE\\\\Models\\\\Hazard\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/HSSEController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/HSSEController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/HSSEController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 14
+			path: app/Modules/HSSE/Http/Controllers/HazardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Hazard\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Http/Controllers/HazardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Hazard\\:\\:\\$likelihood\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/HazardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Hazard\\:\\:\\$reference\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Http/Controllers/HazardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Hazard\\:\\:\\$severity\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/HazardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Hazard\\:\\:\\$title\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/HazardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Hazard\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Modules/HSSE/Http/Controllers/HazardController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\HSSE\\\\Models\\\\Hazard\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/HazardController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\HSSE\\\\Models\\\\Hazard\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/HazardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 14
+			path: app/Modules/HSSE/Http/Controllers/IncidentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Http/Controllers/IncidentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$reference\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Http/Controllers/IncidentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/IncidentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$title\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/IncidentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Modules/HSSE/Http/Controllers/IncidentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/IncidentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Http/Controllers/IncidentController.php
+
+		-
+			message: "#^Method App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:correctiveActions\\(\\) should return Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany but returns Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Modules\\\\HSSE\\\\Models\\\\CorrectiveAction\\>\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Models/Incident.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$name\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$slug\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$body_part_affected\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$coida_reference\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$coida_reportable\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$contributing_factors\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$description\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$immediate_cause\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$injury_type\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$investigator\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$location\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$location_details\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$mhsa_classification\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$occurred_at\\.$#"
+			count: 3
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$reference\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$reported_at\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$reporter\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$root_cause\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$severity\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$title\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$type\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Optional\\:\\:addDays\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Optional\\:\\:toIso8601String\\(\\)\\.$#"
+			count: 3
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Using nullsafe method call on non\\-nullable type Illuminate\\\\Support\\\\Optional\\. Use \\-\\> instead\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/CoidaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:\\$location\\.$#"
+			count: 1
+			path: app/Modules/HSSE/Services/MhsaReportService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\HSSE\\\\Models\\\\Incident\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Services/MhsaReportService.php
+
+		-
+			message: "#^Cannot call method toArray\\(\\) on int\\.$#"
+			count: 2
+			path: app/Modules/HSSE/Services/MhsaReportService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 5
+			path: app/Modules/Inventory/Http/Controllers/InventoryCategoryController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$color\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/InventoryCategoryController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$description\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/InventoryCategoryController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/InventoryCategoryController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$parent_id\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/InventoryCategoryController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Inventory\\\\Models\\\\InventoryCategory\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/InventoryCategoryController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Inventory\\\\Models\\\\InventoryCategory\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Modules/Inventory/Http/Controllers/InventoryCategoryController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 7
+			path: app/Modules/Inventory/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$barcode\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$category_id\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$description\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$sku\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Inventory\\\\Models\\\\Product\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Inventory\\\\Models\\\\Product\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Inventory\\\\Models\\\\Product\\:\\:withCount\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Parameter \\#1 \\$json of function json_decode expects string, Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag given\\.$#"
+			count: 2
+			path: app/Modules/Inventory/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Ternary operator condition is always true\\.$#"
+			count: 2
+			path: app/Modules/Inventory/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 7
+			path: app/Modules/Inventory/Http/Controllers/StockItemController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$expiry_date\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/StockItemController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$location\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/StockItemController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$lot_number\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/StockItemController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$product_id\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/StockItemController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$quantity\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/StockItemController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$serial_number\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/StockItemController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Inventory\\\\Models\\\\Product\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/Inventory/Http/Controllers/StockItemController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Inventory\\\\Models\\\\StockItem\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Inventory/Http/Controllers/StockItemController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Inventory\\\\Models\\\\StockItem\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/Inventory/Http/Controllers/StockItemController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 5
+			path: app/Modules/Invoicing/Http/Controllers/InvoiceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Invoicing\\\\Models\\\\Invoice\\:\\:\\$status\\.$#"
+			count: 2
+			path: app/Modules/Invoicing/Http/Controllers/InvoiceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Invoicing\\\\Models\\\\Invoice\\:\\:\\$workspace_id\\.$#"
+			count: 3
+			path: app/Modules/Invoicing/Http/Controllers/InvoiceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Invoicing\\\\Models\\\\Invoice\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Invoicing/Http/Controllers/InvoiceController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Invoicing\\\\Models\\\\Invoice\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Invoicing/Http/Controllers/InvoiceController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Modules/Invoicing/Http/Controllers/InvoiceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 20
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\JobCards\\\\Models\\\\JobCard\\:\\:\\$id\\.$#"
+			count: 8
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\JobCards\\\\Models\\\\JobCard\\:\\:\\$workspace_id\\.$#"
+			count: 11
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\JobCards\\\\Models\\\\JobCardAttachment\\:\\:\\$filepath\\.$#"
+			count: 1
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\JobCards\\\\Models\\\\JobCardAttachment\\:\\:\\$job_card_id\\.$#"
+			count: 1
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\JobCards\\\\Models\\\\JobCardMaterial\\:\\:\\$job_card_id\\.$#"
+			count: 1
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\JobCards\\\\Models\\\\JobCardTask\\:\\:\\$job_card_id\\.$#"
+			count: 2
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\JobCards\\\\Models\\\\JobCard\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\JobCards\\\\Models\\\\JobCard\\:\\:where\\(\\)\\.$#"
+			count: 6
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\JobCards\\\\Models\\\\JobCardAttachment\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\JobCards\\\\Models\\\\JobCardMaterial\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\JobCards\\\\Models\\\\JobCardTemplate\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\JobCards\\\\Models\\\\JobCardTemplate\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\JobCards\\\\Models\\\\JobCardTimeEntry\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Modules/JobCards/Http/Controllers/JobCardController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Http/Controllers/CampaignController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Http/Controllers/CampaignController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Marketing\\\\Models\\\\Campaign\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Http/Controllers/CampaignController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Marketing\\\\Models\\\\Campaign\\:\\:where\\(\\)\\.$#"
+			count: 6
+			path: app/Modules/Marketing/Http/Controllers/CampaignController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Marketing\\\\Models\\\\CampaignAudience\\:\\:insert\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Http/Controllers/CampaignController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$category\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Http/Controllers/EmailTemplateController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Marketing\\\\Models\\\\EmailTemplate\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Http/Controllers/EmailTemplateController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Marketing\\\\Models\\\\EmailTemplate\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Modules/Marketing/Http/Controllers/EmailTemplateController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\CRM\\\\Models\\\\CrmContact\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/Marketing/Http/Controllers/SegmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Marketing\\\\Models\\\\Segment\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Http/Controllers/SegmentController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Marketing\\\\Models\\\\Segment\\:\\:where\\(\\)\\.$#"
+			count: 6
+			path: app/Modules/Marketing/Http/Controllers/SegmentController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Marketing\\\\Models\\\\Campaign\\:\\:\\$actual_spend\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Services/CampaignService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Marketing\\\\Models\\\\Campaign\\:\\:\\$budget\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Services/CampaignService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Marketing\\\\Models\\\\Campaign\\:\\:\\$clicked_count\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Services/CampaignService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Marketing\\\\Models\\\\Campaign\\:\\:\\$converted_count\\.$#"
+			count: 2
+			path: app/Modules/Marketing/Services/CampaignService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Marketing\\\\Models\\\\Campaign\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Modules/Marketing/Services/CampaignService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Marketing\\\\Models\\\\Campaign\\:\\:\\$opened_count\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Services/CampaignService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Marketing\\\\Models\\\\Campaign\\:\\:\\$sent_count\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Services/CampaignService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Marketing\\\\Models\\\\CampaignAudience\\:\\:insert\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Services/CampaignService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Marketing\\\\Models\\\\CampaignAudience\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Marketing/Services/CampaignService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 22
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$holder_id\\.$#"
+			count: 1
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$id\\.$#"
+			count: 10
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$recipient_id\\.$#"
+			count: 1
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$reference\\.$#"
+			count: 6
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$risk_level\\.$#"
+			count: 1
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$status\\.$#"
+			count: 3
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$workspace_id\\.$#"
+			count: 1
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\PTW\\\\Models\\\\PermitHazard\\:\\:create\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\PTW\\\\Models\\\\PermitHazard\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\PTW\\\\Models\\\\PermitIsolation\\:\\:create\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\PTW\\\\Models\\\\PermitIsolation\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Parameter \\#2 \\$default of method Illuminate\\\\Http\\\\Request\\:\\:query\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 1
+			path: app/Modules/PTW/Http/Controllers/PermitController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Modules/PTW/Models/Permit.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/Modules/PTW/Models/Permit.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$valid_until\\.$#"
+			count: 1
+			path: app/Modules/PTW/Models/Permit.php
+
+		-
+			message: "#^Method App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:hazards\\(\\) should return Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany but returns Illuminate\\\\Database\\\\Query\\\\Builder\\.$#"
+			count: 1
+			path: app/Modules/PTW/Models/Permit.php
+
+		-
+			message: "#^Method App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:isolations\\(\\) should return Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany but returns Illuminate\\\\Database\\\\Query\\\\Builder\\.$#"
+			count: 1
+			path: app/Modules/PTW/Models/Permit.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$activated_at\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$approved_at\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$approver\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$closed_at\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$closer\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$closure_notes\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$description\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$equipment_id\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$extensions_used_minutes\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$hazards\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$holder\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$isolations\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$issued_at\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$issuer\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$location\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$location_details\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$max_extension_minutes\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$ppe_required\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$pre_conditions\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$recipient\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$reference\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$rejection_reason\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$requested_at\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$risk_level\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$suspended_at\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$suspension_reason\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$title\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$valid_from\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$valid_until\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$work_method_statement\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<int,stdClass\\>\\:\\:map\\(\\) expects callable\\(stdClass, int\\)\\: array, Closure\\(App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\)\\: array given\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/DmrPermitRegisterService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 3
+			path: app/Modules/PTW/Services/PermitWorkflowService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$holder_id\\.$#"
+			count: 2
+			path: app/Modules/PTW/Services/PermitWorkflowService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/PermitWorkflowService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$issuer_id\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/PermitWorkflowService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$recipient_id\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/PermitWorkflowService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$status\\.$#"
+			count: 2
+			path: app/Modules/PTW/Services/PermitWorkflowService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:\\$workspace_id\\.$#"
+			count: 2
+			path: app/Modules/PTW/Services/PermitWorkflowService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Core\\\\Models\\\\WorkspaceMember\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/PermitWorkflowService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\PTW\\\\Models\\\\Permit\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/PTW/Services/PermitWorkflowService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 5
+			path: app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$expected_date\\.$#"
+			count: 1
+			path: app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$items\\.$#"
+			count: 1
+			path: app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$notes\\.$#"
+			count: 1
+			path: app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$supplier_email\\.$#"
+			count: 1
+			path: app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$supplier_id\\.$#"
+			count: 1
+			path: app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$supplier_name\\.$#"
+			count: 1
+			path: app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Purchasing\\\\Models\\\\PurchaseOrder\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Purchasing\\\\Models\\\\PurchaseOrder\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Purchasing\\\\Models\\\\PurchaseOrderItem\\:\\:create\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$category\\.$#"
+			count: 1
+			path: app/Modules/Support/Http/Controllers/KnowledgeBaseController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$include_draft\\.$#"
+			count: 1
+			path: app/Modules/Support/Http/Controllers/KnowledgeBaseController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$search\\.$#"
+			count: 1
+			path: app/Modules/Support/Http/Controllers/KnowledgeBaseController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\KnowledgeBaseArticle\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Support/Http/Controllers/KnowledgeBaseController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\KnowledgeBaseArticle\\:\\:where\\(\\)\\.$#"
+			count: 5
+			path: app/Modules/Support/Http/Controllers/KnowledgeBaseController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\SlaBreach\\:\\:whereIn\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Support/Http/Controllers/SlaController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\Ticket\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/Support/Http/Controllers/SlaController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\TicketSla\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Support/Http/Controllers/SlaController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\TicketSla\\:\\:where\\(\\)\\.$#"
+			count: 4
+			path: app/Modules/Support/Http/Controllers/SlaController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$assigned_to\\.$#"
+			count: 1
+			path: app/Modules/Support/Http/Controllers/TicketController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$priority\\.$#"
+			count: 1
+			path: app/Modules/Support/Http/Controllers/TicketController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Modules/Support/Http/Controllers/TicketController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\Ticket\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Support/Http/Controllers/TicketController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\Ticket\\:\\:where\\(\\)\\.$#"
+			count: 5
+			path: app/Modules/Support/Http/Controllers/TicketController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\Ticket\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/Support/Http/Controllers/TicketMessageController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\TicketMessage\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Support/Http/Controllers/TicketMessageController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\TicketMessage\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Modules/Support/Http/Controllers/TicketMessageController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\SlaBreach\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Support/Jobs/EnforceSlaJob.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\Ticket\\:\\:whereNull\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Support/Jobs/EnforceSlaJob.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Support\\\\Models\\\\Ticket\\:\\:\\$assigned_to\\.$#"
+			count: 1
+			path: app/Modules/Support/Listeners/GenerateKbFromTicket.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Support\\\\Models\\\\Ticket\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Modules/Support/Listeners/GenerateKbFromTicket.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Support\\\\Models\\\\Ticket\\:\\:\\$subject\\.$#"
+			count: 1
+			path: app/Modules/Support/Listeners/GenerateKbFromTicket.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Modules\\\\Support\\\\Models\\\\Ticket\\:\\:\\$workspace_id\\.$#"
+			count: 2
+			path: app/Modules/Support/Listeners/GenerateKbFromTicket.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\KnowledgeBaseArticle\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Support/Listeners/GenerateKbFromTicket.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Support\\\\Models\\\\TicketMessage\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Support/Listeners/GenerateKbFromTicket.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Core\\\\Models\\\\Workspace\\:\\:\\$id\\.$#"
+			count: 6
+			path: app/Modules/Templates/Http/Controllers/TemplateController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Templates\\\\Models\\\\Template\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Modules/Templates/Http/Controllers/TemplateController.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Modules\\\\Templates\\\\Models\\\\Template\\:\\:where\\(\\)\\.$#"
+			count: 5
+			path: app/Modules/Templates/Http/Controllers/TemplateController.php

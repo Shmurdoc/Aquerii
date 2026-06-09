@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Workspace;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -15,27 +15,27 @@ class WorkspaceController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'name'     => 'required|string|max:100',
-            'icon'     => 'nullable|string|max:10',
-            'color'    => 'nullable|string|max:20',
+            'name' => 'required|string|max:100',
+            'icon' => 'nullable|string|max:10',
+            'color' => 'nullable|string|max:20',
             'timezone' => 'nullable|string|max:50',
         ]);
 
         $workspace = DB::transaction(function () use ($validated, $request) {
             $ws = Workspace::create(array_merge($validated, [
-                'slug' => Str::slug($validated['name']) . '-' . Str::lower(Str::random(6)),
+                'slug' => Str::slug($validated['name']).'-'.Str::lower(Str::random(6)),
                 'plan' => 'free',
                 'plan_status' => 'active',
             ]));
 
             DB::table('workspace_members')->insert([
-                'id'           => Str::uuid(),
+                'id' => Str::uuid(),
                 'workspace_id' => $ws->id,
-                'user_id'      => $request->user()->id,
-                'role'         => 'owner',
-                'joined_at'    => now(),
-                'created_at'   => now(),
-                'updated_at'   => now(),
+                'user_id' => $request->user()->id,
+                'role' => 'owner',
+                'joined_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             return $ws;
@@ -54,8 +54,8 @@ class WorkspaceController extends Controller
     public function update(Request $request, Workspace $workspace): JsonResponse
     {
         $validated = $request->validate([
-            'name'  => 'sometimes|string|max:100',
-            'icon'  => 'sometimes|string|max:10',
+            'name' => 'sometimes|string|max:100',
+            'icon' => 'sometimes|string|max:10',
             'color' => 'sometimes|string|max:20',
         ]);
 
@@ -81,7 +81,7 @@ class WorkspaceController extends Controller
     {
         $validated = $request->validate([
             'email' => 'required|email',
-            'role'  => 'required|in:admin,member,viewer',
+            'role' => 'required|in:admin,member,viewer',
         ]);
 
         $user = DB::table('users')->where('email', $validated['email'])->first();
@@ -94,13 +94,13 @@ class WorkspaceController extends Controller
         abort_if($exists, 409, 'User is already a member.');
 
         DB::table('workspace_members')->insert([
-            'id'           => Str::uuid(),
+            'id' => Str::uuid(),
             'workspace_id' => $workspace->id,
-            'user_id'      => $user->id,
-            'role'         => $validated['role'],
-            'joined_at'    => now(),
-            'created_at'   => now(),
-            'updated_at'   => now(),
+            'user_id' => $user->id,
+            'role' => $validated['role'],
+            'joined_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         return response()->json(['data' => ['invited' => true]], 201);

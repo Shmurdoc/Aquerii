@@ -1,0 +1,12 @@
+{
+  "name": "hipaa-compliance",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "HIPAA-specific entrypoint for healthcare privacy and security work. Use when a task is explicitly framed around HIPAA, PHI handling, covered entities, BAAs, breach posture, or US healthcare complia..."
+}

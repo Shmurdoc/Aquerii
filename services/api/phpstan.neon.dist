@@ -1,0 +1,36 @@
+includes:
+    - phpstan-baseline.neon
+parameters:
+    level: 5
+    paths:
+        - app
+    excludePaths:
+        - app/Modules/CRM/database
+        - app/Http/Controllers
+        - app/Modules/CRM
+        - app/Models
+        - app/Jobs
+        - app/Services
+        - app/Modules/Documents
+        - app/Modules/Sales
+        - app/Modules/Email
+        - app/Core/Models
+        - app/Core/Exports
+        - app/Core/Http/Controllers
+        - app/Core/Jobs/ProcessAutomations.php
+        - app/Core/Services/VatService.php
+        - app/Modules/AI
+        - app/Modules/Accounting
+        - app/Modules/Automation
+        - app/Modules/Billing
+        - app/Modules/Competency
+        - app/Modules/Delegation
+        - app/Modules/Equipment
+        - app/Modules/HSSE
+        - app/Modules/Inventory
+        - app/Modules/Invoicing
+        - app/Modules/JobCards
+        - app/Modules/PTW
+        - app/Modules/Purchasing
+        - app/Modules/Support
+        - app/Modules/Templates

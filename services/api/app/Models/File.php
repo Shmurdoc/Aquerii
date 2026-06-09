@@ -20,7 +20,7 @@ class File extends Model
     {
         return [
             'size_bytes' => 'integer',
-            'is_public'  => 'boolean',
+            'is_public' => 'boolean',
         ];
     }
 

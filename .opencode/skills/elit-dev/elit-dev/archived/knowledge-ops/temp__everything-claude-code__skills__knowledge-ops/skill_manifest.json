@@ -1,0 +1,12 @@
+{
+  "name": "knowledge-ops",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Knowledge base management, ingestion, sync, and retrieval across multiple storage layers (local files, MCP memory, vector stores, Git repos). Use when the user wants to save, organize, sync, dedupl..."
+}

@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Board extends Model
 {
-    use HasUuids, HasFactory, SoftDeletes;
+    use HasFactory, HasUuids, Searchable, SoftDeletes;
 
     protected $table = 'boards';
 
@@ -22,20 +23,15 @@ class Board extends Model
     protected function casts(): array
     {
         return [
-            'settings'    => 'array',
+            'settings' => 'array',
             'is_archived' => 'boolean',
-            'position'    => 'float',
+            'position' => 'float',
         ];
     }
 
     public function workspace()
     {
         return $this->belongsTo(Workspace::class);
-    }
-
-    public function columns()
-    {
-        return $this->hasMany(BoardColumn::class);
     }
 
     public function groups()
@@ -48,9 +44,18 @@ class Board extends Model
         return $this->hasMany(Item::class);
     }
 
-    public function members()
+    public function toSearchableArray(): array
     {
-        return $this->belongsToMany(User::class, 'workspace_members', 'workspace_id', 'user_id', 'workspace_id');
+        return [
+            'id' => $this->id,
+            'workspace_id' => $this->workspace_id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'type' => $this->type,
+            'board_type' => $this->board_type,
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
+        ];
     }
 
     public function scopeActive($query)

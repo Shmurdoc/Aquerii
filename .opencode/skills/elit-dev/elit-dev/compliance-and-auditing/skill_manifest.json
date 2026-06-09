@@ -1,0 +1,12 @@
+{
+  "name": "compliance-and-auditing",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Compliance checklists, SBOM generation, license auditing, data privacy notes, and audit-ready documentation practices."
+}

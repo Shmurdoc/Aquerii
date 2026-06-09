@@ -1,0 +1,12 @@
+{
+  "name": "receiving-code-review",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performat..."
+}

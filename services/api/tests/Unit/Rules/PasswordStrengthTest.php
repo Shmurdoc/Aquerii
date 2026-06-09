@@ -8,10 +8,11 @@ use App\Rules\PasswordStrength;
 function validatePassword(string $password): ?string
 {
     $errors = [];
-    $rule   = new PasswordStrength();
+    $rule = new PasswordStrength;
     $rule->validate('password', $password, function (string $msg) use (&$errors) {
         $errors[] = $msg;
     });
+
     return $errors[0] ?? null;
 }
 

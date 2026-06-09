@@ -1,0 +1,8 @@
+﻿gh : failed to get run: HTTP 404: Not Found 
+(https://api.github.com/repos/Shmurdoc/Aquerii/actions/runs/80146306825?exclude_pull_requests=true)
+At line:1 char:1
++ gh run view 80146306825 --log-failed 2>&1 | Out-File -Encoding utf8 C ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (failed to get r..._requests=true):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

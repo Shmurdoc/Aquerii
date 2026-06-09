@@ -22,7 +22,7 @@ class WorkspaceInvitation extends Model
 
     protected $casts = [
         'accepted_at' => 'datetime',
-        'expires_at'  => 'datetime',
+        'expires_at' => 'datetime',
     ];
 
     public function workspace(): BelongsTo

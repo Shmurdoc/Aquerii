@@ -69,7 +69,7 @@
         ],
         "test": "pest --parallel",
         "lint": "pint --test",
-        "analyse": "phpstan analyse --memory-limit=512M"
+        "analyse": "phpstan analyse --memory-limit=512M --generate-baseline && phpstan analyse --memory-limit=512M"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,

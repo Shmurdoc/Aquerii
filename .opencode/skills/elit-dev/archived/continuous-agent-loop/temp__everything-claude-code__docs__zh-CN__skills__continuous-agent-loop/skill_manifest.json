@@ -1,0 +1,12 @@
+{
+  "name": "continuous-agent-loop",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u5177\u6709\u8d28\u91cf\u95e8\u3001\u8bc4\u4f30\u548c\u6062\u590d\u63a7\u5236\u7684\u8fde\u7eed\u81ea\u4e3b\u4ee3\u7406\u5faa\u73af\u6a21\u5f0f\u3002"
+}

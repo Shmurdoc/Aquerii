@@ -12,12 +12,12 @@ class BoardFactory extends Factory
     {
         return [
             'workspace_id' => Workspace::factory(),
-            'name'         => implode(' ', fake()->words(3)) . ' Board',
-            'type'         => 'main',
+            'name' => implode(' ', fake()->words(3)).' Board',
+            'type' => 'main',
             'default_view' => 'kanban',
-            'settings'     => [],
-            'position'     => 65536.0,
-            'created_by'   => User::factory(),
+            'settings' => [],
+            'position' => 65536.0,
+            'created_by' => User::factory(),
         ];
     }
 }

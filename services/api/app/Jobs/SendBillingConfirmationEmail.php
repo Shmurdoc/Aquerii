@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\BillingConfirmation;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,14 +20,16 @@ class SendBillingConfirmationEmail implements ShouldQueue
     public function __construct(
         public readonly string $userId,
         public readonly string $eventType,
-        public readonly array  $details,
+        public readonly array $details,
     ) {}
 
     public function handle(): void
     {
         $user = User::find($this->userId);
-        if (!$user) return;
+        if (! $user) {
+            return;
+        }
 
-        Mail::to($user)->send(new \App\Mail\BillingConfirmation($this->eventType, $this->details));
+        Mail::to($user)->send(new BillingConfirmation($this->eventType, $this->details));
     }
 }

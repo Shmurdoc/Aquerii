@@ -1,0 +1,12 @@
+{
+  "name": "chaos-and-resilience-testing",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Chaos engineering practices, fault injection guidance, and resilience testing to validate system robustness under adverse conditions."
+}

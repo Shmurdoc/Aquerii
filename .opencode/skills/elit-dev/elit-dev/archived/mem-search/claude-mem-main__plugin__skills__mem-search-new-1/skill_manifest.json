@@ -1,0 +1,12 @@
+{
+  "name": "mem-search",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Search claude-mem's persistent cross-session memory database. Use when user asks \"did we already solve this?\", \"how did we do X last time?\", or needs work from previous sessions."
+}

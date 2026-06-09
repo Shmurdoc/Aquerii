@@ -1,0 +1,12 @@
+{
+  "name": "flutter-dart-code-review",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u5e93\u65e0\u5173\u7684Flutter/Dart\u4ee3\u7801\u5ba1\u67e5\u6e05\u5355\uff0c\u6db5\u76d6Widget\u6700\u4f73\u5b9e\u8df5\u3001\u72b6\u6001\u7ba1\u7406\u6a21\u5f0f\uff08BLoC\u3001Riverpod\u3001Provider\u3001GetX\u3001MobX\u3001Signals\uff09\u3001Dart\u60ef\u7528\u6cd5\u3001\u6027\u80fd\u3001\u53ef\u8bbf\u95ee\u6027\u3001\u5b89\u5168\u6027\u548c\u6574\u6d01\u67b6\u6784\u3002"
+}

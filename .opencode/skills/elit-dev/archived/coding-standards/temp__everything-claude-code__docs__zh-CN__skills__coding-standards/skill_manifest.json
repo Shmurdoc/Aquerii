@@ -1,0 +1,12 @@
+{
+  "name": "coding-standards",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u9002\u7528\u4e8eTypeScript\u3001JavaScript\u3001React\u548cNode.js\u5f00\u53d1\u7684\u901a\u7528\u7f16\u7801\u6807\u51c6\u3001\u6700\u4f73\u5b9e\u8df5\u548c\u6a21\u5f0f\u3002"
+}

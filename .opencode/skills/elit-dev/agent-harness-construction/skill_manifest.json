@@ -1,0 +1,12 @@
+{
+  "name": "agent-harness-construction",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Design and optimize AI agent action spaces, tool definitions, and observation formatting for higher completion rates."
+}

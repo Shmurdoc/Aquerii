@@ -30,7 +30,7 @@ class Handler extends ExceptionHandler
         if ($e instanceof ValidationException) {
             return response()->json([
                 'error' => [
-                    'code'    => 'VALIDATION_ERROR',
+                    'code' => 'VALIDATION_ERROR',
                     'message' => 'The given data was invalid.',
                     'details' => $e->errors(),
                 ],
@@ -45,6 +45,7 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof ModelNotFoundException) {
             $model = class_basename($e->getModel());
+
             return response()->json([
                 'error' => ['code' => 'NOT_FOUND', 'message' => "{$model} not found."],
             ], 404);
@@ -52,7 +53,7 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof HttpException) {
             // AuthService abort()s with a JSON string as the message — decode it
-            $raw     = $e->getMessage();
+            $raw = $e->getMessage();
             $decoded = $raw ? json_decode($raw, true) : null;
 
             if (is_array($decoded) && isset($decoded['error'])) {
@@ -65,7 +66,7 @@ class Handler extends ExceptionHandler
         }
 
         $statusCode = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
-        $message    = config('app.debug') ? $e->getMessage() : 'An unexpected error occurred.';
+        $message = config('app.debug') ? $e->getMessage() : 'An unexpected error occurred.';
 
         return response()->json([
             'error' => ['code' => 'INTERNAL_ERROR', 'message' => $message],

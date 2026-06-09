@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Workspace;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -21,12 +21,12 @@ class FileController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $data = $files->map(fn($f) => [
-            'id'       => $f->id,
+        $data = $files->map(fn ($f) => [
+            'id' => $f->id,
             'filename' => $f->filename,
-            'size'     => $f->size,
-            'mime'     => $f->mime_type,
-            'url'      => Storage::disk('s3')->temporaryUrl($f->storage_path, now()->addMinutes(60)),
+            'size' => $f->size,
+            'mime' => $f->mime_type,
+            'url' => Storage::disk('s3')->temporaryUrl($f->storage_path, now()->addMinutes(60)),
         ]);
 
         return response()->json(['data' => $data]);
@@ -39,31 +39,31 @@ class FileController extends Controller
             'file' => 'required|file|max:102400', // 100 MB
         ]);
 
-        $file     = $request->file('file');
+        $file = $request->file('file');
         $filename = $file->getClientOriginalName();
-        $size     = $file->getSize();
+        $size = $file->getSize();
 
         // Check workspace storage quota
-        $used  = (int) $workspace->storage_used_bytes;
+        $used = (int) $workspace->storage_used_bytes;
         $limit = (int) ($workspace->storage_limit_bytes ?? 5368709120);
         abort_if($used + $size > $limit, 402, 'Storage quota exceeded.');
 
-        $path = "workspaces/{$workspace->id}/items/{$itemId}/" . Str::uuid() . '_' . $filename;
+        $path = "workspaces/{$workspace->id}/items/{$itemId}/".Str::uuid().'_'.$filename;
         Storage::disk('s3')->put($path, $file->getContent());
 
         $id = Str::uuid()->toString();
         DB::transaction(function () use ($id, $itemId, $workspace, $filename, $path, $size, $file) {
             DB::table('files')->insert([
-                'id'           => $id,
+                'id' => $id,
                 'workspace_id' => $workspace->id,
-                'entity_type'  => 'item',
-                'entity_id'    => $itemId,
-                'filename'     => $filename,
+                'entity_type' => 'item',
+                'entity_id' => $itemId,
+                'filename' => $filename,
                 'storage_path' => $path,
-                'mime_type'    => $file->getMimeType(),
-                'size'         => $size,
-                'created_at'   => now(),
-                'updated_at'   => now(),
+                'mime_type' => $file->getMimeType(),
+                'size' => $size,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             // Trigger updates storage_used_bytes via DB trigger (02_triggers.sql)

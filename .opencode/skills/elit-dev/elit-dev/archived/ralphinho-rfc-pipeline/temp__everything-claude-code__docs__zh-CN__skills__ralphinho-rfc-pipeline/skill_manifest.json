@@ -1,0 +1,12 @@
+{
+  "name": "ralphinho-rfc-pipeline",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u57fa\u4e8eRFC\u9a71\u52a8\u7684\u591a\u667a\u80fd\u4f53DAG\u6267\u884c\u6a21\u5f0f\uff0c\u5305\u542b\u8d28\u91cf\u95e8\u3001\u5408\u5e76\u961f\u5217\u548c\u5de5\u4f5c\u5355\u5143\u7f16\u6392\u3002"
+}

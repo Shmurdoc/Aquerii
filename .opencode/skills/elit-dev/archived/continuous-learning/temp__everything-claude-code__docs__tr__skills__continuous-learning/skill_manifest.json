@@ -1,0 +1,12 @@
+{
+  "name": "continuous-learning",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Claude Code oturumlar\u0131ndan yeniden kullan\u0131labilir kal\u0131plar\u0131 otomatik olarak \u00e7\u0131kar\u0131n ve gelecekte kullanmak \u00fczere \u00f6\u011frenilmi\u015f skill'ler olarak kaydedin."
+}

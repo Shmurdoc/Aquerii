@@ -1,0 +1,12 @@
+{
+  "name": "liquid-glass-design",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "iOS 26 Liquid Glass design system \u2014 dynamic glass material with blur, reflection, and interactive morphing for SwiftUI, UIKit, and WidgetKit."
+}

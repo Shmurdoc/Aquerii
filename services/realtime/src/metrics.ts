@@ -1,5 +1,9 @@
 import http from 'http'
+import type { ServerResponse } from 'http'
 import { register, collectDefaultMetrics, Counter, Gauge } from 'prom-client'
+import pino from 'pino'
+
+const logger = pino({ level: process.env.LOG_LEVEL ?? 'info' })
 
 collectDefaultMetrics({ prefix: 'aquerii_realtime_' })
 
@@ -21,16 +25,17 @@ export const messagesTotal = new Counter({
 
 export function createMetricsServer(port = 9102): http.Server {
   const server = http.createServer(async (_req, res) => {
+    const response = res as ServerResponse
     try {
-      res.setHeader('Content-Type', register.contentType)
-      res.end(await register.metrics())
+      response.setHeader('Content-Type', register.contentType)
+      ;(response as any).end(await register.metrics())
     } catch (err) {
-      res.writeHead(500)
-      res.end(String(err))
+      response.writeHead(500)
+      ;(response as any).end(String(err))
     }
   })
   server.listen(port, () => {
-    console.log(`Metrics server listening on :${port}`)
+    logger.info({ port }, 'Metrics server listening')
   })
   return server
 }

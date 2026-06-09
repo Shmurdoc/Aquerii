@@ -1,0 +1,12 @@
+{
+  "name": "nextjs-turbopack",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Next.js 16+ and Turbopack \u2014 incremental bundling, FS caching, dev speed, and when to use Turbopack vs webpack."
+}

@@ -1,0 +1,12 @@
+{
+  "name": "kotlin-testing",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Kotest, MockK, coroutine testi, property-based testing ve Kover coverage ile Kotlin test kal\u0131plar\u0131. \u0130diomatic Kotlin uygulamalar\u0131yla TDD metodolojisini takip eder."
+}

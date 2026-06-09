@@ -1,0 +1,2 @@
+# .opencode/ paths are in .gitignore and never reach gitleaks, so these
+# fingerprints were "Invalid" warnings. Cleared.

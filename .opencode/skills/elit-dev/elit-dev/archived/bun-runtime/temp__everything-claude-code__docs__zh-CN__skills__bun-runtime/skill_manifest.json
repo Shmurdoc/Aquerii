@@ -1,0 +1,12 @@
+{
+  "name": "bun-runtime",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Bun \u4f5c\u4e3a\u8fd0\u884c\u65f6\u3001\u5305\u7ba1\u7406\u5668\u3001\u6253\u5305\u5668\u548c\u6d4b\u8bd5\u8fd0\u884c\u5668\u3002\u4f55\u65f6\u9009\u62e9 Bun \u800c\u975e Node\u3001\u8fc1\u79fb\u6ce8\u610f\u4e8b\u9879\u4ee5\u53ca Vercel \u652f\u6301\u3002"
+}

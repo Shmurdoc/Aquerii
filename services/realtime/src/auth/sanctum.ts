@@ -4,6 +4,7 @@
 // every socket event.
 
 import { Redis } from 'ioredis'
+import axios from 'axios'
 
 export interface SanctumUser {
   sub: string           // user id
@@ -29,19 +30,20 @@ export async function verifySanctumToken(
   }
 
   // 2. Call API /me
-  const res = await fetch(`${apiUrl}/api/me`, {
+  const res = await axios.get(`${apiUrl}/api/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/json',
     },
-    signal: AbortSignal.timeout(5000), // 5s timeout
+    timeout: 5000,
+    validateStatus: () => true,
   })
 
-  if (!res.ok) {
+  if (res.status < 200 || res.status >= 300) {
     throw new Error(`AUTH_INVALID: API returned ${res.status}`)
   }
 
-  const body = await res.json() as { data: { id: string; name: string; avatar_url: string | null; workspace?: { id: string; role?: string } } }
+  const body = res.data as { data: { id: string; name: string; avatar_url: string | null; workspace?: { id: string; role?: string } } }
   const data = body.data
 
   if (!data?.id) {

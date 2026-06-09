@@ -1,0 +1,12 @@
+{
+  "name": "compose-multiplatform-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "KMP\u9879\u76ee\u4e2d\u7684Compose Multiplatform\u548cJetpack Compose\u6a21\u5f0f\u2014\u2014\u72b6\u6001\u7ba1\u7406\u3001\u5bfc\u822a\u3001\u4e3b\u9898\u5316\u3001\u6027\u80fd\u4f18\u5316\u548c\u5e73\u53f0\u7279\u5b9aUI\u3002"
+}

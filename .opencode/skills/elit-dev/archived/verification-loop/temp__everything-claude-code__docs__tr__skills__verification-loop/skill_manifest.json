@@ -1,0 +1,12 @@
+{
+  "name": "verification-loop",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\"Claude Code oturumlar\u0131 i\u00e7in kapsaml\u0131 do\u011frulama sistemi.\""
+}

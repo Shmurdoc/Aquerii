@@ -1,0 +1,12 @@
+{
+  "name": "code-review-and-quality-gates",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "PR templates, review checklists, automated quality gates, linting, and static analysis workflows to maintain code quality and consistency."
+}

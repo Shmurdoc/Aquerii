@@ -1,0 +1,12 @@
+{
+  "name": "kotlin-exposed-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "JetBrains Exposed ORM \u6a21\u5f0f\uff0c\u5305\u62ec DSL \u67e5\u8be2\u3001DAO \u6a21\u5f0f\u3001\u4e8b\u52a1\u3001HikariCP \u8fde\u63a5\u6c60\u3001Flyway \u8fc1\u79fb\u548c\u4ed3\u5e93\u6a21\u5f0f\u3002"
+}

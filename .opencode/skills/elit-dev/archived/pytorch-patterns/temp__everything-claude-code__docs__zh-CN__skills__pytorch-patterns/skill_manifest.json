@@ -1,0 +1,12 @@
+{
+  "name": "pytorch-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "PyTorch\u6df1\u5ea6\u5b66\u4e60\u6a21\u5f0f\u4e0e\u6700\u4f73\u5b9e\u8df5\uff0c\u7528\u4e8e\u6784\u5efa\u7a33\u5065\u3001\u9ad8\u6548\u4e14\u53ef\u590d\u73b0\u7684\u8bad\u7ec3\u6d41\u7a0b\u3001\u6a21\u578b\u67b6\u6784\u548c\u6570\u636e\u52a0\u8f7d\u3002"
+}

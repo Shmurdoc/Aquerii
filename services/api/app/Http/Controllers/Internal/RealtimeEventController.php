@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Internal;
 
 use App\Http\Controllers\Controller;
 use App\Models\RealtimeEvent;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class RealtimeEventController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'room'          => 'required|string',
+            'room' => 'required|string',
             'from_sequence' => 'required|integer|min:0',
         ]);
 

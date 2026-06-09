@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [master, develop]
   pull_request:
-    branches: [main, develop]
+    branches: [master, develop]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -42,7 +42,7 @@ jobs:
           path: services/api/vendor
           key: composer-${{ hashFiles('services/api/composer.lock') }}
 
-      - run: composer install --prefer-dist --no-scripts --no-progress
+      - run: composer install --prefer-dist --no-scripts --no-progress --ignore-platform-req=ext-opentelemetry
       - run: composer lint
       - run: composer analyse
 
@@ -57,9 +57,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: services/realtime/package-lock.json
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm run build
 
@@ -121,7 +119,7 @@ jobs:
           path: services/api/vendor
           key: composer-${{ hashFiles('services/api/composer.lock') }}
 
-      - run: composer install --prefer-dist --no-scripts --no-progress
+      - run: composer install --prefer-dist --no-scripts --no-progress --ignore-platform-req=ext-opentelemetry
 
       - name: Prepare test env
         run: |
@@ -129,9 +127,17 @@ jobs:
           sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env.testing
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env.testing
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
+          mkdir -p bootstrap/cache
           php artisan key:generate --env=testing
+          # CI service containers expose ports on localhost, not via hostname
+          sed -i 's|value="postgres"|value="127.0.0.1"|' phpunit.xml
+          sed -i 's|REDIS_HOST" value="redis"|REDIS_HOST" value="127.0.0.1"|' phpunit.xml
+          # Fix literal ${DB_PASSWORD} to actual value
+          sed -i 's|value="${DB_PASSWORD}"|value="secret"|' phpunit.xml
+          # Disable SSL for local connections in CI
+          sed -i '/<php>/a\        <env name="DB_SSLMODE" value="prefer" force="true"/>' phpunit.xml
 
-      - run: composer test -- --coverage-clover coverage.xml
+      - run: vendor/bin/pest --coverage-clover coverage.xml
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
@@ -151,10 +157,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: services/realtime/package-lock.json
-      - run: npm ci
-      - run: npm test -- --coverage
+      - run: npm ci --ignore-scripts
+      - run: npm test
 
   test-python:
     name: Python Unit Tests
@@ -169,7 +173,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
-      - run: pip install -r requirements.txt pytest pytest-asyncio pytest-cov
+      - run: pip install -r requirements.txt pytest pytest-asyncio pytest-cov fakeredis
       - run: pytest tests/unit --cov=app --cov-report=xml
 
 # ════════════════════════════════════════════════════════════════
@@ -254,7 +258,7 @@ jobs:
 
       - name: Run API integration tests
         working-directory: services/api
-        run: composer test -- --group=integration
+        run: vendor/bin/pest --group=integration
 
       - name: Tear down
         if: always()

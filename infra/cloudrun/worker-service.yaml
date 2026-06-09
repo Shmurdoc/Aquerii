@@ -1,0 +1,123 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: aquerii-worker
+  annotations:
+    run.googleapis.com/ingress: internal
+    run.googleapis.com/ingress-status: internal
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/maxScale: "5"
+        run.googleapis.com/cpu-throttling: "false"
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      containerConcurrency: 1
+      timeoutSeconds: 3600
+      serviceAccountName: aquerii-worker-sa@${PROJECT_ID}.iam.gserviceaccount.com
+      containers:
+      - image: gcr.io/${PROJECT_ID}/aquerii-api:latest
+        command:
+        - php
+        - artisan
+        - horizon
+        ports:
+        - containerPort: 8080
+          name: http1
+        env:
+        - name: APP_ENV
+          value: production
+        - name: APP_DEBUG
+          value: "false"
+        - name: DB_CONNECTION
+          value: pgsql
+        - name: DB_HOST
+          value: /cloudsql/${PROJECT_ID}:africa-south1:aquerii-primary
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_DATABASE
+          value: aquerii
+        - name: DB_USERNAME
+          value: aquerii_app
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: db-password
+        - name: DB_SSLMODE
+          value: require
+        - name: REDIS_HOST
+          value: 10.0.0.3
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: redis-password
+        - name: REDIS_CLUSTER
+          value: "false"
+        - name: CACHE_DRIVER
+          value: redis
+        - name: QUEUE_CONNECTION
+          value: redis
+        - name: APP_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: laravel-app-key
+        - name: INTERNAL_JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: internal-jwt-secret
+        - name: MAIL_MAILER
+          value: smtp
+        - name: MAIL_HOST
+          value: smtp.billionmail.com
+        - name: MAIL_PORT
+          value: "587"
+        - name: MAIL_ENCRYPTION
+          value: tls
+        - name: MAIL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: billionmail-api-key
+        - name: MAIL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: billionmail-api-key
+        - name: MAIL_FROM_ADDRESS
+          value: noreply@aquerii.co.za
+        - name: MAIL_FROM_NAME
+          value: "Aquerii"
+        - name: LOG_CHANNEL
+          value: stack
+        - name: LOG_STACK
+          value: stderr
+        - name: TELESCOPE_ENABLED
+          value: "false"
+        - name: SCOUT_DRIVER
+          value: meilisearch
+        - name: MEILISEARCH_HOST
+          value: http://meilisearch:7700
+        - name: VONAGE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: vonage-key
+        - name: VONAGE_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: vonage-secret
+        - name: GOTENBERG_URL
+          value: http://gotenberg:3000
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"

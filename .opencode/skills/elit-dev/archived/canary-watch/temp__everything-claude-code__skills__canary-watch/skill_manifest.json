@@ -1,0 +1,12 @@
+{
+  "name": "canary-watch",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Use this skill to monitor a deployed URL for regressions after deploys, merges, or dependency upgrades."
+}

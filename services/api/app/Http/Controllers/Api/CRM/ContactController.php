@@ -24,8 +24,8 @@ class ContactController extends Controller
         if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'ilike', "%{$search}%")
-                  ->orWhere('last_name', 'ilike', "%{$search}%")
-                  ->orWhere('email', 'ilike', "%{$search}%");
+                    ->orWhere('last_name', 'ilike', "%{$search}%")
+                    ->orWhere('email', 'ilike', "%{$search}%");
             });
         }
 
@@ -40,13 +40,13 @@ class ContactController extends Controller
 
         $validated = $request->validate([
             'first_name' => 'required|string|max:100',
-            'last_name'  => 'required|string|max:100',
-            'email'      => 'sometimes|nullable|email|max:255',
-            'phone'      => 'sometimes|nullable|string|max:30',
+            'last_name' => 'required|string|max:100',
+            'email' => 'sometimes|nullable|email|max:255',
+            'phone' => 'sometimes|nullable|string|max:30',
             'company_id' => 'sometimes|nullable|uuid',
-            'stage_id'   => 'sometimes|nullable|uuid',
+            'stage_id' => 'sometimes|nullable|uuid',
             'lead_score' => 'sometimes|integer|min:0|max:100',
-            'tags'       => 'sometimes|array',
+            'tags' => 'sometimes|array',
         ]);
 
         $contact = CrmContact::create(array_merge($validated, [
@@ -69,16 +69,16 @@ class ContactController extends Controller
         $this->authorize('update', $contact);
 
         $validated = $request->validate([
-            'first_name'  => 'sometimes|string|max:100',
-            'last_name'   => 'sometimes|string|max:100',
-            'email'       => 'sometimes|nullable|email|max:255',
-            'phone'       => 'sometimes|nullable|string|max:30',
-            'company_id'  => 'sometimes|nullable|uuid',
-            'stage_id'    => 'sometimes|nullable|uuid',
-            'lead_score'  => 'sometimes|integer|min:0|max:100',
-            'tags'        => 'sometimes|array',
-            'notes'       => 'sometimes|nullable|string',
-            'deal_value'  => 'sometimes|nullable|numeric',
+            'first_name' => 'sometimes|string|max:100',
+            'last_name' => 'sometimes|string|max:100',
+            'email' => 'sometimes|nullable|email|max:255',
+            'phone' => 'sometimes|nullable|string|max:30',
+            'company_id' => 'sometimes|nullable|uuid',
+            'stage_id' => 'sometimes|nullable|uuid',
+            'lead_score' => 'sometimes|integer|min:0|max:100',
+            'tags' => 'sometimes|array',
+            'notes' => 'sometimes|nullable|string',
+            'deal_value' => 'sometimes|nullable|numeric',
         ]);
 
         $contact->update($validated);

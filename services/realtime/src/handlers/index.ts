@@ -25,7 +25,7 @@ export function registerHandlers(
         socket.emit('error', { code: 'ROOM_FORBIDDEN' });
         return;
       }
-      await roomManager.join(socket, room);
+      await roomManager.joinRoom(socket, room);
 
       // Send missed events since last sequence
       const since = socket.handshake.auth?.lastSequence ?? 0;
@@ -33,7 +33,7 @@ export function registerHandlers(
     });
 
     socket.on('room:leave', async ({ room }: { room: string }) => {
-      await roomManager.leave(socket, room);
+      await roomManager.leaveRoom(socket, room);
     });
 
     // ── Document collaboration (Y.js) ────────────────────────

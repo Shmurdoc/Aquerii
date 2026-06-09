@@ -1,0 +1,12 @@
+{
+  "name": "systematic-debugging",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes"
+}

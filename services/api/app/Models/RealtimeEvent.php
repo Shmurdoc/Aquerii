@@ -21,7 +21,7 @@ class RealtimeEvent extends Model
     protected function casts(): array
     {
         return [
-            'payload'      => 'array',
+            'payload' => 'array',
             'published_at' => 'datetime',
         ];
     }
@@ -35,7 +35,7 @@ class RealtimeEvent extends Model
         });
     }
 
-    public function delete(): bool|null
+    public function delete(): ?bool
     {
         throw new RuntimeException('RealtimeEvent records are insert-only and cannot be deleted.');
     }

@@ -1,0 +1,12 @@
+{
+  "name": "golang-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u7528\u4e8e\u6784\u5efa\u5065\u58ee\u3001\u9ad8\u6548\u4e14\u53ef\u7ef4\u62a4\u7684Go\u5e94\u7528\u7a0b\u5e8f\u7684\u60ef\u7528Go\u6a21\u5f0f\u3001\u6700\u4f73\u5b9e\u8df5\u548c\u7ea6\u5b9a\u3002"
+}

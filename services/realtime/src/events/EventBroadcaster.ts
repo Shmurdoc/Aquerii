@@ -2,6 +2,9 @@
 import type { Server, Socket } from 'socket.io'
 import { Redis } from 'ioredis'
 import axios from 'axios'
+import pino from 'pino'
+
+const logger = pino({ level: process.env.LOG_LEVEL ?? 'info' })
 
 interface RealtimeEvent {
   room: string
@@ -34,10 +37,10 @@ export class EventBroadcaster {
         const event: RealtimeEvent = JSON.parse(message)
         this.broadcast(event)
       } catch (err) {
-        console.error('[EventBroadcaster] Failed to parse event:', err)
+        logger.error({ err }, 'Failed to parse event')
       }
     })
-    console.log('[EventBroadcaster] Subscribed to realtime:events')
+    logger.info('Subscribed to realtime:events')
   }
 
   private broadcast(event: RealtimeEvent): void {
@@ -68,7 +71,7 @@ export class EventBroadcaster {
         })
       }
     } catch (err) {
-      console.error('[EventBroadcaster] replayMissed failed:', err)
+      logger.error({ err }, 'replayMissed failed')
     }
   }
 

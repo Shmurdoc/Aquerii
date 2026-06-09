@@ -1,0 +1,12 @@
+{
+  "name": "agent-introspection-debugging",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Structured self-debugging workflow for AI agent failures using capture, diagnosis, contained recovery, and introspection reports."
+}

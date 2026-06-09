@@ -1,0 +1,12 @@
+{
+  "name": "coding-standards",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "TypeScript, JavaScript, React ve Node.js geli\u015ftirme i\u00e7in evrensel kodlama standartlar\u0131, en iyi uygulamalar ve kal\u0131plar."
+}

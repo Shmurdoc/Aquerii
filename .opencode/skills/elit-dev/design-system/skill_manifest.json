@@ -1,0 +1,12 @@
+{
+  "name": "design-system",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Use this skill to generate or audit design systems, check visual consistency, and review PRs that touch styling."
+}

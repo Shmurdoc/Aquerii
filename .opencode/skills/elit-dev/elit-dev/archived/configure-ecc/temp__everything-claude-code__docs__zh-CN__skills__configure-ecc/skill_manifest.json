@@ -1,0 +1,12 @@
+{
+  "name": "configure-ecc",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Everything Claude Code \u7684\u4ea4\u4e92\u5f0f\u5b89\u88c5\u7a0b\u5e8f \u2014 \u5f15\u5bfc\u7528\u6237\u9009\u62e9\u5e76\u5b89\u88c5\u6280\u80fd\u548c\u89c4\u5219\u5230\u7528\u6237\u7ea7\u6216\u9879\u76ee\u7ea7\u76ee\u5f55\uff0c\u9a8c\u8bc1\u8def\u5f84\uff0c\u5e76\u53ef\u9009\u62e9\u4f18\u5316\u5df2\u5b89\u88c5\u6587\u4ef6\u3002"
+}

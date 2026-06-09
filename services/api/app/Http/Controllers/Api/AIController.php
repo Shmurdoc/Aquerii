@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Workspace;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class AIController extends Controller
 {
@@ -16,8 +17,8 @@ class AIController extends Controller
     public function chat(Request $request, Workspace $workspace): JsonResponse
     {
         $validated = $request->validate([
-            'message'     => 'required|string|max:8000',
-            'history'     => 'sometimes|array',
+            'message' => 'required|string|max:8000',
+            'history' => 'sometimes|array',
             'context_ids' => 'sometimes|array',
         ]);
 
@@ -26,15 +27,16 @@ class AIController extends Controller
         try {
             $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
                 ->timeout(60)
-                ->post(config('services.ai.url') . '/chat', [
+                ->post(config('services.ai.url').'/chat', [
                     'workspace_id' => $workspace->id,
-                    'message'      => $validated['message'],
-                    'history'      => $validated['history'] ?? [],
-                    'context_ids'  => $validated['context_ids'] ?? [],
+                    'message' => $validated['message'],
+                    'history' => $validated['history'] ?? [],
+                    'context_ids' => $validated['context_ids'] ?? [],
                 ]);
 
             if ($response->failed()) {
                 $this->refundCredits($workspace, 5);
+
                 return response()->json(['error' => 'AI service error'], 502);
             }
 
@@ -42,6 +44,7 @@ class AIController extends Controller
         } catch (\Throwable $e) {
             $this->refundCredits($workspace, 5);
             Log::error('AI chat error', ['error' => $e->getMessage()]);
+
             return response()->json(['error' => 'AI unavailable'], 503);
         }
     }
@@ -58,19 +61,21 @@ class AIController extends Controller
         try {
             $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.url') . '/documents/summarize', [
+                ->post(config('services.ai.url').'/documents/summarize', [
                     'workspace_id' => $workspace->id,
-                    'text'         => $validated['text'],
+                    'text' => $validated['text'],
                 ]);
 
             if ($response->failed()) {
                 $this->refundCredits($workspace, 3);
+
                 return response()->json(['error' => 'AI service error'], 502);
             }
 
             return response()->json(['data' => $response->json('data')]);
         } catch (\Throwable $e) {
             $this->refundCredits($workspace, 3);
+
             return response()->json(['error' => 'AI unavailable'], 503);
         }
     }
@@ -87,20 +92,21 @@ class AIController extends Controller
         try {
             $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
                 ->timeout(30)
-                ->post(config('services.ai.url') . '/crm/score', [
+                ->post(config('services.ai.url').'/crm/score', [
                     'workspace_id' => $workspace->id,
-                    'deal_id'      => $validated['deal_id'],
+                    'deal_id' => $validated['deal_id'],
                 ]);
 
             if ($response->failed()) {
                 $this->refundCredits($workspace, 10);
+
                 return response()->json(['error' => 'AI service error'], 502);
             }
 
             $score = $response->json('data.score');
 
             // Persist score back to deal
-            \Illuminate\Support\Facades\DB::table('crm_deals')
+            DB::table('crm_deals')
                 ->where('id', $validated['deal_id'])
                 ->where('workspace_id', $workspace->id)
                 ->update(['ai_score' => $score, 'updated_at' => now()]);
@@ -108,6 +114,7 @@ class AIController extends Controller
             return response()->json(['data' => ['score' => $score]]);
         } catch (\Throwable $e) {
             $this->refundCredits($workspace, 10);
+
             return response()->json(['error' => 'AI unavailable'], 503);
         }
     }
@@ -115,16 +122,16 @@ class AIController extends Controller
     // GET /workspaces/{workspace}/ai/credits
     public function credits(Workspace $workspace): JsonResponse
     {
-        $plan   = $workspace->plan ?? 'free';
+        $plan = $workspace->plan ?? 'free';
         $limits = ['free' => 100, 'starter' => 500, 'growth' => 2000, 'business' => 10000];
-        $limit  = $limits[$plan] ?? 100;
+        $limit = $limits[$plan] ?? 100;
 
         $used = (int) Redis::get("ai_credits:{$workspace->id}") ?? 0;
 
         return response()->json([
             'data' => [
-                'used'      => $used,
-                'limit'     => $limit,
+                'used' => $used,
+                'limit' => $limit,
                 'remaining' => max(0, $limit - $used),
             ],
         ]);
@@ -134,20 +141,20 @@ class AIController extends Controller
     public function generateTaskDescription(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'title'   => 'required|string|max:500',
+            'title' => 'required|string|max:500',
             'context' => 'nullable|string|max:2000',
         ]);
 
         $workspace = $request->attributes->get('workspace');
 
         $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
-            ->post(config('services.ai.url') . '/ai/task/generate-description', [
+            ->post(config('services.ai.url').'/ai/task/generate-description', [
                 'workspace_id' => $workspace->id,
-                'title'        => $validated['title'],
-                'context'      => $validated['context'] ?? '',
+                'title' => $validated['title'],
+                'context' => $validated['context'] ?? '',
             ]);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             return response()->json(['error' => ['code' => 'AI_ERROR', 'message' => 'AI service error']], 502);
         }
 
@@ -159,19 +166,19 @@ class AIController extends Controller
     {
         $validated = $request->validate([
             'prompt' => 'required|string|max:2000',
-            'style'  => 'nullable|string|in:professional,casual,technical,creative',
+            'style' => 'nullable|string|in:professional,casual,technical,creative',
         ]);
 
         $workspace = $request->attributes->get('workspace');
 
         $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
-            ->post(config('services.ai.url') . '/ai/document/generate', [
+            ->post(config('services.ai.url').'/ai/document/generate', [
                 'workspace_id' => $workspace->id,
-                'prompt'       => $validated['prompt'],
-                'style'        => $validated['style'] ?? 'professional',
+                'prompt' => $validated['prompt'],
+                'style' => $validated['style'] ?? 'professional',
             ]);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             return response()->json(['error' => ['code' => 'AI_ERROR', 'message' => 'AI service error']], 502);
         }
 
@@ -188,12 +195,12 @@ class AIController extends Controller
         $workspace = $request->attributes->get('workspace');
 
         $response = Http::withHeader('X-Internal-Secret', config('services.ai.secret'))
-            ->post(config('services.ai.url') . '/ai/automation/generate', [
+            ->post(config('services.ai.url').'/ai/automation/generate', [
                 'workspace_id' => $workspace->id,
-                'description'  => $validated['description'],
+                'description' => $validated['description'],
             ]);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             return response()->json(['error' => ['code' => 'AI_ERROR', 'message' => 'AI service error']], 502);
         }
 
@@ -204,11 +211,11 @@ class AIController extends Controller
 
     private function deductCredits(Workspace $workspace, int $amount): void
     {
-        $plan   = $workspace->plan ?? 'free';
+        $plan = $workspace->plan ?? 'free';
         $limits = ['free' => 100, 'starter' => 500, 'growth' => 2000, 'business' => 10000];
-        $limit  = $limits[$plan] ?? 100;
+        $limit = $limits[$plan] ?? 100;
 
-        $key  = "ai_credits:{$workspace->id}";
+        $key = "ai_credits:{$workspace->id}";
         $used = (int) Redis::get($key) ?? 0;
 
         abort_if($used + $amount > $limit, 402, 'AI credit limit reached.');

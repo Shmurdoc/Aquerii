@@ -1,0 +1,12 @@
+{
+  "name": "security-hardening",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Security best practices including threat modeling, secure coding guidelines, SAST/DAST/SCA integration, dependency hardening, secrets management, and breach readiness."
+}

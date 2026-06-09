@@ -1,0 +1,1134 @@
+﻿PHP Lint & Static Analysis	Run composer lint	∩╗┐2026-06-08T16:11:17.9891417Z ##[group]Run composer lint
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:17.9891752Z ^[[36;1mcomposer lint^[[0m
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:17.9919247Z shell: /usr/bin/bash -e {0}
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:17.9919533Z env:
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:17.9919760Z   PHP_VERSION: 8.3
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:17.9920006Z   NODE_VERSION: 20
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:17.9920232Z   PYTHON_VERSION: 3.11
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:17.9920500Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:17.9920822Z   COMPOSER_PROCESS_TIMEOUT: 0
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:17.9921110Z   COMPOSER_NO_INTERACTION: 1
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:17.9921387Z   COMPOSER_NO_AUDIT: 1
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:17.9921627Z ##[endgroup]
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:18.4539902Z 
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:20.2693640Z   ...........................Γ¿»................................................
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:22.4655746Z   ............................................................................
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:23.6309748Z   ...........................................................Γ¿»................
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:26.4868294Z   ............................................................................
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:28.3057291Z   ............................................................................
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:29.8844875Z   ............................................................................
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:31.7466031Z   ............................................................................
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:33.2774328Z   ............................................................................
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:34.1970374Z   ............................................................................
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:35.1594123Z   ............................................................................
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:35.3996074Z   ..........................
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:35.3996457Z 
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:35.3997108Z   ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ Laravel  
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:35.3997847Z     FAIL   ......................................... 786 files, 2 style issues  
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:35.4003918Z   Γ¿» app/Core/Console/Commands/CheckCertExpiry.php unary_operator_spaces, not_ΓÇª  
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:35.4008871Z   Γ¿» bootstrap/app.php                                          ordered_imports  
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:35.4009568Z 
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:35.4129019Z Script pint --test handling the lint event returned with error code 1
+PHP Lint & Static Analysis	Run composer lint	2026-06-08T16:11:35.4238342Z ##[error]Process completed with exit code 1.
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	∩╗┐2026-06-08T16:12:22.4318776Z ##[group]Run npx vitest run --reporter=verbose --coverage
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:22.4319219Z ^[[36;1mnpx vitest run --reporter=verbose --coverage^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:22.4347353Z shell: /usr/bin/bash -e {0}
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:22.4347607Z env:
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:22.4347802Z   PHP_VERSION: 8.3
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:22.4348015Z   NODE_VERSION: 20
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:22.4348216Z   PYTHON_VERSION: 3.11
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:22.4348455Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:22.4348732Z ##[endgroup]
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:23.3992683Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:23.3994683Z ^[[7m^[[1m^[[36m RUN ^[[39m^[[22m^[[27m ^[[36mv1.6.1^[[39m ^[[90m/home/runner/work/Aquerii/Aquerii/services/web^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:23.3995949Z ^[[2m      Coverage enabled with ^[[22m^[[33mv8^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:23.3996383Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:25.2769936Z  ^[[32mΓ£ô^[[39m tests/unit/auth/apiInterceptor.test.ts^[[2m > ^[[22mapi request interceptor^[[2m > ^[[22mattaches *** when token exists
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:25.2772928Z  ^[[32mΓ£ô^[[39m tests/unit/auth/apiInterceptor.test.ts^[[2m > ^[[22mapi request interceptor^[[2m > ^[[22mattaches X-Workspace-ID when workspace exists
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:25.2775398Z  ^[[32mΓ£ô^[[39m tests/unit/auth/apiInterceptor.test.ts^[[2m > ^[[22mapi request interceptor^[[2m > ^[[22mdoes not set auth header when token is null
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:25.2778015Z  ^[[32mΓ£ô^[[39m tests/unit/auth/apiInterceptor.test.ts^[[2m > ^[[22mapi request interceptor^[[2m > ^[[22mgenerates Idempotency-Key for mutating requests
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:25.2780407Z  ^[[32mΓ£ô^[[39m tests/unit/auth/apiInterceptor.test.ts^[[2m > ^[[22mapi request interceptor^[[2m > ^[[22mdoes not overwrite existing Idempotency-Key
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:25.2782790Z  ^[[32mΓ£ô^[[39m tests/unit/auth/apiInterceptor.test.ts^[[2m > ^[[22mapi request interceptor^[[2m > ^[[22mdoes not generate Idempotency-Key for GET requests
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:25.2785099Z  ^[[32mΓ£ô^[[39m tests/unit/auth/apiInterceptor.test.ts^[[2m > ^[[22mapi response interceptor^[[2m > ^[[22mpasses through successful responses
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:25.2787512Z  ^[[32mΓ£ô^[[39m tests/unit/auth/apiInterceptor.test.ts^[[2m > ^[[22mapi response interceptor^[[2m > ^[[22mcalls logout on 401 non-MFA error
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:25.2789778Z  ^[[32mΓ£ô^[[39m tests/unit/auth/apiInterceptor.test.ts^[[2m > ^[[22mapi response interceptor^[[2m > ^[[22mdoes not logout on 401 MFA_REQUIRED
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:25.2791948Z  ^[[32mΓ£ô^[[39m tests/unit/auth/apiInterceptor.test.ts^[[2m > ^[[22mapi response interceptor^[[2m > ^[[22mre-throws the error
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1230732Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22mrenders text from data rows in at least one viewport
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1238730Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22mrenders header labels
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1248576Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22mshows empty state when data is empty
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1251035Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22mshows error state with retry button
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1253239Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22mshows loading skeleton
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1254987Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22msorts by column on header click
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1256979Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22mpaginates when data exceeds pageSize
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1258763Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22mhandles row selection
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1260585Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22mhandles select all checkbox in desktop view
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1262796Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22mdoes not render empty state when data exists
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1295589Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22munwraps a paginated response object { data: [...] } without throwing
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1298654Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22mrenders the empty state when data is undefined without throwing
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1300872Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/DataTable.test.tsx^[[2m > ^[[22mDataTable^[[2m > ^[[22mrenders the empty state when data is null without throwing
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1453750Z ^[[90mstderr^[[2m | tests/unit/roi/ROIDashboardPage.test.tsx^[[2m > ^[[22m^[[2mROIDashboardPage^[[2m > ^[[22m^[[2mrenders with loading state^[[22m^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1470088Z ΓÜá∩╕Å React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1475378Z ΓÜá∩╕Å React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.1477749Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.3081036Z  ^[[32mΓ£ô^[[39m tests/unit/roi/ROIDashboardPage.test.tsx^[[2m > ^[[22mROIDashboardPage^[[2m > ^[[22mrenders with loading state
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.3085697Z  ^[[32mΓ£ô^[[39m tests/unit/roi/ROIDashboardPage.test.tsx^[[2m > ^[[22mROIDashboardPage^[[2m > ^[[22mrenders dashboard data when loaded
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.3090810Z  ^[[32mΓ£ô^[[39m tests/unit/roi/ROIDashboardPage.test.tsx^[[2m > ^[[22mROIDashboardPage^[[2m > ^[[22mshows empty state when no data
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.3093113Z  ^[[32mΓ£ô^[[39m tests/unit/roi/ROIDashboardPage.test.tsx^[[2m > ^[[22mROIDashboardPage^[[2m > ^[[22mshows error state on API failure
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.3102238Z  ^[[32mΓ£ô^[[39m tests/unit/roi/ROIDashboardPage.test.tsx^[[2m > ^[[22mROIDashboardPage^[[2m > ^[[22mdate range preset triggers refetch with new params
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:26.3104685Z  ^[[32mΓ£ô^[[39m tests/unit/roi/ROIDashboardPage.test.tsx^[[2m > ^[[22mROIDashboardPage^[[2m > ^[[22mrenders trend direction indicators
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:27.2812821Z  ^[[32mΓ£ô^[[39m tests/unit/hooks/useCalendarItems.test.tsx^[[2m > ^[[22museCalendarItems^[[2m > ^[[22mdoes NOT fire network call when workspace is null
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:27.3429687Z  ^[[32mΓ£ô^[[39m tests/unit/hooks/useCalendarItems.test.tsx^[[2m > ^[[22museCalendarItems^[[2m > ^[[22mFIRES network call to /calendar-items when workspace is set
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:27.3432185Z  ^[[32mΓ£ô^[[39m tests/unit/hooks/useCalendarItems.test.tsx^[[2m > ^[[22museCalendarItems^[[2m > ^[[22muses the correct queryKey including from/to and entityType
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:27.5201545Z  ^[[32mΓ£ô^[[39m tests/unit/hooks/useCalendarItems.test.tsx^[[2m > ^[[22museCalendarItems^[[2m > ^[[22mhandles missing data field gracefully (returns empty array)
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.0269475Z  ^[[32mΓ£ô^[[39m tests/unit/stores/authStore.test.ts^[[2m > ^[[22mauthStore^[[2m > ^[[22msetAuth sets token, user, and workspace
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.0278795Z  ^[[32mΓ£ô^[[39m tests/unit/stores/authStore.test.ts^[[2m > ^[[22mauthStore^[[2m > ^[[22mlogout clears all state
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.0280912Z  ^[[32mΓ£ô^[[39m tests/unit/stores/authStore.test.ts^[[2m > ^[[22mauthStore^[[2m > ^[[22msetWorkspace updates workspace independently
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.0283308Z  ^[[32mΓ£ô^[[39m tests/unit/stores/authStore.test.ts^[[2m > ^[[22mauthStore^[[2m > ^[[22mpersists token, user and workspace to sessionStorage
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.0285856Z  ^[[32mΓ£ô^[[39m tests/unit/stores/authStore.test.ts^[[2m > ^[[22mauthStore^[[2m > ^[[22mpartializes only token, user, workspace (no extra fields)
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.0288550Z  ^[[32mΓ£ô^[[39m tests/unit/stores/authStore.test.ts^[[2m > ^[[22mauthStore^[[2m > ^[[22mpersisted data round-trips through sessionStorage
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.0290807Z  ^[[32mΓ£ô^[[39m tests/unit/stores/authStore.test.ts^[[2m > ^[[22mauthStore^[[2m > ^[[22mhandles logout with no prior auth state (idempotent)
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.3833771Z ^[[90mstderr^[[2m | tests/unit/auth/LoginPage.test.tsx^[[2m > ^[[22m^[[2mLoginPage^[[2m > ^[[22m^[[2mrenders the sign-in form^[[22m^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.3859824Z ΓÜá∩╕Å React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.3889868Z ΓÜá∩╕Å React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.3892471Z  ^[[32mΓ£ô^[[39m tests/unit/auth/LoginPage.test.tsx^[[2m > ^[[22mLoginPage^[[2m > ^[[22mrenders the sign-in form
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.3917060Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.5778913Z  ^[[32mΓ£ô^[[39m tests/unit/auth/LoginPage.test.tsx^[[2m > ^[[22mLoginPage^[[2m > ^[[22mshows validation errors for empty fields
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:28.5780933Z  ^[[32mΓ£ô^[[39m tests/unit/auth/LoginPage.test.tsx^[[2m > ^[[22mLoginPage^[[2m > ^[[22mcalls API and sets auth on success
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.1640363Z  ^[[32mΓ£ô^[[39m tests/unit/crm/deals.test.ts^[[2m > ^[[22mselectPipeline^[[2m > ^[[22mreturns pipeline matching given ID
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.1651647Z  ^[[32mΓ£ô^[[39m tests/unit/crm/deals.test.ts^[[2m > ^[[22mselectPipeline^[[2m > ^[[22mreturns default pipeline when ID does not match
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.1660229Z  ^[[32mΓ£ô^[[39m tests/unit/crm/deals.test.ts^[[2m > ^[[22mselectPipeline^[[2m > ^[[22mreturns first pipeline when no ID and no default
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.1661819Z  ^[[32mΓ£ô^[[39m tests/unit/crm/deals.test.ts^[[2m > ^[[22mselectPipeline^[[2m > ^[[22mreturns undefined for empty list
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.1663199Z  ^[[32mΓ£ô^[[39m tests/unit/crm/deals.test.ts^[[2m > ^[[22mdealsByStage^[[2m > ^[[22mfilters deals by stage_id
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.1664709Z  ^[[32mΓ£ô^[[39m tests/unit/crm/deals.test.ts^[[2m > ^[[22mdealsByStage^[[2m > ^[[22mreturns empty array for stage with no deals
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.1666163Z  ^[[32mΓ£ô^[[39m tests/unit/crm/deals.test.ts^[[2m > ^[[22mstageValue^[[2m > ^[[22msums deal values for a stage
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.1667737Z  ^[[32mΓ£ô^[[39m tests/unit/crm/deals.test.ts^[[2m > ^[[22mstageValue^[[2m > ^[[22mtreats null values as 0
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.1669150Z  ^[[32mΓ£ô^[[39m tests/unit/crm/deals.test.ts^[[2m > ^[[22mstageValue^[[2m > ^[[22mreturns 0 for stage with no deals
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6059503Z  ^[[31m├ù^[[39m tests/unit/auth/LoginPage.test.tsx^[[2m > ^[[22mLoginPage^[[2m > ^[[22mreveals MFA field when server requires it^[[33m 1054^[[2mms^[[22m^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6085123Z ^[[31m   ΓåÆ Unable to find an element with the text: MFA Code. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6090672Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6091227Z Ignored nodes: comments, script, style
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6092534Z ^[[36m<body>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6094835Z   ^[[36m<div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6097503Z     ^[[36m<form^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6117668Z       ^[[33mclass^[[31m=^[[32m"space-y-4"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6118533Z       ^[[33mnovalidate^[[31m=^[[32m""^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6125561Z     ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6126222Z       ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6127263Z         ^[[33mclass^[[31m=^[[32m"stagger-item"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6128144Z         ^[[33mstyle^[[31m=^[[32m"--stagger-i: 0;"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6128868Z       ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6129439Z         ^[[36m<h2^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6130479Z           ^[[33mclass^[[31m=^[[32m"text-heading font-semibold text-[var(--color-text-primary)]"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6138607Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6139278Z           ^[[0mSign in^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6139903Z         ^[[36m</h2>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6140486Z         ^[[36m<p^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6141469Z           ^[[33mclass^[[31m=^[[32m"text-body-sm text-[var(--color-text-secondary)] mt-1"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6142408Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6143680Z           ^[[0mWelcome back. Enter your details to continue.^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6144449Z         ^[[36m</p>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6144998Z       ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6145544Z       ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6146241Z         ^[[33mclass^[[31m=^[[32m"stagger-item"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6147357Z         ^[[33mstyle^[[31m=^[[32m"--stagger-i: 1;"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6148037Z       ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6148441Z         ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6149051Z           ^[[33mclass^[[31m=^[[32m"flex flex-col gap-1.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6149625Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6150031Z           ^[[36m<label^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6150973Z             ^[[33mclass^[[31m=^[[32m"font-medium text-[var(--color-text-secondary)] text-body-sm"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6151809Z             ^[[33mfor^[[31m=^[[32m":r6:"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6152250Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6152643Z             ^[[0mEmail^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6153088Z           ^[[36m</label>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6153557Z           ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6157433Z             ^[[33mclass^[[31m=^[[32m"relative group rounded-md bg-[var(--color-bg-input)] border transition-[border-color,box-shadow,background] duration-200 ease-out border-[var(--color-glass-border)] focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_3px_var(--color-accent-light)] focus-within:bg-[var(--color-bg-elevated)] hover:border-[var(--color-glass-border-hover)]"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6160305Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6160787Z             ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6161929Z               ^[[33mclass^[[31m=^[[32m"absolute inset-y-0 left-0 flex items-center pointer-events-none pl-3"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6162977Z             ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6163486Z               ^[[36m<svg^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6164152Z                 ^[[33maria-hidden^[[31m=^[[32m"true"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6165888Z                 ^[[33mclass^[[31m=^[[32m"lucide lucide-mail text-[var(--color-text-muted)] transition-colors group-focus-within:text-[var(--color-accent-text)]"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6197808Z                 ^[[33mfill^[[31m=^[[32m"none"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6198561Z                 ^[[33mheight^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6199307Z                 ^[[33mstroke^[[31m=^[[32m"currentColor"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6200151Z                 ^[[33mstroke-linecap^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6200985Z                 ^[[33mstroke-linejoin^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6201771Z                 ^[[33mstroke-width^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6202444Z                 ^[[33mviewBox^[[31m=^[[32m"0 0 24 24"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6203174Z                 ^[[33mwidth^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6204059Z                 ^[[33mxmlns^[[31m=^[[32m"http://www.w3.org/2000/svg"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6204795Z               ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6205786Z                 ^[[36m<rect^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6206445Z                   ^[[33mheight^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6207560Z                   ^[[33mrx^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6208281Z                   ^[[33mwidth^[[31m=^[[32m"20"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6208974Z                   ^[[33mx^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6209653Z                   ^[[33my^[[31m=^[[32m"4"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6210239Z                 ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6210819Z                 ^[[36m<path^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6211594Z                   ^[[33md^[[31m=^[[32m"m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6212281Z                 ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6212914Z               ^[[36m</svg>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6213463Z             ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6213955Z             ^[[36m<input^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6214619Z               ^[[33maria-invalid^[[31m=^[[32m"false"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6215396Z               ^[[33mautocomplete^[[31m=^[[32m"email"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6247794Z               ^[[33mclass^[[31m=^[[32m"peer w-full bg-transparent text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] border-0 outline-none rounded-md h-10 text-body pl-10 pr-3.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6249839Z               ^[[33mid^[[31m=^[[32m":r6:"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6250566Z               ^[[33mname^[[31m=^[[32m"email"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6251347Z               ^[[33mplaceholder^[[31m=^[[32m"you@company.com"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6252157Z               ^[[33mtype^[[31m=^[[32m"email"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6252832Z               ^[[33mvalue^[[31m=^[[32m""^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6253402Z             ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6253909Z             ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6254906Z               ^[[33mclass^[[31m=^[[32m"absolute inset-y-0 right-0 flex items-center gap-1 pr-2.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6255936Z             ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6256419Z           ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6257158Z         ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6257604Z       ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6258067Z       ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6258640Z         ^[[33mclass^[[31m=^[[32m"stagger-item"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6259374Z         ^[[33mstyle^[[31m=^[[32m"--stagger-i: 2;"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6259982Z       ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6260414Z         ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6261080Z           ^[[33mclass^[[31m=^[[32m"flex flex-col gap-1.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6261760Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6262233Z           ^[[36m<label^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6263195Z             ^[[33mclass^[[31m=^[[32m"font-medium text-[var(--color-text-secondary)] text-body-sm"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6264181Z             ^[[33mfor^[[31m=^[[32m":r7:"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6264754Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6265235Z             ^[[0mPassword^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6265764Z           ^[[36m</label>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6266269Z           ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6270942Z             ^[[33mclass^[[31m=^[[32m"relative group rounded-md bg-[var(--color-bg-input)] border transition-[border-color,box-shadow,background] duration-200 ease-out border-[var(--color-glass-border)] focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_3px_var(--color-accent-light)] focus-within:bg-[var(--color-bg-elevated)] hover:border-[var(--color-glass-border-hover)]"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6273783Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6274213Z             ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6275246Z               ^[[33mclass^[[31m=^[[32m"absolute inset-y-0 left-0 flex items-center pointer-events-none pl-3"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6276225Z             ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6276979Z               ^[[36m<svg^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6277674Z                 ^[[33maria-hidden^[[31m=^[[32m"true"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6279371Z                 ^[[33mclass^[[31m=^[[32m"lucide lucide-lock text-[var(--color-text-muted)] transition-colors group-focus-within:text-[var(--color-accent-text)]"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6281035Z                 ^[[33mfill^[[31m=^[[32m"none"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6281674Z                 ^[[33mheight^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6282350Z                 ^[[33mstroke^[[31m=^[[32m"currentColor"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6283076Z                 ^[[33mstroke-linecap^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6283785Z                 ^[[33mstroke-linejoin^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6284448Z                 ^[[33mstroke-width^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6285082Z                 ^[[33mviewBox^[[31m=^[[32m"0 0 24 24"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6285669Z                 ^[[33mwidth^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6286341Z                 ^[[33mxmlns^[[31m=^[[32m"http://www.w3.org/2000/svg"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6287210Z               ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6287700Z                 ^[[36m<rect^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6288251Z                   ^[[33mheight^[[31m=^[[32m"11"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6288908Z                   ^[[33mrx^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6289515Z                   ^[[33mry^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6317815Z                   ^[[33mwidth^[[31m=^[[32m"18"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6369330Z                   ^[[33mx^[[31m=^[[32m"3"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6370140Z                   ^[[33my^[[31m=^[[32m"11"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6370692Z                 ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6371215Z                 ^[[36m<path^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6371894Z                   ^[[33md^[[31m=^[[32m"M7 11V7a5 5 0 0 1 10 0v4"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6372511Z                 ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6373009Z               ^[[36m</svg>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6373475Z             ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6373951Z             ^[[36m<input^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6374549Z               ^[[33maria-invalid^[[31m=^[[32m"false"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6375353Z               ^[[33mautocomplete^[[31m=^[[32m"current-password"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6377671Z               ^[[33mclass^[[31m=^[[32m"peer w-full bg-transparent text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] border-0 outline-none rounded-md h-10 text-body pl-10 pr-10"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6379332Z               ^[[33mid^[[31m=^[[32m":r7:"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6379981Z               ^[[33mname^[[31m=^[[32m"password"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6380702Z               ^[[33mplaceholder^[[31m=^[[32m"ΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇó"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6381396Z               ^[[33mtype^[[31m=^[[32m"password"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6382037Z               ^[[33mvalue^[[31m=^[[32m""^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6382556Z             ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6382987Z             ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6383915Z               ^[[33mclass^[[31m=^[[32m"absolute inset-y-0 right-0 flex items-center gap-1 pr-2.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6384757Z             ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6385229Z               ^[[36m<button^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6385891Z                 ^[[33maria-label^[[31m=^[[32m"Show password"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6387979Z                 ^[[33mclass^[[31m=^[[32m"p-0.5 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6389423Z                 ^[[33mtabindex^[[31m=^[[32m"-1"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6390101Z                 ^[[33mtype^[[31m=^[[32m"button"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6390676Z               ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6391174Z                 ^[[36m<svg^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6391847Z                   ^[[33mclass^[[31m=^[[32m"lucide lucide-eye"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6392587Z                   ^[[33mfill^[[31m=^[[32m"none"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6393269Z                   ^[[33mheight^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6394056Z                   ^[[33mstroke^[[31m=^[[32m"currentColor"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6394867Z                   ^[[33mstroke-linecap^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6395710Z                   ^[[33mstroke-linejoin^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6397108Z                   ^[[33mstroke-width^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6397863Z                   ^[[33mviewBox^[[31m=^[[32m"0 0 24 24"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6398574Z                   ^[[33mwidth^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6399390Z                   ^[[33mxmlns^[[31m=^[[32m"http://www.w3.org/2000/svg"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6400059Z                 ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6400582Z                   ^[[36m<path^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6401394Z                     ^[[33md^[[31m=^[[32m"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6402138Z                   ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6402672Z                   ^[[36m<circle^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6403268Z                     ^[[33mcx^[[31m=^[[32m"12"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6403906Z                     ^[[33mcy^[[31m=^[[32m"12"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6404525Z                     ^[[33mr^[[31m=^[[32m"3"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6405096Z                   ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6405603Z                 ^[[36m</svg>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6406134Z               ^[[36m</button>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6406623Z             ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6407509Z           ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6407952Z         ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6408381Z         ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6409007Z           ^[[33mclass^[[31m=^[[32m"flex justify-end mt-1.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6409604Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6410001Z           ^[[36m<a^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6411293Z             ^[[33mclass^[[31m=^[[32m"text-label text-[var(--color-text-secondary)] hover:text-[var(--color-accent-text)] transition-colors"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6412571Z             ^[[33mhref^[[31m=^[[32m"/forgot-password"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6413161Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6413703Z             ^[[0mForgot password?^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6414240Z           ^[[36m</a>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6414677Z         ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6415110Z       ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6415628Z       ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6416233Z         ^[[33mclass^[[31m=^[[32m"stagger-item pt-1"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6420206Z         ^[[33mstyle^[[31m=^[[32m"--stagger-i: 3;"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6420832Z       ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6421263Z         ^[[36m<button^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6425509Z           ^[[33mclass^[[31m=^[[32m"relative inline-flex items-center justify-center font-medium select-none transition-[background,border-color,color,box-shadow,transform,opacity] duration-180 ease-out focus:outline-none focus-visible:shadow-[var(--shadow-focus)] disabled:opacity-50 disabled:pointer-events-none press-shrink text-white shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-elevated)] h-10 px-4 text-body rounded-md gap-2 w-full group/btn"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6429561Z           ^[[33mstyle^[[31m=^[[32m"background: var(--gradient-accent);"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6430383Z           ^[[33mtype^[[31m=^[[32m"submit"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6430912Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6431399Z           ^[[36m<span>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6431894Z             ^[[0mSign in^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6432389Z           ^[[36m</span>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6432855Z           ^[[36m<svg^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6433440Z             ^[[33maria-hidden^[[31m=^[[32m"true"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6434846Z             ^[[33mclass^[[31m=^[[32m"lucide lucide-arrow-right transition-transform duration-200 group-hover/btn:translate-x-0.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6436107Z             ^[[33mfill^[[31m=^[[32m"none"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6437117Z             ^[[33mheight^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6437880Z             ^[[33mstroke^[[31m=^[[32m"currentColor"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6438682Z             ^[[33mstroke-linecap^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6439467Z             ^[[33mstroke-linejoin^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6440210Z             ^[[33mstroke-width^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6440912Z             ^[[33mviewBox^[[31m=^[[32m"0 0 24 24"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6444276Z             ^[[33mwidth^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6445090Z             ^[[33mxmlns^[[31m=^[[32m"http://www.w3.org/2000/svg"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6445790Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6446276Z             ^[[36m<path^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6447181Z               ^[[33md^[[31m=^[[32m"M5 12h14"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6447827Z             ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6448337Z             ^[[36m<path^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6448978Z               ^[[33md^[[31m=^[[32m"m12 5 7 7-7 7"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6449625Z             ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6450125Z           ^[[36m</svg>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6450633Z         ^[[36m</button>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6451128Z       ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6451608Z       ^[[36m<p^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6452771Z         ^[[33mclass^[[31m=^[[32m"stagger-item text-center text-body-sm text-[var(--color-text-secondary)] pt-1"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6453972Z         ^[[33mstyle^[[31m=^[[32m"--stagger-i: 4;"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6454612Z       ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6455075Z         ^[[0mNo account?^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6456318Z         ^[[0m ^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6457019Z         ^[[36m<a^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6458281Z           ^[[33mclass^[[31m=^[[32m"text-[var(--color-accent-text)] hover:text-[var(--color-accent)] font-medium transition-colors"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6459490Z           ^[[33mhref^[[31m=^[[32m"/register"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6460065Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6460507Z           ^[[0mCreate one^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6460983Z         ^[[36m</a>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6461404Z       ^[[36m</p>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6461815Z     ^[[36m</form>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6462240Z   ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6462661Z ^[[36m</body>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6462888Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6463169Z Ignored nodes: comments, script, style
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6463763Z ^[[36m<body>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6464188Z   ^[[36m<div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6464631Z     ^[[36m<form^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6465162Z       ^[[33mclass^[[31m=^[[32m"space-y-4"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6465832Z       ^[[33mnovalidate^[[31m=^[[32m""^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6466401Z     ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6467111Z       ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6467720Z         ^[[33mclass^[[31m=^[[32m"stagger-item"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6468517Z         ^[[33mstyle^[[31m=^[[32m"--stagger-i: 0;"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6469163Z       ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6469618Z         ^[[36m<h2^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6470612Z           ^[[33mclass^[[31m=^[[32m"text-heading font-semibold text-[var(--color-text-primary)]"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6471536Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6472004Z           ^[[0mSign in^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6472653Z         ^[[36m</h2>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6473112Z         ^[[36m<p^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6474031Z           ^[[33mclass^[[31m=^[[32m"text-body-sm text-[var(--color-text-secondary)] mt-1"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6474928Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6475652Z           ^[[0mWelcome back. Enter your details to continue.^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6476339Z         ^[[36m</p>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6477037Z       ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6477481Z       ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6478039Z         ^[[33mclass^[[31m=^[[32m"stagger-item"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6478756Z         ^[[33mstyle^[[31m=^[[32m"--stagger-i: 1;"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6479327Z       ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6479733Z         ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6480358Z           ^[[33mclass^[[31m=^[[32m"flex flex-col gap-1.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6480949Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6481359Z           ^[[36m<label^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6482329Z             ^[[33mclass^[[31m=^[[32m"font-medium text-[var(--color-text-secondary)] text-body-sm"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6483264Z             ^[[33mfor^[[31m=^[[32m":r6:"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6483783Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6484207Z             ^[[0mEmail^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6484935Z           ^[[36m</label>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6485406Z           ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6489190Z             ^[[33mclass^[[31m=^[[32m"relative group rounded-md bg-[var(--color-bg-input)] border transition-[border-color,box-shadow,background] duration-200 ease-out border-[var(--color-glass-border)] focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_3px_var(--color-accent-light)] focus-within:bg-[var(--color-bg-elevated)] hover:border-[var(--color-glass-border-hover)]"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6492083Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6492510Z             ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6493562Z               ^[[33mclass^[[31m=^[[32m"absolute inset-y-0 left-0 flex items-center pointer-events-none pl-3"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6494476Z             ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6494924Z               ^[[36m<svg^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6495528Z                 ^[[33maria-hidden^[[31m=^[[32m"true"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6497345Z                 ^[[33mclass^[[31m=^[[32m"lucide lucide-mail text-[var(--color-text-muted)] transition-colors group-focus-within:text-[var(--color-accent-text)]"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6498989Z                 ^[[33mfill^[[31m=^[[32m"none"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6499656Z                 ^[[33mheight^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6500357Z                 ^[[33mstroke^[[31m=^[[32m"currentColor"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6501134Z                 ^[[33mstroke-linecap^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6501898Z                 ^[[33mstroke-linejoin^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6502617Z                 ^[[33mstroke-width^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6503319Z                 ^[[33mviewBox^[[31m=^[[32m"0 0 24 24"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6503974Z                 ^[[33mwidth^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6504751Z                 ^[[33mxmlns^[[31m=^[[32m"http://www.w3.org/2000/svg"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6505409Z               ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6505892Z                 ^[[36m<rect^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6506497Z                   ^[[33mheight^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6507352Z                   ^[[33mrx^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6508004Z                   ^[[33mwidth^[[31m=^[[32m"20"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6508627Z                   ^[[33mx^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6509225Z                   ^[[33my^[[31m=^[[32m"4"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6509749Z                 ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6510249Z                 ^[[36m<path^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6511014Z                   ^[[33md^[[31m=^[[32m"m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6511698Z                 ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6512201Z               ^[[36m</svg>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6512669Z             ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6513161Z             ^[[36m<input^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6513794Z               ^[[33maria-invalid^[[31m=^[[32m"false"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6514516Z               ^[[33mautocomplete^[[31m=^[[32m"email"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6516918Z               ^[[33mclass^[[31m=^[[32m"peer w-full bg-transparent text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] border-0 outline-none rounded-md h-10 text-body pl-10 pr-3.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6518760Z               ^[[33mid^[[31m=^[[32m":r6:"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6519476Z               ^[[33mname^[[31m=^[[32m"email"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6520311Z               ^[[33mplaceholder^[[31m=^[[32m"you@company.com"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6521140Z               ^[[33mtype^[[31m=^[[32m"email"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6521845Z               ^[[33mvalue^[[31m=^[[32m""^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6522423Z             ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6522921Z             ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6523919Z               ^[[33mclass^[[31m=^[[32m"absolute inset-y-0 right-0 flex items-center gap-1 pr-2.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6524804Z             ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6525275Z           ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6525743Z         ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6526195Z       ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6527254Z       ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6527852Z         ^[[33mclass^[[31m=^[[32m"stagger-item"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6528578Z         ^[[33mstyle^[[31m=^[[32m"--stagger-i: 2;"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6529134Z       ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6529535Z         ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6530194Z           ^[[33mclass^[[31m=^[[32m"flex flex-col gap-1.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6530849Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6531311Z           ^[[36m<label^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6532305Z             ^[[33mclass^[[31m=^[[32m"font-medium text-[var(--color-text-secondary)] text-body-sm"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6533301Z             ^[[33mfor^[[31m=^[[32m":r7:"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6533853Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6534284Z             ^[[0mPassword^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6534769Z           ^[[36m</label>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6535222Z           ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6539077Z             ^[[33mclass^[[31m=^[[32m"relative group rounded-md bg-[var(--color-bg-input)] border transition-[border-color,box-shadow,background] duration-200 ease-out border-[var(--color-glass-border)] focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_3px_var(--color-accent-light)] focus-within:bg-[var(--color-bg-elevated)] hover:border-[var(--color-glass-border-hover)]"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6542161Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6542645Z             ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6543684Z               ^[[33mclass^[[31m=^[[32m"absolute inset-y-0 left-0 flex items-center pointer-events-none pl-3"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6544664Z             ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6545158Z               ^[[36m<svg^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6545832Z                 ^[[33maria-hidden^[[31m=^[[32m"true"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6547769Z                 ^[[33mclass^[[31m=^[[32m"lucide lucide-lock text-[var(--color-text-muted)] transition-colors group-focus-within:text-[var(--color-accent-text)]"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6549276Z                 ^[[33mfill^[[31m=^[[32m"none"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6550001Z                 ^[[33mheight^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6550778Z                 ^[[33mstroke^[[31m=^[[32m"currentColor"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6551605Z                 ^[[33mstroke-linecap^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6552411Z                 ^[[33mstroke-linejoin^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6553196Z                 ^[[33mstroke-width^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6553958Z                 ^[[33mviewBox^[[31m=^[[32m"0 0 24 24"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6554662Z                 ^[[33mwidth^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6555498Z                 ^[[33mxmlns^[[31m=^[[32m"http://www.w3.org/2000/svg"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6556221Z               ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6557015Z                 ^[[36m<rect^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6557667Z                   ^[[33mheight^[[31m=^[[32m"11"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6558349Z                   ^[[33mrx^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6559019Z                   ^[[33mry^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6559705Z                   ^[[33mwidth^[[31m=^[[32m"18"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6560397Z                   ^[[33mx^[[31m=^[[32m"3"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6561066Z                   ^[[33my^[[31m=^[[32m"11"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6561645Z                 ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6562207Z                 ^[[36m<path^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6562924Z                   ^[[33md^[[31m=^[[32m"M7 11V7a5 5 0 0 1 10 0v4"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6563564Z                 ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6564086Z               ^[[36m</svg>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6564583Z             ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6565062Z             ^[[36m<input^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6565696Z               ^[[33maria-invalid^[[31m=^[[32m"false"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6566535Z               ^[[33mautocomplete^[[31m=^[[32m"current-password"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6568992Z               ^[[33mclass^[[31m=^[[32m"peer w-full bg-transparent text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] border-0 outline-none rounded-md h-10 text-body pl-10 pr-10"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6571047Z               ^[[33mid^[[31m=^[[32m":r7:"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6571784Z               ^[[33mname^[[31m=^[[32m"password"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6572560Z               ^[[33mplaceholder^[[31m=^[[32m"ΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇó"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6573316Z               ^[[33mtype^[[31m=^[[32m"password"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6574015Z               ^[[33mvalue^[[31m=^[[32m""^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6574578Z             ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6575040Z             ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6576037Z               ^[[33mclass^[[31m=^[[32m"absolute inset-y-0 right-0 flex items-center gap-1 pr-2.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6577246Z             ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6577778Z               ^[[36m<button^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6578482Z                 ^[[33maria-label^[[31m=^[[32m"Show password"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6580313Z                 ^[[33mclass^[[31m=^[[32m"p-0.5 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6582139Z                 ^[[33mtabindex^[[31m=^[[32m"-1"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6582867Z                 ^[[33mtype^[[31m=^[[32m"button"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6583448Z               ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6583987Z                 ^[[36m<svg^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6584683Z                   ^[[33mclass^[[31m=^[[32m"lucide lucide-eye"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6585468Z                   ^[[33mfill^[[31m=^[[32m"none"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6586183Z                   ^[[33mheight^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6587201Z                   ^[[33mstroke^[[31m=^[[32m"currentColor"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6588037Z                   ^[[33mstroke-linecap^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6588887Z                   ^[[33mstroke-linejoin^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6589668Z                   ^[[33mstroke-width^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6590390Z                   ^[[33mviewBox^[[31m=^[[32m"0 0 24 24"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6591081Z                   ^[[33mwidth^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6591902Z                   ^[[33mxmlns^[[31m=^[[32m"http://www.w3.org/2000/svg"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6592595Z                 ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6593143Z                   ^[[36m<path^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6594020Z                     ^[[33md^[[31m=^[[32m"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6594823Z                   ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6595372Z                   ^[[36m<circle^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6596012Z                     ^[[33mcx^[[31m=^[[32m"12"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6596961Z                     ^[[33mcy^[[31m=^[[32m"12"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6597681Z                     ^[[33mr^[[31m=^[[32m"3"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6598293Z                   ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6598874Z                 ^[[36m</svg>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6599479Z               ^[[36m</button>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6600047Z             ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6600547Z           ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6601036Z         ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6601515Z         ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6602187Z           ^[[33mclass^[[31m=^[[32m"flex justify-end mt-1.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6602843Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6603283Z           ^[[36m<a^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6604631Z             ^[[33mclass^[[31m=^[[32m"text-label text-[var(--color-text-secondary)] hover:text-[var(--color-accent-text)] transition-colors"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6606007Z             ^[[33mhref^[[31m=^[[32m"/forgot-password"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6606639Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6607451Z             ^[[0mForgot password?^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6608029Z           ^[[36m</a>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6620255Z         ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6620757Z       ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6621202Z       ^[[36m<div^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6621805Z         ^[[33mclass^[[31m=^[[32m"stagger-item pt-1"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6622829Z         ^[[33mstyle^[[31m=^[[32m"--stagger-i: 3;"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6623426Z       ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6623853Z         ^[[36m<button^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6628396Z           ^[[33mclass^[[31m=^[[32m"relative inline-flex items-center justify-center font-medium select-none transition-[background,border-color,color,box-shadow,transform,opacity] duration-180 ease-out focus:outline-none focus-visible:shadow-[var(--shadow-focus)] disabled:opacity-50 disabled:pointer-events-none press-shrink text-white shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-elevated)] h-10 px-4 text-body rounded-md gap-2 w-full group/btn"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6632212Z           ^[[33mstyle^[[31m=^[[32m"background: var(--gradient-accent);"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6633095Z           ^[[33mtype^[[31m=^[[32m"submit"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6633668Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6634132Z           ^[[36m<span>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6634639Z             ^[[0mSign in^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6635160Z           ^[[36m</span>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6635918Z           ^[[36m<svg^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6636544Z             ^[[33maria-hidden^[[31m=^[[32m"true"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6638276Z             ^[[33mclass^[[31m=^[[32m"lucide lucide-arrow-right transition-transform duration-200 group-hover/btn:translate-x-0.5"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6639538Z             ^[[33mfill^[[31m=^[[32m"none"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6640233Z             ^[[33mheight^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6640972Z             ^[[33mstroke^[[31m=^[[32m"currentColor"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6641749Z             ^[[33mstroke-linecap^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6642533Z             ^[[33mstroke-linejoin^[[31m=^[[32m"round"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6643263Z             ^[[33mstroke-width^[[31m=^[[32m"2"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6643986Z             ^[[33mviewBox^[[31m=^[[32m"0 0 24 24"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6644670Z             ^[[33mwidth^[[31m=^[[32m"16"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6645491Z             ^[[33mxmlns^[[31m=^[[32m"http://www.w3.org/2000/svg"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6646170Z           ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6646635Z             ^[[36m<path^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6647536Z               ^[[33md^[[31m=^[[32m"M5 12h14"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6648112Z             ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6648602Z             ^[[36m<path^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6649248Z               ^[[33md^[[31m=^[[32m"m12 5 7 7-7 7"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6649844Z             ^[[36m/>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6650335Z           ^[[36m</svg>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6650839Z         ^[[36m</button>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6651381Z       ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6651841Z       ^[[36m<p^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6652980Z         ^[[33mclass^[[31m=^[[32m"stagger-item text-center text-body-sm text-[var(--color-text-secondary)] pt-1"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6654209Z         ^[[33mstyle^[[31m=^[[32m"--stagger-i: 4;"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6654844Z       ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6655316Z         ^[[0mNo account?^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6655820Z         ^[[0m ^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6656256Z         ^[[36m<a^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6657805Z           ^[[33mclass^[[31m=^[[32m"text-[var(--color-accent-text)] hover:text-[var(--color-accent)] font-medium transition-colors"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6659068Z           ^[[33mhref^[[31m=^[[32m"/register"^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6659666Z         ^[[36m>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6660133Z           ^[[0mCreate one^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6660631Z         ^[[36m</a>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6661089Z       ^[[36m</p>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6661564Z     ^[[36m</form>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6662149Z   ^[[36m</div>^[[31m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.6662769Z ^[[36m</body>^[[31m^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.7708964Z  ^[[32mΓ£ô^[[39m tests/unit/auth/LoginPage.test.tsx^[[2m > ^[[22mLoginPage^[[2m > ^[[22mshows error toast on failed login
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.8793361Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatInput.test.tsx^[[2m > ^[[22mChatInput^[[2m > ^[[22mrenders textarea and send button
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.8796602Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatInput.test.tsx^[[2m > ^[[22mChatInput^[[2m > ^[[22msend button is disabled when input is empty
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.8799000Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatInput.test.tsx^[[2m > ^[[22mChatInput^[[2m > ^[[22mcalls onSend with trimmed value on button click
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.8800871Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatInput.test.tsx^[[2m > ^[[22mChatInput^[[2m > ^[[22mcalls onSend on Enter without Shift
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.8802647Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatInput.test.tsx^[[2m > ^[[22mChatInput^[[2m > ^[[22mdoes not call onSend on Shift+Enter
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.8804319Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatInput.test.tsx^[[2m > ^[[22mChatInput^[[2m > ^[[22mclears input after sending
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.8806080Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatInput.test.tsx^[[2m > ^[[22mChatInput^[[2m > ^[[22mis disabled when disabled prop is true
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.8808190Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatInput.test.tsx^[[2m > ^[[22mChatInput^[[2m > ^[[22mshows loading spinner when isLoading
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:29.8810264Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatInput.test.tsx^[[2m > ^[[22mChatInput^[[2m > ^[[22mshows disabledReason as placeholder when disabled
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:30.8359483Z ^[[90mstderr^[[2m | tests/unit/auth/routeGuards.test.tsx^[[2m > ^[[22m^[[2mRequireAuth^[[2m > ^[[22m^[[2mredirects to /login when no token^[[22m^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:30.8379770Z ΓÜá∩╕Å React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:30.8389341Z ΓÜá∩╕Å React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:30.8391192Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:30.9395435Z  ^[[32mΓ£ô^[[39m tests/unit/auth/routeGuards.test.tsx^[[2m > ^[[22mRequireAuth^[[2m > ^[[22mredirects to /login when no token
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:30.9418093Z  ^[[32mΓ£ô^[[39m tests/unit/auth/routeGuards.test.tsx^[[2m > ^[[22mRequireAuth^[[2m > ^[[22mrenders children when token exists
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:30.9423197Z  ^[[32mΓ£ô^[[39m tests/unit/auth/routeGuards.test.tsx^[[2m > ^[[22mRequireOnboarding^[[2m > ^[[22mredirects to /onboarding when no workspace
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:30.9425467Z  ^[[32mΓ£ô^[[39m tests/unit/auth/routeGuards.test.tsx^[[2m > ^[[22mRequireOnboarding^[[2m > ^[[22mrenders children when workspace exists
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:31.9197382Z  ^[[32mΓ£ô^[[39m tests/unit/hooks/useSalesOrders.test.tsx^[[2m > ^[[22museSalesOrders^[[2m > ^[[22mfetches sales orders list
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:31.9199030Z  ^[[32mΓ£ô^[[39m tests/unit/hooks/useSalesOrders.test.tsx^[[2m > ^[[22museSalesOrders^[[2m > ^[[22mpasses params to list
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.0781824Z  ^[[32mΓ£ô^[[39m tests/unit/hooks/useSalesOrders.test.tsx^[[2m > ^[[22museCreateSalesOrder^[[2m > ^[[22mcalls create mutation
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.3796542Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatThread.test.tsx^[[2m > ^[[22mChatThread^[[2m > ^[[22mrenders messages
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.3798725Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatThread.test.tsx^[[2m > ^[[22mChatThread^[[2m > ^[[22mrenders empty state when no messages
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.3800133Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatThread.test.tsx^[[2m > ^[[22mChatThread^[[2m > ^[[22mdoes not render empty state when messages exist
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.3801186Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatThread.test.tsx^[[2m > ^[[22mChatThread^[[2m > ^[[22mshows typing indicator when isLoading
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.3802176Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatThread.test.tsx^[[2m > ^[[22mChatThread^[[2m > ^[[22mrenders user messages right-aligned
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.3803179Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatThread.test.tsx^[[2m > ^[[22mChatThread^[[2m > ^[[22mrenders assistant messages left-aligned
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.3804537Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/ChatThread.test.tsx^[[2m > ^[[22mChatThread^[[2m > ^[[22mpreserves whitespace in message content
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.9268459Z  ^[[32mΓ£ô^[[39m tests/unit/crm/contacts.test.ts^[[2m > ^[[22mscoreColor^[[2m > ^[[22mreturns green for score >= 70
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.9270583Z  ^[[32mΓ£ô^[[39m tests/unit/crm/contacts.test.ts^[[2m > ^[[22mscoreColor^[[2m > ^[[22mreturns yellow for score between 40 and 69
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.9272531Z  ^[[32mΓ£ô^[[39m tests/unit/crm/contacts.test.ts^[[2m > ^[[22mscoreColor^[[2m > ^[[22mreturns red for score < 40
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.9274476Z  ^[[32mΓ£ô^[[39m tests/unit/crm/contacts.test.ts^[[2m > ^[[22mvalidateContactForm^[[2m > ^[[22mreturns error when first name is empty
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.9276985Z  ^[[32mΓ£ô^[[39m tests/unit/crm/contacts.test.ts^[[2m > ^[[22mvalidateContactForm^[[2m > ^[[22mreturns error when last name is empty
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.9279226Z  ^[[32mΓ£ô^[[39m tests/unit/crm/contacts.test.ts^[[2m > ^[[22mvalidateContactForm^[[2m > ^[[22mreturns error when both names are empty
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.9281534Z  ^[[32mΓ£ô^[[39m tests/unit/crm/contacts.test.ts^[[2m > ^[[22mvalidateContactForm^[[2m > ^[[22mreturns error when names are only whitespace
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:32.9284210Z  ^[[32mΓ£ô^[[39m tests/unit/crm/contacts.test.ts^[[2m > ^[[22mvalidateContactForm^[[2m > ^[[22mreturns null when both names are valid
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.2870249Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Input.test.tsx^[[2m > ^[[22mInput^[[2m > ^[[22mrenders label when provided
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.2872448Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Input.test.tsx^[[2m > ^[[22mInput^[[2m > ^[[22mdisplays error message
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.2874495Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Input.test.tsx^[[2m > ^[[22mInput^[[2m > ^[[22mdisplays helper text
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.2876518Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Input.test.tsx^[[2m > ^[[22mInput^[[2m > ^[[22mforwards ref correctly
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.2878861Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Input.test.tsx^[[2m > ^[[22mInput^[[2m > ^[[22mfires onChange handler
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.2881031Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Input.test.tsx^[[2m > ^[[22mInput^[[2m > ^[[22mdoes not show helper text when error is present
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.3391037Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Button.test.tsx^[[2m > ^[[22mButton^[[2m > ^[[22mrenders children
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.3395317Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Button.test.tsx^[[2m > ^[[22mButton^[[2m > ^[[22mshows loading spinner when loading
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.3397813Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Button.test.tsx^[[2m > ^[[22mButton^[[2m > ^[[22mis disabled when disabled prop is set
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.3399645Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Button.test.tsx^[[2m > ^[[22mButton^[[2m > ^[[22mapplies variant classes
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.3401303Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Button.test.tsx^[[2m > ^[[22mButton^[[2m > ^[[22mapplies size classes
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.7662864Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/SuggestedPrompts.test.tsx^[[2m > ^[[22mSuggestedPrompts^[[2m > ^[[22mrenders all prompts
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.7688642Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/SuggestedPrompts.test.tsx^[[2m > ^[[22mSuggestedPrompts^[[2m > ^[[22mcalls onSelect with prompt text on click
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.7738905Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/SuggestedPrompts.test.tsx^[[2m > ^[[22mSuggestedPrompts^[[2m > ^[[22mdisables buttons when disabled prop is true
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:34.7768310Z  ^[[32mΓ£ô^[[39m src/components/ai/__tests__/SuggestedPrompts.test.tsx^[[2m > ^[[22mSuggestedPrompts^[[2m > ^[[22mreturns null for empty prompts array
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:36.1331643Z  ^[[32mΓ£ô^[[39m tests/unit/helpers/formatCurrency.test.ts^[[2m > ^[[22mformatCurrency^[[2m > ^[[22mreturns ZAR format for NaN input
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:36.1337225Z  ^[[32mΓ£ô^[[39m tests/unit/helpers/formatCurrency.test.ts^[[2m > ^[[22mformatCurrency^[[2m > ^[[22mformats positive numbers correctly (ZAR default)
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:36.1340025Z  ^[[32mΓ£ô^[[39m tests/unit/helpers/formatCurrency.test.ts^[[2m > ^[[22mformatCurrency^[[2m > ^[[22mformats negative numbers correctly (ZAR default)
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:36.1342731Z  ^[[32mΓ£ô^[[39m tests/unit/helpers/formatCurrency.test.ts^[[2m > ^[[22mformatCurrency^[[2m > ^[[22mhandles string input
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:36.4021175Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Card.test.tsx^[[2m > ^[[22mCard^[[2m > ^[[22mrenders children
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:36.4036960Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Card.test.tsx^[[2m > ^[[22mCard^[[2m > ^[[22mrenders header and footer
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:36.4038800Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Card.test.tsx^[[2m > ^[[22mCard^[[2m > ^[[22mapplies variant classes
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:36.4361591Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Modal.test.tsx^[[2m > ^[[22mModal^[[2m > ^[[22mrenders when open
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:36.4390864Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Modal.test.tsx^[[2m > ^[[22mModal^[[2m > ^[[22mdoes not render when closed
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:36.4418149Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Modal.test.tsx^[[2m > ^[[22mModal^[[2m > ^[[22mcalls onClose when close button clicked
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:36.4438403Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Modal.test.tsx^[[2m > ^[[22mModal^[[2m > ^[[22mrenders footer content
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:37.9102856Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Badge.test.tsx^[[2m > ^[[22mBadge^[[2m > ^[[22mrenders text content
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:37.9111327Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Badge.test.tsx^[[2m > ^[[22mBadge^[[2m > ^[[22mapplies variant classes
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:37.9116666Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Badge.test.tsx^[[2m > ^[[22mBadge^[[2m > ^[[22mapplies size classes
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.1690016Z  ^[[32mΓ£ô^[[39m tests/unit/helpers/formatDate.test.ts^[[2m > ^[[22mformatDate^[[2m > ^[[22mreturns em dash for null or undefined
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.1692422Z  ^[[32mΓ£ô^[[39m tests/unit/helpers/formatDate.test.ts^[[2m > ^[[22mformatDate^[[2m > ^[[22mreturns em dash for empty string
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.1694358Z  ^[[32mΓ£ô^[[39m tests/unit/helpers/formatDate.test.ts^[[2m > ^[[22mformatDate^[[2m > ^[[22mformats ISO date string correctly
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.1696264Z  ^[[32mΓ£ô^[[39m tests/unit/helpers/formatDate.test.ts^[[2m > ^[[22mformatDate^[[2m > ^[[22mformats ISO datetime string correctly
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.3802470Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Toggle.test.tsx^[[2m > ^[[22mToggle^[[2m > ^[[22mrenders label
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.3803453Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Toggle.test.tsx^[[2m > ^[[22mToggle^[[2m > ^[[22mfires onChange when clicked
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.3804361Z  ^[[32mΓ£ô^[[39m src/components/ui/__tests__/Toggle.test.tsx^[[2m > ^[[22mToggle^[[2m > ^[[22mis disabled when disabled prop is set
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4086953Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4100047Z ^[[31mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»^[[1m^[[7m Failed Tests 1 ^[[27m^[[22mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4100492Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4103014Z ^[[31m^[[1m^[[7m FAIL ^[[27m^[[22m^[[39m tests/unit/auth/LoginPage.test.tsx^[[2m > ^[[22mLoginPage^[[2m > ^[[22mreveals MFA field when server requires it
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4132296Z ^[[31m^[[1mTestingLibraryElementError^[[22m^[[39m: Unable to find an element with the text: MFA Code. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4133567Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4134117Z Ignored nodes: comments, script, style
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4134725Z ^[[36m<body>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4135311Z   ^[[36m<div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4135911Z     ^[[36m<form^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4136610Z       ^[[33mclass^[[39m=^[[32m"space-y-4"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4137458Z       ^[[33mnovalidate^[[39m=^[[32m""^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4138069Z     ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4138618Z       ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4139326Z         ^[[33mclass^[[39m=^[[32m"stagger-item"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4140090Z         ^[[33mstyle^[[39m=^[[32m"--stagger-i: 0;"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4140704Z       ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4141265Z         ^[[36m<h2^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4142269Z           ^[[33mclass^[[39m=^[[32m"text-heading font-semibold text-[var(--color-text-primary)]"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4143136Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4143706Z           ^[[0mSign in^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4144568Z         ^[[36m</h2>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4145160Z         ^[[36m<p^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4146127Z           ^[[33mclass^[[39m=^[[32m"text-body-sm text-[var(--color-text-secondary)] mt-1"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4147028Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4147807Z           ^[[0mWelcome back. Enter your details to continue.^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4148429Z         ^[[36m</p>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4149019Z       ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4149582Z       ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4150281Z         ^[[33mclass^[[39m=^[[32m"stagger-item"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4151031Z         ^[[33mstyle^[[39m=^[[32m"--stagger-i: 1;"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4151658Z       ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4152234Z         ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4153018Z           ^[[33mclass^[[39m=^[[32m"flex flex-col gap-1.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4153624Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4154193Z           ^[[36m<label^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4155203Z             ^[[33mclass^[[39m=^[[32m"font-medium text-[var(--color-text-secondary)] text-body-sm"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4156004Z             ^[[33mfor^[[39m=^[[32m":r6:"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4157469Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4158022Z             ^[[0mEmail^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4158452Z           ^[[36m</label>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4158870Z           ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4162132Z             ^[[33mclass^[[39m=^[[32m"relative group rounded-md bg-[var(--color-bg-input)] border transition-[border-color,box-shadow,background] duration-200 ease-out border-[var(--color-glass-border)] focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_3px_var(--color-accent-light)] focus-within:bg-[var(--color-bg-elevated)] hover:border-[var(--color-glass-border-hover)]"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4164497Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4164779Z             ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4165371Z               ^[[33mclass^[[39m=^[[32m"absolute inset-y-0 left-0 flex items-center pointer-events-none pl-3"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4165888Z             ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4166148Z               ^[[36m<svg^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4166491Z                 ^[[33maria-hidden^[[39m=^[[32m"true"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4168280Z                 ^[[33mclass^[[39m=^[[32m"lucide lucide-mail text-[var(--color-text-muted)] transition-colors group-focus-within:text-[var(--color-accent-text)]"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4169752Z                 ^[[33mfill^[[39m=^[[32m"none"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4170475Z                 ^[[33mheight^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4171314Z                 ^[[33mstroke^[[39m=^[[32m"currentColor"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4172131Z                 ^[[33mstroke-linecap^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4172949Z                 ^[[33mstroke-linejoin^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4173713Z                 ^[[33mstroke-width^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4174444Z                 ^[[33mviewBox^[[39m=^[[32m"0 0 24 24"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4175101Z                 ^[[33mwidth^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4175891Z                 ^[[33mxmlns^[[39m=^[[32m"http://www.w3.org/2000/svg"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4176545Z               ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4177274Z                 ^[[36m<rect^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4177864Z                   ^[[33mheight^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4178498Z                   ^[[33mrx^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4179133Z                   ^[[33mwidth^[[39m=^[[32m"20"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4179748Z                   ^[[33mx^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4180337Z                   ^[[33my^[[39m=^[[32m"4"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4180857Z                 ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4181359Z                 ^[[36m<path^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4182117Z                   ^[[33md^[[39m=^[[32m"m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4182800Z                 ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4183293Z               ^[[36m</svg>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4183580Z             ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4184056Z             ^[[36m<input^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4184398Z               ^[[33maria-invalid^[[39m=^[[32m"false"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4184799Z               ^[[33mautocomplete^[[39m=^[[32m"email"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4185857Z               ^[[33mclass^[[39m=^[[32m"peer w-full bg-transparent text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] border-0 outline-none rounded-md h-10 text-body pl-10 pr-3.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4187228Z               ^[[33mid^[[39m=^[[32m":r6:"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4187948Z               ^[[33mname^[[39m=^[[32m"email"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4188401Z               ^[[33mplaceholder^[[39m=^[[32m"you@company.com"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4188804Z               ^[[33mtype^[[39m=^[[32m"email"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4189151Z               ^[[33mvalue^[[39m=^[[32m""^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4189452Z             ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4189715Z             ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4190235Z               ^[[33mclass^[[39m=^[[32m"absolute inset-y-0 right-0 flex items-center gap-1 pr-2.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4190708Z             ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4191141Z           ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4191386Z         ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4191792Z       ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4192127Z       ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4192437Z         ^[[33mclass^[[39m=^[[32m"stagger-item"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4192821Z         ^[[33mstyle^[[39m=^[[32m"--stagger-i: 2;"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4193129Z       ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4193355Z         ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4193688Z           ^[[33mclass^[[39m=^[[32m"flex flex-col gap-1.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4194014Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4194244Z           ^[[36m<label^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4194761Z             ^[[33mclass^[[39m=^[[32m"font-medium text-[var(--color-text-secondary)] text-body-sm"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4195261Z             ^[[33mfor^[[39m=^[[32m":r7:"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4195544Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4195797Z             ^[[0mPassword^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4196061Z           ^[[36m</label>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4196320Z           ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4199254Z             ^[[33mclass^[[39m=^[[32m"relative group rounded-md bg-[var(--color-bg-input)] border transition-[border-color,box-shadow,background] duration-200 ease-out border-[var(--color-glass-border)] focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_3px_var(--color-accent-light)] focus-within:bg-[var(--color-bg-elevated)] hover:border-[var(--color-glass-border-hover)]"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4200748Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4200993Z             ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4201553Z               ^[[33mclass^[[39m=^[[32m"absolute inset-y-0 left-0 flex items-center pointer-events-none pl-3"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4202042Z             ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4202290Z               ^[[36m<svg^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4202627Z                 ^[[33maria-hidden^[[39m=^[[32m"true"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4203488Z                 ^[[33mclass^[[39m=^[[32m"lucide lucide-lock text-[var(--color-text-muted)] transition-colors group-focus-within:text-[var(--color-accent-text)]"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4204223Z                 ^[[33mfill^[[39m=^[[32m"none"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4204585Z                 ^[[33mheight^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4204968Z                 ^[[33mstroke^[[39m=^[[32m"currentColor"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4205379Z                 ^[[33mstroke-linecap^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4205794Z                 ^[[33mstroke-linejoin^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4206183Z                 ^[[33mstroke-width^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4206568Z                 ^[[33mviewBox^[[39m=^[[32m"0 0 24 24"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4207180Z                 ^[[33mwidth^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4207609Z                 ^[[33mxmlns^[[39m=^[[32m"http://www.w3.org/2000/svg"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4207961Z               ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4208478Z                 ^[[36m<rect^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4208802Z                   ^[[33mheight^[[39m=^[[32m"11"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4209154Z                   ^[[33mrx^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4209485Z                   ^[[33mry^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4209822Z                   ^[[33mwidth^[[39m=^[[32m"18"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4210159Z                   ^[[33mx^[[39m=^[[32m"3"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4210487Z                   ^[[33my^[[39m=^[[32m"11"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4210778Z                 ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4211057Z                 ^[[36m<path^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4211418Z                   ^[[33md^[[39m=^[[32m"M7 11V7a5 5 0 0 1 10 0v4"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4211752Z                 ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4212027Z               ^[[36m</svg>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4212288Z             ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4212541Z             ^[[36m<input^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4212874Z               ^[[33maria-invalid^[[39m=^[[32m"false"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4213307Z               ^[[33mautocomplete^[[39m=^[[32m"current-password"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4214511Z               ^[[33mclass^[[39m=^[[32m"peer w-full bg-transparent text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] border-0 outline-none rounded-md h-10 text-body pl-10 pr-10"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4215361Z               ^[[33mid^[[39m=^[[32m":r7:"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4215713Z               ^[[33mname^[[39m=^[[32m"password"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4216112Z               ^[[33mplaceholder^[[39m=^[[32m"ΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇó"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4216513Z               ^[[33mtype^[[39m=^[[32m"password"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4217179Z               ^[[33mvalue^[[39m=^[[32m""^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4217490Z             ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4217743Z             ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4218254Z               ^[[33mclass^[[39m=^[[32m"absolute inset-y-0 right-0 flex items-center gap-1 pr-2.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4218710Z             ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4219004Z               ^[[36m<button^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4219377Z                 ^[[33maria-label^[[39m=^[[32m"Show password"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4220307Z                 ^[[33mclass^[[39m=^[[32m"p-0.5 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4221062Z                 ^[[33mtabindex^[[39m=^[[32m"-1"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4221419Z                 ^[[33mtype^[[39m=^[[32m"button"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4221719Z               ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4221996Z                 ^[[36m<svg^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4222349Z                   ^[[33mclass^[[39m=^[[32m"lucide lucide-eye"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4222730Z                   ^[[33mfill^[[39m=^[[32m"none"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4223080Z                   ^[[33mheight^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4223457Z                   ^[[33mstroke^[[39m=^[[32m"currentColor"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4223899Z                   ^[[33mstroke-linecap^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4224512Z                   ^[[33mstroke-linejoin^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4225251Z                   ^[[33mstroke-width^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4226002Z                   ^[[33mviewBox^[[39m=^[[32m"0 0 24 24"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4226917Z                   ^[[33mwidth^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4227719Z                   ^[[33mxmlns^[[39m=^[[32m"http://www.w3.org/2000/svg"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4228366Z                 ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4228779Z                   ^[[36m<path^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4229236Z                     ^[[33md^[[39m=^[[32m"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4229638Z                   ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4229929Z                   ^[[36m<circle^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4230269Z                     ^[[33mcx^[[39m=^[[32m"12"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4230772Z                     ^[[33mcy^[[39m=^[[32m"12"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4231300Z                     ^[[33mr^[[39m=^[[32m"3"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4231614Z                   ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4231910Z                 ^[[36m</svg>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4232199Z               ^[[36m</button>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4232491Z             ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4232749Z           ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4233000Z         ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4233241Z         ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4233583Z           ^[[33mclass^[[39m=^[[32m"flex justify-end mt-1.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4233933Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4234162Z           ^[[36m<a^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4234848Z             ^[[33mclass^[[39m=^[[32m"text-label text-[var(--color-text-secondary)] hover:text-[var(--color-accent-text)] transition-colors"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4235533Z             ^[[33mhref^[[39m=^[[32m"/forgot-password"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4235853Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4236128Z             ^[[0mForgot password?^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4236418Z           ^[[36m</a>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4236878Z         ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4237331Z       ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4237591Z       ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4238022Z         ^[[33mclass^[[39m=^[[32m"stagger-item pt-1"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4238548Z         ^[[33mstyle^[[39m=^[[32m"--stagger-i: 3;"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4239081Z       ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4239416Z         ^[[36m<button^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4242441Z           ^[[33mclass^[[39m=^[[32m"relative inline-flex items-center justify-center font-medium select-none transition-[background,border-color,color,box-shadow,transform,opacity] duration-180 ease-out focus:outline-none focus-visible:shadow-[var(--shadow-focus)] disabled:opacity-50 disabled:pointer-events-none press-shrink text-white shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-elevated)] h-10 px-4 text-body rounded-md gap-2 w-full group/btn"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4246178Z           ^[[33mstyle^[[39m=^[[32m"background: var(--gradient-accent);"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4247335Z           ^[[33mtype^[[39m=^[[32m"submit"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4247876Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4248271Z           ^[[36m<span>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4248670Z             ^[[0mSign in^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4259013Z           ^[[36m</span>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4259629Z           ^[[36m<svg^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4260231Z             ^[[33maria-hidden^[[39m=^[[32m"true"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4261586Z             ^[[33mclass^[[39m=^[[32m"lucide lucide-arrow-right transition-transform duration-200 group-hover/btn:translate-x-0.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4262744Z             ^[[33mfill^[[39m=^[[32m"none"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4263366Z             ^[[33mheight^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4264016Z             ^[[33mstroke^[[39m=^[[32m"currentColor"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4264723Z             ^[[33mstroke-linecap^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4265343Z             ^[[33mstroke-linejoin^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4265754Z             ^[[33mstroke-width^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4266142Z             ^[[33mviewBox^[[39m=^[[32m"0 0 24 24"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4266498Z             ^[[33mwidth^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4267237Z             ^[[33mxmlns^[[39m=^[[32m"http://www.w3.org/2000/svg"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4267611Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4267869Z             ^[[36m<path^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4268429Z               ^[[33md^[[39m=^[[32m"M5 12h14"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4268752Z             ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4269009Z             ^[[36m<path^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4269329Z               ^[[33md^[[39m=^[[32m"m12 5 7 7-7 7"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4269649Z             ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4269900Z           ^[[36m</svg>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4270162Z         ^[[36m</button>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4270406Z       ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4270682Z       ^[[36m<p^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4271264Z         ^[[33mclass^[[39m=^[[32m"stagger-item text-center text-body-sm text-[var(--color-text-secondary)] pt-1"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4272077Z         ^[[33mstyle^[[39m=^[[32m"--stagger-i: 4;"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4272403Z       ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4272641Z         ^[[0mNo account?^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4272884Z         ^[[0m ^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4273104Z         ^[[36m<a^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4274043Z           ^[[33mclass^[[39m=^[[32m"text-[var(--color-accent-text)] hover:text-[var(--color-accent)] font-medium transition-colors"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4275148Z           ^[[33mhref^[[39m=^[[32m"/register"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4275644Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4276032Z           ^[[0mCreate one^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4276450Z         ^[[36m</a>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4277032Z       ^[[36m</p>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4277419Z     ^[[36m</form>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4277863Z   ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4278257Z ^[[36m</body>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4278465Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4278729Z Ignored nodes: comments, script, style
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4279226Z ^[[36m<body>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4279797Z   ^[[36m<div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4280160Z     ^[[36m<form^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4280621Z       ^[[33mclass^[[39m=^[[32m"space-y-4"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4281233Z       ^[[33mnovalidate^[[39m=^[[32m""^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4281734Z     ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4282109Z       ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4282661Z         ^[[33mclass^[[39m=^[[32m"stagger-item"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4283327Z         ^[[33mstyle^[[39m=^[[32m"--stagger-i: 0;"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4283856Z       ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4284214Z         ^[[36m<h2^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4285126Z           ^[[33mclass^[[39m=^[[32m"text-heading font-semibold text-[var(--color-text-primary)]"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4285999Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4286439Z           ^[[0mSign in^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4287122Z         ^[[36m</h2>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4287587Z         ^[[36m<p^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4288482Z           ^[[33mclass^[[39m=^[[32m"text-body-sm text-[var(--color-text-secondary)] mt-1"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4289311Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4289968Z           ^[[0mWelcome back. Enter your details to continue.^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4290461Z         ^[[36m</p>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4290894Z       ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4291266Z       ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4291754Z         ^[[33mclass^[[39m=^[[32m"stagger-item"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4292338Z         ^[[33mstyle^[[39m=^[[32m"--stagger-i: 1;"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4292787Z       ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4293133Z         ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4293595Z           ^[[33mclass^[[39m=^[[32m"flex flex-col gap-1.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4294134Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4294544Z           ^[[36m<label^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4295497Z             ^[[33mclass^[[39m=^[[32m"font-medium text-[var(--color-text-secondary)] text-body-sm"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4296541Z             ^[[33mfor^[[39m=^[[32m":r6:"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4297345Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4297871Z             ^[[0mEmail^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4298447Z           ^[[36m</label>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4298954Z           ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4301280Z             ^[[33mclass^[[39m=^[[32m"relative group rounded-md bg-[var(--color-bg-input)] border transition-[border-color,box-shadow,background] duration-200 ease-out border-[var(--color-glass-border)] focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_3px_var(--color-accent-light)] focus-within:bg-[var(--color-bg-elevated)] hover:border-[var(--color-glass-border-hover)]"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4302906Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4303206Z             ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4303856Z               ^[[33mclass^[[39m=^[[32m"absolute inset-y-0 left-0 flex items-center pointer-events-none pl-3"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4304444Z             ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4304763Z               ^[[36m<svg^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4305401Z                 ^[[33maria-hidden^[[39m=^[[32m"true"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4306400Z                 ^[[33mclass^[[39m=^[[32m"lucide lucide-mail text-[var(--color-text-muted)] transition-colors group-focus-within:text-[var(--color-accent-text)]"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4307618Z                 ^[[33mfill^[[39m=^[[32m"none"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4308184Z                 ^[[33mheight^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4308968Z                 ^[[33mstroke^[[39m=^[[32m"currentColor"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4309873Z                 ^[[33mstroke-linecap^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4310763Z                 ^[[33mstroke-linejoin^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4311625Z                 ^[[33mstroke-width^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4312487Z                 ^[[33mviewBox^[[39m=^[[32m"0 0 24 24"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4313318Z                 ^[[33mwidth^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4314229Z                 ^[[33mxmlns^[[39m=^[[32m"http://www.w3.org/2000/svg"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4315088Z               ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4316052Z                 ^[[36m<rect^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4317064Z                   ^[[33mheight^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4317900Z                   ^[[33mrx^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4318767Z                   ^[[33mwidth^[[39m=^[[32m"20"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4319555Z                   ^[[33mx^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4320306Z                   ^[[33my^[[39m=^[[32m"4"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4320994Z                 ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4321716Z                 ^[[36m<path^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4322658Z                   ^[[33md^[[39m=^[[32m"m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4323519Z                 ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4323888Z               ^[[36m</svg>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4324449Z             ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4324972Z             ^[[36m<input^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4325664Z               ^[[33maria-invalid^[[39m=^[[32m"false"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4326432Z               ^[[33mautocomplete^[[39m=^[[32m"email"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4328934Z               ^[[33mclass^[[39m=^[[32m"peer w-full bg-transparent text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] border-0 outline-none rounded-md h-10 text-body pl-10 pr-3.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4330543Z               ^[[33mid^[[39m=^[[32m":r6:"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4330974Z               ^[[33mname^[[39m=^[[32m"email"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4331487Z               ^[[33mplaceholder^[[39m=^[[32m"you@company.com"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4332170Z               ^[[33mtype^[[39m=^[[32m"email"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4332995Z               ^[[33mvalue^[[39m=^[[32m""^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4333716Z             ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4334278Z             ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4335231Z               ^[[33mclass^[[39m=^[[32m"absolute inset-y-0 right-0 flex items-center gap-1 pr-2.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4336140Z             ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4336587Z           ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4337300Z         ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4337748Z       ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4338107Z       ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4338418Z         ^[[33mclass^[[39m=^[[32m"stagger-item"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4338998Z         ^[[33mstyle^[[39m=^[[32m"--stagger-i: 2;"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4339459Z       ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4339824Z         ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4340173Z           ^[[33mclass^[[39m=^[[32m"flex flex-col gap-1.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4340517Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4340757Z           ^[[36m<label^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4341279Z             ^[[33mclass^[[39m=^[[32m"font-medium text-[var(--color-text-secondary)] text-body-sm"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4341790Z             ^[[33mfor^[[39m=^[[32m":r7:"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4342077Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4342324Z             ^[[0mPassword^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4342810Z           ^[[36m</label>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4343069Z           ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4344902Z             ^[[33mclass^[[39m=^[[32m"relative group rounded-md bg-[var(--color-bg-input)] border transition-[border-color,box-shadow,background] duration-200 ease-out border-[var(--color-glass-border)] focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_3px_var(--color-accent-light)] focus-within:bg-[var(--color-bg-elevated)] hover:border-[var(--color-glass-border-hover)]"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4346378Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4346625Z             ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4347533Z               ^[[33mclass^[[39m=^[[32m"absolute inset-y-0 left-0 flex items-center pointer-events-none pl-3"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4348230Z             ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4348527Z               ^[[36m<svg^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4348868Z                 ^[[33maria-hidden^[[39m=^[[32m"true"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4349733Z                 ^[[33mclass^[[39m=^[[32m"lucide lucide-lock text-[var(--color-text-muted)] transition-colors group-focus-within:text-[var(--color-accent-text)]"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4350642Z                 ^[[33mfill^[[39m=^[[32m"none"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4351009Z                 ^[[33mheight^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4351395Z                 ^[[33mstroke^[[39m=^[[32m"currentColor"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4351799Z                 ^[[33mstroke-linecap^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4352204Z                 ^[[33mstroke-linejoin^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4352595Z                 ^[[33mstroke-width^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4352971Z                 ^[[33mviewBox^[[39m=^[[32m"0 0 24 24"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4353324Z                 ^[[33mwidth^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4353756Z                 ^[[33mxmlns^[[39m=^[[32m"http://www.w3.org/2000/svg"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4354116Z               ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4354392Z                 ^[[36m<rect^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4354720Z                   ^[[33mheight^[[39m=^[[32m"11"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4355065Z                   ^[[33mrx^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4355400Z                   ^[[33mry^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4355739Z                   ^[[33mwidth^[[39m=^[[32m"18"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4356081Z                   ^[[33mx^[[39m=^[[32m"3"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4356404Z                   ^[[33my^[[39m=^[[32m"11"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4356935Z                 ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4357434Z                 ^[[36m<path^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4357894Z                   ^[[33md^[[39m=^[[32m"M7 11V7a5 5 0 0 1 10 0v4"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4358244Z                 ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4358746Z               ^[[36m</svg>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4359027Z             ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4359487Z             ^[[36m<input^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4360070Z               ^[[33maria-invalid^[[39m=^[[32m"false"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4360529Z               ^[[33mautocomplete^[[39m=^[[32m"current-password"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4361620Z               ^[[33mclass^[[39m=^[[32m"peer w-full bg-transparent text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] border-0 outline-none rounded-md h-10 text-body pl-10 pr-10"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4362482Z               ^[[33mid^[[39m=^[[32m":r7:"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4362842Z               ^[[33mname^[[39m=^[[32m"password"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4363234Z               ^[[33mplaceholder^[[39m=^[[32m"ΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇó"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4363617Z               ^[[33mtype^[[39m=^[[32m"password"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4363962Z               ^[[33mvalue^[[39m=^[[32m""^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4364253Z             ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4364495Z             ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4365001Z               ^[[33mclass^[[39m=^[[32m"absolute inset-y-0 right-0 flex items-center gap-1 pr-2.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4365474Z             ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4365755Z               ^[[36m<button^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4366369Z                 ^[[33maria-label^[[39m=^[[32m"Show password"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4367602Z                 ^[[33mclass^[[39m=^[[32m"p-0.5 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4368381Z                 ^[[33mtabindex^[[39m=^[[32m"-1"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4368754Z                 ^[[33mtype^[[39m=^[[32m"button"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4369058Z               ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4369333Z                 ^[[36m<svg^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4369690Z                   ^[[33mclass^[[39m=^[[32m"lucide lucide-eye"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4370077Z                   ^[[33mfill^[[39m=^[[32m"none"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4370435Z                   ^[[33mheight^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4370865Z                   ^[[33mstroke^[[39m=^[[32m"currentColor"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4371304Z                   ^[[33mstroke-linecap^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4371726Z                   ^[[33mstroke-linejoin^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4372183Z                   ^[[33mstroke-width^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4372872Z                   ^[[33mviewBox^[[39m=^[[32m"0 0 24 24"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4373386Z                   ^[[33mwidth^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4373878Z                   ^[[33mxmlns^[[39m=^[[32m"http://www.w3.org/2000/svg"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4374302Z                 ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4374617Z                   ^[[36m<path^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4375084Z                     ^[[33md^[[39m=^[[32m"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4375536Z                   ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4375850Z                   ^[[36m<circle^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4376211Z                     ^[[33mcx^[[39m=^[[32m"12"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4376583Z                     ^[[33mcy^[[39m=^[[32m"12"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4377250Z                     ^[[33mr^[[39m=^[[32m"3"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4377634Z                   ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4377965Z                 ^[[36m</svg>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4378330Z               ^[[36m</button>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4378645Z             ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4378943Z           ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4379237Z         ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4379518Z         ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4379948Z           ^[[33mclass^[[39m=^[[32m"flex justify-end mt-1.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4380322Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4380623Z           ^[[36m<a^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4381400Z             ^[[33mclass^[[39m=^[[32m"text-label text-[var(--color-text-secondary)] hover:text-[var(--color-accent-text)] transition-colors"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4382553Z             ^[[33mhref^[[39m=^[[32m"/forgot-password"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4383171Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4383717Z             ^[[0mForgot password?^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4384290Z           ^[[36m</a>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4384779Z         ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4385239Z       ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4385708Z       ^[[36m<div^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4386346Z         ^[[33mclass^[[39m=^[[32m"stagger-item pt-1"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4387337Z         ^[[33mstyle^[[39m=^[[32m"--stagger-i: 3;"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4387867Z       ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4388228Z         ^[[36m<button^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4392146Z           ^[[33mclass^[[39m=^[[32m"relative inline-flex items-center justify-center font-medium select-none transition-[background,border-color,color,box-shadow,transform,opacity] duration-180 ease-out focus:outline-none focus-visible:shadow-[var(--shadow-focus)] disabled:opacity-50 disabled:pointer-events-none press-shrink text-white shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-elevated)] h-10 px-4 text-body rounded-md gap-2 w-full group/btn"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4395807Z           ^[[33mstyle^[[39m=^[[32m"background: var(--gradient-accent);"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4396663Z           ^[[33mtype^[[39m=^[[32m"submit"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4397860Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4398363Z           ^[[36m<span>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4398862Z             ^[[0mSign in^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4399358Z           ^[[36m</span>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4399861Z           ^[[36m<svg^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4400462Z             ^[[33maria-hidden^[[39m=^[[32m"true"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4401938Z             ^[[33mclass^[[39m=^[[32m"lucide lucide-arrow-right transition-transform duration-200 group-hover/btn:translate-x-0.5"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4403176Z             ^[[33mfill^[[39m=^[[32m"none"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4403849Z             ^[[33mheight^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4404567Z             ^[[33mstroke^[[39m=^[[32m"currentColor"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4405329Z             ^[[33mstroke-linecap^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4406113Z             ^[[33mstroke-linejoin^[[39m=^[[32m"round"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4407079Z             ^[[33mstroke-width^[[39m=^[[32m"2"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4407835Z             ^[[33mviewBox^[[39m=^[[32m"0 0 24 24"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4408773Z             ^[[33mwidth^[[39m=^[[32m"16"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4409590Z             ^[[33mxmlns^[[39m=^[[32m"http://www.w3.org/2000/svg"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4410277Z           ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4410734Z             ^[[36m<path^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4411343Z               ^[[33md^[[39m=^[[32m"M5 12h14"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4411945Z             ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4412418Z             ^[[36m<path^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4413047Z               ^[[33md^[[39m=^[[32m"m12 5 7 7-7 7"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4413645Z             ^[[36m/>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4414113Z           ^[[36m</svg>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4414593Z         ^[[36m</button>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4415096Z       ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4415551Z       ^[[36m<p^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4416661Z         ^[[33mclass^[[39m=^[[32m"stagger-item text-center text-body-sm text-[var(--color-text-secondary)] pt-1"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4418082Z         ^[[33mstyle^[[39m=^[[32m"--stagger-i: 4;"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4418703Z       ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4419157Z         ^[[0mNo account?^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4419635Z         ^[[0m ^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4420046Z         ^[[36m<a^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4421269Z           ^[[33mclass^[[39m=^[[32m"text-[var(--color-accent-text)] hover:text-[var(--color-accent)] font-medium transition-colors"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4422489Z           ^[[33mhref^[[39m=^[[32m"/register"^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4423078Z         ^[[36m>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4423530Z           ^[[0mCreate one^[[0m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4424020Z         ^[[36m</a>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4424475Z       ^[[36m</p>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4424953Z     ^[[36m</form>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4425400Z   ^[[36m</div>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4425847Z ^[[36m</body>^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4427242Z ^[[90m ^[[2mΓ¥»^[[22m waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:^[[2m163:27^[[22m^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4428859Z ^[[90m ^[[2mΓ¥»^[[22m node_modules/@testing-library/dom/dist/query-helpers.js:^[[2m86:33^[[22m^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4430139Z ^[[36m ^[[2mΓ¥»^[[22m tests/unit/auth/LoginPage.test.tsx:^[[2m84:25^[[22m^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4431842Z     ^[[90m 82| ^[[39m    fireEvent^[[33m.^[[39m^[[34mclick^[[39m(screen^[[33m.^[[39m^[[34mgetByRole^[[39m(^[[32m'button'^[[39m^[[33m,^[[39m { name^[[33m:^[[39m ^[[36m/sign in/i^[[39m }))
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4433095Z     ^[[90m 83| ^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4434505Z     ^[[90m 84| ^[[39m    ^[[34mexpect^[[39m(^[[35mawait^[[39m screen^[[33m.^[[39m^[[34mfindByText^[[39m(^[[32m'MFA Code'^[[39m))^[[33m.^[[39m^[[34mtoBeInTheDocument^[[39m()
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4435810Z     ^[[90m   | ^[[39m                        ^[[31m^^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4436395Z     ^[[90m 85| ^[[39m  })
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4437044Z     ^[[90m 86| ^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4437263Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4437754Z ^[[31m^[[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/1]ΓÄ»^[[22m^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4438112Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4438976Z ^[[2m Test Files ^[[22m ^[[1m^[[31m1 failed^[[39m^[[22m^[[2m | ^[[22m^[[1m^[[32m20 passed^[[39m^[[22m^[[90m (21)^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4440752Z ^[[2m      Tests ^[[22m ^[[1m^[[31m1 failed^[[39m^[[22m^[[2m | ^[[22m^[[1m^[[32m120 passed^[[39m^[[22m^[[90m (121)^[[39m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4441712Z ^[[2m   Start at ^[[22m 16:12:23
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4443128Z ^[[2m   Duration ^[[22m 15.01s^[[2m (transform 791ms, setup 1.46s, collect 6.22s, tests 5.07s, environment 21.82s, prepare 3.15s)^[[22m
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4444030Z 
+Web Unit Tests	Run npx vitest run --reporter=verbose --coverage	2026-06-08T16:12:38.4637791Z ##[error]Process completed with exit code 1.

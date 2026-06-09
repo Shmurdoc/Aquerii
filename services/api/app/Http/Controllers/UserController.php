@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,13 +17,27 @@ class UserController extends Controller
         return response()->json(['data' => $user]);
     }
 
+    // POST /me/avatar
+    public function uploadAvatar(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'avatar' => 'required|image|max:2048',
+        ]);
+
+        $user = $request->user();
+        $path = $request->file('avatar')->store("avatars/{$user->id}", 's3');
+        $user->update(['avatar_url' => Storage::disk('s3')->url($path)]);
+
+        return response()->json(['data' => $user->fresh()]);
+    }
+
     // PUT /me
     public function update(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'name'     => 'sometimes|string|max:100',
+            'name' => 'sometimes|string|max:100',
             'password' => 'sometimes|string|min:8|confirmed',
-            'avatar'   => 'sometimes|image|max:2048',
+            'avatar' => 'sometimes|image|max:2048',
         ]);
 
         $user = $request->user();

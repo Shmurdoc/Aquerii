@@ -1,0 +1,12 @@
+{
+  "name": "kotlin-coroutines-flows",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Kotlin Coroutines and Flow patterns for Android and KMP \u2014 structured concurrency, Flow operators, StateFlow, error handling, and testing."
+}

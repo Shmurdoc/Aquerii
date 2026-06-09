@@ -1,0 +1,12 @@
+{
+  "name": "golang-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u0130diomatic Go desenler, en iyi uygulamalar ve sa\u011flam, verimli ve bak\u0131m\u0131 kolay Go uygulamalar\u0131 olu\u015fturmak i\u00e7in konvansiyonlar."
+}

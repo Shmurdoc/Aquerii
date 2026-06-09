@@ -1,0 +1,12 @@
+{
+  "name": "clickhouse-io",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\uace0\uc131\ub2a5 \ubd84\uc11d \uc6cc\ud06c\ub85c\ub4dc\ub97c \uc704\ud55c ClickHouse \ub370\uc774\ud130\ubca0\uc774\uc2a4 \ud328\ud134, \ucffc\ub9ac \ucd5c\uc801\ud654, \ubd84\uc11d \ubc0f \ub370\uc774\ud130 \uc5d4\uc9c0\ub2c8\uc5b4\ub9c1 \ubaa8\ubc94 \uc0ac\ub840."
+}

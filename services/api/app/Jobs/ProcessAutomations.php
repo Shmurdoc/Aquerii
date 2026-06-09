@@ -19,14 +19,15 @@ class ProcessAutomations implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $tries   = 3;
+    public int $tries = 3;
+
     public int $timeout = 120;
 
     public function __construct(
         public readonly string $workspaceId,
         public readonly string $itemId,
         public readonly string $trigger,
-        public readonly array  $context = [],
+        public readonly array $context = [],
     ) {
         $this->onQueue('automations');
     }
@@ -34,7 +35,9 @@ class ProcessAutomations implements ShouldQueue
     public function handle(AutomationEngine $engine): void
     {
         $item = Item::withTrashed()->find($this->itemId);
-        if (!$item) return;
+        if (! $item) {
+            return;
+        }
 
         $engine->evaluate($this->workspaceId, $item, $this->trigger, $this->context);
     }
@@ -43,9 +46,9 @@ class ProcessAutomations implements ShouldQueue
     {
         \Log::error('ProcessAutomations failed', [
             'workspace_id' => $this->workspaceId,
-            'item_id'      => $this->itemId,
-            'trigger'      => $this->trigger,
-            'error'        => $e->getMessage(),
+            'item_id' => $this->itemId,
+            'trigger' => $this->trigger,
+            'error' => $e->getMessage(),
         ]);
     }
 }

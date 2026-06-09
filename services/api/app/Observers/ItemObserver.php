@@ -2,11 +2,11 @@
 
 namespace App\Observers;
 
-use App\Models\Item;
-use App\Jobs\UpdateMeilisearchIndex;
 use App\Jobs\EvaluateAutomationTriggers;
-use App\Jobs\UpdateClickHouseAnalytics;
 use App\Jobs\UpdateAIEmbedding;
+use App\Jobs\UpdateClickHouseAnalytics;
+use App\Jobs\UpdateMeilisearchIndex;
+use App\Models\Item;
 
 class ItemObserver
 {

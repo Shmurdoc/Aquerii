@@ -1,0 +1,12 @@
+{
+  "name": "swift-actor-persistence",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Thread-safe data persistence in Swift using actors \u2014 in-memory cache with file-backed storage, eliminating data races by design."
+}

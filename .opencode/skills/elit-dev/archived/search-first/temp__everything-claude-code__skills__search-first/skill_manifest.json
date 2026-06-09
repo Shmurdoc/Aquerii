@@ -1,0 +1,12 @@
+{
+  "name": "search-first",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Research-before-coding workflow. Search for existing tools, libraries, and patterns before writing custom code. Invokes the researcher agent."
+}

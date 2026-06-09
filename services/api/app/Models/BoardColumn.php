@@ -19,10 +19,10 @@ class BoardColumn extends Model
     protected function casts(): array
     {
         return [
-            'settings'    => 'array',
-            'is_system'   => 'boolean',
-            'position'    => 'float',
-            'width'       => 'integer',
+            'settings' => 'array',
+            'is_system' => 'boolean',
+            'position' => 'float',
+            'width' => 'integer',
         ];
     }
 

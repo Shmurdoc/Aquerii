@@ -1,0 +1,76 @@
+apiVersion: run.googleapis.com/v1
+kind: Job
+metadata:
+  name: aquerii-scheduler
+  annotations:
+    run.googleapis.com/launch-stage: BETA
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      template:
+        spec:
+          serviceAccountName: aquerii-scheduler-sa@${PROJECT_ID}.iam.gserviceaccount.com
+          containers:
+          - image: gcr.io/${PROJECT_ID}/aquerii-api:latest
+            command:
+            - php
+            - artisan
+            - schedule:run
+            env:
+            - name: APP_ENV
+              value: production
+            - name: APP_DEBUG
+              value: "false"
+            - name: DB_CONNECTION
+              value: pgsql
+            - name: DB_HOST
+              value: /cloudsql/${PROJECT_ID}:africa-south1:aquerii-primary
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_DATABASE
+              value: aquerii
+            - name: DB_USERNAME
+              value: aquerii_app
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: db-password
+            - name: DB_SSLMODE
+              value: require
+            - name: REDIS_HOST
+              value: 10.0.0.3
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: redis-password
+            - name: CACHE_DRIVER
+              value: redis
+            - name: QUEUE_CONNECTION
+              value: redis
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: laravel-app-key
+            - name: INTERNAL_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: internal-jwt-secret
+            - name: LOG_CHANNEL
+              value: stack
+            - name: LOG_STACK
+              value: stderr
+            resources:
+              limits:
+                memory: 256Mi
+                cpu: "0.5"
+          maxRetries: 0
+          timeoutSeconds: 600

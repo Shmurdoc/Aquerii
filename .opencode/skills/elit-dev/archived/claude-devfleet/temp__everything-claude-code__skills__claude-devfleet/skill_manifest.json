@@ -1,0 +1,12 @@
+{
+  "name": "claude-devfleet",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Orchestrate multi-agent coding tasks via Claude DevFleet \u2014 plan projects, dispatch parallel agents in isolated worktrees, monitor progress, and read structured reports."
+}

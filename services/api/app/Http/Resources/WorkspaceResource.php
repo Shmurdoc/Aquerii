@@ -9,13 +9,13 @@ class WorkspaceResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'           => $this->id,
-            'name'         => $this->name,
-            'slug'         => $this->slug,
-            'plan'         => $this->plan,
-            'owner_id'     => $this->owner_id,
+            'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'plan' => $this->plan,
+            'owner_id' => $this->owner_id,
             'member_count' => $this->members()->count(),
-            'created_at'   => $this->created_at,
+            'created_at' => $this->created_at,
         ];
     }
 }

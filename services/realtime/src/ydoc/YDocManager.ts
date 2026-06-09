@@ -7,7 +7,7 @@ import axios from 'axios'
 interface DocState {
   doc: Y.Doc
   lastModified: number
-  persistTimer?: NodeJS.Timeout
+  persistTimer?: unknown
 }
 
 export class YDocManager {
@@ -89,8 +89,8 @@ export class YDocManager {
     const state = this.docs.get(docId)
     if (!state) return
 
-    if (state.persistTimer) clearTimeout(state.persistTimer)
-    state.persistTimer = setTimeout(() => this.persistToAPI(docId), this.PERSIST_DELAY)
+    if (state.persistTimer) (globalThis as any).clearTimeout(state.persistTimer as any)
+    state.persistTimer = (globalThis as any).setTimeout(() => this.persistToAPI(docId), this.PERSIST_DELAY)
   }
 
   private async persistToAPI(docId: string): Promise<void> {
@@ -140,7 +140,7 @@ export class YDocManager {
     const state = this.docs.get(docId)
     if (!state) return
     if (state.persistTimer) {
-      clearTimeout(state.persistTimer)
+      (globalThis as any).clearTimeout(state.persistTimer as any)
       state.persistTimer = undefined
     }
     await this.persistToAPI(docId)

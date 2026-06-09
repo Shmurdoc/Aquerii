@@ -1,0 +1,12 @@
+{
+  "name": "continuous-learning",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Claude Code \uc138\uc158\uc5d0\uc11c \uc7ac\uc0ac\uc6a9 \uac00\ub2a5\ud55c \ud328\ud134\uc744 \uc790\ub3d9\uc73c\ub85c \ucd94\ucd9c\ud558\uc5ec \ud5a5\ud6c4 \uc0ac\uc6a9\uc744 \uc704\ud55c \ud559\uc2b5\ub41c \uc2a4\ud0ac\ub85c \uc800\uc7a5\ud569\ub2c8\ub2e4."
+}

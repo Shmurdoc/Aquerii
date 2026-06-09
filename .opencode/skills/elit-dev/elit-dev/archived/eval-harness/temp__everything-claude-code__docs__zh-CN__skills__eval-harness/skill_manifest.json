@@ -1,0 +1,12 @@
+{
+  "name": "eval-harness",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u514b\u52b3\u5fb7\u4ee3\u7801\u4f1a\u8bdd\u7684\u6b63\u5f0f\u8bc4\u4f30\u6846\u67b6\uff0c\u5b9e\u65bd\u8bc4\u4f30\u9a71\u52a8\u5f00\u53d1\uff08EDD\uff09\u539f\u5219"
+}

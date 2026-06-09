@@ -1,0 +1,12 @@
+{
+  "name": "accessibility",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Design, implement, and audit inclusive digital products using WCAG 2.2 Level AA"
+}

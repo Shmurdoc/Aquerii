@@ -1,0 +1,12 @@
+{
+  "name": "docker-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Yerel geli\u015ftirme, konteyner g\u00fcvenli\u011fi, a\u011f, volume stratejileri ve multi-servis orkestrasyon i\u00e7in Docker ve Docker Compose kal\u0131plar\u0131."
+}

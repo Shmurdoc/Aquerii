@@ -10,10 +10,11 @@ class WorkspaceFactory extends Factory
     public function definition(): array
     {
         $name = fake()->company();
+
         return [
-            'name'     => $name,
-            'slug'     => Str::slug($name) . '-' . Str::random(4),
-            'plan'     => 'free',
+            'name' => $name,
+            'slug' => Str::slug($name).'-'.Str::random(4),
+            'plan' => 'free',
             'settings' => [],
             'timezone' => 'UTC',
         ];

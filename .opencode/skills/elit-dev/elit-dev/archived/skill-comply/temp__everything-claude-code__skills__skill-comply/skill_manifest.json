@@ -1,0 +1,12 @@
+{
+  "name": "skill-comply",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Visualize whether skills, rules, and agent definitions are actually followed \u2014 auto-generates scenarios at 3 prompt strictness levels, runs agents, classifies behavioral sequences, and reports comp..."
+}

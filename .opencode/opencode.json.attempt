@@ -1,0 +1,154 @@
+﻿{
+  "$schema": "https:
+
+  "instructions": ".opencode/AGENTS.md",
+
+  "model": {
+    "default": "anthropic/claude-sonnet-4-5",
+    "fallback": "openai/gpt-4o"
+  },
+
+  "autoshare": false,
+
+  "mcp": {
+    "filesystem": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem",
+        "C:\\Users\\madoc\\source\\repos\\Aquerii",
+        "E:\\Devine Brain",
+        "C:\\Users\\madoc\\Documents",
+        "C:\\Users\\madoc\\Downloads"
+      ],
+      "enabled": true
+    },
+
+    "github": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "enabled": true
+    },
+
+    "postgresql": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-postgres",
+        "postgresql:
+      ],
+      "enabled": true
+    },
+
+    "mysql": {
+      "type": "local",
+      "command": ["npx", "-y", "@benborla29/mcp-server-mysql"],
+      "env": {
+        "MYSQL_HOST": "${MYSQL_HOST:-mysql}",
+        "MYSQL_PORT": "${MYSQL_PORT:-3306}",
+        "MYSQL_USER": "root",
+        "MYSQL_PASS": "${MYSQL_PASS}",
+        "MYSQL_DB": "app"
+      },
+      "enabled": true
+    },
+
+    "sqlite": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-sqlite",
+        "--db-path", "C:\\Users\\madoc\\source\\repos\\Aquerii\\supervisor.db"]
+      ],
+      "enabled": true
+    },
+
+    "graphify": {
+      "type": "local",
+      "command": ["python", "-m", "graphify", "serve", "--transport", "stdio"],
+      "env": {
+        "GRAPHIFY_ROOT": "E:\\Devine Brain\\graphify"
+      },
+      "enabled": true
+    },
+
+    "ruflo": {
+      "type": "local",
+      "command": ["claude-flow-mcp"],
+      "env": {
+        "NODE_NO_WARNINGS": "1"
+      },
+      "enabled": true
+    },
+
+    "sequential-thinking": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "enabled": true
+    },
+
+    "fetch": {
+      "type": "local",
+      "command": ["uvx", "mcp-server-fetch"],
+      "enabled": true
+    },
+
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp@latest"],
+      "enabled": true
+    },
+
+    "docker": {
+      "type": "local",
+      "command": ["npx", "-y", "docker-mcp-server"],
+      "enabled": true
+    },
+
+    "memory": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
+      "enabled": true
+    }
+  },
+
+  "plugin": [
+    "opencode-mem0",
+    "@nntoan/gstack"
+  ],
+
+  "lsp": {
+    "typescript": {
+      "command": "typescript-language-server",
+      "args": ["--stdio"],
+      "filetypes": ["typescript", "typescriptreact", "javascript", "javascriptreact"]
+    },
+    "python": {
+      "command": "basedpyright-langserver",
+      "args": ["--stdio"],
+      "filetypes": ["python"]
+    },
+    "css": {
+      "command": "vscode-css-language-server",
+      "args": ["--stdio"],
+      "filetypes": ["css", "scss", "less"]
+    },
+    "html": {
+      "command": "vscode-html-language-server",
+      "args": ["--stdio"],
+      "filetypes": ["html"]
+    },
+    "sql": {
+      "command": "sqls",
+      "args": [],
+      "filetypes": ["sql", "mysql"]
+    }
+  },
+
+  "env": {
+    "GITHUB_TOKEN": "${GITHUB_TOKEN}",
+    "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+    "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
+    "POSTGRES_URL": "postgresql:
+    "MYSQL_HOST": "mysql",
+    "MYSQL_USER": "root",
+    "MYSQL_PASS": "${MYSQL_PASS}"
+  }
+}

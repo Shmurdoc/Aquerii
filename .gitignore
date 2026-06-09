@@ -1,0 +1,53 @@
+# ─── Environment ──────────────────────────────────────
+.env
+
+# ─── OS ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Node ─────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+# removed: services/realtime/package-lock.json
+
+# ─── PHP / Composer ───────────────────────────────────
+/vendor/
+services/api/vendor/
+composer.lock
+
+# ─── Laravel ──────────────────────────────────────────
+/storage/framework/cache/data/
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/logs/*
+/storage/debugbar/*
+/bootstrap/cache/*.php
+
+# ─── Python ───────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+
+# ─── Build artifacts ─────────────────────────────────
+services/web/dist/
+services/web/playwright-report/
+services/web/test-results/
+services/api/bootstrap/cache/*.php
+services/api/storage/logs/*
+*.log
+
+# ─── IDE ──────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ─── Docker ───────────────────────────────────────────
+docker-data/
+
+# ─── Scratch / personal notes ────────────────────────
+madoc*.md
+
+# ─── K8s secrets (use Vault/SealedSecrets in prod) ───
+infra/k8s/secrets.yaml
+.gstack/

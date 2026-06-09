@@ -1,0 +1,12 @@
+{
+  "name": "foundation-models-on-device",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Apple FoundationModels framework for on-device LLM \u2014 text generation, guided generation with @Generable, tool calling, and snapshot streaming in iOS 26+."
+}

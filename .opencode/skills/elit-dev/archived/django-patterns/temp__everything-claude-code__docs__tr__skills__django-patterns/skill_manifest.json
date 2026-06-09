@@ -1,0 +1,12 @@
+{
+  "name": "django-patterns",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "DRF ile Django mimari desenleri, REST API tasar\u0131m\u0131, ORM en iyi uygulamalar\u0131, caching, signal'ler, middleware ve production-grade Django uygulamalar\u0131."
+}

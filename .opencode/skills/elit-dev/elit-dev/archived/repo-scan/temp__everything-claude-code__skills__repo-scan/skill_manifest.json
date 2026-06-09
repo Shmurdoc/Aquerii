@@ -1,0 +1,12 @@
+{
+  "name": "repo-scan",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Cross-stack source code asset audit \u2014 classifies every file, detects embedded third-party libraries, and delivers actionable four-level verdicts per module with interactive HTML reports."
+}

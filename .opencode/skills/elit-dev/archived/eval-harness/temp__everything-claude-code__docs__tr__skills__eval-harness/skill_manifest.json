@@ -1,0 +1,12 @@
+{
+  "name": "eval-harness",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Eval-driven development (EDD) ilkelerini uygulayan Claude Code oturumlar\u0131 i\u00e7in formal de\u011ferlendirme \u00e7er\u00e7evesi"
+}

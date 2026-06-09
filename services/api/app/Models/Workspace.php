@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Workspace extends Model
 {
-    use HasUuids, HasFactory, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'name', 'slug', 'logo_url', 'cover_url', 'custom_domain',
@@ -20,12 +20,12 @@ class Workspace extends Model
     protected function casts(): array
     {
         return [
-            'settings'              => 'array',
-            'trial_ends_at'         => 'datetime',
-            'automations_reset_at'  => 'datetime',
-            'ai_credits_reset_at'   => 'datetime',
-            'storage_quota_bytes'   => 'integer',
-            'storage_used_bytes'    => 'integer',
+            'settings' => 'array',
+            'trial_ends_at' => 'datetime',
+            'automations_reset_at' => 'datetime',
+            'ai_credits_reset_at' => 'datetime',
+            'storage_quota_bytes' => 'integer',
+            'storage_used_bytes' => 'integer',
         ];
     }
 
@@ -39,14 +39,12 @@ class Workspace extends Model
         return $this->hasMany(Board::class);
     }
 
-    public function documents()
-    {
-        return $this->hasMany(Document::class);
-    }
-
     public function storageUsedPercent(): float
     {
-        if ($this->storage_quota_bytes === 0) return 0.0;
+        if ($this->storage_quota_bytes === 0) {
+            return 0.0;
+        }
+
         return ($this->storage_used_bytes / $this->storage_quota_bytes) * 100;
     }
 

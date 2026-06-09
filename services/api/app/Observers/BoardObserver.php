@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Board;
 use App\Jobs\UpdateMeilisearchIndex;
+use App\Models\Board;
 
 class BoardObserver
 {

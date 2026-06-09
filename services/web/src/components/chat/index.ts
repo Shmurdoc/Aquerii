@@ -1,0 +1,1 @@
+export { MentionText } from './MentionText'

@@ -1,0 +1,12 @@
+{
+  "name": "database-migrations",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\u015eema de\u011fi\u015fiklikleri, veri migration'lar\u0131, rollback'ler ve PostgreSQL, MySQL ve yayg\u0131n ORM'ler (Prisma, Drizzle, Django, TypeORM, golang-migrate) aras\u0131nda s\u0131f\u0131r kesinti deployment'lar\u0131 i\u00e7in veritaba..."
+}

@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use Laravel\Scout\Searchable;
 
 class Item extends Model
 {
-    use HasUuids, HasFactory, SoftDeletes;
+    use HasFactory, HasUuids, Searchable, SoftDeletes;
 
     protected $fillable = [
         'workspace_id', 'board_id', 'group_id', 'parent_id',
@@ -22,13 +22,13 @@ class Item extends Model
     protected function casts(): array
     {
         return [
-            'description'    => 'array',
-            'column_values'  => 'array',
-            'due_date'       => 'datetime',
-            'reminder_at'    => 'datetime',
-            'tracked_hours'  => 'float',
-            'estimated_hours'=> 'float',
-            'version'        => 'integer',
+            'description' => 'array',
+            'column_values' => 'array',
+            'due_date' => 'datetime',
+            'reminder_at' => 'datetime',
+            'tracked_hours' => 'float',
+            'estimated_hours' => 'float',
+            'version' => 'integer',
         ];
     }
 
@@ -58,36 +58,18 @@ class Item extends Model
             ->withPivot('assigned_by', 'assigned_at');
     }
 
-    public function comments()
+    public function toSearchableArray(): array
     {
-        return $this->hasMany(Comment::class, 'entity_id')
-            ->where('entity_type', 'item')
-            ->whereNull('deleted_at');
-    }
-
-    public function files()
-    {
-        return $this->hasMany(File::class, 'entity_id')
-            ->where('entity_type', 'item');
-    }
-
-    /**
-     * Optimistic lock check.
-     * Throws if expected_version doesn't match current version.
-     */
-    public function assertVersion(int $expectedVersion): void
-    {
-        if ($this->version !== $expectedVersion) {
-            throw new HttpResponseException(
-                response()->json([
-                    'error' => [
-                        'code'             => 'CONCURRENT_EDIT',
-                        'message'          => 'Item was modified by another user. Reload and retry.',
-                        'current_version'  => $this->version,
-                        'expected_version' => $expectedVersion,
-                    ],
-                ], 409)
-            );
-        }
+        return [
+            'id' => $this->id,
+            'workspace_id' => $this->workspace_id,
+            'board_id' => $this->board_id,
+            'group_id' => $this->group_id,
+            'title' => $this->title,
+            'status' => $this->status,
+            'priority' => $this->priority,
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
+        ];
     }
 }

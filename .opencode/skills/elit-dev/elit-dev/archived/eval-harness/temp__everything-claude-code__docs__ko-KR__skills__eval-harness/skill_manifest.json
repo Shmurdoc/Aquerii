@@ -1,0 +1,12 @@
+{
+  "name": "eval-harness",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\ud3c9\uac00 \uc8fc\ub3c4 \uac1c\ubc1c(EDD) \uc6d0\uce59\uc744 \uad6c\ud604\ud558\ub294 Claude Code \uc138\uc158\uc6a9 \uacf5\uc2dd \ud3c9\uac00 \ud504\ub808\uc784\uc6cc\ud06c"
+}

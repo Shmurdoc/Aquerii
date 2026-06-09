@@ -1,0 +1,209 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.logger = void 0;
+// src/index.ts — Aquerii Realtime Server entry point
+require("./instrumentation"); // OTel must initialise before anything else
+const http_1 = require("http");
+const socket_io_1 = require("socket.io");
+const redis_adapter_1 = require("@socket.io/redis-adapter");
+const ioredis_1 = require("ioredis");
+const pino_1 = __importDefault(require("pino"));
+const zod_1 = require("zod");
+const sanctum_1 = require("./auth/sanctum");
+const RoomManager_1 = require("./rooms/RoomManager");
+const PresenceManager_1 = require("./presence/PresenceManager");
+const YDocManager_1 = require("./ydoc/YDocManager");
+const EventBroadcaster_1 = require("./events/EventBroadcaster");
+const catchupHandler_1 = require("./handlers/catchupHandler");
+const chatHandler_1 = require("./handlers/chatHandler");
+const metrics_1 = require("./metrics");
+// ── Zod schemas for socket event payloads ─────────────────────────────────────
+const DocUpdateSchema = zod_1.z.object({
+    docId: zod_1.z.string().uuid(),
+    update: zod_1.z.string().min(1),
+    room: zod_1.z.string().min(1),
+});
+const DocSyncSchema = zod_1.z.object({
+    docId: zod_1.z.string().uuid(),
+    stateVector: zod_1.z.string().min(1),
+});
+const DocAwarenessSchema = zod_1.z.object({
+    docId: zod_1.z.string().uuid(),
+    update: zod_1.z.string().min(1),
+});
+// ── Logger (exported so legacy modules can import it) ─────────────────────────
+exports.logger = (0, pino_1.default)({ level: process.env.LOG_LEVEL ?? 'info' });
+// ── Config ────────────────────────────────────────────────────────────────────
+const PORT = parseInt(process.env.PORT ?? '3000', 10);
+const REDIS_URL = process.env.REDIS_URL
+    ?? `redis://:${process.env.REDIS_PASSWORD ?? ''}@${process.env.REDIS_HOST ?? 'redis'}:${process.env.REDIS_PORT ?? '6379'}`;
+const API_URL = process.env.API_URL ?? 'http://api:8000';
+const API_SECRET = process.env.REALTIME_SECRET ?? process.env.INTERNAL_API_KEY ?? '';
+const ORIGINS = (process.env.CORS_ORIGINS ?? process.env.CORS_ORIGIN ?? 'http://localhost:5173').split(',');
+async function bootstrap() {
+    // ── Redis connections ────────────────────────────────────────────────────
+    // socket.io-redis-adapter requires separate pub/sub clients.
+    // A third client is used for all other Redis operations.
+    const pubClient = new ioredis_1.Redis(REDIS_URL).on('error', (e) => exports.logger.error(e, 'Redis pub error'));
+    const subClient = pubClient.duplicate();
+    const redisClient = pubClient.duplicate();
+    // ── HTTP + Socket.IO ─────────────────────────────────────────────────────
+    const httpServer = (0, http_1.createServer)((req, res) => {
+        const response = res;
+        if (req.url === '/health' || req.url === '/healthz') {
+            response.writeHead(200, { 'Content-Type': 'application/json' });
+            response.end(JSON.stringify({ status: 'ok', service: 'realtime', uptime: process.uptime() }));
+            return;
+        }
+        response.writeHead(404);
+        response.end();
+    });
+    const io = new socket_io_1.Server(httpServer, {
+        cors: {
+            origin: ORIGINS,
+            credentials: true,
+            methods: ['GET', 'POST'],
+        },
+        transports: ['websocket', 'polling'],
+        pingTimeout: 20000,
+        pingInterval: 25000,
+        maxHttpBufferSize: 1e6, // 1 MB
+    });
+    io.adapter((0, redis_adapter_1.createAdapter)(pubClient, subClient));
+    // ── Auth middleware ───────────────────────────────────────────────────────
+    io.use(async (socket, next) => {
+        const token = socket.handshake.auth?.token ??
+            (socket.handshake.headers.authorization ?? '').replace('Bearer ', '');
+        if (!token)
+            return next(new Error('AUTH_REQUIRED'));
+        try {
+            const payload = await (0, sanctum_1.verifySanctumToken)(token, API_URL, redisClient);
+            // Attach structured payload for new managers
+            socket.data.user = { ...payload, iat: 0, exp: 0 };
+            // Also set flat fields for legacy handlers
+            socket.data.userId = payload.sub;
+            socket.data.workspaceId = payload.workspace_id;
+            socket.data.name = payload.name ?? '';
+            next();
+        }
+        catch (err) {
+            exports.logger.warn({ err }, 'Socket auth failed');
+            next(new Error('AUTH_INVALID'));
+        }
+    });
+    // ── Manager instances ─────────────────────────────────────────────────────
+    const roomManager = new RoomManager_1.RoomManager(io, redisClient);
+    const presenceManager = new PresenceManager_1.PresenceManager(io, redisClient);
+    const ydocManager = new YDocManager_1.YDocManager(io, redisClient, API_URL, API_SECRET);
+    const broadcaster = new EventBroadcaster_1.EventBroadcaster(io, redisClient, API_URL, API_SECRET);
+    // Subscribe to the Redis channel for Laravel-published realtime events
+    await broadcaster.start();
+    // ── Connection handler ────────────────────────────────────────────────────
+    io.on('connection', (socket) => {
+        const user = socket.data.user;
+        metrics_1.connectedClients.inc();
+        exports.logger.info({ userId: user.sub, workspaceId: user.workspace_id }, 'Client connected');
+        // Auto-join the workspace room so workspace-wide broadcasts reach this socket
+        socket.join(`workspace:${user.workspace_id}`);
+        // Register room join/leave, presence typing, and disconnect handlers
+        (0, catchupHandler_1.registerCatchupHandler)(socket, user, roomManager, presenceManager, broadcaster);
+        // Register chat handlers
+        (0, chatHandler_1.registerChatHandler)(socket, user);
+        // ── Presence heartbeat ──────────────────────────────────────────────────
+        // Refresh presence TTL whenever the client pings (every ~25s per Socket.IO default).
+        // This keeps presence alive for active connections and lets it expire naturally
+        // within ~1hr of silent disconnect (presence TTL = 3600s in PresenceManager).
+        socket.on('ping', async () => {
+            const rooms = socket.data.rooms || new Set();
+            for (const room of rooms) {
+                try {
+                    await presenceManager.heartbeat(user.sub, room);
+                }
+                catch {
+                    // non-fatal
+                }
+            }
+        });
+        // ── Y.js document sync ──────────────────────────────────────────────────
+        socket.on('doc:update', async (raw) => {
+            const parsed = DocUpdateSchema.safeParse(raw);
+            if (!parsed.success) {
+                socket.emit('error', { event: 'doc:update', issues: parsed.error.issues });
+                return;
+            }
+            const data = parsed.data;
+            try {
+                const update = Buffer.from(data.update, 'base64');
+                await ydocManager.applyUpdate(data.docId, update, socket, data.room);
+                metrics_1.messagesTotal.inc({ event: 'doc:update' });
+            }
+            catch (err) {
+                exports.logger.error({ err, docId: data.docId }, 'doc:update error');
+            }
+        });
+        socket.on('doc:sync', async (raw) => {
+            const parsed = DocSyncSchema.safeParse(raw);
+            if (!parsed.success) {
+                socket.emit('error', { event: 'doc:sync', issues: parsed.error.issues });
+                return;
+            }
+            const data = parsed.data;
+            try {
+                const stateVector = Buffer.from(data.stateVector, 'base64');
+                const update = await ydocManager.getUpdate(data.docId, stateVector);
+                socket.emit('doc:sync:reply', {
+                    docId: data.docId,
+                    update: Buffer.from(update).toString('base64'),
+                });
+                metrics_1.messagesTotal.inc({ event: 'doc:sync' });
+            }
+            catch (err) {
+                exports.logger.error({ err, docId: data.docId }, 'doc:sync error');
+            }
+        });
+        // Relay Y.js awareness updates (cursor positions etc.) without server processing
+        socket.on('doc:awareness', (raw) => {
+            const parsed = DocAwarenessSchema.safeParse(raw);
+            if (!parsed.success) {
+                socket.emit('error', { event: 'doc:awareness', issues: parsed.error.issues });
+                return;
+            }
+            socket.to(`doc:${parsed.data.docId}`).emit('doc:awareness', parsed.data);
+            metrics_1.messagesTotal.inc({ event: 'doc:awareness' });
+        });
+        // ── Disconnect ──────────────────────────────────────────────────────────
+        socket.on('disconnect', (reason) => {
+            metrics_1.connectedClients.dec();
+            exports.logger.info({ userId: user.sub, reason }, 'Client disconnected');
+        });
+    });
+    // ── Start listening ───────────────────────────────────────────────────────
+    httpServer.listen(PORT, () => {
+        exports.logger.info(`[Aquerii Realtime] listening on :${PORT}`);
+    });
+    // Metrics server on a separate port scraped by Prometheus
+    (0, metrics_1.createMetricsServer)(9464);
+    // ── Graceful shutdown ─────────────────────────────────────────────────────
+    const shutdown = async (signal) => {
+        exports.logger.info({ signal }, 'Shutting down realtime server');
+        // Flush all Y.js docs to the API before exiting
+        await ydocManager.flushAll();
+        await broadcaster.stop();
+        io.close(() => {
+            pubClient.quit();
+            subClient.quit();
+            redisClient.quit();
+            process.exit(0);
+        });
+    };
+    process.on('SIGTERM', () => shutdown('SIGTERM'));
+    process.on('SIGINT', () => shutdown('SIGINT'));
+}
+bootstrap().catch((err) => {
+    exports.logger.fatal(err, 'Failed to start realtime server');
+    process.exit(1);
+});
+//# sourceMappingURL=index.js.map

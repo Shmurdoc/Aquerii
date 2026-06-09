@@ -1,0 +1,12 @@
+{
+  "name": "incident-response-and-runbooks",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "Incident response playbooks, on-call procedures, postmortem templates, and escalation paths to contain and learn from production incidents."
+}

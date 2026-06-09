@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Document extends Model
 {
-    use HasUuids;
+    use HasUuids, Searchable;
 
     protected $table = 'documents';
 
@@ -19,8 +20,8 @@ class Document extends Model
     protected function casts(): array
     {
         return [
-            'content'        => 'array',
-            'is_locked'      => 'boolean',
+            'content' => 'array',
+            'is_locked' => 'boolean',
             'last_edited_at' => 'datetime',
         ];
     }
@@ -43,5 +44,19 @@ class Document extends Model
     public function lastEditor()
     {
         return $this->belongsTo(User::class, 'last_edited_by');
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'workspace_id' => $this->workspace_id,
+            'folder_id' => $this->folder_id,
+            'title' => $this->title,
+            'created_by' => $this->created_by,
+            'last_edited_at' => $this->last_edited_at?->toISOString(),
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
+        ];
     }
 }

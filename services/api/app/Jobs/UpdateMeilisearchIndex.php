@@ -2,18 +2,22 @@
 
 namespace App\Jobs;
 
+use App\Models\Board;
+use App\Models\Comment;
+use App\Models\Document;
+use App\Models\Item;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class UpdateMeilisearchIndex implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 3;
+
     public int $backoff = 30;
 
     public function __construct(
@@ -25,15 +29,16 @@ class UpdateMeilisearchIndex implements ShouldQueue
     public function handle(): void
     {
         $modelClass = match ($this->modelType) {
-            'item'     => \App\Models\Item::class,
-            'document' => \App\Models\Document::class,
-            'comment'  => \App\Models\Comment::class,
-            'board'    => \App\Models\Board::class,
-            default    => throw new \InvalidArgumentException("Unknown model type: {$this->modelType}"),
+            'item' => Item::class,
+            'document' => Document::class,
+            'comment' => Comment::class,
+            'board' => Board::class,
+            default => throw new \InvalidArgumentException("Unknown model type: {$this->modelType}"),
         };
 
         if ($this->operation === 'delete') {
             $modelClass::removeFromSearch($this->modelId);
+
             return;
         }
 

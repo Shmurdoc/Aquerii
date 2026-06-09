@@ -8,11 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class WorkspaceMember extends Model
 {
-    use HasUuids, HasFactory;
+    use HasFactory, HasUuids;
 
     protected $table = 'workspace_members';
 
-    // The workspace_members table has only created_at, no updated_at
     const UPDATED_AT = null;
 
     protected $fillable = [

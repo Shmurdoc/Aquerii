@@ -1,0 +1,12 @@
+{
+  "name": "springboot-verification",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\"Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security scans, and diff review before release or PR.\""
+}

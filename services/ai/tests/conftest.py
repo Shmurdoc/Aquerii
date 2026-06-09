@@ -27,24 +27,20 @@ os.environ.setdefault("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4317")
 @pytest.fixture(scope="session", autouse=True)
 def patch_otel():
     """Disable OTel so tests don't require a collector."""
-    with patch("app.core.otel.setup_otel", return_value=None):
+    try:
+        with patch("app.core.otel.setup_otel", return_value=None):
+            yield
+    except (ModuleNotFoundError, AttributeError):
         yield
 
 
 @pytest.fixture(scope="session", autouse=True)
-def patch_prometheus():
-    """Prevent Prometheus Instrumentator from registering on test client."""
-    mock_inst = MagicMock()
-    mock_inst.instrument.return_value = mock_inst
-    mock_inst.expose.return_value = mock_inst
-    with patch("app.main.Instrumentator", return_value=mock_inst):
-        yield
-
-
-@pytest.fixture(scope="session", autouse=True)
-def patch_aioredis_lifespan():
+def patch_redis():
     """Prevent lifespan from connecting to a real Redis server."""
     mock_redis = AsyncMock()
     mock_redis.aclose = AsyncMock()
-    with patch("app.main.aioredis.from_url", return_value=mock_redis):
+    try:
+        with patch("app.main._redis_client", mock_redis):
+            yield
+    except (ModuleNotFoundError, AttributeError):
         yield

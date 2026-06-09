@@ -11,7 +11,11 @@ import { Button, Input } from '@/components/ui'
 const schema = z.object({
   name:           z.string().min(1, 'Name is required').max(255),
   email:          z.string().email('Invalid email'),
-  password:       z.string().min(8, 'Minimum 8 characters'),
+  password:       z.string()
+    .min(8, 'Minimum 8 characters')
+    .regex(/[a-z]/, 'Must contain at least one lowercase letter')
+    .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
+    .regex(/[0-9]/, 'Must contain at least one number'),
   password_confirmation: z.string(),
   workspace_name: z.string().min(1, 'Workspace name is required').max(255),
 }).refine(d => d.password === d.password_confirmation, {
@@ -39,8 +43,8 @@ export default function RegisterPage() {
   const mutation = useMutation({
     mutationFn: (data: FormData) => api.post('/auth/register', data),
     onSuccess: (res) => {
-      const { user, token, workspace } = res.data.data
-      setAuth(token, user, workspace)
+      const { user, token, workspace, role } = res.data.data
+      setAuth(token, user, workspace, role)
       navigate('/onboarding')
     },
     onError: (err: any) => {

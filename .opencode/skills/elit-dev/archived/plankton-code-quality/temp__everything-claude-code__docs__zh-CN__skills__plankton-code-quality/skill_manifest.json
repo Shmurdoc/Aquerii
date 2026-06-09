@@ -1,0 +1,12 @@
+{
+  "name": "plankton-code-quality",
+  "version": "1",
+  "owner": "approver@example.com",
+  "entry_points": [],
+  "hard_rules": {
+    "require_tests": false
+  },
+  "tests": [],
+  "sensitive": false,
+  "description": "\"\u4f7f\u7528Plankton\u8fdb\u884c\u7f16\u5199\u65f6\u4ee3\u7801\u8d28\u91cf\u5f3a\u5236\u6267\u884c\u2014\u2014\u901a\u8fc7\u94a9\u5b50\u5728\u6bcf\u6b21\u6587\u4ef6\u7f16\u8f91\u65f6\u81ea\u52a8\u683c\u5f0f\u5316\u3001\u4ee3\u7801\u68c0\u67e5\u548cClaude\u9a71\u52a8\u7684\u4fee\u590d\u3002\""
+}
