@@ -42,7 +42,7 @@ jobs:
           path: services/api/vendor
           key: composer-${{ hashFiles('services/api/composer.lock') }}
 
-      - run: composer install --prefer-dist --no-scripts --no-progress
+      - run: composer install --prefer-dist --no-scripts --no-progress --ignore-platform-req=ext-opentelemetry
       - run: composer lint
       - run: composer analyse
 
@@ -57,9 +57,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: services/realtime/package-lock.json
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm run build
 
@@ -121,7 +119,7 @@ jobs:
           path: services/api/vendor
           key: composer-${{ hashFiles('services/api/composer.lock') }}
 
-      - run: composer install --prefer-dist --no-scripts --no-progress
+      - run: composer install --prefer-dist --no-scripts --no-progress --ignore-platform-req=ext-opentelemetry
 
       - name: Prepare test env
         run: |
@@ -151,9 +149,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: services/realtime/package-lock.json
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm test -- --coverage
 
   test-python:
