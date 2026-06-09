@@ -23,12 +23,7 @@ return new class extends Migration
             $table->string('reference_type')->nullable();
             $table->string('reference_id')->nullable();
             $table->uuid('created_by')->nullable();
-            $table->string('status', 20)->default('draft');
-            $table->timestamp('posted_at')->nullable();
-            $table->uuid('posted_by')->nullable();
-            $table->uuid('reversal_of')->nullable();
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('workspace_id')->references('id')->on('workspaces')->cascadeOnDelete();
             $table->index('workspace_id');
