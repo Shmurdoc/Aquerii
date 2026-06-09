@@ -5,37 +5,36 @@
     "license": "proprietary",
     "require": {
         "php": "^8.3",
-        "anthropic-ai/sdk": "^0.24",
-        "brick/math": "^0.12",
-        "filament/filament": "^3.2",
-        "google/cloud-ai-platform": "^1.0",
         "laravel/framework": "^11.0",
-        "laravel/horizon": "^5.24",
         "laravel/sanctum": "^4.0",
-        "laravel/scout": "^10.10",
-        "laravel/socialite": "^5.14",
+        "laravel/horizon": "^5.24",
         "laravel/telescope": "^5.0",
-        "league/flysystem-aws-s3-v3": "^3.28",
-        "league/oauth2-server": "^8.5",
-        "lorisleiva/laravel-actions": "^2.8",
-        "maatwebsite/excel": "*",
-        "minishlink/web-push": "^9.0",
-        "meilisearch/meilisearch-php": "^1.8",
-        "open-telemetry/exporter-otlp": "^1.0",
-        "open-telemetry/sdk": "^1.0",
-        "pragmarx/google2fa-laravel": "^2.2",
-        "predis/predis": "^2.2",
-        "socialiteproviders/github": "^4.0",
-        "socialiteproviders/google": "^4.0",
+        "filament/filament": "^3.2",
+        "spatie/laravel-permission": "^6.7",
         "spatie/laravel-activitylog": "^4.8",
+        "spatie/laravel-query-builder": "^5.8",
         "spatie/laravel-data": "^4.8",
         "spatie/laravel-medialibrary": "^11.7",
-        "spatie/laravel-permission": "^6.7",
-        "spatie/laravel-query-builder": "^5.8",
         "stripe/stripe-php": "^15.0",
-        "symfony/css-selector": "^7.0",
+        "google/cloud-ai-platform": "^1.0",
+        "anthropic-ai/sdk": "^0.24",
+        "league/flysystem-aws-s3-v3": "^3.28",
+        "predis/predis": "^2.2",
+        "open-telemetry/sdk": "^1.0",
+        "open-telemetry/exporter-otlp": "^1.0",
+        "open-telemetry/opentelemetry-auto-laravel": "^0.0.5",
         "tymon/jwt-auth": "^2.1",
-        "webklex/php-imap": "^5.0"
+        "league/oauth2-server": "^8.5",
+        "socialiteproviders/google": "^4.0",
+        "socialiteproviders/github": "^4.0",
+        "laravel/socialite": "^5.14",
+        "pragmarx/google2fa-laravel": "^2.2",
+        "brick/math": "^0.12",
+        "meilisearch/meilisearch-php": "^1.8",
+        "laravel/scout": "^10.10",
+        "webklex/php-imap": "^5.0",
+        "symfony/css-selector": "^7.0",
+        "lorisleiva/laravel-actions": "^2.8"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",
@@ -68,7 +67,7 @@
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
-        "test": "pest",
+        "test": "pest --parallel",
         "lint": "pint --test",
         "analyse": "phpstan analyse --memory-limit=512M"
     },
@@ -83,22 +82,7 @@
         },
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true,
-            "tbachert/spi": true
-        }
-    },
-    "policy": {
-        "advisories": {
-            "ignore-id": [
-                "PKSA-mdq4-51ck-6kdq",
-                "PKSA-8qx3-n5y5-vvnd",
-                "PKSA-q46n-4fdk-zjr4",
-                "PKSA-qzrn-rnz3-85w1",
-                "PKSA-w7xr-vk7n-rstm",
-                "PKSA-p3rx-dfwp-73ny",
-                "PKSA-ckwp-rt7t-c46m",
-                "PKSA-njrm-6dtg-m2pc"
-            ]
+            "php-http/discovery": true
         }
     }
 }

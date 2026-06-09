@@ -86,7 +86,7 @@ export class PresenceManager {
     const key = this.presenceKey(room)
     const raw = await this.redis.hgetall(key)
     if (!raw) return []
-    return Object.values(raw).filter((v): v is string => v != null).map((v) => JSON.parse(v) as PresenceUser)
+    return Object.values(raw).map((v) => JSON.parse(v) as PresenceUser)
   }
 
   /**

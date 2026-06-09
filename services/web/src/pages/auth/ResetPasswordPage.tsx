@@ -1,14 +1,27 @@
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { api } from '@/lib/api'
 import toast from 'react-hot-toast'
+import { Button, Input } from '@/components/ui'
 
-interface FormData { password: string; password_confirmation: string }
+const schema = z.object({
+  password: z.string().min(12, 'Minimum 12 characters'),
+  password_confirmation: z.string(),
+}).refine(d => d.password === d.password_confirmation, {
+  message: 'Passwords do not match',
+  path: ['password_confirmation'],
+})
+
+type FormData = z.infer<typeof schema>
 
 export default function ResetPasswordPage() {
   const [params] = useSearchParams()
   const navigate = useNavigate()
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm<FormData>()
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  })
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -27,25 +40,31 @@ export default function ResetPasswordPage() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <h2 className="text-xl font-semibold text-gray-100">Set new password</h2>
-      <input
-        {...register('password', { required: true, minLength: 12 })}
+
+      <Input
         type="password"
+        label="New password"
         placeholder="New password (min 12 chars)"
-        className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-100 outline-none focus:border-indigo-500"
+        error={errors.password?.message}
+        {...register('password')}
       />
-      <input
-        {...register('password_confirmation', { required: true })}
+
+      <Input
         type="password"
+        label="Confirm password"
         placeholder="Confirm new password"
-        className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-100 outline-none focus:border-indigo-500"
+        error={errors.password_confirmation?.message}
+        {...register('password_confirmation')}
       />
-      <button
+
+      <Button
         type="submit"
-        disabled={isSubmitting}
-        className="w-full bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg py-2 text-sm font-medium transition-colors disabled:opacity-50"
+        variant="primary"
+        loading={isSubmitting}
+        className="w-full"
       >
-        {isSubmitting ? 'Resetting…' : 'Reset password'}
-      </button>
+        {isSubmitting ? 'Resetting\u2026' : 'Reset password'}
+      </Button>
     </form>
   )
 }

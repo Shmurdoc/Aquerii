@@ -107,10 +107,8 @@ class AutomationController extends Controller
     public function runs(Workspace $workspace, string $automationId): JsonResponse
     {
         $runs = DB::table('automation_runs')
-            ->join('automations', 'automations.id', '=', 'automation_runs.automation_id')
-            ->where('automation_runs.automation_id', $automationId)
-            ->where('automations.workspace_id', $workspace->id)
-            ->orderBy('automation_runs.created_at', 'desc')
+            ->where('automation_id', $automationId)
+            ->orderBy('created_at', 'desc')
             ->limit(100)
             ->get();
 

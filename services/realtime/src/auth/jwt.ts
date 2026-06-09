@@ -1,6 +1,5 @@
-// src/auth/jwt.ts — JWT payload type shared across handlers
-// Note: token verification is handled by sanctum.ts (Sanctum token introspection).
-// This file exists only for the JWTPayload type used in catchupHandler.
+// src/auth/jwt.ts — JWT verification for socket connections
+import jwt from 'jsonwebtoken'
 
 export interface JWTPayload {
   sub: string           // user_id
@@ -10,4 +9,9 @@ export interface JWTPayload {
   role?: string
   iat: number
   exp: number
+}
+
+export function verifyJWT(token: string): JWTPayload {
+  const secret = process.env.JWT_SECRET ?? process.env.REALTIME_SECRET ?? ''
+  return jwt.verify(token, secret) as JWTPayload
 }

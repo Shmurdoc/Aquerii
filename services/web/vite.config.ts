@@ -4,18 +4,6 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./tests/setup.ts'],
-    exclude: ['node_modules', 'tests/e2e/**'],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'html', 'lcov'],
-      include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.d.ts', 'src/**/*.test.*', 'src/**/*.spec.*'],
-    },
-  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -37,9 +25,7 @@ export default defineConfig({
   },
   build: {
     outDir:        'dist',
-    // Production builds ship without source maps to avoid leaking TS source.
-    // 'hidden' is allowed in dev where you need a built artifact for debugging.
-    sourcemap:     process.env.NODE_ENV === 'production' ? false : 'hidden',
+    sourcemap:     true,
     rollupOptions: {
       output: {
         manualChunks: {

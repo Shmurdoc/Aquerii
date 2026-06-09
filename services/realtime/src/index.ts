@@ -2,12 +2,10 @@
 import './instrumentation' // OTel must initialise before anything else
 
 import { createServer } from 'http'
-import type { ServerResponse } from 'http'
 import { Server } from 'socket.io'
 import { createAdapter } from '@socket.io/redis-adapter'
 import { Redis } from 'ioredis'
 import pino from 'pino'
-import { z } from 'zod'
 
 import { verifySanctumToken } from './auth/sanctum'
 import { RoomManager } from './rooms/RoomManager'
@@ -15,27 +13,7 @@ import { PresenceManager } from './presence/PresenceManager'
 import { YDocManager } from './ydoc/YDocManager'
 import { EventBroadcaster } from './events/EventBroadcaster'
 import { registerCatchupHandler } from './handlers/catchupHandler'
-import { registerChatHandler } from './handlers/chatHandler'
 import { connectedClients, messagesTotal, createMetricsServer } from './metrics'
-import { cursorUpdateSchema, typingSchema } from './validation/socketSchemas'
-import { validateSocketEvent } from './middleware/validateSocketEvent'
-
-// ── Zod schemas for socket event payloads ─────────────────────────────────────
-const DocUpdateSchema = z.object({
-  docId:  z.string().uuid(),
-  update: z.string().min(1),
-  room:   z.string().min(1),
-})
-
-const DocSyncSchema = z.object({
-  docId:       z.string().uuid(),
-  stateVector: z.string().min(1),
-})
-
-const DocAwarenessSchema = z.object({
-  docId:  z.string().uuid(),
-  update: z.string().min(1),
-})
 
 // ── Logger (exported so legacy modules can import it) ─────────────────────────
 export const logger = pino({ level: process.env.LOG_LEVEL ?? 'info' })
@@ -52,20 +30,19 @@ async function bootstrap(): Promise<void> {
   // ── Redis connections ────────────────────────────────────────────────────
   // socket.io-redis-adapter requires separate pub/sub clients.
   // A third client is used for all other Redis operations.
-  const pubClient    = new Redis(REDIS_URL).on('error', (e: Error) => logger.error(e, 'Redis pub error'))
+  const pubClient    = new Redis(REDIS_URL).on('error', (e) => logger.error(e, 'Redis pub error'))
   const subClient    = pubClient.duplicate()
   const redisClient  = pubClient.duplicate()
 
   // ── HTTP + Socket.IO ─────────────────────────────────────────────────────
   const httpServer = createServer((req, res) => {
-    const response = res as ServerResponse
     if (req.url === '/health' || req.url === '/healthz') {
-      response.writeHead(200, { 'Content-Type': 'application/json' })
-      ;(response as any).end(JSON.stringify({ status: 'ok', uptime: process.uptime() }))
+      res.writeHead(200, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ status: 'ok', service: 'realtime', uptime: process.uptime() }))
       return
     }
-    response.writeHead(404)
-    ;(response as any).end()
+    res.writeHead(404)
+    res.end()
   })
 
   const io = new Server(httpServer, {
@@ -127,33 +104,8 @@ async function bootstrap(): Promise<void> {
     // Register room join/leave, presence typing, and disconnect handlers
     registerCatchupHandler(socket, user, roomManager, presenceManager, broadcaster)
 
-    // Register chat handlers
-    registerChatHandler(socket, user)
-
-    // ── Presence heartbeat ──────────────────────────────────────────────────
-    // Refresh presence TTL whenever the client pings (every ~25s per Socket.IO default).
-    // This keeps presence alive for active connections and lets it expire naturally
-    // within ~1hr of silent disconnect (presence TTL = 3600s in PresenceManager).
-    socket.on('ping', async () => {
-      socket.data.lastPing = Date.now()
-      const rooms: Set<string> = socket.data.rooms || new Set()
-      for (const room of rooms) {
-        try {
-          await presenceManager.heartbeat(user.sub, room)
-        } catch {
-          // non-fatal
-        }
-      }
-    })
-
     // ── Y.js document sync ──────────────────────────────────────────────────
-    socket.on('doc:update', async (raw: unknown) => {
-      const parsed = DocUpdateSchema.safeParse(raw)
-      if (!parsed.success) {
-        socket.emit('error', { event: 'doc:update', issues: parsed.error.issues })
-        return
-      }
-      const data = parsed.data
+    socket.on('doc:update', async (data: { docId: string; update: string; room: string }) => {
       try {
         const update = Buffer.from(data.update, 'base64')
         await ydocManager.applyUpdate(data.docId, update, socket, data.room)
@@ -163,13 +115,7 @@ async function bootstrap(): Promise<void> {
       }
     })
 
-    socket.on('doc:sync', async (raw: unknown) => {
-      const parsed = DocSyncSchema.safeParse(raw)
-      if (!parsed.success) {
-        socket.emit('error', { event: 'doc:sync', issues: parsed.error.issues })
-        return
-      }
-      const data = parsed.data
+    socket.on('doc:sync', async (data: { docId: string; stateVector: string }) => {
       try {
         const stateVector = Buffer.from(data.stateVector, 'base64')
         const update = await ydocManager.getUpdate(data.docId, stateVector)
@@ -184,39 +130,10 @@ async function bootstrap(): Promise<void> {
     })
 
     // Relay Y.js awareness updates (cursor positions etc.) without server processing
-    socket.on('doc:awareness', (raw: unknown) => {
-      const parsed = DocAwarenessSchema.safeParse(raw)
-      if (!parsed.success) {
-        socket.emit('error', { event: 'doc:awareness', issues: parsed.error.issues })
-        return
-      }
-      socket.to(`doc:${parsed.data.docId}`).emit('doc:awareness', parsed.data)
+    socket.on('doc:awareness', (data: { docId: string; update: string }) => {
+      socket.to(`doc:${data.docId}`).emit('doc:awareness', data)
       messagesTotal.inc({ event: 'doc:awareness' })
     })
-
-    // ── Cursor position ────────────────────────────────────────────────────
-    socket.on('cursor:update', validateSocketEvent(cursorUpdateSchema, async (data) => {
-      try {
-        await presenceManager.updateCursor(socket, data.roomId, user.sub, { x: data.x, y: data.y })
-        messagesTotal.inc({ event: 'cursor:update' })
-      } catch (err) {
-        logger.error({ err }, 'cursor:update error')
-      }
-    }))
-
-    // ── Typing indicator ───────────────────────────────────────────────────
-    socket.on('typing', validateSocketEvent(typingSchema, async (data) => {
-      try {
-        if (data.isTyping) {
-          await presenceManager.startTyping(socket, data.roomId, user.sub, user.name ?? '')
-        } else {
-          await presenceManager.stopTyping(socket, data.roomId, user.sub)
-        }
-        messagesTotal.inc({ event: 'typing' })
-      } catch (err) {
-        logger.error({ err }, 'typing error')
-      }
-    }))
 
     // ── Disconnect ──────────────────────────────────────────────────────────
     socket.on('disconnect', (reason) => {
@@ -224,34 +141,6 @@ async function bootstrap(): Promise<void> {
       logger.info({ userId: user.sub, reason }, 'Client disconnected')
     })
   })
-
-  // ── Stale heartbeat interval (every 30s) ────────────────────────────────
-  const HEARTBEAT_INTERVAL_MS = 30_000
-  const heartbeatTimer = (globalThis as any).setInterval(async () => {
-    try {
-      const sockets = await io.fetchSockets()
-      const now = Date.now()
-      for (const socket of sockets) {
-        const lastPing: number | undefined = socket.data.lastPing
-        if (!lastPing || now - lastPing > HEARTBEAT_INTERVAL_MS) {
-          const user = socket.data.user
-          if (user?.sub) {
-            const rooms: Set<string> = socket.data.rooms || new Set()
-            for (const room of rooms) {
-              try {
-                await presenceManager.heartbeat(user.sub, room)
-              } catch {
-                // non-fatal
-              }
-            }
-          }
-        }
-      }
-    } catch (err) {
-      logger.warn({ err }, 'Heartbeat interval error')
-    }
-  }, HEARTBEAT_INTERVAL_MS)
-  heartbeatTimer.unref()
 
   // ── Start listening ───────────────────────────────────────────────────────
   httpServer.listen(PORT, () => {

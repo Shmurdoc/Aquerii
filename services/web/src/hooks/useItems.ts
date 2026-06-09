@@ -10,37 +10,21 @@ export interface Item {
   group_id: string
   parent_id: string | null
   title: string
-  description: string | Record<string, unknown> | null
+  description?: string
   status: string | null
   priority: string | null
   due_date: string | null
   position: number
   version: number
-  done: boolean
   column_values: Record<string, unknown>
   assignees: Array<{ id: string; name: string; avatar_url: string | null }>
-}
-
-export function normalizeDescription(
-  raw: string | Record<string, unknown> | null | undefined
-): Record<string, unknown> | null {
-  if (!raw) return null
-  if (typeof raw === 'object') return raw
-  return {
-    type: 'doc',
-    content: [
-      {
-        type: 'paragraph',
-        content: [{ type: 'text', text: raw }],
-      },
-    ],
-  }
 }
 
 export function useItems(boardId: string, groupId?: string) {
   const workspace = useAuthStore(s => s.workspace)
   const qc        = useQueryClient()
 
+  // Subscribe to realtime updates for this board
   useEffect(() => {
     const socket = getSocket()
     const room   = `board:${boardId}`
@@ -65,20 +49,9 @@ export function useItems(boardId: string, groupId?: string) {
     queryFn: async () => {
       const params = groupId ? { group_id: groupId } : {}
       const res    = await api.get(`/workspaces/${workspace!.id}/boards/${boardId}/items`, { params })
-      return (res.data.data as Item[]).map(item => ({
-        ...item,
-        description: normalizeDescription(item.description),
-      }))
+      return res.data.data as Item[]
     },
     enabled: !!workspace && !!boardId,
-  })
-}
-
-export function useItem(workspaceId: string, boardId: string, itemId: string) {
-  return useQuery({
-    queryKey: ['item', workspaceId, boardId, itemId],
-    queryFn: () => api.get(`/workspaces/${workspaceId}/boards/${boardId}/items/${itemId}`).then(r => r.data.data),
-    enabled: !!workspaceId && !!boardId && !!itemId,
   })
 }
 
@@ -111,6 +84,7 @@ export function useMoveItem(boardId: string) {
         group_id: groupId, position,
       }),
     onMutate: async ({ itemId, groupId, position }) => {
+      // Optimistic update
       await qc.cancelQueries({ queryKey: ['items', boardId] })
       const prev = qc.getQueryData<Item[]>(['items', boardId])
       qc.setQueryData<Item[]>(['items', boardId], old =>

@@ -1,76 +1,37 @@
 <?php
 
-use App\Core\Console\Commands\CheckCertExpiry;
-use App\Core\Console\Commands\PurgeExpiredTrials;
-use App\Core\Console\Commands\RecalculateUsage;
-use App\Core\Console\Commands\ResetAiCredits;
-use App\Core\Console\Commands\RunDunning;
-use App\Core\Console\Commands\SendDueReminders;
-use App\Core\Exceptions\Handler;
-use App\Core\Http\Middleware\AuthenticateScimToken;
-use App\Core\Http\Middleware\CheckFeatureAccess;
-use App\Core\Http\Middleware\EnforceIdempotency;
-use App\Core\Http\Middleware\EnsureEmailIsVerified;
-use App\Core\Http\Middleware\GateKioskAuth;
-use App\Core\Http\Middleware\InternalJwt;
-use App\Core\Http\Middleware\InternalSecret;
-use App\Core\Http\Middleware\RequireAccountType;
-use App\Core\Http\Middleware\RequireOwner;
-use App\Core\Http\Middleware\RequireWorkspaceRole;
-use App\Core\Http\Middleware\SecureHeaders;
-use App\Core\Http\Middleware\SetWorkspaceTenant;
-use App\Core\Http\Middleware\ThrottleRequests;
-use App\Providers\AuthServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Request;
+use App\Http\Middleware\SetWorkspaceTenant;
+use App\Http\Middleware\EnforceIdempotency;
+use App\Http\Middleware\ThrottleRequests;
+use App\Http\Middleware\InternalSecret;
 
-$app = Application::configure(basePath: dirname(__DIR__))
+return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         api: __DIR__.'/../routes/api.php',
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         apiPrefix: 'api',
     )
-    ->withCommands([
-        CheckCertExpiry::class,
-        PurgeExpiredTrials::class,
-        RecalculateUsage::class,
-        ResetAiCredits::class,
-        RunDunning::class,
-        SendDueReminders::class,
-    ])
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->prepend(SecureHeaders::class);
-
         $middleware->alias([
-            'idempotent' => EnforceIdempotency::class,
-            'throttle' => ThrottleRequests::class,
-            'workspace' => SetWorkspaceTenant::class,
+            'idempotent'      => EnforceIdempotency::class,
+            'throttle'        => ThrottleRequests::class,
+            'workspace'       => SetWorkspaceTenant::class,
             'internal.secret' => InternalSecret::class,
-            'internal.jwt' => InternalJwt::class,
-            'verified' => EnsureEmailIsVerified::class,
-            'workspace.role' => RequireWorkspaceRole::class,
-            'workspace.owner' => RequireOwner::class,
-            'require.account_type' => RequireAccountType::class,
-            'feature' => CheckFeatureAccess::class,
-            'gate-kiosk' => GateKioskAuth::class,
-            'scim.token' => AuthenticateScimToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {
+        // Always return JSON for API requests, never redirect
+        $exceptions->shouldRenderJsonWhen(function (\Illuminate\Http\Request $request, \Throwable $e) {
             return $request->is('api/*') || $request->expectsJson();
         });
-        $exceptions->render(function (Throwable $e, Request $request) {
+        $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
             if ($request->is('api/*') || $request->expectsJson()) {
-                return Handler::renderJson($e, $request);
+                return App\Exceptions\Handler::renderJson($e, $request);
             }
         });
     })
     ->create();
-
-$app->register(AuthServiceProvider::class);
-
-return $app;

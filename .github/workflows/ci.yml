@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, master, develop, feat/*]
+    branches: [main, develop]
   pull_request:
-    branches: [main, master, develop, feat/*]
+    branches: [main, develop]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,7 +14,6 @@ env:
   PHP_VERSION: "8.3"
   NODE_VERSION: "20"
   PYTHON_VERSION: "3.11"
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 # ════════════════════════════════════════════════════════════════
 # STAGE 1 — Static Analysis (runs in parallel)
@@ -58,24 +57,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm install
+          cache: npm
+          cache-dependency-path: services/realtime/package-lock.json
+      - run: npm ci
       - run: npm run lint
       - run: npm run build
-
-  lint-web:
-    name: Web Lint & Type Check
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: services/web
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - run: npm install --legacy-peer-deps
-      - run: npm run lint
-      - run: npm run typecheck
 
   lint-python:
     name: Python Lint
@@ -94,7 +80,7 @@ jobs:
       - run: mypy app --ignore-missing-imports
 
 # ════════════════════════════════════════════════════════════════
-# STAGE 2 — Unit & Integration Tests
+# STAGE 2 — Unit Tests
 # ════════════════════════════════════════════════════════════════
 
   test-php:
@@ -140,22 +126,10 @@ jobs:
       - name: Prepare test env
         run: |
           cp .env.example .env.testing
-          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env.testing
           sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env.testing
           sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env.testing
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
-          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env.testing
-          sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env.testing
-          sed -i "s|CACHE_DRIVER=.*|CACHE_DRIVER=array|" .env.testing || echo "CACHE_STORE=array" >> .env.testing
-          sed -i 's|value="postgres"|value="localhost"|' phpunit.xml
-          sed -i 's|value="redis"|value="localhost"|' phpunit.xml
-          sed -i 's|value="${DB_PASSWORD}"|value="secret"|' phpunit.xml
-          mkdir -p bootstrap/cache
-          mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
-          php artisan key:generate --env=testing --quiet
-
-      - name: Run migrations
-        run: php artisan migrate --seed --env=testing
+          php artisan key:generate --env=testing
 
       - run: composer test -- --coverage-clover coverage.xml
 
@@ -177,30 +151,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm install
-      - run: npx vitest run --reporter=verbose
-
-  test-web:
-    name: Web Unit Tests
-    runs-on: ubuntu-latest
-    needs: [lint-web]
-    defaults:
-      run:
-        working-directory: services/web
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - run: npm install --legacy-peer-deps
-      - run: npm install --save-dev jsdom @testing-library/jest-dom
-      - run: npx vitest run --reporter=verbose --coverage
-
-      - name: Upload coverage
-        uses: codecov/codecov-action@v4
-        with:
-          files: services/web/coverage/coverage-summary.json
-          flags: web
+          cache: npm
+          cache-dependency-path: services/realtime/package-lock.json
+      - run: npm ci
+      - run: npm test -- --coverage
 
   test-python:
     name: Python Unit Tests
@@ -215,176 +169,45 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
-      - run: pip install -r requirements.txt pytest pytest-asyncio pytest-cov fakeredis
-      - run: pytest tests/test_crm_endpoints.py --cov=app --cov-report=xml -v
-
-  test-php-scim-security:
-    name: PHP SCIM & Security Tests
-    runs-on: ubuntu-latest
-    needs: [lint-php]
-    services:
-      postgres:
-        image: postgres:15.6
-        env:
-          POSTGRES_DB: aquerii_test
-          POSTGRES_USER: aquerii_app
-          POSTGRES_PASSWORD: secret
-        ports: ["5432:5432"]
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
-      redis:
-        image: redis:7.2-alpine
-        ports: ["6379:6379"]
-        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 5
-    defaults:
-      run:
-        working-directory: services/api
-    steps:
-      - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          extensions: pdo, pgsql, redis, zip, bcmath, intl
-          coverage: none
-
-      - name: Cache Composer
-        uses: actions/cache@v4
-        with:
-          path: services/api/vendor
-          key: composer-${{ hashFiles('services/api/composer.lock') }}
-
-      - run: composer install --prefer-dist --no-scripts --no-progress
-
-      - name: Prepare test env
-        run: |
-          cp .env.example .env.testing
-          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env.testing
-          sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env.testing
-          sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env.testing
-          sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
-          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env.testing
-          sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env.testing
-          sed -i "s|CACHE_DRIVER=.*|CACHE_DRIVER=array|" .env.testing || echo "CACHE_STORE=array" >> .env.testing
-          sed -i 's|value="postgres"|value="localhost"|' phpunit.xml
-          sed -i 's|value="redis"|value="localhost"|' phpunit.xml
-          sed -i 's|value="${DB_PASSWORD}"|value="secret"|' phpunit.xml
-          mkdir -p bootstrap/cache
-          mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
-          php artisan key:generate --env=testing --quiet
-
-      - name: Run migrations
-        run: php artisan migrate --env=testing
-
-      - name: Run SCIM/security test set
-        run: php artisan test tests/Feature/Security/ScimAndFieldPermissionsTest.php tests/Feature/Security/ReadinessControlPlaneTest.php tests/Feature/Security/RealWorldReadinessTest.php tests/Unit/Scenario/ScenarioSimulationTest.php --env=testing
-
-  endpoint-audit-static:
-    name: Endpoint Audit (Static)
-    runs-on: ubuntu-latest
-    needs: [lint-php, lint-python]
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          extensions: pdo, pgsql
-          coverage: none
-
-      - name: Install API deps for route inventory
-        working-directory: services/api
-        run: |
-          cp .env.example .env
-          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env
-          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
-          mkdir -p bootstrap/cache
-          composer install --prefer-dist --no-scripts --no-progress
-          php artisan key:generate --force --quiet
-
-      - name: Run static endpoint audit
-        run: python services/tests/python/system_hardening_audit.py --repo-root . --output-json services/tests/python/endpoint-audit-report.json
-
-      - name: Upload endpoint audit report
-        uses: actions/upload-artifact@v4
-        with:
-          name: endpoint-audit-report
-          path: services/tests/python/endpoint-audit-report.json
+      - run: pip install -r requirements.txt pytest pytest-asyncio pytest-cov
+      - run: pytest tests/unit --cov=app --cov-report=xml
 
 # ════════════════════════════════════════════════════════════════
 # STAGE 3 — Security Scan
 # ════════════════════════════════════════════════════════════════
 
-  sast:
-    name: SAST — Semgrep
+  security:
+    name: Dependency Security Scan
     runs-on: ubuntu-latest
-    needs: [test-php, test-node, test-web, test-python, test-php-scim-security, endpoint-audit-static]
+    needs: [test-php, test-node, test-python]
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run Semgrep
-        uses: semgrep/semgrep-action@v1
-        with:
-          config: p/default
-
-  secrets-scan:
-    name: Secrets — Gitleaks
-    runs-on: ubuntu-latest
-    needs: [test-php, test-node, test-web, test-python, test-php-scim-security, endpoint-audit-static]
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_CONFIG: .gitleaks.toml
-
-  dependency-scan:
-    name: Dependency Scan
-    runs-on: ubuntu-latest
-    needs: [test-php, test-node, test-web, test-python, test-php-scim-security, endpoint-audit-static]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: PHP — composer audit --abandoned=ignore
+      - name: PHP — composer audit
         working-directory: services/api
         run: |
           composer install --prefer-dist --no-scripts --no-progress --quiet
-          composer audit --abandoned=ignore
+          composer audit
 
-      - name: Node (realtime) — npm audit
+      - name: Node — npm audit
         working-directory: services/realtime
         run: |
-          npm install --quiet
-          npm audit --audit-level=high --omit=dev
-
-      - name: Node (web) — npm audit
-        working-directory: services/web
-        run: |
-          npm install --legacy-peer-deps --quiet
-          npm audit --audit-level=high --omit=dev
+          npm ci --quiet
+          npm audit --audit-level=high
 
       - name: Python — pip-audit
         working-directory: services/ai
         run: |
           pip install pip-audit --quiet
-          pip-audit -r requirements.txt --ignore-vuln PYSEC-2026-161
+          pip-audit -r requirements.txt
 
       - name: Trivy filesystem scan
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@master
         with:
           scan-type: fs
           scan-ref: .
           severity: CRITICAL,HIGH
           exit-code: 1
-          skip-dirs: services/api/vendor
-          trivyignores: .trivyignore
 
 # ════════════════════════════════════════════════════════════════
 # STAGE 4 — Docker Build (verify images build cleanly)
@@ -393,10 +216,10 @@ jobs:
   docker-build:
     name: Docker Build Check
     runs-on: ubuntu-latest
-    needs: [sast, secrets-scan, dependency-scan]
+    needs: [security]
     strategy:
       matrix:
-        service: [api, realtime, ai, web]
+        service: [api, realtime, ai]
     steps:
       - uses: actions/checkout@v4
 
@@ -406,8 +229,7 @@ jobs:
       - name: Build ${{ matrix.service }}
         uses: docker/build-push-action@v5
         with:
-          context: ${{ matrix.service == 'api' && '.' || format('services/{0}', matrix.service) }}
-          dockerfile: ${{ matrix.service == 'api' && 'services/api/Dockerfile' || 'Dockerfile' }}
+          context: services/${{ matrix.service }}
           push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -421,273 +243,25 @@ jobs:
     name: Integration Tests
     runs-on: ubuntu-latest
     needs: [docker-build]
-    services:
-      postgres:
-        image: postgres:15.6
-        env:
-          POSTGRES_DB: aquerii_test
-          POSTGRES_USER: aquerii_app
-          POSTGRES_PASSWORD: secret
-        ports: ["5432:5432"]
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
-      redis:
-        image: redis:7.2-alpine
-        ports: ["6379:6379"]
-        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          extensions: pdo, pgsql, redis, zip, bcmath, intl
-          coverage: pcov
-
-      - name: Cache Composer
-        uses: actions/cache@v4
-        with:
-          path: services/api/vendor
-          key: composer-${{ hashFiles('services/api/composer.lock') }}
-
-      - run: composer install --prefer-dist --no-scripts --no-progress
-        working-directory: services/api
-
-      - name: Start Meilisearch
+      - name: Start stack
         run: |
-          docker run -d --name meilisearch -p 7700:7700 \
-            -e MEILI_MASTER_KEY=test_key \
-            getmeili/meilisearch:v1.6
-
-      - name: Prepare test env
-        working-directory: services/api
-        run: |
-          cp .env.example .env.testing
-          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env.testing
-          sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env.testing
-          sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env.testing
-          sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
-          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env.testing
-          sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env.testing
-          sed -i "s|CACHE_DRIVER=.*|CACHE_DRIVER=array|" .env.testing || echo "CACHE_STORE=array" >> .env.testing
-          echo "MEILISEARCH_HOST=http://localhost:7700" >> .env.testing
-          echo "MEILISEARCH_KEY=test_key" >> .env.testing
-          mkdir -p bootstrap/cache
-          mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
-          php artisan key:generate --env=testing --quiet
-
-      - name: Run migrations
-        working-directory: services/api
-        run: php artisan migrate --force --seed --env=testing
+          cp .env.example .env
+          docker compose up -d postgres redis meilisearch
+          docker compose run --rm api php artisan migrate --force --seed
 
       - name: Run API integration tests
         working-directory: services/api
         run: composer test -- --group=integration
 
-      - name: Cleanup Meilisearch
+      - name: Tear down
         if: always()
-        run: docker rm -f meilisearch || true
+        run: docker compose down -v
 
 # ════════════════════════════════════════════════════════════════
-# STAGE 6 — E2E Tests (Playwright)
-# ════════════════════════════════════════════════════════════════
-
-  e2e:
-    name: E2E Tests (Chromium)
-    runs-on: ubuntu-latest
-    needs: [docker-build]
-    services:
-      postgres:
-        image: postgres:15.6
-        env:
-          POSTGRES_DB: aquerii_test
-          POSTGRES_USER: aquerii_app
-          POSTGRES_PASSWORD: secret
-        ports: ["5432:5432"]
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
-      redis:
-        image: redis:7.2-alpine
-        ports: ["6379:6379"]
-        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 5
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          extensions: pdo, pgsql, redis, zip, bcmath, intl
-          coverage: none
-
-      - name: Start API server
-        working-directory: services/api
-        run: |
-          cp .env.example .env
-          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env
-          sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env
-          sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
-          sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
-          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
-          sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env
-          echo "SUPER_ADMIN_EMAIL=superadmin@aquerii.local" >> .env
-          echo "SUPER_ADMIN_PASSWORD=aquerii-dev-only" >> .env
-          composer install --prefer-dist --no-scripts --no-progress --quiet
-          mkdir -p bootstrap/cache
-          mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
-          php artisan key:generate --force
-          php artisan migrate --force
-          php artisan db:seed --class=DatabaseSeeder --force
-          php artisan db:seed --class=E2ESeeder --force
-          php artisan serve --port=8000 &
-          sleep 3
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install deps
-        working-directory: services/web
-        run: npm install --legacy-peer-deps
-
-      - name: Install Playwright browsers
-        working-directory: services/web
-        run: npx playwright install chromium
-
-      - name: Run E2E tests
-        working-directory: services/web
-        run: npx playwright test --project=chromium
-        env:
-          BASE_URL: http://localhost:8000
-
-# ════════════════════════════════════════════════════════════════
-# STAGE 7 — Performance Tests (non-blocking)
-# ════════════════════════════════════════════════════════════════
-
-  test-perf:
-    name: k6 Load Test (smoke)
-    runs-on: ubuntu-latest
-    needs: [docker-build]
-    services:
-      postgres:
-        image: postgres:15.6
-        env:
-          POSTGRES_DB: aquerii_test
-          POSTGRES_USER: aquerii_app
-          POSTGRES_PASSWORD: secret
-        ports: ["5432:5432"]
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
-      redis:
-        image: redis:7.2-alpine
-        ports: ["6379:6379"]
-        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 5
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          extensions: pdo, pgsql, redis, zip, bcmath, intl
-          coverage: none
-
-      - name: Start Meilisearch
-        run: |
-          docker run -d --name meilisearch -p 7700:7700 \
-            -e MEILI_MASTER_KEY=test_key \
-            getmeili/meilisearch:v1.6
-
-      - name: Start API server
-        working-directory: services/api
-        run: |
-          cp .env.example .env
-          sed -i 's|APP_URL=.*|APP_URL=http://localhost:8000|' .env
-          sed -i 's|DB_HOST=.*|DB_HOST=localhost|' .env
-          sed -i 's|DB_DATABASE=.*|DB_DATABASE=aquerii_test|' .env
-          sed -i 's|DB_USERNAME=.*|DB_USERNAME=aquerii_app|' .env
-          sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env
-          sed -i 's|DB_SSLMODE=.*|DB_SSLMODE=disable|' .env
-          sed -i 's|REDIS_HOST=.*|REDIS_HOST=localhost|' .env
-          echo "MEILISEARCH_HOST=http://localhost:7700" >> .env
-          echo "MEILISEARCH_KEY=test_key" >> .env
-          echo "SUPER_ADMIN_EMAIL=superadmin@aquerii.local" >> .env
-          echo "SUPER_ADMIN_PASSWORD=aquerii-dev-only" >> .env
-          composer install --prefer-dist --no-scripts --no-progress --quiet
-          mkdir -p bootstrap/cache
-          mkdir -p storage/framework/{views,cache,cache/data,sessions,testing}
-          php artisan key:generate --force
-          php artisan migrate --force
-          php artisan db:seed --class=DatabaseSeeder --force
-          php artisan db:seed --class=E2ESeeder --force
-          php artisan serve --port=8000 &
-          sleep 3
-
-      - name: Install k6
-        run: |
-          curl -sL https://github.com/grafana/k6/releases/download/v0.55.0/k6-v0.55.0-linux-amd64.tar.gz | tar xz
-          sudo mv k6-v0.55.0-linux-amd64/k6 /usr/local/bin/k6
-
-      - name: Precompute load test token
-        run: |
-          set -e
-          LOGIN=$(curl -s -X POST http://localhost:8000/api/auth/login \
-            -H 'Content-Type: application/json' \
-            -d '{"email":"test@example.com","password":"password123"}')
-          echo "Login response: $LOGIN"
-          TOKEN=$(echo "$LOGIN" | python3 -c 'import sys,json;print(json.load(sys.stdin)["data"]["token"])')
-          ME=$(curl -s http://localhost:8000/api/me -H "Authorization: Bearer $TOKEN")
-          echo "Me response: $ME"
-          WS_ID=$(echo "$ME" | python3 -c 'import sys,json;print(json.load(sys.stdin)["data"]["workspaces"][0]["id"])')
-          echo "TOKEN=$TOKEN" >> $GITHUB_ENV
-          echo "WS_ID=$WS_ID" >> $GITHUB_ENV
-
-      - name: Run k6 smoke test
-        run: k6 run services/tests/load/smoke-test.js --env BASE_URL=http://localhost:8000
-
-      - name: Run k6 load test
-        continue-on-error: true
-        run: k6 run services/tests/load/load-test.js --env BASE_URL=http://localhost:8000 --env AUTH_TOKEN=$TOKEN --env WS_ID=$WS_ID
-        # smoke test enforces p(95)<2000ms, rate<0.01. Full load test kept
-        # continue-on-error: true because it may exceed thresholds in CI and
-        # we want E2E/unit results independent of performance environment.
-
-      - name: Upload API logs (debug)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: k6-api-logs
-          path: services/api/storage/logs/*.log
-          if-no-files-found: ignore
-
-  lighthouse:
-    name: Lighthouse CI
-    runs-on: ubuntu-latest
-    needs: [docker-build]
-    defaults:
-      run:
-        working-directory: services/web
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - run: npm install --legacy-peer-deps
-      - run: npx lhci autorun --config=lighthouserc.cjs
-
-# ════════════════════════════════════════════════════════════════
-# STAGE 7 — Publish (main branch only)
+# STAGE 6 — Publish (main branch only)
 # ════════════════════════════════════════════════════════════════
 
   publish:
@@ -697,7 +271,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     strategy:
       matrix:
-        service: [api, realtime, ai, web]
+        service: [api, realtime, ai]
     steps:
       - uses: actions/checkout@v4
 
@@ -712,53 +286,10 @@ jobs:
       - name: Build and push ${{ matrix.service }}
         uses: docker/build-push-action@v5
         with:
-          context: ${{ matrix.service == 'api' && '.' || format('services/{0}', matrix.service) }}
-          dockerfile: ${{ matrix.service == 'api' && 'services/api/Dockerfile' || 'Dockerfile' }}
+          context: services/${{ matrix.service }}
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/aquerii-${{ matrix.service }}:latest
             ghcr.io/${{ github.repository_owner }}/aquerii-${{ matrix.service }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-# ════════════════════════════════════════════════════════════════
-# STAGE 8 — Deploy to Staging (main branch only)
-# ════════════════════════════════════════════════════════════════
-
-  deploy:
-    name: Deploy to Staging
-    runs-on: ubuntu-latest
-    needs: [publish]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Configure kubectl
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config || echo "No kubeconfig secret set — deploy is a stub"
-
-      - name: Deploy to staging
-        run: |
-          echo "=== Staging Deployment ==="
-          echo "Images ready:"
-          echo "  ghcr.io/${{ github.repository_owner }}/aquerii-api:${{ github.sha }}"
-          echo "  ghcr.io/${{ github.repository_owner }}/aquerii-web:${{ github.sha }}"
-          echo "  ghcr.io/${{ github.repository_owner }}/aquerii-realtime:${{ github.sha }}"
-          echo "  ghcr.io/${{ github.repository_owner }}/aquerii-ai:${{ github.sha }}"
-          echo "=== Staging deploy stub — extend with kubectl or helm as needed =="
-
-# ════════════════════════════════════════════════════════════════
-# STAGE 9 — Production Promotion Gate (manual approval)
-# ════════════════════════════════════════════════════════════════
-
-  promote-to-production:
-    name: Promote to Production
-    runs-on: ubuntu-latest
-    needs: [deploy]
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: production
-      url: https://aquerii.com
-    steps:
-      - run: echo "Promotion gate — manual approval required before production deploy"

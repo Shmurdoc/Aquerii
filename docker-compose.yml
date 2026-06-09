@@ -23,36 +23,18 @@ services:
     networks:
       - public
       - api_net
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:80/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 128M
 
   # ─── LARAVEL API ──────────────────────────────────────────────
   api:
     build:
-      context: .
-      dockerfile: services/api/Dockerfile
+      context: ./services/api
+      dockerfile: Dockerfile
       target: production
     restart: unless-stopped
     environment:
       APP_ENV: ${APP_ENV:-local}
-      APP_DEBUG: ${APP_DEBUG:-false}
       APP_KEY: ${APP_KEY}
-      APP_URL: http://localhost:8000
-      SANCTUM_STATEFUL_DOMAINS: "localhost,127.0.0.1,localhost:3000"
-      SESSION_DOMAIN: "null"
-      SESSION_SECURE_COOKIE: "false"
-      SESSION_SAME_SITE: "lax"
-      CORS_ALLOWED_ORIGINS: "https://localhost,http://localhost:3000,http://localhost:8000"
-      PHP_OPCACHE_VALIDATE_TIMESTAMPS: "0"
+      APP_URL: ${APP_URL:-http://localhost}
       DB_HOST: postgres
       DB_PORT: 5432
       DB_DATABASE: ${DB_DATABASE:-aquerii}
@@ -88,7 +70,6 @@ services:
       CLICKHOUSE_HOST: clickhouse
       CLICKHOUSE_PORT: 8123
     volumes:
-      - ./services/api:/var/www/html
       - api_storage:/var/www/html/storage
     depends_on:
       postgres:
@@ -108,17 +89,12 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    deploy:
-      resources:
-        limits:
-          cpus: '2.0'
-          memory: 1.5G
 
   # ─── HORIZON (Queue Worker) ───────────────────────────────────
   horizon:
     build:
-      context: .
-      dockerfile: services/api/Dockerfile
+      context: ./services/api
+      dockerfile: Dockerfile
       target: production
     restart: unless-stopped
     command: ["php", "artisan", "horizon"]
@@ -157,17 +133,6 @@ services:
     networks:
       - api_net
       - data_net
-    healthcheck:
-      test: ["CMD-SHELL", "pgrep -f 'artisan horizon' || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 256M
 
   # ─── NODE.JS REALTIME ─────────────────────────────────────────
   realtime:
@@ -200,11 +165,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
 
   # ─── PYTHON AI SERVICE ────────────────────────────────────────
   ai:
@@ -239,11 +199,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 512M
 
   # ─── POSTGRESQL ───────────────────────────────────────────────
   postgres:
@@ -264,11 +219,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          cpus: '2.0'
-          memory: 1G
     command: >
       postgres
         -c shared_buffers=256MB
@@ -298,11 +248,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 640M
 
   # ─── MEILISEARCH ─────────────────────────────────────────────
   meilisearch:
@@ -311,7 +256,7 @@ services:
     environment:
       MEILI_MASTER_KEY: ${MEILISEARCH_KEY:-secret_meilisearch_master_key}
       MEILI_NO_ANALYTICS: "true"
-      MEILI_ENV: ${MEILI_ENV:-development}
+      MEILI_ENV: ${APP_ENV:-development}
     volumes:
       - meilisearch_data:/meili_data
     networks:
@@ -321,11 +266,6 @@ services:
       interval: 20s
       timeout: 10s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 512M
 
   # ─── MINIO (Object Storage) ───────────────────────────────────
   minio:
@@ -337,6 +277,8 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_SECRET:-minioadmin}
     volumes:
       - minio_data:/data
+    ports:
+      - "9001:9001"   # MinIO console (dev only)
     networks:
       - data_net
     healthcheck:
@@ -344,11 +286,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
 
   # ─── CHROMADB (Vector DB for AI RAG) ─────────────────────────
   chromadb:
@@ -359,16 +296,11 @@ services:
     networks:
       - data_net
     healthcheck:
-      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8000; printf 'GET /api/v2/heartbeat HTTP/1.0\\r\\nHost: localhost\\r\\n\\r\\n' >&3; head -1 <&3 | grep -q '200'"]
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/heartbeat')\""]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 512M
 
   # ─── CLICKHOUSE (Analytics) ───────────────────────────────────
   clickhouse:
@@ -386,28 +318,15 @@ services:
         hard: 262144
     networks:
       - data_net
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8123/ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
-    deploy:
-      resources:
-        limits:
-          cpus: '2.0'
-          memory: 2G
 
-  # ─── JAEGER (Distributed Tracing) ─────────────────────────────
-  jaeger:
-    image: jaegertracing/all-in-one:1.57
+  # ─── MAILPIT (Dev Email) ──────────────────────────────────────
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
     ports:
-      - "4317:4317"   # gRPC
-      - "4318:4318"   # HTTP
-      - "16686:16686" # UI
-    profiles: [dev]
+      - "8025:8025"   # Mailpit UI (dev only)
     networks:
-      - observability_net
+      - api_net
 
   # ─── PROMETHEUS ───────────────────────────────────────────────
   prometheus:
@@ -424,47 +343,11 @@ services:
     networks:
       - data_net
       - observability_net
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9090/-/healthy"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-
-  # ─── ALERTMANAGER ─────────────────────────────────────────────
-  alertmanager:
-    image: prom/alertmanager:v0.27.0
-    restart: unless-stopped
-    volumes:
-      - ./infra/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
-    command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-      - '--storage.path=/alertmanager'
-    networks:
-      - data_net
-      - observability_net
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9093/-/healthy"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 128M
 
   # ─── GRAFANA ──────────────────────────────────────────────────
   grafana:
     image: grafana/grafana:10.4.0
     restart: unless-stopped
-    profiles: ["dev", "observability"]  # opt-in: `docker compose --profile observability up`
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
@@ -478,17 +361,6 @@ services:
       - prometheus
     networks:
       - observability_net
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
 
   # ─── LOKI (Log aggregation) ───────────────────────────────────
   loki:
@@ -499,12 +371,6 @@ services:
       - loki_data:/loki
     networks:
       - observability_net
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3100/ready"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
 
   # ─── OTEL COLLECTOR ──────────────────────────────────────────
   otel-collector:
@@ -515,12 +381,18 @@ services:
     networks:
       - api_net
       - observability_net
-    healthcheck:
-      test: ["CMD", "/otelcol-contrib", "validate", "--config=/etc/otelcol-contrib/config.yaml"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+
+  # ─── VAULT (Dev mode) ─────────────────────────────────────────
+  vault:
+    image: hashicorp/vault:1.16
+    restart: unless-stopped
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: dev-root-token
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+    cap_add:
+      - IPC_LOCK
+    networks:
+      - data_net
 
   # ─── WEB (React SPA) ──────────────────────────────────────────
   web:
@@ -534,49 +406,6 @@ services:
     networks:
       - public
       - api_net
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:80/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 64M
-
-  # ─── TOOLS (On-demand Node.js dev scripts) ──────────────────
-  # Throwaway service for running Node.js-based operational scripts that
-  # need to talk to Postgres (e.g. team/scripts/cleanup-test-data.mjs).
-  # Not started by `docker compose up` — invoke explicitly:
-  #   docker compose run --rm tools node scripts/cleanup-test-data.mjs --dry-run
-  #   docker compose run --rm tools node scripts/cleanup-test-data.mjs --execute
-  # Image is built from services/tools/Dockerfile (context = ./team) with
-  # `pg` pre-installed, so subsequent runs are instant.
-  # Intentionally NOT in any `depends_on` chain — purely ad-hoc, opt-in
-  # via the `tools` profile.
-  tools:
-    build:
-      context: ./team
-      dockerfile: ../services/tools/Dockerfile
-    image: aquerii-tools:latest
-    profiles: ["tools"]  # opt-in: only runs via `docker compose run --rm tools …
-    working_dir: /app
-    environment:
-      # Use the in-network postgres hostname (matches api container)
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: ${DB_DATABASE:-aquerii}
-      DB_USERNAME: ${DB_USERNAME:-aquerii_app}
-      DB_PASSWORD: ${DB_PASSWORD}
-    networks:
-      - data_net
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
 
 networks:
   public:

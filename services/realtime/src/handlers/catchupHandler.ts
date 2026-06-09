@@ -1,27 +1,9 @@
 // src/handlers/catchupHandler.ts — room:join / room:leave / presence:typing / disconnect
 import type { Socket } from 'socket.io'
-import { z } from 'zod'
 import type { RoomManager } from '../rooms/RoomManager'
 import type { PresenceManager } from '../presence/PresenceManager'
 import type { EventBroadcaster } from '../events/EventBroadcaster'
 import type { JWTPayload } from '../auth/jwt'
-
-// ── Zod schemas ───────────────────────────────────────────────────────────────
-const RoomJoinSchema = z.object({
-  resourceType: z.enum(['board', 'document']),
-  resourceId:   z.string().min(1),
-  lastSequence: z.number().int().optional(),
-})
-
-const RoomLeaveSchema = z.object({
-  resourceType: z.enum(['board', 'document']),
-  resourceId:   z.string().min(1),
-})
-
-const PresenceTypingSchema = z.object({
-  room:   z.string().min(1),
-  typing: z.boolean(),
-})
 
 export function registerCatchupHandler(
   socket: Socket,
@@ -30,61 +12,54 @@ export function registerCatchupHandler(
   presenceManager: PresenceManager,
   broadcaster: EventBroadcaster,
 ): void {
-  // ── room:join ──────────────────────────────────────────────────────────────
-  socket.on('room:join', async (raw: unknown) => {
-    const parsed = RoomJoinSchema.safeParse(raw)
-    if (!parsed.success) {
-      socket.emit('error', { event: 'room:join', issues: parsed.error.issues })
-      return
-    }
-    const data = parsed.data
-    try {
-      await roomManager.join(socket, payload, data.resourceType, data.resourceId)
-      const room = roomManager.roomKey(payload.workspace_id, data.resourceType, data.resourceId)
+  // ── room:join ─────────────────────────────────────────────────────────────
+  socket.on(
+    'room:join',
+    async (data: {
+      resourceType: 'board' | 'document'
+      resourceId: string
+      lastSequence?: number
+    }) => {
+      try {
+        await roomManager.join(socket, payload, data.resourceType, data.resourceId)
+        const room = roomManager.roomKey(payload.workspace_id, data.resourceType, data.resourceId)
 
-      await presenceManager.userJoined(socket, room, {
-        userId:    payload.sub,
-        name:      payload.name ?? 'Unknown',
-        avatarUrl: payload.avatar_url,
-      })
+        await presenceManager.userJoined(socket, room, {
+          userId:    payload.sub,
+          name:      payload.name ?? 'Unknown',
+          avatarUrl: payload.avatar_url,
+        })
 
-      socket.emit('room:joined', { room })
+        socket.emit('room:joined', { room })
 
-      if (data.lastSequence != null) {
-        await broadcaster.replayMissed(room, data.lastSequence, socket)
+        // Replay any events the client missed since it was last connected
+        if (data.lastSequence != null) {
+          await broadcaster.replayMissed(room, data.lastSequence, socket)
+        }
+      } catch (err) {
+        socket.emit('room:error', { message: 'Failed to join room' })
+        console.error('[catchupHandler] room:join error:', err)
       }
-    } catch (err) {
-      socket.emit('room:error', { message: 'Failed to join room' })
-      console.error('[catchupHandler] room:join error:', err)
-    }
-  })
+    },
+  )
 
-  // ── room:leave ─────────────────────────────────────────────────────────────
-  socket.on('room:leave', async (raw: unknown) => {
-    const parsed = RoomLeaveSchema.safeParse(raw)
-    if (!parsed.success) {
-      socket.emit('error', { event: 'room:leave', issues: parsed.error.issues })
-      return
-    }
-    const data = parsed.data
-    try {
-      const room = roomManager.roomKey(payload.workspace_id, data.resourceType, data.resourceId)
-      await roomManager.leave(socket, data.resourceType, data.resourceId, payload.workspace_id)
-      await presenceManager.userLeft(socket, room, payload.sub)
-      socket.emit('room:left', { room })
-    } catch (err) {
-      console.error('[catchupHandler] room:leave error:', err)
-    }
-  })
+  // ── room:leave ────────────────────────────────────────────────────────────
+  socket.on(
+    'room:leave',
+    async (data: { resourceType: 'board' | 'document'; resourceId: string }) => {
+      try {
+        const room = roomManager.roomKey(payload.workspace_id, data.resourceType, data.resourceId)
+        await roomManager.leave(socket, data.resourceType, data.resourceId, payload.workspace_id)
+        await presenceManager.userLeft(socket, room, payload.sub)
+        socket.emit('room:left', { room })
+      } catch (err) {
+        console.error('[catchupHandler] room:leave error:', err)
+      }
+    },
+  )
 
-  // ── presence:typing ────────────────────────────────────────────────────────
-  socket.on('presence:typing', async (raw: unknown) => {
-    const parsed = PresenceTypingSchema.safeParse(raw)
-    if (!parsed.success) {
-      socket.emit('error', { event: 'presence:typing', issues: parsed.error.issues })
-      return
-    }
-    const data = parsed.data
+  // ── presence:typing ───────────────────────────────────────────────────────
+  socket.on('presence:typing', async (data: { room: string; typing: boolean }) => {
     try {
       if (data.typing) {
         await presenceManager.startTyping(socket, data.room, payload.sub, payload.name ?? '')
@@ -96,7 +71,7 @@ export function registerCatchupHandler(
     }
   })
 
-  // ── disconnect ─────────────────────────────────────────────────────────────
+  // ── disconnect ────────────────────────────────────────────────────────────
   socket.on('disconnect', async () => {
     const rooms: Set<string> = socket.data.rooms || new Set()
     for (const room of rooms) {
