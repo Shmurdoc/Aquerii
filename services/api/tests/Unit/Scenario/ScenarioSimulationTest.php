@@ -1,6 +1,6 @@
 <?php
 
-use App\Core\Http\Controllers\Api\ScenarioController;
+use App\Http\Controllers\Api\ScenarioController;
 use App\Core\Models\ScenarioAdjustment;
 use Illuminate\Support\Collection;
 
