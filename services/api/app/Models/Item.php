@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Item extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes, Searchable;
 
     protected $fillable = [
         'workspace_id', 'board_id', 'group_id', 'parent_id',
@@ -55,5 +56,20 @@ class Item extends Model
     {
         return $this->belongsToMany(User::class, 'item_assignees')
             ->withPivot('assigned_by', 'assigned_at');
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'workspace_id' => $this->workspace_id,
+            'board_id' => $this->board_id,
+            'group_id' => $this->group_id,
+            'title' => $this->title,
+            'status' => $this->status,
+            'priority' => $this->priority,
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
+        ];
     }
 }

@@ -28,6 +28,7 @@ class EquipmentCertRecord extends Model
             'issued_at' => 'date',
             'expires_at' => 'date',
             'verified_at' => 'datetime',
+            'status' => 'string',
             'metadata' => 'array',
         ];
     }

@@ -109,7 +109,6 @@ class WorkspaceInvitationController extends Controller
                     'role' => $invitation->role,
                     'joined_at' => now(),
                     'created_at' => now(),
-                    'updated_at' => now(),
                 ]);
             }
 

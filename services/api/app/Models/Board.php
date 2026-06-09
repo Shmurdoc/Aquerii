@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Board extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes, Searchable;
 
     protected $table = 'boards';
 
@@ -41,6 +42,20 @@ class Board extends Model
     public function items()
     {
         return $this->hasMany(Item::class);
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'workspace_id' => $this->workspace_id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'type' => $this->type,
+            'board_type' => $this->board_type,
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
+        ];
     }
 
     public function scopeActive($query)

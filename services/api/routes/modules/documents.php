@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Documents\Http\Controllers\DocumentController;
+use App\Http\Controllers\Api\DocumentController;
 use App\Modules\Documents\Http\Controllers\DocumentFolderController;
 use App\Modules\Documents\Http\Controllers\ScannedDocumentController;
 use Illuminate\Support\Facades\Route;

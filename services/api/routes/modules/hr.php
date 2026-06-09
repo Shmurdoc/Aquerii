@@ -112,6 +112,6 @@ Route::post('hr/shifts/handovers', [ShiftController::class, 'storeHandover'])->m
 Route::get('hr/shifts/handovers/{handover}', [ShiftController::class, 'showHandover']);
 Route::post('hr/shifts/handovers/{handover}/acknowledge', [ShiftController::class, 'acknowledgeHandover'])->middleware('idempotent');
 
-Route::get('hr/shifts/{shift}', [ShiftController::class, 'showShift']);
-Route::patch('hr/shifts/{shift}', [ShiftController::class, 'updateShift'])->middleware('idempotent');
-Route::delete('hr/shifts/{shift}', [ShiftController::class, 'destroyShift'])->middleware('idempotent');
+Route::get('hr/shifts/{shift}', [ShiftController::class, 'showShift'])->whereUuid('shift');
+Route::patch('hr/shifts/{shift}', [ShiftController::class, 'updateShift'])->whereUuid('shift')->middleware('idempotent');
+Route::delete('hr/shifts/{shift}', [ShiftController::class, 'destroyShift'])->whereUuid('shift')->middleware('idempotent');

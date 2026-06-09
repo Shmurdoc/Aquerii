@@ -12,6 +12,7 @@ use App\Modules\Competency\Models\TrainingRecord;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CompetencyController extends Controller
 {
@@ -130,20 +131,22 @@ class CompetencyController extends Controller
             'notes' => 'nullable|string|max:2000',
         ]);
 
-        // Check for ANY existing record (not just active) due to unique constraint on [user_id, competency_type_id]
-        $existing = CompetencyRecord::where('workspace_id', $workspace->id)
-            ->where('user_id', $validated['user_id'])
-            ->where('competency_type_id', $validated['competency_type_id'])
-            ->first();
+        $record = DB::transaction(function () use ($validated, $workspace) {
+            // Check for ANY existing record (not just active) due to unique constraint on [user_id, competency_type_id]
+            $existing = CompetencyRecord::where('workspace_id', $workspace->id)
+                ->where('user_id', $validated['user_id'])
+                ->where('competency_type_id', $validated['competency_type_id'])
+                ->first();
 
-        if ($existing) {
-            $existing->forceDelete();
-        }
+            if ($existing) {
+                $existing->forceDelete();
+            }
 
-        $record = CompetencyRecord::create(array_merge(
-            $validated,
-            ['workspace_id' => $workspace->id]
-        ));
+            return CompetencyRecord::create(array_merge(
+                $validated,
+                ['workspace_id' => $workspace->id]
+            ));
+        });
 
         return response()->json(['data' => $record], 201);
     }
