@@ -129,6 +129,9 @@ jobs:
           sed -i 's|DB_PASSWORD=.*|DB_PASSWORD=secret|' .env.testing
           mkdir -p bootstrap/cache
           php artisan key:generate --env=testing
+          # CI service containers expose ports on localhost, not via hostname
+          sed -i 's|value="postgres"|value="127.0.0.1"|' phpunit.xml
+          sed -i 's|REDIS_HOST" value="redis"|REDIS_HOST" value="127.0.0.1"|' phpunit.xml
 
       - run: vendor/bin/pest --coverage-clover coverage.xml
 
