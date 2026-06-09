@@ -99,7 +99,7 @@ it('generates a sequential reference per workspace per year', function () {
             'description' => 'Lift crusher',
             'location' => 'Workshop',
             'risk_level' => Permit::RISK_HIGH,
-            'work_method_statement' => 'Plan the lift, brief the team, execute the lift, lower the load safely to ground.',
+            'work_method_statement' => '1. Conduct pre-lift safety briefing with all crew members. 2. Inspect rigging equipment and confirm SWL. 3. Establish exclusion zone around lift area. 4. Execute the lift under controlled conditions. 5. Lower load safely to ground and secure.',
             'ppe_required' => 'Hard hat, boots',
         ]
     )->assertStatus(201)
@@ -113,7 +113,7 @@ it('generates a sequential reference per workspace per year', function () {
             'description' => 'Lift crusher again',
             'location' => 'Workshop',
             'risk_level' => Permit::RISK_HIGH,
-            'work_method_statement' => 'Plan the lift, brief the team, execute the lift, lower the load safely to ground.',
+            'work_method_statement' => '1. Conduct pre-lift safety briefing with all crew members. 2. Inspect rigging equipment and confirm SWL. 3. Establish exclusion zone around lift area. 4. Execute the lift under controlled conditions. 5. Lower load safely to ground and secure.',
             'ppe_required' => 'Hard hat, boots',
         ]
     )->assertStatus(201)

@@ -197,6 +197,12 @@ class ComplianceController extends Controller
                 'status' => $record->status,
             ]);
 
+        $totalCertTypes = $certTypes->count();
+        $compliantCertTypes = $requirements->whereIn('status', ['compliant', 'valid'])->count();
+        $complianceScore = $totalCertTypes > 0
+            ? round(($compliantCertTypes / $totalCertTypes) * 100, 1)
+            : 100.0;
+
         return response()->json([
             'data' => [
                 'id' => $equipment->id,
@@ -208,6 +214,7 @@ class ComplianceController extends Controller
                 'category' => $equipment->category ? ['id' => $equipment->category->id, 'name' => $equipment->category->name] : null,
                 'status' => $equipment->status,
                 'overall_compliance_status' => $status,
+                'compliance_score' => $complianceScore,
                 'failures' => $failures,
                 'certificates' => $certBreakdown,
             ],

@@ -113,6 +113,7 @@ it('activates a permit from issued to active returning 200', function () {
         'user_id' => $holder->id,
         'competency_type_id' => $inductionType->id,
         'status' => 'active',
+        'issued_at' => Carbon::now()->subDays(30),
         'verified_at' => Carbon::now(),
     ]);
 
@@ -334,6 +335,7 @@ it('cannot issue permit when holder is non-compliant — missing COF verified_at
         'user_id' => $holder->id,
         'competency_type_id' => $inductionType->id,
         'status' => 'active',
+        'issued_at' => Carbon::now()->subDays(30),
         'verified_at' => Carbon::now(),
     ]);
 
@@ -516,6 +518,7 @@ it('cannot activate an expired permit', function () {
         'user_id' => $holder->id,
         'competency_type_id' => $inductionType->id,
         'status' => 'active',
+        'issued_at' => Carbon::now()->subDays(30),
         'verified_at' => Carbon::now(),
     ]);
 

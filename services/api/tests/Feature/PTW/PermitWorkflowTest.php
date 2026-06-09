@@ -60,6 +60,7 @@ it('moves a permit through the full happy path', function () {
         'user_id' => $holder->id,
         'competency_type_id' => $inductionType->id,
         'status' => 'active',
+        'issued_at' => Carbon::now()->subDays(30),
         'verified_at' => Carbon::now(),
     ]);
 
