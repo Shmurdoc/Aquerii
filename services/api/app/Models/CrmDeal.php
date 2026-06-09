@@ -20,12 +20,12 @@ class CrmDeal extends Model
     protected function casts(): array
     {
         return [
-            'value'               => 'float',
-            'probability'         => 'integer',
+            'value' => 'float',
+            'probability' => 'integer',
             'expected_close_date' => 'date',
-            'won_at'              => 'datetime',
-            'lost_at'             => 'datetime',
-            'custom_fields'       => 'array',
+            'won_at' => 'datetime',
+            'lost_at' => 'datetime',
+            'custom_fields' => 'array',
         ];
     }
 

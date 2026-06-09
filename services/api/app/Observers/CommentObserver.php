@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Comment;
 use App\Jobs\UpdateMeilisearchIndex;
+use App\Models\Comment;
 
 class CommentObserver
 {

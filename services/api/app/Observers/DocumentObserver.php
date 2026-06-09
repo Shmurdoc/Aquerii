@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Document;
 use App\Jobs\UpdateAIEmbedding;
+use App\Models\Document;
 
 class DocumentObserver
 {

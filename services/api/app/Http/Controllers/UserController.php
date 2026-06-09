@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,9 +21,9 @@ class UserController extends Controller
     public function update(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'name'     => 'sometimes|string|max:100',
+            'name' => 'sometimes|string|max:100',
             'password' => 'sometimes|string|min:8|confirmed',
-            'avatar'   => 'sometimes|image|max:2048',
+            'avatar' => 'sometimes|image|max:2048',
         ]);
 
         $user = $request->user();

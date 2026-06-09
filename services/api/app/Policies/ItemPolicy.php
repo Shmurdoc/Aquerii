@@ -23,6 +23,7 @@ class ItemPolicy
         if ($this->isAdmin($user, $item->workspace_id)) {
             return true;
         }
+
         // Assignee check
         return $item->assignees()->where('user_id', $user->id)->exists();
     }

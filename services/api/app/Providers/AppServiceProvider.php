@@ -2,16 +2,16 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Item;
 use App\Models\Board;
-use App\Models\Document;
 use App\Models\Comment;
-use App\Observers\ItemObserver;
+use App\Models\Document;
+use App\Models\Item;
 use App\Observers\BoardObserver;
-use App\Observers\DocumentObserver;
 use App\Observers\CommentObserver;
+use App\Observers\DocumentObserver;
+use App\Observers\ItemObserver;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {

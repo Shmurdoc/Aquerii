@@ -19,7 +19,7 @@ class IdempotencyKey extends Model
     {
         return [
             'response_body' => 'array',
-            'expires_at'    => 'datetime',
+            'expires_at' => 'datetime',
         ];
     }
 
