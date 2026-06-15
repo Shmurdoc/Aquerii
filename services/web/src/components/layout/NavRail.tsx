@@ -147,24 +147,27 @@ export default function NavRail({ onCmdOpen }: Props) {
       className="flex flex-col shrink-0 z-[var(--z-sticky)] overflow-hidden"
     >
       <button
-        className="flex items-center gap-2.5 px-3 py-3 mb-1 hover:bg-[var(--color-bg-hover)] rounded-none transition-colors duration-150 w-full text-left"
+        className="flex items-center gap-2.5 px-3 py-3 mb-1 hover:bg-[var(--color-bg-hover)] rounded-none transition-colors duration-150 w-full text-left relative group"
         aria-label={workspace?.name ?? 'Aquerii'}
         title={collapsed ? (workspace?.name ?? 'Aquerii') : undefined}
       >
-        {workspace?.logo_url ? (
-          <img
-            src={workspace.logo_url}
-            alt={workspace.name}
-            className="h-8 w-8 rounded-md object-contain bg-white/5 shrink-0 ring-1 ring-[var(--color-glass-border)]"
-          />
-        ) : (
-          <InitialsAvatar
-            name={workspace?.name ?? 'Aquerii'}
-            color={workspace?.color ?? '#7c3aed'}
-            size={32}
-            shape="rounded"
-          />
-        )}
+        <div className="relative">
+          {workspace?.logo_url ? (
+            <img
+              src={workspace.logo_url}
+              alt={workspace.name}
+              className="h-8 w-8 rounded-md object-contain bg-white/5 shrink-0 ring-1 ring-[var(--color-glass-border)]"
+            />
+          ) : (
+            <InitialsAvatar
+              name={workspace?.name ?? 'Aquerii'}
+              color={workspace?.color ?? '#7c3aed'}
+              size={32}
+              shape="rounded"
+            />
+          )}
+          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[var(--color-bg-base)]" style={{ background: 'var(--color-status-done)' }} />
+        </div>
         <div className="min-w-0 flex-1" style={labelStyle}>
           <p className="text-body font-semibold text-[var(--color-text-primary)] truncate">
             {workspace?.name ?? 'Aquerii'}
@@ -213,7 +216,7 @@ export default function NavRail({ onCmdOpen }: Props) {
                   className={({ isActive }) =>
                     clsx(
                       'group/nav relative flex items-center gap-2.5 px-2.5 h-9 rounded-md',
-                      'transition-[background,color] duration-150 ease-out press-shrink',
+                      'transition-[background,color,box-shadow] duration-150 ease-out press-shrink',
                       isActive
                         ? 'text-[var(--color-text-primary)]'
                         : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)]',
@@ -223,6 +226,7 @@ export default function NavRail({ onCmdOpen }: Props) {
                     isActive
                       ? {
                           background: `color-mix(in oklab, ${accent} 18%, transparent)`,
+                          boxShadow: `inset 0 0 12px ${accent}11`,
                         }
                       : undefined
                   }
@@ -230,17 +234,24 @@ export default function NavRail({ onCmdOpen }: Props) {
                   {({ isActive }) => (
                     <>
                       {isActive && (
-                        <span
-                          aria-hidden="true"
-                          className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-full animate-fade-in"
-                          style={{ background: accent, boxShadow: `0 0 12px ${accent}` }}
-                        />
+                        <>
+                          <span
+                            aria-hidden="true"
+                            className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-full animate-fade-in"
+                            style={{ background: accent, boxShadow: `0 0 12px ${accent}` }}
+                          />
+                          <span
+                            aria-hidden="true"
+                            className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-1/2 rounded-full opacity-40"
+                            style={{ background: accent, boxShadow: `0 0 20px ${accent}` }}
+                          />
+                        </>
                       )}
                       <Icon
                         size={15}
                         aria-hidden="true"
                         className={clsx(
-                          'shrink-0 transition-colors duration-150',
+                          'shrink-0 transition-all duration-150',
                           isActive ? '' : 'group-hover/nav:text-[var(--color-text-primary)]',
                         )}
                         style={isActive ? { color: accent } : undefined}
@@ -256,8 +267,12 @@ export default function NavRail({ onCmdOpen }: Props) {
                       </span>
                       {to === '/inbox' && unreadCount > 0 && (
                         <span
-                          className="ml-auto text-micro font-bold text-white bg-[var(--color-status-blocked)] rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center tabular-nums animate-fade-in"
-                          style={{ display: expanded ? 'inline-flex' : 'none' }}
+                          className="ml-auto text-micro font-bold text-white rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center tabular-nums animate-fade-in"
+                          style={{
+                            display: expanded ? 'inline-flex' : 'none',
+                            background: 'var(--color-status-blocked)',
+                            boxShadow: '0 0 8px var(--color-status-blocked)',
+                          }}
                           aria-label={`${unreadCount} unread`}
                         >
                           {unreadCount > 99 ? '99+' : unreadCount}
@@ -325,9 +340,9 @@ export default function NavRail({ onCmdOpen }: Props) {
           className="flex items-center gap-2.5 px-2.5 h-9 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors duration-150 w-full"
         >
           {user?.avatar_url ? (
-            <img src={user.avatar_url} alt={user.name} className="w-6 h-6 rounded-full shrink-0" />
+            <img src={user.avatar_url} alt={user.name} className="w-6 h-6 rounded-full shrink-0 ring-1 ring-[var(--color-glass-border)]" />
           ) : (
-            <div className="w-6 h-6 rounded-full bg-[var(--color-accent)] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0" style={{ background: 'var(--gradient-accent)' }}>
               {user?.name?.[0] ?? 'U'}
             </div>
           )}

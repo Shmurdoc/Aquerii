@@ -9,7 +9,9 @@ describe('Badge', () => {
 
   it('applies variant classes', () => {
     render(<Badge variant="success">Done</Badge>)
-    expect(screen.getByText('Done').className).toContain('bg-green-900/50')
+    const badge = screen.getByText('Done')
+    expect(badge.className).toContain('bg-green-900/50')
+    expect(badge.className).toContain('text-green-300')
   })
 
   it('applies size classes', () => {

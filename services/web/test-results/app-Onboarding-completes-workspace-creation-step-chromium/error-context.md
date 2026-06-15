@@ -7,7 +7,7 @@
 # Test info
 
 - Name: app.spec.ts >> Onboarding >> completes workspace creation step
-- Location: tests\e2e\app.spec.ts:41:3
+- Location: tests\e2e\app.spec.ts:29:3
 
 # Error details
 
@@ -15,34 +15,56 @@
 TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
 =========================== logs ===========================
 waiting for navigation until "load"
+  navigated to "https://localhost/login"
 ============================================================
 ```
 
 # Page snapshot
 
 ```yaml
-- generic [ref=e2]:
-  - generic [ref=e4]:
-    - generic [ref=e5]:
-      - heading "Aquerii" [level=1] [ref=e6]
-      - paragraph [ref=e7]: Work that flows.
-    - generic [ref=e9]:
-      - heading "Sign in" [level=2] [ref=e10]
-      - generic [ref=e11]:
-        - generic [ref=e12]: Email
-        - textbox [ref=e13]: test@example.com
-      - generic [ref=e14]:
-        - generic [ref=e15]: Password
-        - textbox [ref=e16]: password123
-      - button "Sign in" [ref=e17] [cursor=pointer]
-      - paragraph [ref=e18]:
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - img [ref=e8]
+      - heading "Aquerii" [level=1] [ref=e10]
+      - paragraph [ref=e11]: Work that flows.
+    - generic [ref=e13]:
+      - heading "Sign in" [level=2] [ref=e14]
+      - generic [ref=e15]:
+        - generic [ref=e16]: Email
+        - textbox [ref=e17]
+      - generic [ref=e18]:
+        - generic [ref=e19]: Password
+        - textbox [ref=e20]
+      - button "Sign in" [ref=e21] [cursor=pointer]
+      - paragraph [ref=e22]:
         - text: No account?
-        - link "Create one" [ref=e19] [cursor=pointer]:
+        - link "Create one" [ref=e23] [cursor=pointer]:
           - /url: /register
-  - generic [ref=e20]:
-    - img [ref=e22]
-    - button "Open Tanstack query devtools" [ref=e70] [cursor=pointer]:
-      - img [ref=e71]
+    - paragraph [ref=e24]:
+      - text: By continuing you agree to our
+      - link "Terms" [ref=e25] [cursor=pointer]:
+        - /url: /terms
+      - text: and
+      - link "Privacy Policy" [ref=e26] [cursor=pointer]:
+        - /url: /privacy
+      - text: .
+  - generic [ref=e32]:
+    - generic [ref=e33]:
+      - paragraph [ref=e34]: The operating system for ambitious teams
+      - heading "Projects, CRM, ERP, and AI — in one cinematic surface." [level=2] [ref=e35]
+      - paragraph [ref=e36]: Boards, pipelines, invoices, safety, support. Everything wired into one fast, keyboard-driven workspace. No tab graveyard.
+    - list [ref=e37]:
+      - listitem [ref=e38]:
+        - img [ref=e40]
+        - generic [ref=e42]: Realtime collaboration across every record
+      - listitem [ref=e43]:
+        - img [ref=e45]
+        - generic [ref=e50]: Workspaces, roles, and field permissions
+      - listitem [ref=e51]:
+        - img [ref=e53]
+        - generic [ref=e55]: Audit logs, MFA, and SSO on every plan
+    - paragraph [ref=e56]: © 2026 Aquerii
 ```
 
 # Test source
@@ -51,116 +73,120 @@ waiting for navigation until "load"
   1   | import { test, expect } from './fixtures'
   2   | import { boardsUrl } from './helpers'
   3   | 
-  4   | async function loginAndGoToBoards(test: {
-  5   |   loginPage: any; boardsPage: any; page: any
-  6   | }) {
-  7   |   const { loginPage, boardsPage, page } = test
-  8   |   await loginPage.login('test@example.com', 'password123')
-  9   |   await page.waitForURL(/\/(onboarding|boards)/, { timeout: 15000 })
-  10  |   if (page.url().includes('/onboarding')) {
-  11  |     await page.goto(boardsUrl())
-  12  |     await page.waitForURL(/\/boards/, { timeout: 10000 })
-  13  |   }
-  14  | }
+  4   | test.describe('Authentication', () => {
+  5   |   test('redirects unauthenticated user to login', async ({ page }) => {
+  6   |     await page.goto(boardsUrl())
+  7   |     await expect(page).toHaveURL(/\/login/)
+  8   |   })
+  9   | 
+  10  |   test('shows validation errors on empty login submit', async ({ loginPage, page }) => {
+  11  |     await loginPage.goto()
+  12  |     await loginPage.submit()
+  13  |     await expect(page.locator('text=required')).toBeVisible()
+  14  |   })
   15  | 
-  16  | test.describe('Authentication', () => {
-  17  |   test('redirects unauthenticated user to login', async ({ page }) => {
-  18  |     await page.goto(boardsUrl())
-  19  |     await expect(page).toHaveURL(/\/login/)
-  20  |   })
+  16  |   test('logs in with valid credentials', async ({ loginPage, page }) => {
+  17  |     await loginPage.login('test@example.com', 'password123')
+  18  |     await expect(page).toHaveURL(/\/(onboarding|boards)/)
+  19  |   })
+  20  | })
   21  | 
-  22  |   test('shows validation errors on empty login submit', async ({ loginPage, page }) => {
-  23  |     await loginPage.goto()
-  24  |     await loginPage.submit()
-  25  |     await expect(page.locator('text=required')).toBeVisible()
-  26  |   })
-  27  | 
-  28  |   test('logs in with valid credentials', async ({ loginPage, page }) => {
-  29  |     await loginPage.login('test@example.com', 'password123')
-  30  |     await expect(page).toHaveURL(/\/(onboarding|boards)/)
-  31  |   })
-  32  | })
-  33  | 
-  34  | test.describe('Onboarding', () => {
-  35  |   test.beforeEach(async ({ loginPage, page }) => {
-  36  |     await loginPage.login('test@example.com', 'password123')
-> 37  |     await page.waitForURL(/\/(onboarding|boards)/, { timeout: 15000 })
+  22  | test.describe('Onboarding', () => {
+  23  |   test.beforeEach(async ({ loginPage, page }) => {
+  24  |     await loginPage.login('test@example.com', 'password123')
+> 25  |     await page.waitForURL(/\/(onboarding|boards)/, { timeout: 15000 })
       |                ^ TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
-  38  |     await page.goto(`${process.env.BASE_URL ?? 'http://localhost:3000'}/onboarding`)
-  39  |   })
-  40  | 
-  41  |   test('completes workspace creation step', async ({ page }) => {
-  42  |     await page.fill('input[placeholder*="Acme"]', 'Test Workspace')
-  43  |     await page.click('button:has-text("Continue")')
-  44  |     await expect(page.locator('text=What best describes you')).toBeVisible()
+  26  |     await page.goto(`${process.env.BASE_URL ?? 'http://localhost:3000'}/onboarding`)
+  27  |   })
+  28  | 
+  29  |   test('completes workspace creation step', async ({ page }) => {
+  30  |     await page.fill('input[placeholder*="Acme"]', 'Test Workspace')
+  31  |     await page.click('button:has-text("Continue")')
+  32  |     await expect(page.locator('text=What best describes you')).toBeVisible()
+  33  |   })
+  34  | })
+  35  | 
+  36  | test.describe('Boards', () => {
+  37  |   test.beforeEach(async ({ page, loginPage, boardsPage }) => {
+  38  |     const { loginPage: lp, boardsPage: bp, page: p } = { loginPage, boardsPage, page }
+  39  |     await lp.login('test@example.com', 'password123')
+  40  |     await p.waitForURL(/\/(onboarding|boards)/, { timeout: 15000 })
+  41  |     if (p.url().includes('/onboarding')) {
+  42  |       await p.goto(boardsUrl())
+  43  |       await p.waitForURL(/\/boards/, { timeout: 10000 })
+  44  |     }
   45  |   })
-  46  | })
-  47  | 
-  48  | test.describe('Boards', () => {
-  49  |   test.beforeEach(async ({ page, loginPage, boardsPage }) => {
-  50  |     await loginAndGoToBoards({ loginPage, boardsPage, page })
-  51  |   })
-  52  | 
-  53  |   test('displays boards page', async ({ boardsPage }) => {
-  54  |     await expect(boardsPage.heading).toBeVisible()
-  55  |   })
-  56  | 
-  57  |   test('can create a new board', async ({ boardsPage, page }) => {
-  58  |     await boardsPage.createBoard()
-  59  |     await expect(page).toHaveURL(/\/boards\/[a-z0-9-]+/, { timeout: 10000 })
-  60  |   })
-  61  | 
-  62  |   test('opens board and shows kanban view', async ({ boardsPage, boardPage }) => {
-  63  |     await boardsPage.openBoard()
-  64  |     await expect(boardPage.kanbanButton).toBeVisible()
-  65  |   })
-  66  | 
-  67  |   test('can switch to table view', async ({ boardsPage, boardPage }) => {
-  68  |     await boardsPage.openBoard()
-  69  |     await boardPage.switchToTableView()
-  70  |     await expect(boardPage.page.locator('text=Title')).toBeVisible()
-  71  |     await expect(boardPage.page.locator('text=Due Date')).toBeVisible()
+  46  | 
+  47  |   test('displays boards page', async ({ boardsPage }) => {
+  48  |     await expect(boardsPage.heading).toBeVisible()
+  49  |   })
+  50  | 
+  51  |   test('can create a new board', async ({ boardsPage, page }) => {
+  52  |     await boardsPage.createBoard()
+  53  |     await expect(page).toHaveURL(/\/boards\/[a-z0-9-]+/, { timeout: 10000 })
+  54  |   })
+  55  | 
+  56  |   test('opens board and shows kanban view', async ({ boardsPage, boardPage }) => {
+  57  |     await boardsPage.openBoard()
+  58  |     await expect(boardPage.kanbanButton).toBeVisible()
+  59  |   })
+  60  | 
+  61  |   test('can switch to table view', async ({ boardsPage, boardPage }) => {
+  62  |     await boardsPage.openBoard()
+  63  |     await boardPage.switchToTableView()
+  64  |     await expect(boardPage.page.locator('text=Title')).toBeVisible()
+  65  |     await expect(boardPage.page.locator('text=Due Date')).toBeVisible()
+  66  |   })
+  67  | 
+  68  |   test('can switch to calendar view', async ({ boardsPage, boardPage }) => {
+  69  |     await boardsPage.openBoard()
+  70  |     await boardPage.switchToCalendarView()
+  71  |     await expect(boardPage.page.locator('text=Mon')).toBeVisible()
   72  |   })
   73  | 
-  74  |   test('can switch to calendar view', async ({ boardsPage, boardPage }) => {
-  75  |     await boardsPage.openBoard()
-  76  |     await boardPage.switchToCalendarView()
-  77  |     await expect(boardPage.page.locator('text=Mon')).toBeVisible()
-  78  |   })
-  79  | 
-  80  |   test('navigates between pages via sidebar', async ({ nav, boardsPage, page }) => {
-  81  |     await expect(boardsPage.heading).toBeVisible()
-  82  |     await nav.goToDocuments()
-  83  |     await expect(page).toHaveURL(/\/documents/)
-  84  |     await nav.goToCRM()
-  85  |     await expect(page).toHaveURL(/\/crm/)
-  86  |     await nav.goToBoards()
-  87  |     await expect(page).toHaveURL(/\/boards/)
-  88  |   })
-  89  | })
-  90  | 
-  91  | test.describe('Documents', () => {
-  92  |   test.beforeEach(async ({ page, loginPage, boardsPage, documentsPage }) => {
-  93  |     await loginAndGoToBoards({ loginPage, boardsPage, page })
-  94  |     await documentsPage.goto()
-  95  |   })
-  96  | 
-  97  |   test('displays documents page', async ({ documentsPage }) => {
-  98  |     await expect(documentsPage.heading).toBeVisible()
-  99  |   })
-  100 | 
-  101 |   test('can create a new document', async ({ documentsPage, page }) => {
-  102 |     await documentsPage.createNewNote()
-  103 |     await expect(page).toHaveURL(/\/documents\/[a-z0-9-]+/)
-  104 |   })
-  105 | })
-  106 | 
-  107 | test.describe('CRM', () => {
-  108 |   test('displays pipeline view', async ({ page, loginPage, boardsPage, crmPage }) => {
-  109 |     await loginAndGoToBoards({ loginPage, boardsPage, page })
-  110 |     await crmPage.goto()
-  111 |     await expect(crmPage.stageHeader('Lead')).toBeVisible({ timeout: 5000 })
-  112 |   })
-  113 | })
-  114 | 
+  74  |   test('navigates between pages via sidebar', async ({ nav, boardsPage, page }) => {
+  75  |     await expect(boardsPage.heading).toBeVisible()
+  76  |     await nav.goToDocuments()
+  77  |     await expect(page).toHaveURL(/\/documents/)
+  78  |     await nav.goToCRM()
+  79  |     await expect(page).toHaveURL(/\/crm/)
+  80  |     await nav.goToBoards()
+  81  |     await expect(page).toHaveURL(/\/boards/)
+  82  |   })
+  83  | })
+  84  | 
+  85  | test.describe('Documents', () => {
+  86  |   test.beforeEach(async ({ page, loginPage, boardsPage, documentsPage }) => {
+  87  |     await loginPage.login('test@example.com', 'password123')
+  88  |     await page.waitForURL(/\/(onboarding|boards)/, { timeout: 15000 })
+  89  |     if (page.url().includes('/onboarding')) {
+  90  |       await page.goto(boardsUrl())
+  91  |       await page.waitForURL(/\/boards/, { timeout: 10000 })
+  92  |     }
+  93  |     await documentsPage.goto()
+  94  |   })
+  95  | 
+  96  |   test('displays documents page', async ({ documentsPage }) => {
+  97  |     await expect(documentsPage.heading).toBeVisible()
+  98  |   })
+  99  | 
+  100 |   test('can create a new document', async ({ documentsPage, page }) => {
+  101 |     await documentsPage.createNewNote()
+  102 |     await expect(page).toHaveURL(/\/documents\/[a-z0-9-]+/)
+  103 |   })
+  104 | })
+  105 | 
+  106 | test.describe('CRM', () => {
+  107 |   test('displays pipeline view', async ({ page, loginPage, crmPage }) => {
+  108 |     await loginPage.login('test@example.com', 'password123')
+  109 |     await page.waitForURL(/\/(onboarding|boards)/, { timeout: 15000 })
+  110 |     if (page.url().includes('/onboarding')) {
+  111 |       await page.goto(boardsUrl())
+  112 |       await page.waitForURL(/\/boards/, { timeout: 10000 })
+  113 |     }
+  114 |     await crmPage.goto()
+  115 |     await expect(crmPage.stageHeader('Lead')).toBeVisible({ timeout: 5000 })
+  116 |   })
+  117 | })
+  118 | 
 ```

@@ -25,7 +25,8 @@ export function useDocuments() {
 }
 
 export function useDocument(docId: string, workspaceId?: string) {
-  const wsId = workspaceId ?? useAuthStore((s) => s.workspace)?.id
+  const workspace = useAuthStore((s) => s.workspace)
+  const wsId = workspaceId ?? workspace?.id
   return useQuery({
     queryKey: ['document', wsId, docId],
     queryFn: () => api.get(`/workspaces/${wsId}/documents/${docId}`).then((r) => r.data.data),

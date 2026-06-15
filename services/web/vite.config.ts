@@ -4,11 +4,24 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
+  css: {
+    postcss: false,
+  },
   test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
     exclude: ['node_modules', 'tests/e2e/**'],
+    css: false,
+    coverage: {
+      provider: 'v8',
+      thresholds: {
+        statements: 70,
+        branches: 70,
+        functions: 70,
+        lines: 70,
+      },
+    },
   },
   resolve: {
     alias: {

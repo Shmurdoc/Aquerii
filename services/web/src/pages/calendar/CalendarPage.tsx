@@ -70,32 +70,49 @@ function NewEventModal({ onClose }: { onClose: () => void }) {
   })
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="rounded-xl w-full max-w-md p-5 space-y-4" style={{ background: 'var(--color-bg-base)', border: '1px solid var(--color-glass-border)' }}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-backdrop-in" style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}>
+      <div className="rounded-xl w-full max-w-md p-5 space-y-4 animate-scale-in" style={{ background: 'var(--color-bg-base)', border: '1px solid var(--color-glass-border)' }}>
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>New Event</h2>
-          <button onClick={onClose} style={{ color: 'var(--color-text-muted)' }}><X size={16} /></button>
+          <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[var(--color-bg-hover)] transition-colors" style={{ color: 'var(--color-text-muted)' }}><X size={16} /></button>
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Title</label>
           <input value={title} onChange={e => setTitle(e.target.value)}
-            className="rounded px-2 py-1.5 text-sm outline-none"
-            style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
+            placeholder="Event title"
+            className="rounded-lg px-3 py-2 text-sm outline-none transition-all duration-150"
+            style={{
+              background: 'var(--color-bg-input)',
+              border: '1px solid var(--color-glass-border)',
+              color: 'var(--color-text-primary)',
+            }}
+            onFocus={e => { e.target.style.borderColor = 'var(--color-accent)'; e.target.style.boxShadow = '0 0 0 3px var(--color-accent-light)' }}
+            onBlur={e => { e.target.style.borderColor = 'var(--color-glass-border)'; e.target.style.boxShadow = 'none' }}
+          />
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Due Date</label>
           <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)}
-            className="rounded px-2 py-1.5 text-sm outline-none"
-            style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }} />
+            className="rounded-lg px-3 py-2 text-sm outline-none transition-all duration-150"
+            style={{
+              background: 'var(--color-bg-input)',
+              border: '1px solid var(--color-glass-border)',
+              color: 'var(--color-text-primary)',
+            }}
+          />
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Priority</label>
           <select value={priority} onChange={e => setPriority(e.target.value)}
-            className="rounded px-2 py-1.5 text-sm outline-none"
-            style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }}>
+            className="rounded-lg px-3 py-2 text-sm outline-none"
+            style={{
+              background: 'var(--color-bg-input)',
+              border: '1px solid var(--color-glass-border)',
+              color: 'var(--color-text-primary)',
+            }}>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
@@ -106,8 +123,12 @@ function NewEventModal({ onClose }: { onClose: () => void }) {
         <div className="flex flex-col gap-1">
           <label className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Board</label>
           <select value={boardId} onChange={e => setBoardId(e.target.value)}
-            className="rounded px-2 py-1.5 text-sm outline-none"
-            style={{ background: 'var(--color-bg-input)', border: '1px solid var(--color-glass-border)', color: 'var(--color-text-primary)' }}>
+            className="rounded-lg px-3 py-2 text-sm outline-none"
+            style={{
+              background: 'var(--color-bg-input)',
+              border: '1px solid var(--color-glass-border)',
+              color: 'var(--color-text-primary)',
+            }}>
             {boards.length === 0 && <option value="">No boards available</option>}
             {boards.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
           </select>
@@ -126,11 +147,11 @@ function NewEventModal({ onClose }: { onClose: () => void }) {
 
 function EventDetail({ item, onClose }: { item: CalendarItem; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="rounded-xl w-full max-w-sm p-5 space-y-3" style={{ background: 'var(--color-bg-base)', border: '1px solid var(--color-glass-border)' }} onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-backdrop-in" style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }} onClick={onClose}>
+      <div className="rounded-xl w-full max-w-sm p-5 space-y-3 animate-scale-in" style={{ background: 'var(--color-bg-base)', border: '1px solid var(--color-glass-border)' }} onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>{item.title}</h2>
-          <button onClick={onClose} style={{ color: 'var(--color-text-muted)' }}><X size={16} /></button>
+          <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[var(--color-bg-hover)] transition-colors" style={{ color: 'var(--color-text-muted)' }}><X size={16} /></button>
         </div>
         <div className="space-y-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
           <div className="flex items-center gap-2">
@@ -212,15 +233,20 @@ function MonthView({ items, current, onMonthChange, onItemClick }: { items: Cale
         </div>
         <button
           onClick={() => onMonthChange(new Date())}
-          className="text-xs px-2 py-1 rounded-lg bg-[var(--color-bg-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+          className="text-xs px-3 py-1.5 rounded-lg font-medium transition-all duration-150"
+          style={{
+            background: 'var(--color-accent-light)',
+            color: 'var(--color-accent-text)',
+            border: '1px solid color-mix(in oklab, var(--color-accent) 20%, transparent)',
+          }}
         >
           Today
         </button>
       </div>
 
-      <div className="grid grid-cols-7 mb-1">
+      <div className="grid grid-cols-7 mb-1 gap-px">
         {DAY_LABELS.map(d => (
-          <div key={d} className="text-xs text-[var(--color-text-muted)] font-medium text-center py-1">
+          <div key={d} className="text-xs font-semibold text-center py-1.5" style={{ color: 'var(--color-text-muted)' }}>
             {d}
           </div>
         ))}
@@ -249,12 +275,13 @@ function MonthView({ items, current, onMonthChange, onItemClick }: { items: Cale
                 >
                   <div
                     className={clsx(
-                      'w-6 h-6 flex items-center justify-center text-xs font-medium rounded-full mb-1 ml-auto',
+                      'w-6 h-6 flex items-center justify-center text-xs font-medium rounded-full mb-1',
                       today
-                        ? 'text-white'
+                        ? 'text-white animate-pulse-glow'
                         : 'text-[var(--color-text-muted)]',
+                      !today && 'hover:bg-[var(--color-bg-hover)]',
                     )}
-                    style={today ? { background: 'var(--color-accent)' } : undefined}
+                    style={today ? { background: 'var(--gradient-accent)' } : undefined}
                   >
                     {format(d, 'd')}
                   </div>
@@ -264,7 +291,7 @@ function MonthView({ items, current, onMonthChange, onItemClick }: { items: Cale
                       <button
                         key={item.id}
                         onClick={() => onItemClick(item.id)}
-                        className="w-full text-left truncate text-[11px] px-1.5 py-0.5 rounded font-medium transition-opacity hover:opacity-80"
+                        className="w-full text-left truncate text-[11px] px-1.5 py-0.5 rounded font-medium transition-all hover:opacity-80"
                         style={{
                           backgroundColor: item.board_color ? `${item.board_color}30` : 'rgba(99,102,241,0.2)',
                           color: item.board_color ?? '#818cf8',
@@ -329,7 +356,7 @@ function AgendaView({ items, onItemClick }: { items: CalendarItem[]; onItemClick
 
   if (dates.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-[var(--color-text-muted)]">
+      <div className="flex flex-col items-center justify-center py-20" style={{ color: 'var(--color-text-muted)' }}>
         <CalendarDays size={32} className="opacity-40 mb-2" />
         <p className="text-sm">No items with due dates</p>
       </div>
@@ -356,7 +383,7 @@ function AgendaView({ items, onItemClick }: { items: CalendarItem[]; onItemClick
               >
                 {format(date, 'EEEE, MMM d, yyyy')}
               </span>
-              {isPast && <span className="text-[10px] text-red-400/70">overdue</span>}
+              {isPast && <span className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400">overdue</span>}
               <span className="text-[10px] text-[var(--color-text-muted)]">
                 {dayItems.length} item{dayItems.length !== 1 ? 's' : ''}
               </span>
@@ -366,6 +393,7 @@ function AgendaView({ items, onItemClick }: { items: CalendarItem[]; onItemClick
               style={{
                 background: 'var(--color-glass-bg)',
                 borderColor: 'var(--color-glass-border)',
+                backdropFilter: 'blur(12px)',
               }}
             >
               {dayItems.map(item => (
@@ -445,7 +473,7 @@ export default function CalendarPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 size={24} className="animate-spin text-[var(--color-text-muted)]" />
+        <Loader2 size={24} className="animate-spin" style={{ color: 'var(--color-text-muted)' }} />
       </div>
     )
   }
@@ -453,7 +481,7 @@ export default function CalendarPage() {
   if (isError) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-3">
-        <p className="text-sm text-red-400">Failed to load calendar items</p>
+        <p className="text-sm" style={{ color: 'var(--color-status-blocked)' }}>Failed to load calendar items</p>
         <button
           type="button"
           onClick={() => refetch()}
@@ -461,6 +489,7 @@ export default function CalendarPage() {
           style={{
             background: 'var(--color-bg-surface)',
             color: 'var(--color-text-secondary)',
+            border: '1px solid var(--color-glass-border)',
           }}
         >
           <RefreshCw size={12} />
@@ -519,7 +548,7 @@ export default function CalendarPage() {
       </div>
 
       {(!items || items.length === 0) ? (
-        <div className="flex flex-col items-center justify-center flex-1 text-[var(--color-text-muted)]">
+        <div className="flex flex-col items-center justify-center flex-1" style={{ color: 'var(--color-text-muted)' }}>
           <CalendarDays size={32} className="opacity-40 mb-2" />
           <p className="text-sm">No items with due dates</p>
           <p className="text-xs mt-1 opacity-60">Create board items with due dates to see them here</p>

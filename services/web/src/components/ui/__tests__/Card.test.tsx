@@ -1,18 +1,18 @@
 import { render, screen } from '@testing-library/react'
-import { Card } from '../Card'
+import { Card, CardHeader, CardBody, CardFooter } from '../Card'
 
 describe('Card', () => {
   it('renders children', () => {
-    render(<Card><Card.Body>Content</Card.Body></Card>)
+    render(<Card><CardBody>Content</CardBody></Card>)
     expect(screen.getByText('Content')).toBeInTheDocument()
   })
 
   it('renders header and footer', () => {
     render(
       <Card>
-        <Card.Header>Header</Card.Header>
-        <Card.Body>Body</Card.Body>
-        <Card.Footer>Footer</Card.Footer>
+        <CardHeader>Header</CardHeader>
+        <CardBody>Body</CardBody>
+        <CardFooter>Footer</CardFooter>
       </Card>
     )
     expect(screen.getByText('Header')).toBeInTheDocument()
@@ -21,8 +21,8 @@ describe('Card', () => {
   })
 
   it('applies variant classes', () => {
-    render(<Card variant="glass" data-testid="glass-card"><Card.Body>Glass</Card.Body></Card>)
+    render(<Card variant="glass" data-testid="glass-card"><CardBody>Glass</CardBody></Card>)
     const card = screen.getByTestId('glass-card')
-    expect(card.className).toContain('backdrop-blur')
+    expect(card.className).toContain('backdrop-blur-lg')
   })
 })

@@ -204,42 +204,57 @@ export default function DashboardPage() {
 
   return (
     <div className="p-6 space-y-6 overflow-auto h-full">
-      {/* Hero Header with Gradient */}
-      <div className="relative overflow-hidden rounded-2xl p-6" style={{
-        background: 'linear-gradient(135deg, var(--color-accent) 0%, rgba(124, 58, 237, 0.3) 100%)',
+      <div className="relative overflow-hidden rounded-2xl" style={{
+        background: 'var(--color-bg-base)',
+        border: '1px solid var(--color-glass-border)',
       }}>
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
-        <div className="relative z-10 animate-slide-up">
-          <h1 className="text-2xl font-bold text-white mb-1">
-            Welcome back, {user?.name?.split(' ')[0] ?? 'there'} 👋
-          </h1>
-          <p className="text-white/70 text-sm">
-            Here&apos;s what&apos;s happening in {workspace?.name ?? 'your workspace'} today
-          </p>
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03]" />
+        <div className="absolute inset-0" style={{ background: 'var(--gradient-mesh)' }} />
+        <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-20 blur-3xl animate-orb-drift" style={{ background: 'radial-gradient(circle, var(--color-accent) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 left-1/4 w-48 h-48 rounded-full opacity-15 blur-3xl animate-orb-drift-slow" style={{ background: 'radial-gradient(circle, #ec4899 0%, transparent 70%)' }} />
+        <div className="relative z-10 p-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <h1 className="text-2xl font-bold mb-1">
+                <span className="gradient-text">Welcome back</span>
+                <span className="text-[var(--color-text-primary)]">
+                  , {user?.name?.split(' ')[0] ?? 'there'}
+                </span>
+              </h1>
+              <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                Here&apos;s what&apos;s happening in {workspace?.name ?? 'your workspace'} today
+              </p>
+            </div>
+            <div className="hidden sm:flex items-center gap-2">
+              <span className="text-micro font-medium px-2.5 py-1 rounded-full" style={{
+                background: 'var(--color-accent-light)',
+                color: 'var(--color-accent-text)',
+                border: '1px solid color-mix(in oklab, var(--color-accent) 20%, transparent)',
+              }}>
+                {format(new Date(), 'EEEE, MMM d')}
+              </span>
+            </div>
+          </div>
         </div>
-        {/* Floating decorative elements */}
-        <div className="absolute top-4 right-4 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-        <div className="absolute bottom-4 right-20 w-20 h-20 bg-white/5 rounded-full blur-xl" />
+        <div className="h-px mx-6" style={{
+          background: 'linear-gradient(90deg, transparent, var(--color-glass-border), transparent)',
+        }} />
+        <div className="relative z-10 px-6 pb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+            <ErrorBoundary fallback={<WidgetErrorFallback label="metrics" />}>
+              <KpiRow />
+            </ErrorBoundary>
+          </div>
+        </div>
       </div>
 
-      {/* KPI Cards with stagger animation */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          <ErrorBoundary fallback={<WidgetErrorFallback label="metrics" />}>
-            <KpiRow />
-          </ErrorBoundary>
-        </div>
-      </div>
-
-      {/* My Tasks Widget */}
-      <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+      <div className="animate-slide-up" style={{ animationDelay: '0.15s' }}>
         <ErrorBoundary fallback={<WidgetErrorFallback label="tasks" />}>
           <MyTasksWidget />
         </ErrorBoundary>
       </div>
 
-      {/* Activity Feed + Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 animate-slide-up" style={{ animationDelay: '0.25s' }}>
         <div className="lg:col-span-2">
           <ErrorBoundary fallback={<WidgetErrorFallback label="activity feed" />}>
             <ActivityFeedWrapper />
@@ -250,12 +265,24 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Team Sentiment */}
-      <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
+      <div className="animate-slide-up" style={{ animationDelay: '0.35s' }}>
         <ErrorBoundary fallback={<WidgetErrorFallback label="team sentiment" />}>
           <BurnoutWidget />
         </ErrorBoundary>
       </div>
     </div>
   )
+}
+
+function format(date: Date, fmt: string) {
+  const d = date.getDate()
+  const m = date.toLocaleString('default', { month: 'short' })
+  const y = date.getFullYear()
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  const day = days[date.getDay()]
+  return fmt
+    .replace('EEEE', day)
+    .replace('MMM', m)
+    .replace('d', String(d))
+    .replace('yyyy', String(y))
 }

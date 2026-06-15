@@ -43,6 +43,7 @@ interface SectionConfig {
   label: string
   icon: typeof AlertCircle
   color: string
+  accentColor: string
   badge?: string
   hideEmpty?: boolean
 }
@@ -117,14 +118,18 @@ function SectionBlock({ config, tasks, onToggle }: {
 
   return (
     <div
-      className="rounded-xl border overflow-hidden"
+      className="rounded-xl border overflow-hidden relative"
       style={{
         background: 'var(--color-glass-bg)',
         borderColor: 'var(--color-glass-border)',
         backdropFilter: 'blur(12px)',
       }}
     >
-      <div className="flex items-center justify-between px-4 pt-3 pb-2">
+      <div className="absolute left-0 top-0 bottom-0 w-0.5 rounded-l-xl" style={{
+        background: `linear-gradient(180deg, ${config.accentColor}, ${config.accentColor}66)`,
+        boxShadow: `0 0 8px ${config.accentColor}44`,
+      }} />
+      <div className="flex items-center justify-between px-4 pt-3 pb-2 pl-5">
         <div className="flex items-center gap-2">
           <Icon size={14} className={config.color} />
           <p
@@ -191,6 +196,7 @@ export default function MyDayPage() {
       label: 'Overdue',
       icon: AlertCircle,
       color: 'text-red-400',
+      accentColor: '#ef4444',
       badge: 'bg-red-500/20 text-red-400',
     },
     {
@@ -198,6 +204,7 @@ export default function MyDayPage() {
       label: 'Today',
       icon: Clock,
       color: 'text-amber-400',
+      accentColor: '#f59e0b',
       badge: 'bg-amber-500/20 text-amber-400',
     },
     {
@@ -205,18 +212,21 @@ export default function MyDayPage() {
       label: 'Tomorrow',
       icon: Calendar,
       color: 'text-blue-400',
+      accentColor: '#3b82f6',
     },
     {
       key: 'this_week',
       label: 'This Week',
       icon: Calendar,
       color: 'text-indigo-400',
+      accentColor: '#818cf8',
     },
     {
       key: 'later',
       label: 'Later',
       icon: Clock,
       color: 'text-gray-400',
+      accentColor: '#64748b',
       hideEmpty: true,
     },
   ]
@@ -243,7 +253,6 @@ export default function MyDayPage() {
       },
       { onError: (err: any) => toast.error(err?.response?.data?.message ?? 'Failed to update task') }
     )
-    // Optimistic update via the hook's refetch; no local state needed
   }
 
   if (isLoading) {
@@ -274,32 +283,45 @@ export default function MyDayPage() {
     <div className="p-6 space-y-6 overflow-auto h-full">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h1
-            className="text-xl font-semibold"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            My Day
-          </h1>
-          <p style={{ color: 'var(--color-text-muted)' }} className="text-sm">
-            {format(now, 'EEEE, MMMM d, yyyy')}
-          </p>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{
+              background: 'var(--gradient-accent-soft)',
+            }}>
+              <div className="w-4 h-4 rounded-sm" style={{ background: 'var(--gradient-accent)' }} />
+            </div>
+            <div>
+              <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                My Day
+              </h1>
+              <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                {format(now, 'EEEE, MMMM d, yyyy')}
+              </p>
+            </div>
+          </div>
         </div>
         {totalPending > 0 && (
-          <span
-            className="text-xs px-2 py-1 rounded-lg font-medium"
-            style={{
-              backgroundColor: 'var(--color-accent-light)',
-              color: 'var(--color-accent-text)',
-            }}
-          >
-            {totalPending} pending
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: 'var(--color-accent)' }} />
+              <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: 'var(--color-accent)' }} />
+            </span>
+            <span
+              className="text-xs px-3 py-1 rounded-lg font-medium"
+              style={{
+                background: 'var(--color-accent-light)',
+                color: 'var(--color-accent-text)',
+                border: '1px solid color-mix(in oklab, var(--color-accent) 20%, transparent)',
+              }}
+            >
+              {totalPending} pending
+            </span>
+          </div>
         )}
       </div>
 
       {(!tasks || tasks.length === 0) ? (
         <div
-          className="rounded-xl border flex items-center justify-center py-16"
+          className="rounded-xl border flex items-center justify-center py-16 relative"
           style={{
             background: 'var(--color-glass-bg)',
             borderColor: 'var(--color-glass-border)',
@@ -320,10 +342,14 @@ export default function MyDayPage() {
 
       <button
         type="button"
-        className="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-white shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+        className="fixed bottom-8 right-8 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-105 active:scale-95 press-shrink"
+        style={{
+          background: 'var(--gradient-accent)',
+          boxShadow: '0 4px 20px var(--color-accent-glow)',
+        }}
         onClick={() => navigate('/boards')}
       >
-        <Plus size={24} />
+        <Plus size={24} className="text-white" />
       </button>
     </div>
   )
