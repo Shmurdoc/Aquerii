@@ -26,7 +26,7 @@ beforeEach(() => {
 describe('LoginPage', () => {
   it('renders the sign-in form', () => {
     renderLogin()
-    expect(screen.getByRole('heading', { name: 'Sign in' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Welcome back' })).toBeInTheDocument()
     expect(document.querySelector('input[name="email"]')).toBeInTheDocument()
     expect(document.querySelector('input[name="password"]')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
