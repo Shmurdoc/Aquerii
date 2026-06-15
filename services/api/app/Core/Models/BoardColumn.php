@@ -12,7 +12,8 @@ class BoardColumn extends Model
     protected $table = 'board_columns';
 
     protected $fillable = [
-        'board_id', 'workspace_id', 'title', 'type',
+        // Allow mass assignment for provisioning/seeders which provide a `name` field
+        'board_id', 'workspace_id', 'name', 'title', 'type',
         'settings', 'is_system', 'position', 'width',
     ];
 
