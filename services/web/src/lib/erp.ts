@@ -1288,9 +1288,9 @@ export const erpHR = {
 
 export function formatCurrency(amount: number | string, currency = 'ZAR'): string {
   const n = typeof amount === 'string' ? parseFloat(amount) : amount
-  if (isNaN(n)) return 'R0.00'
   const locale = currency === 'ZAR' ? 'en-ZA' : 'en-US'
-  return new Intl.NumberFormat(locale, { style: 'currency', currency, minimumFractionDigits: 2 }).format(n)
+  const fmt = (v: number) => new Intl.NumberFormat(locale, { style: 'currency', currency, minimumFractionDigits: 2 }).format(v)
+  return isNaN(n) ? fmt(0) : fmt(n)
 }
 
 export function formatDate(dateStr: string | null | undefined): string {

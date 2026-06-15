@@ -38,3 +38,6 @@ Schedule::command('workspace:recalculate-usage')->dailyAt('02:00');
 
 // Purge expired trials daily
 Schedule::command('app:purge-expired-trials')->daily();
+
+// Auto-clock-out ghost shifts (no clock-out after 18 hours)
+Schedule::command('attendance:auto-clockout-ghosts')->hourly();

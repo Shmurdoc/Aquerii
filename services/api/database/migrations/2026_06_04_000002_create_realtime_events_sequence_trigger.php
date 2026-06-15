@@ -14,11 +14,12 @@ return new class extends Migration
                 NEW.sequence = (
                     SELECT COALESCE(MAX(sequence), 0) + 1
                     FROM realtime_events
-                    WHERE session_id = NEW.session_id
                 );
                 RETURN NEW;
             END;
             $$;
+
+            DROP TRIGGER IF EXISTS trg_realtime_events_sequence ON realtime_events;
 
             CREATE TRIGGER trg_realtime_events_sequence
             BEFORE INSERT ON realtime_events

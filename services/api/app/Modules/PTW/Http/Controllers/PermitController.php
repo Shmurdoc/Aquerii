@@ -303,6 +303,20 @@ class PermitController extends Controller
         );
     }
 
+    public function hsseReview(Request $request, Workspace $workspace, Permit $permit): JsonResponse
+    {
+        $meta = [];
+        if ($request->has('hsse_reviewer_id')) {
+            $validated = $request->validate(['hsse_reviewer_id' => 'required|uuid']);
+            $meta['hsse_reviewer_id'] = $validated['hsse_reviewer_id'];
+        }
+
+        return $this->applyTransition(
+            $request, $workspace, $permit,
+            PermitWorkflowService::TRANSITION_HSSE_REVIEW, meta: $meta
+        );
+    }
+
     public function suspend(Request $request, Workspace $workspace, Permit $permit): JsonResponse
     {
         $request->validate(['reason' => 'required|string|min:3|max:1000']);
@@ -460,7 +474,7 @@ class PermitController extends Controller
         return response()->json(['data' => $isolation]);
     }
 
-    public function register(Request $request, Workspace $workspace): Response
+    public function register(Request $request, Workspace $workspace): JsonResponse|Response
     {
         $this->assertMember($request, $workspace);
 

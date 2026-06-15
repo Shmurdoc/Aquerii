@@ -46,6 +46,7 @@ jobs:
       - run: composer install --prefer-dist --no-scripts --no-progress
       - run: composer lint
       - run: composer analyse
+      - run: composer audit --abandoned=ignore
 
   lint-node:
     name: Node Lint & Type Check

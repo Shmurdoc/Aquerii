@@ -73,6 +73,25 @@ return [
 
     ],
 
+    'pool' => [
+        'min' => env('DB_POOL_MIN', 2),
+        'max' => env('DB_POOL_MAX', 20),
+        'idle_timeout' => env('DB_POOL_IDLE_TIMEOUT', 600),
+        'retry_delay' => env('DB_POOL_RETRY_DELAY', 1),
+        'max_lifetime' => env('DB_POOL_MAX_LIFETIME', 3600),
+    ],
+
+    'pgbouncer' => [
+        'enabled' => env('PGBOUNCER_ENABLED', false),
+        'host' => env('PGBOUNCER_HOST', 'pgbouncer'),
+        'port' => env('PGBOUNCER_PORT', '6432'),
+        'pool_mode' => env('PGBOUNCER_POOL_MODE', 'transaction'),
+        'default_pool_size' => env('PGBOUNCER_DEFAULT_POOL_SIZE', 25),
+        'max_client_conn' => env('PGBOUNCER_MAX_CLIENT_CONN', 100),
+        'server_idle_timeout' => env('PGBOUNCER_SERVER_IDLE_TIMEOUT', 600),
+        'query_timeout' => env('PGBOUNCER_QUERY_TIMEOUT', 0),
+    ],
+
     'migrations' => [
         'table' => 'migrations',
         'update_date_on_publish' => true,

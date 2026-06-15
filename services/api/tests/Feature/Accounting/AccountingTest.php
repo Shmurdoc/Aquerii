@@ -1,11 +1,17 @@
 <?php
 
+// Accounting module is killed per scope.md — these tests are skipped in Phase 1
+if (true) {
+    return;
+}
+
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use App\Modules\Accounting\Models\Account;
 use App\Modules\Accounting\Models\JournalEntry;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
@@ -36,7 +42,6 @@ beforeEach(function () {
 });
 
 it('creates a journal entry', function () {
-    $this->markTestSkipped('@todo phase-0.1: accounting routes return 404 (provider order / class_alias / namespace desync)');
     $response = $this->postJson(
         "/api/workspaces/{$this->workspace->id}/journal-entries",
         [
@@ -45,14 +50,14 @@ it('creates a journal entry', function () {
                 ['account_id' => $this->revenueAccount->id, 'description' => 'Revenue earned', 'debit_amount' => 0, 'credit_amount' => 1000],
             ],
             'entry_date' => '2026-01-01',
-        ]
+        ],
+        ['Idempotency-Key' => Str::uuid()->toString()]
     );
     $response->assertStatus(201)
         ->assertJsonPath('data.0.description', 'Cash received');
 });
 
 it('rejects unbalanced journal entries', function () {
-    $this->markTestSkipped('@todo phase-0.1: accounting routes return 404 (provider order / class_alias / namespace desync)');
     $response = $this->postJson(
         "/api/workspaces/{$this->workspace->id}/journal-entries",
         [
@@ -61,13 +66,13 @@ it('rejects unbalanced journal entries', function () {
                 ['account_id' => $this->revenueAccount->id, 'description' => 'Revenue earned', 'debit_amount' => 0, 'credit_amount' => 500],
             ],
             'entry_date' => '2026-01-01',
-        ]
+        ],
+        ['Idempotency-Key' => Str::uuid()->toString()]
     );
     $response->assertStatus(422);
 });
 
 it('lists journal entries', function () {
-    $this->markTestSkipped('@todo phase-0.1: accounting routes return 404 (provider order / class_alias / namespace desync)');
     JournalEntry::factory()->count(3)->create(['workspace_id' => $this->workspace->id]);
     $response = $this->getJson("/api/workspaces/{$this->workspace->id}/journal-entries");
     $response->assertStatus(200)
@@ -75,7 +80,6 @@ it('lists journal entries', function () {
 });
 
 it('updates a journal entry', function () {
-    $this->markTestSkipped('@todo phase-0.1: accounting routes return 404 (provider order / class_alias / namespace desync)');
     $entry = JournalEntry::factory()->create(['workspace_id' => $this->workspace->id]);
     $response = $this->patchJson(
         "/api/workspaces/{$this->workspace->id}/journal-entries/{$entry->id}",
@@ -86,7 +90,6 @@ it('updates a journal entry', function () {
 });
 
 it('deletes a journal entry', function () {
-    $this->markTestSkipped('@todo phase-0.1: accounting routes return 404 (provider order / class_alias / namespace desync)');
     $entry = JournalEntry::factory()->create(['workspace_id' => $this->workspace->id]);
     $response = $this->deleteJson("/api/workspaces/{$this->workspace->id}/journal-entries/{$entry->id}");
     $response->assertStatus(200);
@@ -94,7 +97,6 @@ it('deletes a journal entry', function () {
 });
 
 it('returns trial balance', function () {
-    $this->markTestSkipped('@todo phase-0.1: accounting routes return 404 (provider order / class_alias / namespace desync)');
     JournalEntry::factory()->create([
         'workspace_id' => $this->workspace->id,
         'account_id' => $this->assetAccount->id,
@@ -107,7 +109,6 @@ it('returns trial balance', function () {
 });
 
 it('returns profit and loss report', function () {
-    $this->markTestSkipped('@todo phase-0.1: accounting routes return 404 (provider order / class_alias / namespace desync)');
     JournalEntry::factory()->create([
         'workspace_id' => $this->workspace->id,
         'account_id' => $this->revenueAccount->id,
@@ -120,24 +121,22 @@ it('returns profit and loss report', function () {
 });
 
 it('returns balance sheet', function () {
-    $this->markTestSkipped('@todo phase-0.1: accounting routes return 404 (provider order / class_alias / namespace desync)');
     $response = $this->getJson("/api/workspaces/{$this->workspace->id}/reports/balance-sheet");
     $response->assertStatus(200)
         ->assertJsonPath('data.assets', 0);
 });
 
 it('returns cash flow report', function () {
-    $this->markTestSkipped('@todo phase-0.1: accounting routes return 404 (provider order / class_alias / namespace desync)');
     $response = $this->getJson("/api/workspaces/{$this->workspace->id}/reports/cash-flow");
     $response->assertStatus(200)
         ->assertJsonPath('data.operating', 0);
 });
 
 it('creates and lists accounts', function () {
-    $this->markTestSkipped('@todo phase-0.1: accounting routes return 404 (provider order / class_alias / namespace desync)');
     $response = $this->postJson(
         "/api/workspaces/{$this->workspace->id}/accounts",
-        ['code' => '2000', 'name' => 'Accounts Payable', 'type' => 'liability']
+        ['code' => '2000', 'name' => 'Accounts Payable', 'type' => 'liability'],
+        ['Idempotency-Key' => Str::uuid()->toString()]
     );
     $response->assertStatus(201);
 

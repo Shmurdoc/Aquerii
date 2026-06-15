@@ -93,6 +93,7 @@ it('updates an incident', function () {
     $incident = Incident::factory()->create([
         'workspace_id' => $this->workspace->id,
         'reporter_id' => $this->user->id,
+        'status' => Incident::STATUS_OPEN,
     ]);
 
     $response = $this->patchJson(

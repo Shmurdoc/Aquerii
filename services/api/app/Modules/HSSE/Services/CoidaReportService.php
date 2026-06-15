@@ -44,8 +44,8 @@ class CoidaReportService
             ],
             'employer' => [
                 'name' => $workspace->name,
-                'registration_number' => $workspace->metadata['coida_registration_number'] ?? null,
-                'industry' => $workspace->metadata['industry'] ?? null,
+                'registration_number' => $workspace->settings['coida_registration_number'] ?? null,
+                'industry' => $workspace->settings['industry'] ?? null,
             ],
             'incident' => [
                 'reference' => $incident->reference,

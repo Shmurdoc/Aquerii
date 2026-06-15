@@ -23,8 +23,8 @@ class SetWorkspaceTenant
         $workspaceId = $this->resolveWorkspaceId($request);
 
         if ($workspaceId) {
-            // If header-driven, verify the user is actually a member of this workspace
-            if ($request->hasHeader('X-Workspace-ID') && $user = $request->user()) {
+            // Verify the user is actually a member of this workspace
+            if ($user = $request->user()) {
                 $isMember = DB::table('workspace_members')
                     ->where('workspace_id', $workspaceId)
                     ->where('user_id', $user->id)

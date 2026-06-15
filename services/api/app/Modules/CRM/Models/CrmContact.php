@@ -46,9 +46,9 @@ class CrmContact extends Model
         ];
     }
 
-    public function getFullNameAttribute(): ?string
+    public function getFullNameAttribute(): string
     {
-        return trim("{$this->first_name} {$this->last_name}") ?: null;
+        return trim("{$this->first_name} {$this->last_name}") ?: 'Unnamed Contact';
     }
 
     public function workspace()

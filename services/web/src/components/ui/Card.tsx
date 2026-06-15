@@ -1,133 +1,40 @@
-import { forwardRef, type ReactNode, type MouseEventHandler, type CSSProperties, type ForwardRefExoticComponent, type RefAttributes } from 'react'
-import { clsx } from 'clsx'
+import { HTMLAttributes, forwardRef } from 'react'
 
-type CardVariant = 'default' | 'interactive' | 'glass' | 'elevated' | 'outline'
-type CardPadding = 'none' | 'sm' | 'md' | 'lg'
+type Variant = 'default' | 'glass' | 'interactive'
 
-type CardProps = {
-  variant?: CardVariant
-  padding?: CardPadding
-  onClick?: MouseEventHandler
-  children?: ReactNode
-  className?: string
-  style?: CSSProperties
-  role?: string
-  'aria-label'?: string
+interface Props extends HTMLAttributes<HTMLDivElement> {
+  variant?: Variant
+  padding?: string
 }
 
-const variantStyles: Record<CardVariant, string> = {
-  default:
-    'bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)]',
-  interactive:
-    'bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] cursor-pointer hover:border-[var(--color-glass-border-hover)] hover:bg-[var(--color-bg-elevated)] active:scale-[0.998]',
-  glass:
-    'bg-[var(--color-glass-bg)] border border-[var(--color-glass-border)] backdrop-blur-md',
-  elevated:
-    'bg-[var(--color-bg-elevated)] border border-[var(--color-glass-border)] shadow-[var(--shadow-lg)]',
-  outline:
-    'bg-transparent border border-[var(--color-glass-border)]',
+const variantStyles: Record<Variant, string> = {
+  default: 'bg-gray-900 border border-gray-800',
+  glass:   'bg-white/5 backdrop-blur-lg border border-white/10',
+  interactive: 'bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] hover:bg-[var(--color-bg-hover)] hover:border-[var(--color-glass-border-hover)] cursor-pointer transition-colors',
 }
 
-const paddingStyles: Record<CardPadding, string> = {
-  none: 'p-0',
-  sm: 'p-3',
-  md: 'p-4',
-  lg: 'p-6',
-}
-
-const baseTransition =
-  'transition-[background,border-color,box-shadow,transform] duration-200 ease-out'
-
-export const Card = forwardRef<HTMLDivElement, CardProps>(
-  (
-    {
-      variant = 'default',
-      padding = 'md',
-      onClick,
-      children,
-      className,
-      style,
-      role,
-      ...props
-    },
-    ref,
-  ) => {
-    return (
-      <div
-        ref={ref}
-        onClick={onClick}
-        role={role ?? (onClick ? 'button' : undefined)}
-        tabIndex={onClick ? 0 : undefined}
-        onKeyDown={
-          onClick
-            ? (e: React.KeyboardEvent) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  ;(onClick as any)(e)
-                }
-              }
-            : undefined
-        }
-        style={style}
-        className={clsx(
-          'rounded-md',
-          baseTransition,
-          variantStyles[variant],
-          paddingStyles[padding],
-          className,
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    )
-  },
+export const Card = forwardRef<HTMLDivElement, Props>(
+  ({ variant = 'default', className = '', padding: paddingVal, children, ...props }, ref) => (
+    <div ref={ref} className={`rounded-xl ${paddingVal ?? 'p-6'} ${variantStyles[variant]} ${className}`} {...props}>
+      {children}
+    </div>
+  )
 )
 
-type CardSectionProps = {
-  children?: ReactNode
-  className?: string
+Card.displayName = 'Card'
+
+Card.Header = CardHeader
+Card.Body = CardBody
+Card.Footer = CardFooter
+
+export function CardHeader({ className = '', ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={`mb-4 ${className}`} {...props} />
 }
 
-type CardComponent = ForwardRefExoticComponent<
-  CardProps & RefAttributes<HTMLDivElement>
-> & {
-  Header: typeof CardHeader
-  Body: typeof CardBody
-  Footer: typeof CardFooter
+export function CardBody({ className = '', ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={className} {...props} />
 }
 
-function CardHeader({ children, className }: CardSectionProps) {
-  return (
-    <div className={clsx('flex items-center gap-3', className)}>
-      {children}
-    </div>
-  )
+export function CardFooter({ className = '', ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={`mt-4 pt-4 border-t border-gray-800 ${className}`} {...props} />
 }
-
-function CardBody({ children, className }: CardSectionProps) {
-  return (
-    <div className={clsx(className)}>
-      {children}
-    </div>
-  )
-}
-
-function CardFooter({ children, className }: CardSectionProps) {
-  return (
-    <div
-      className={clsx(
-        'flex items-center gap-3 mt-4 pt-3 border-t border-[var(--color-glass-border)]',
-        className,
-      )}
-    >
-      {children}
-    </div>
-  )
-}
-
-/* eslint-disable no-extra-semi */
-;(Card as any).Header = CardHeader
-;(Card as any).Body = CardBody
-;(Card as any).Footer = CardFooter
-/* eslint-enable no-extra-semi */

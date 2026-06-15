@@ -9,7 +9,7 @@ import {
 import { format, isToday, isYesterday, isSameDay } from 'date-fns'
 import toast from 'react-hot-toast'
 import clsx from 'clsx'
-import DOMPurify from 'dompurify'
+
 import { Button, Badge, MentionInput } from '@/components/ui'
 
 interface Props {
@@ -282,17 +282,9 @@ export default function ThreadView({ workspaceId, threadId, accounts, onClose }:
                       )}
 
                       {/* Body */}
-                      {email.body_html ? (
-                        <div
-                          className="prose prose-invert prose-sm max-w-none [&_blockquote]:border-l-2 [&_blockquote]:border-[var(--color-glass-border)] [&_blockquote]:pl-3 [&_blockquote]:ml-2 [&_blockquote]:text-[var(--color-text-muted)] [&_a]:text-[var(--color-accent-text)]"
-                          style={{ color: 'var(--color-text-secondary)' }}
-                          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(email.body_html) }}
-                        />
-                      ) : (
-                        <p className="text-sm whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                          {email.body_text ?? '(no content)'}
-                        </p>
-                      )}
+                      <p className="text-sm whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                        {email.body_text ?? '(no content)'}
+                      </p>
 
                       {/* AI suggestions */}
                       {(email.ai_suggestions ?? []).filter(s => s.status === 'pending').length > 0 && (

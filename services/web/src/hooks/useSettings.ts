@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { settingsApi, WorkspaceMember, BillingInfo, UserProfile, MemberRole, AuditLogEntry, SessionInfo, NotificationPreferences } from '@/lib/settings'
+import { settingsApi, WorkspaceMember, BillingInfo, UserProfile, MemberRole, AuditLogEntry, SessionInfo, NotificationPreferences, WorkspaceStorage } from '@/lib/settings'
 import { useAuthStore } from '@/stores/authStore'
 import toast from 'react-hot-toast'
 
@@ -154,6 +154,17 @@ export function useChangePassword() {
     mutationFn: (payload) => settingsApi.changePassword(payload),
     onSuccess: () => toast.success('Password changed'),
     onError: (e) => toast.error(e.message),
+  })
+}
+
+// ─── Storage ─────────────────────────────────────────────────────────────────
+
+export function useStorage() {
+  return useQuery<WorkspaceStorage>({
+    queryKey: ['workspace', useAuthStore.getState().workspace?.id, 'storage'],
+    queryFn: () => settingsApi.getStorage(),
+    enabled: !!useAuthStore.getState().workspace?.id,
+    staleTime: 30_000,
   })
 }
 

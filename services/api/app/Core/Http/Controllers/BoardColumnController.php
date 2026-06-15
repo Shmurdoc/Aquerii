@@ -13,7 +13,7 @@ class BoardColumnController extends Controller
     // GET /workspaces/{workspace}/boards/{board}/columns
     public function index(Workspace $workspace, string $boardId): JsonResponse
     {
-        $columns = DB::table('columns')
+        $columns = DB::table('board_columns')
             ->where('board_id', $boardId)
             ->orderBy('position')
             ->get();
@@ -29,10 +29,10 @@ class BoardColumnController extends Controller
             'type' => 'required|string|in:text,number,date,select,people,status',
         ]);
 
-        $maxPos = DB::table('columns')->where('board_id', $boardId)->max('position') ?? 0;
+        $maxPos = DB::table('board_columns')->where('board_id', $boardId)->max('position') ?? 0;
         $id = Str::uuid()->toString();
 
-        DB::table('columns')->insert([
+        DB::table('board_columns')->insert([
             'id' => $id,
             'board_id' => $boardId,
             'title' => $validated['title'],
@@ -43,6 +43,17 @@ class BoardColumnController extends Controller
         ]);
 
         return response()->json(['data' => ['id' => $id]], 201);
+    }
+
+    // GET /workspaces/{workspace}/boards/{board}/columns/{column}
+    public function show(Workspace $workspace, string $boardId, string $columnId): JsonResponse
+    {
+        $column = DB::table('board_columns')
+            ->where('id', $columnId)
+            ->where('board_id', $boardId)
+            ->firstOrFail();
+
+        return response()->json(['data' => $column]);
     }
 
     // PATCH /workspaces/{workspace}/boards/{board}/columns/{column}
@@ -59,7 +70,7 @@ class BoardColumnController extends Controller
         }
         $validated['updated_at'] = now();
 
-        DB::table('columns')
+        DB::table('board_columns')
             ->where('id', $columnId)
             ->where('board_id', $boardId)
             ->update($validated);
@@ -70,7 +81,7 @@ class BoardColumnController extends Controller
     // DELETE /workspaces/{workspace}/boards/{board}/columns/{column}
     public function destroy(Workspace $workspace, string $boardId, string $columnId): JsonResponse
     {
-        DB::table('columns')
+        DB::table('board_columns')
             ->where('id', $columnId)
             ->where('board_id', $boardId)
             ->delete();

@@ -1,182 +1,78 @@
-import { forwardRef, useId, useState, type InputHTMLAttributes, type ReactNode } from 'react'
-import { type LucideIcon } from 'lucide-react'
-import { X, Eye, EyeOff, AlertCircle } from 'lucide-react'
-import { clsx } from 'clsx'
+import { InputHTMLAttributes, forwardRef, useState } from 'react'
 
-type InputSize = 'sm' | 'md' | 'lg'
-
-type InputProps = {
+interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string
   error?: string
-  helperText?: string
-  size?: InputSize
-  icon?: LucideIcon
-  trailingIcon?: LucideIcon
+  icon?: React.ReactNode
   clearable?: boolean
   onClear?: () => void
+  size?: 'sm' | 'md' | 'lg'
   containerClassName?: string
-  hint?: ReactNode
-} & Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>
-
-const sizeStyles: Record<InputSize, string> = {
-  sm: 'h-8 text-body-sm',
-  md: 'h-10 text-body',
-  lg: 'h-12 text-body-lg',
+  helperText?: string
 }
 
-const iconSizes: Record<InputSize, number> = { sm: 14, md: 16, lg: 18 }
-const labelSizeStyles: Record<InputSize, string> = {
-  sm: 'text-label',
-  md: 'text-body-sm',
-  lg: 'text-body',
+const sizeStyles = {
+  sm: 'px-3 py-1.5 text-xs',
+  md: 'px-3 py-2 text-sm',
+  lg: 'px-4 py-3 text-base',
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
-  (
-    {
-      label,
-      error,
-      helperText,
-      hint,
-      size = 'md',
-      icon: Icon,
-      trailingIcon: TrailingIcon,
-      clearable,
-      onClear,
-      containerClassName,
-      className,
-      type,
-      onChange,
-      value,
-      id,
-      ...props
-    },
-    ref,
-  ) => {
-    const [showPassword, setShowPassword] = useState(false)
-    const autoId = useId()
-    const inputId = id ?? autoId
-    const isPassword = type === 'password'
-    const hasValue = value !== undefined && value !== '' && value !== null
-    const invalid = !!error
+export const Input = forwardRef<HTMLInputElement, Props>(
+  ({ label, error, icon, clearable, onClear, size = 'md', className = '', containerClassName, helperText, onChange, value, ...props }, ref) => {
+    const [localValue, setLocalValue] = useState(value ?? '')
+
+    const controlledValue = value !== undefined ? value : localValue
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (value === undefined) setLocalValue(e.target.value)
+      onChange?.(e)
+    }
+
+    const handleClear = () => {
+      onClear?.()
+      if (value === undefined) setLocalValue('')
+      if (onChange) {
+        const native = new Event('change', { bubbles: true })
+        Object.defineProperty(native, 'target', {
+          value: { value: '' },
+          writable: false,
+        })
+        onChange(native as unknown as React.ChangeEvent<HTMLInputElement>)
+      }
+    }
 
     return (
-      <div className={clsx('flex flex-col gap-1.5', containerClassName)}>
-        {label && (
-          <label
-            htmlFor={inputId}
-            className={clsx(
-              'font-medium text-[var(--color-text-secondary)]',
-              labelSizeStyles[size],
-            )}
-          >
-            {label}
-          </label>
-        )}
-        <div
-          className={clsx(
-            'relative group rounded-md',
-            'bg-[var(--color-bg-input)]',
-            'border transition-[border-color,box-shadow,background] duration-200 ease-out',
-            invalid
-              ? 'border-[var(--color-status-blocked)] shadow-[0_0_0_3px_rgba(239,68,68,0.15)]'
-              : 'border-[var(--color-glass-border)]',
-            'focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_3px_var(--color-accent-light)] focus-within:bg-[var(--color-bg-elevated)]',
-            'hover:border-[var(--color-glass-border-hover)]',
-          )}
-        >
-          {Icon && (
-            <div
-              className={clsx(
-                'absolute inset-y-0 left-0 flex items-center pointer-events-none',
-                size === 'sm' ? 'pl-2.5' : 'pl-3',
-              )}
-            >
-              <Icon
-                size={iconSizes[size]}
-                className="text-[var(--color-text-muted)] transition-colors group-focus-within:text-[var(--color-accent-text)]"
-                aria-hidden="true"
-              />
-            </div>
+      <div className={containerClassName}>
+        {label && <label className="block text-sm text-gray-400 mb-1">{label}</label>}
+        <div className="relative">
+          {icon && (
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 pointer-events-none">
+              {icon}
+            </span>
           )}
           <input
             ref={ref}
-            id={inputId}
-            type={isPassword && showPassword ? 'text' : type}
-            value={value}
-            onChange={onChange}
-            className={clsx(
-              'peer w-full bg-transparent text-[var(--color-text-primary)]',
-              'placeholder:text-[var(--color-text-muted)]',
-              'border-0 outline-none rounded-md',
-              sizeStyles[size],
-              Icon ? (size === 'sm' ? 'pl-8' : 'pl-10') : (size === 'sm' ? 'pl-3' : 'pl-3.5'),
-              (clearable && hasValue) || isPassword || TrailingIcon
-                ? (size === 'sm' ? 'pr-8' : 'pr-10')
-                : (size === 'sm' ? 'pr-3' : 'pr-3.5'),
-              className,
-            )}
-            aria-invalid={invalid}
-            aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
+            value={controlledValue}
+            onChange={handleChange}
+            className={`w-full bg-gray-800 border rounded-lg text-white outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-500 ${error ? 'border-red-500' : 'border-gray-700'} ${icon ? 'pl-10' : ''} ${clearable ? 'pr-8' : ''} ${sizeStyles[size]} ${className}`}
             {...props}
           />
-          <div
-            className={clsx(
-              'absolute inset-y-0 right-0 flex items-center gap-1',
-              size === 'sm' ? 'pr-2' : 'pr-2.5',
-            )}
-          >
-            {clearable && hasValue && !isPassword && (
-              <button
-                type="button"
-                onClick={onClear}
-                className="p-0.5 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors"
-                tabIndex={-1}
-                aria-label="Clear input"
-              >
-                <X size={iconSizes[size]} />
-              </button>
-            )}
-            {isPassword && (
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="p-0.5 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors"
-                tabIndex={-1}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? <EyeOff size={iconSizes[size]} /> : <Eye size={iconSizes[size]} />}
-              </button>
-            )}
-            {!clearable && !isPassword && TrailingIcon && (
-              <TrailingIcon
-                size={iconSizes[size]}
-                className="text-[var(--color-text-muted)]"
-                aria-hidden="true"
-              />
-            )}
-          </div>
+          {clearable && controlledValue && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500 hover:text-gray-300"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
         </div>
-        {error && (
-          <span
-            id={`${inputId}-error`}
-            className="flex items-center gap-1.5 text-label text-[var(--color-status-blocked)] animate-fade-in"
-            role="alert"
-          >
-            <AlertCircle size={12} aria-hidden="true" />
-            {error}
-          </span>
-        )}
-        {helperText && !error && (
-          <span
-            id={`${inputId}-helper`}
-            className="text-label text-[var(--color-text-muted)]"
-          >
-            {helperText}
-          </span>
-        )}
-        {hint}
+        {error && <p className="text-red-400 text-xs mt-1">{error}</p>}
+        {helperText && !error && <p className="text-gray-500 text-xs mt-1">{helperText}</p>}
       </div>
     )
-  },
+  }
 )
+
+Input.displayName = 'Input'

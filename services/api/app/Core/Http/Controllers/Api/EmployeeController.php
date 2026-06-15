@@ -3,6 +3,10 @@
 namespace App\Core\Http\Controllers\Api;
 
 use App\Core\Http\Controllers\Controller;
+use App\Core\Models\WorkspaceGeofence;
+use App\Services\AlertService;
+use App\Services\FatigueService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -67,10 +71,41 @@ class EmployeeController extends Controller
             return response()->json(['message' => 'Already clocked in today.'], 409);
         }
 
+        DB::table('attendance_logs')
+            ->where('workspace_id', $workspaceId)
+            ->where('user_id', $userId)
+            ->whereNull('clocked_out_at')
+            ->where('clocked_in_at', '<', now()->subHours(18))
+            ->update([
+                'clocked_out_at' => DB::raw('clocked_in_at + INTERVAL \'18 hours\''),
+                'clock_out_source' => 'system_forced',
+                'updated_at' => now(),
+            ]);
+
+        $overlapping = DB::table('attendance_logs')
+            ->where('workspace_id', $workspaceId)
+            ->where('user_id', $userId)
+            ->whereNotNull('clocked_out_at')
+            ->where('clocked_in_at', '>=', now()->subHours(24))
+            ->orderByDesc('clocked_in_at')
+            ->first();
+
+        $doubleShiftViolation = false;
+        if ($overlapping) {
+            $shiftDuration = Carbon::parse($overlapping->clocked_out_at)
+                ->diffInHours(Carbon::parse($overlapping->clocked_in_at));
+            if ($shiftDuration >= 16) {
+                $doubleShiftViolation = true;
+            }
+        }
+
+        $fatigue = (new FatigueService)->check($userId, $workspaceId);
+
         $id = Str::uuid();
         $now = now();
         $isLate = $now->gt(now()->setTime(9, 15, 0));
-        DB::table('attendance_logs')->insert([
+
+        $data = [
             'id' => $id,
             'workspace_id' => $workspaceId,
             'user_id' => $userId,
@@ -78,11 +113,74 @@ class EmployeeController extends Controller
             'status' => $isLate ? 'late' : 'present',
             'created_at' => $now,
             'updated_at' => $now,
-        ]);
+        ];
+
+        if ($request->filled('lat') && $request->filled('lng')) {
+            $lat = (float) $request->input('lat');
+            $lng = (float) $request->input('lng');
+            $data['clocked_in_lat'] = $lat;
+            $data['clocked_in_lng'] = $lng;
+        }
+
+        $geofenceStatus = null;
+        $bufferMeters = (float) config('geofence.buffer_meters', 50);
+
+        if (isset($lat, $lng)) {
+            $geofences = WorkspaceGeofence::where('workspace_id', $workspaceId)
+                ->where('active', true)
+                ->get();
+
+            $outsideAll = true;
+            foreach ($geofences as $geofence) {
+                $effectiveRadius = (float) $geofence->radius_meters + $bufferMeters;
+                $distance = $this->haversineDistance($lat, $lng, (float) $geofence->lat, (float) $geofence->lng);
+                if ($distance <= $effectiveRadius) {
+                    $outsideAll = false;
+                    break;
+                }
+            }
+
+            $geofenceStatus = $geofences->isNotEmpty() && $outsideAll ? 'outside' : 'inside';
+
+            if ($geofenceStatus === 'outside') {
+                (new AlertService)->create(
+                    workspaceId: $workspaceId,
+                    userId: $userId,
+                    type: 'geofence',
+                    severity: 'warning',
+                    title: 'Clock-in outside geofence',
+                    message: "User clocked in at ({$lat}, {$lng}) which is outside all defined geofences (buffer: {$bufferMeters}m).",
+                );
+            }
+        }
+
+        DB::table('attendance_logs')->insert($data);
 
         $log = DB::table('attendance_logs')->where('id', $id)->first();
 
-        return response()->json(['attendance' => $log]);
+        $response = ['attendance' => $log];
+
+        if ($geofenceStatus !== null) {
+            $response['geofence_status'] = $geofenceStatus;
+        }
+
+        if ($doubleShiftViolation) {
+            $response['double_shift_warning'] = 'Previous shift exceeded 16 hours. Possible double-shift violation.';
+        }
+
+        if ($fatigue->soft_blocked) {
+            $response['fatigue_warning'] = $fatigue->observation_period
+                ? 'Worker returning after ' . $fatigue->absent_days . ' days absence. ' . $fatigue->observation_period . '-day observation period active.'
+                : '12+ hours worked in the last 24h.';
+            $response['fatigue'] = [
+                'hours_worked' => $fatigue->hours_worked,
+                'soft_blocked' => true,
+                'absent_days' => $fatigue->absent_days,
+                'observation_period' => $fatigue->observation_period,
+            ];
+        }
+
+        return response()->json($response);
     }
 
     public function clockOut(Request $request, string $workspaceId)
@@ -100,9 +198,16 @@ class EmployeeController extends Controller
             return response()->json(['message' => 'Not clocked in today.'], 404);
         }
 
+        $data = ['clocked_out_at' => now(), 'updated_at' => now()];
+
+        if ($request->filled('lat') && $request->filled('lng')) {
+            $data['clocked_out_lat'] = $request->input('lat');
+            $data['clocked_out_lng'] = $request->input('lng');
+        }
+
         DB::table('attendance_logs')
             ->where('id', $log->id)
-            ->update(['clocked_out_at' => now(), 'updated_at' => now()]);
+            ->update($data);
 
         $log = DB::table('attendance_logs')->where('id', $log->id)->first();
 
@@ -293,5 +398,17 @@ class EmployeeController extends Controller
         }
 
         return response()->json(['balances' => $balances]);
+    }
+
+    private function haversineDistance(float $lat1, float $lng1, float $lat2, float $lng2): float
+    {
+        $earthRadius = 6371000;
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLng = deg2rad($lng2 - $lng1);
+        $a = sin($dLat / 2) * sin($dLat / 2)
+            + cos(deg2rad($lat1)) * cos(deg2rad($lat2))
+            * sin($dLng / 2) * sin($dLng / 2);
+
+        return $earthRadius * 2 * atan2(sqrt($a), sqrt(1 - $a));
     }
 }

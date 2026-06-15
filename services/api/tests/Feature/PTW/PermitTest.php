@@ -133,7 +133,8 @@ it('rejects invalid permit type', function () {
             'ppe_required' => 'Test',
         ]
     )->assertStatus(422)
-        ->assertJsonValidationErrors(['type']);
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR')
+        ->assertJsonStructure(['error' => ['details' => ['type']]]);
 });
 
 it('shows a permit with relations and available transitions', function () {
@@ -171,8 +172,9 @@ it('updates a draft permit and refuses to update a non-draft permit', function (
     $this->patchJson(
         "/api/workspaces/{$this->workspace->id}/ptw/permits/{$issued->id}",
         ['title' => 'Cannot edit']
-    )->assertStatus(422)
-        ->assertJsonValidationErrors(['status']);
+    )        ->assertStatus(422)
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR')
+        ->assertJsonStructure(['error' => ['details' => ['status']]]);
 });
 
 it('deletes only draft permits', function () {

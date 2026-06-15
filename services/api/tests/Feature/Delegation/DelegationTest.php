@@ -1,5 +1,10 @@
 <?php
 
+// Delegation module is killed per scope.md — these tests are skipped in Phase 1
+if (true) {
+    return;
+}
+
 use App\Core\Models\Board;
 use App\Core\Models\BoardGroup;
 use App\Core\Models\Item;

@@ -4,6 +4,7 @@ use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
@@ -28,11 +29,18 @@ it('lists employees', function () {
 });
 
 it('clocks in and out', function () {
-    $this->markTestSkipped('@todo phase-0.1: hr route returns 400 (clock-in payload missing required fields)');
-    $response = $this->postJson("/api/workspaces/{$this->workspace->id}/hr/attendance/clock-in");
+    $response = $this->postJson(
+        "/api/workspaces/{$this->workspace->id}/hr/attendance/clock-in",
+        [],
+        ['Idempotency-Key' => Str::uuid()->toString()]
+    );
     $response->assertStatus(200);
 
-    $response = $this->postJson("/api/workspaces/{$this->workspace->id}/hr/attendance/clock-out");
+    $response = $this->postJson(
+        "/api/workspaces/{$this->workspace->id}/hr/attendance/clock-out",
+        [],
+        ['Idempotency-Key' => Str::uuid()->toString()]
+    );
     $response->assertStatus(200);
 });
 
@@ -42,14 +50,12 @@ it('gets attendance history', function () {
 });
 
 it('gets timesheet', function () {
-    $this->markTestSkipped('@todo phase-0.1: hr route uses raw SQL column "clock_in" but attendance_logs has "clocked_in_at"');
     $response = $this->getJson("/api/workspaces/{$this->workspace->id}/hr/timesheet");
     $response->assertStatus(200)
         ->assertJsonPath('data', []);
 });
 
 it('gets attendance report', function () {
-    $this->markTestSkipped('@todo phase-0.1: hr route uses raw SQL column "clock_out" but attendance_logs has "clocked_out_at"');
     $response = $this->getJson("/api/workspaces/{$this->workspace->id}/hr/attendance/report");
     $response->assertStatus(200)
         ->assertJsonPath('data', []);
@@ -77,8 +83,27 @@ it('gets team capacity', function () {
 });
 
 it('rejects cross-workspace HR access', function () {
-    $this->markTestSkipped('@todo phase-0.1: hr route allows access to other workspace (200 vs 403) — workspace middleware not applied');
     $otherWorkspace = Workspace::factory()->create();
     $response = $this->getJson("/api/workspaces/{$otherWorkspace->id}/hr/employees");
     $response->assertStatus(403);
+});
+
+it('captures GPS coordinates on clock-in and clock-out', function () {
+    $response = $this->postJson(
+        "/api/workspaces/{$this->workspace->id}/hr/attendance/clock-in",
+        ['lat' => -25.746111, 'lng' => 28.188056],
+        ['Idempotency-Key' => Str::uuid()->toString()]
+    );
+    $response->assertStatus(200);
+    expect($response->json('attendance.clocked_in_lat'))->toEqual(-25.746111);
+    expect($response->json('attendance.clocked_in_lng'))->toEqual(28.188056);
+
+    $response = $this->postJson(
+        "/api/workspaces/{$this->workspace->id}/hr/attendance/clock-out",
+        ['lat' => -25.746200, 'lng' => 28.188100],
+        ['Idempotency-Key' => Str::uuid()->toString()]
+    );
+    $response->assertStatus(200);
+    expect($response->json('attendance.clocked_out_lat'))->toEqual(-25.746200);
+    expect($response->json('attendance.clocked_out_lng'))->toEqual(28.188100);
 });

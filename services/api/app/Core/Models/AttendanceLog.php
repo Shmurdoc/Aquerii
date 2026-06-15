@@ -17,6 +17,11 @@ class AttendanceLog extends Model
         'user_id',
         'clocked_in_at',
         'clocked_out_at',
+        'clocked_in_lat',
+        'clocked_in_lng',
+        'clocked_out_lat',
+        'clocked_out_lng',
+        'clock_out_source',
         'status',
         'notes',
     ];

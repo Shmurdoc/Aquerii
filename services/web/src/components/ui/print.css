@@ -170,6 +170,39 @@
     font-size: 8pt !important;
   }
 
+    /* ── Visitor badge print (label format) ── */
+  .visitor-badge {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90mm !important;
+    height: 55mm !important;
+    padding: 6mm 4mm !important;
+    margin: 0 !important;
+    border: 2px solid #000 !important;
+    border-radius: 0 !important;
+    background: white !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: none !important;
+    page-break-after: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .visitor-badge * {
+    color: #000 !important;
+    background: transparent !important;
+  }
+
+  .visitor-badge p,
+  .visitor-badge span {
+    color: #000 !important;
+    font-family: 'Arial', 'Helvetica', sans-serif !important;
+  }
+
   /* ── Print button stays visible ── */
   .print-button {
     display: inline-flex !important;

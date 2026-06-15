@@ -44,6 +44,8 @@ class Permit extends Model
 
     public const STATUS_SUSPENDED = 'suspended';
 
+    public const STATUS_HSSE_REVIEWED = 'hsse_reviewed';
+
     public const STATUS_CLOSED = 'closed';
 
     public const STATUS_REJECTED = 'rejected';
@@ -73,7 +75,8 @@ class Permit extends Model
 
     public static array $statuses = [
         self::STATUS_DRAFT, self::STATUS_REQUESTED, self::STATUS_APPROVED,
-        self::STATUS_ISSUED, self::STATUS_ACTIVE, self::STATUS_SUSPENDED,
+        self::STATUS_HSSE_REVIEWED, self::STATUS_ISSUED, self::STATUS_ACTIVE,
+        self::STATUS_SUSPENDED,
         self::STATUS_CLOSED, self::STATUS_REJECTED, self::STATUS_EXPIRED,
     ];
 
@@ -87,9 +90,10 @@ class Permit extends Model
         'issuer_id', 'approver_id', 'holder_id', 'recipient_id',
         'valid_from', 'valid_until', 'max_extension_minutes', 'extensions_used_minutes',
         'risk_level', 'pre_conditions', 'work_method_statement', 'ppe_required',
-        'requested_at', 'approved_at', 'issued_at', 'activated_at',
+        'requested_at', 'approved_at', 'hsse_reviewed_at', 'issued_at', 'activated_at',
         'suspended_at', 'closed_at', 'closed_by', 'closure_notes',
         'rejection_reason', 'suspension_reason',
+        'updated_at',
     ];
 
     protected static function newFactory(): PermitFactory
@@ -106,6 +110,7 @@ class Permit extends Model
             'valid_until' => 'datetime',
             'requested_at' => 'datetime',
             'approved_at' => 'datetime',
+            'hsse_reviewed_at' => 'datetime',
             'issued_at' => 'datetime',
             'activated_at' => 'datetime',
             'suspended_at' => 'datetime',

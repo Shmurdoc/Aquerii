@@ -41,20 +41,10 @@ import TicketDetailPage from '@/pages/support/TicketDetailPage'
 import KnowledgeBasePage from '@/pages/support/KnowledgeBasePage'
 import SlaPage from '@/pages/support/SlaPage'
 import DashboardPage from '@/pages/DashboardPage'
-import CampaignsPage from '@/pages/marketing/CampaignsPage'
-import EmailTemplatesPage from '@/pages/marketing/EmailTemplatesPage'
-import SegmentsPage from '@/pages/marketing/SegmentsPage'
 import SettingsPage      from '@/pages/settings/SettingsPage'
 import EmployeePage      from '@/pages/employees/EmployeePage'
 import InboxPage         from '@/pages/inbox/InboxPage'
-import InvoicingPage     from '@/pages/invoicing/InvoicingPage'
-import PurchasingPage    from '@/pages/purchasing/PurchasingPage'
-import SalesPage         from '@/pages/sales/SalesPage'
-import InventoryPage     from '@/pages/inventory/InventoryPage'
-import JobCardsPage      from '@/pages/jobcards/JobCardsPage'
-import DelegationsPage   from '@/pages/delegations/DelegationsPage'
 import MeetingsPage      from '@/pages/meetings/MeetingsPage'
-import AccountingPage    from '@/pages/accounting/AccountingPage'
 import FinancialApprovalsPage from '@/pages/erp/FinancialApprovalsPage'
 import ReportSchedulesPage from '@/pages/erp/ReportSchedulesPage'
 import GoalsPage         from '@/pages/erp/GoalsPage'
@@ -165,19 +155,8 @@ export default function App() {
           <Route path="/support/tickets/:ticketId" element={<TicketDetailPage />} />
           <Route path="/support/knowledge-base"  element={<KnowledgeBasePage />} />
           <Route path="/support/slas"            element={<SlaPage />} />
-          <Route path="/marketing" element={<Navigate to="/marketing/campaigns" replace />} />
-          <Route path="/marketing/campaigns"       element={<CampaignsPage />} />
-          <Route path="/marketing/email-templates" element={<EmailTemplatesPage />} />
-          <Route path="/marketing/segments"        element={<SegmentsPage />} />
-          <Route path="/erp"              element={<Navigate to="/erp/invoicing" replace />} />
+          <Route path="/erp" element={<Navigate to="/erp/financial-approvals" replace />} />
           <Route element={<ERPLayout />}>
-            <Route path="/erp/invoicing"   element={<InvoicingPage />} />
-            <Route path="/erp/purchasing"  element={<PurchasingPage />} />
-            <Route path="/erp/sales"       element={<SalesPage />} />
-            <Route path="/erp/inventory"   element={<InventoryPage />} />
-            <Route path="/erp/job-cards"   element={<JobCardsPage />} />
-            <Route path="/erp/delegations" element={<DelegationsPage />} />
-            <Route path="/erp/accounting"  element={<AccountingPage />} />
             <Route path="/erp/financial-approvals" element={<FinancialApprovalsPage />} />
             <Route path="/erp/report-schedules" element={<ReportSchedulesPage />} />
             <Route path="/erp/goals"       element={<GoalsPage />} />

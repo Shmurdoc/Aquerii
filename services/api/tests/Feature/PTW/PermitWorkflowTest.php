@@ -5,6 +5,7 @@ use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use App\Modules\PTW\Models\Permit;
 use App\Modules\PTW\Services\PermitWorkflowService;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
@@ -33,6 +34,11 @@ it('moves a permit through the full happy path', function () {
         ->assertStatus(200)
         ->assertJsonPath('data.status', 'approved')
         ->assertJsonPath('data.approved_at', fn ($v) => $v !== null);
+
+    $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/hsse-review")
+        ->assertStatus(200)
+        ->assertJsonPath('data.status', 'hsse_reviewed')
+        ->assertJsonPath('data.hsse_reviewed_at', fn ($v) => $v !== null);
 
     $holder = User::factory()->create();
     WorkspaceMember::factory()->create([
@@ -86,7 +92,8 @@ it('rejects a transition from an illegal source state', function () {
 
     $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/approve")
         ->assertStatus(422)
-        ->assertJsonValidationErrors(['status']);
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR')
+        ->assertJsonStructure(['error' => ['details' => ['status']]]);
 });
 
 it('requires a reason for reject', function () {
@@ -98,7 +105,8 @@ it('requires a reason for reject', function () {
 
     $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/reject")
         ->assertStatus(422)
-        ->assertJsonValidationErrors(['reason']);
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR')
+        ->assertJsonStructure(['error' => ['details' => ['reason']]]);
 
     $this->postJson(
         "/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/reject",
@@ -117,7 +125,8 @@ it('requires a reason for suspend', function () {
 
     $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/suspend")
         ->assertStatus(422)
-        ->assertJsonValidationErrors(['reason']);
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR')
+        ->assertJsonStructure(['error' => ['details' => ['reason']]]);
 });
 
 it('refuses to activate a permit past its validity window', function () {
@@ -131,7 +140,8 @@ it('refuses to activate a permit past its validity window', function () {
 
     $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/activate")
         ->assertStatus(422)
-        ->assertJsonValidationErrors(['valid_until']);
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR')
+        ->assertJsonStructure(['error' => ['details' => ['valid_until']]]);
 });
 
 it('refuses to issue without a future valid_until', function () {
@@ -145,7 +155,8 @@ it('refuses to issue without a future valid_until', function () {
         "/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/issue",
         ['valid_until' => now()->subHour()->toIso8601String()]
     )->assertStatus(422)
-        ->assertJsonValidationErrors(['valid_until']);
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR')
+        ->assertJsonStructure(['error' => ['details' => ['valid_until']]]);
 });
 
 it('rejects a viewer from performing any state transition', function () {
@@ -165,7 +176,8 @@ it('rejects a viewer from performing any state transition', function () {
 
     $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/request")
         ->assertStatus(422)
-        ->assertJsonValidationErrors(['actor']);
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR')
+        ->assertJsonStructure(['error' => ['details' => ['actor']]]);
 });
 
 it('lists the available transitions for the current user', function () {
@@ -201,6 +213,19 @@ it('writes an audit log entry on every transition', function () {
     expect($log->workspace_id)->toBe($this->workspace->id);
 });
 
+it('requires approval before HSSE review', function () {
+    $permit = Permit::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'issuer_id' => $this->user->id,
+        'status' => Permit::STATUS_REQUESTED,
+    ]);
+
+    $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/hsse-review")
+        ->assertStatus(422)
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR')
+        ->assertJsonStructure(['error' => ['details' => ['status']]]);
+});
+
 it('exposes a service-level canTransition helper', function () {
     $permit = Permit::factory()->create([
         'workspace_id' => $this->workspace->id,
@@ -211,5 +236,116 @@ it('exposes a service-level canTransition helper', function () {
 
     expect($svc->canTransition($permit, 'request', $this->user))->toBeTrue();
     expect($svc->canTransition($permit, 'approve', $this->user))->toBeFalse();
+    expect($svc->canTransition($permit, 'hsse_review', $this->user))->toBeFalse();
     expect($svc->canTransition($permit, 'close', $this->user))->toBeFalse();
+});
+
+it('prevents activation when holder is fatigue-hard-blocked', function () {
+    $holder = User::factory()->create();
+    WorkspaceMember::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $holder->id,
+        'role' => 'member',
+    ]);
+    DB::table('attendance_logs')->insert([
+        'id' => Str::uuid(),
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $holder->id,
+        'clocked_in_at' => now()->subHours(18),
+        'clocked_out_at' => now()->subHours(1),
+        'status' => 'present',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $permit = Permit::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'issuer_id' => $this->user->id,
+        'holder_id' => $holder->id,
+        'status' => Permit::STATUS_ISSUED,
+    ]);
+
+    Sanctum::actingAs($holder);
+
+    $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/activate")
+        ->assertStatus(422)
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR')
+        ->assertJsonStructure(['error' => ['details' => ['fatigue']]]);
+});
+
+it('rejects resume from a non-suspended state', function () {
+    $permit = Permit::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'issuer_id' => $this->user->id,
+        'status' => Permit::STATUS_ACTIVE,
+    ]);
+
+    $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/resume")
+        ->assertStatus(422)
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR');
+});
+
+it('rejects close from a non-closable state', function () {
+    $permit = Permit::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'issuer_id' => $this->user->id,
+        'status' => Permit::STATUS_DRAFT,
+    ]);
+
+    $this->postJson(
+        "/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/close",
+        ['notes' => 'Trying to close early']
+    )->assertStatus(422)
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR');
+});
+
+it('allows closing an expired permit', function () {
+    $permit = Permit::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'issuer_id' => $this->user->id,
+        'status' => Permit::STATUS_EXPIRED,
+    ]);
+
+    $this->postJson(
+        "/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/close",
+        ['notes' => 'Expired permit closed for record-keeping']
+    )->assertStatus(200)
+        ->assertJsonPath('data.status', 'closed');
+});
+
+it('rejects member from approving a permit', function () {
+    $member = User::factory()->create();
+    WorkspaceMember::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'user_id' => $member->id,
+        'role' => 'member',
+    ]);
+
+    $permit = Permit::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'issuer_id' => $this->user->id,
+        'status' => Permit::STATUS_REQUESTED,
+    ]);
+
+    Sanctum::actingAs($member);
+
+    $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/approve")
+        ->assertStatus(422)
+        ->assertJsonPath('error.code', 'VALIDATION_ERROR')
+        ->assertJsonStructure(['error' => ['details' => ['actor']]]);
+});
+
+it('rejects a non-member from performing any transition', function () {
+    $intruder = User::factory()->create();
+
+    $permit = Permit::factory()->create([
+        'workspace_id' => $this->workspace->id,
+        'issuer_id' => $this->user->id,
+        'status' => Permit::STATUS_DRAFT,
+    ]);
+
+    Sanctum::actingAs($intruder);
+
+    $this->postJson("/api/workspaces/{$this->workspace->id}/ptw/permits/{$permit->id}/request")
+        ->assertStatus(403);
 });

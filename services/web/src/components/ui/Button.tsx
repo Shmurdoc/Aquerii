@@ -2,7 +2,7 @@ import { forwardRef, type ReactNode, type MouseEventHandler, type CSSProperties 
 import { clsx } from 'clsx'
 import { Loader2 } from 'lucide-react'
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' | 'warning' | 'outline' | 'gradient'
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' | 'warning' | 'outline' | 'gradient' | 'interactive' | 'error'
 type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
 export type ButtonProps = {
@@ -42,6 +42,10 @@ const variantStyles: Record<ButtonVariant, string> = {
     'bg-[var(--color-status-progress)] text-white hover:opacity-90 shadow-[var(--shadow-md)]',
   outline:
     'border border-[var(--color-glass-border-hover)] bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] hover:border-[var(--color-accent)]',
+  interactive:
+    'bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)] border border-[var(--color-glass-border)] hover:bg-[var(--color-accent-light)] hover:border-[var(--color-accent)]',
+  error:
+    'bg-[var(--color-status-blocked)]/10 text-[var(--color-status-blocked)] border border-[var(--color-status-blocked)]/30 hover:bg-[var(--color-status-blocked)]/20',
 }
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -120,3 +124,5 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     )
   },
 )
+
+Button.displayName = 'Button'

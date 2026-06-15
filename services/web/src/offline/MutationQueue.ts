@@ -36,7 +36,7 @@ const CONFLICT_STORE = 'conflicts'
 
 async function getDB(): Promise<IDBPDatabase> {
   return openDB(DB_NAME, 2, {
-    upgrade(db, oldVersion) {
+    upgrade(db: IDBPDatabase<unknown>, oldVersion: number) {
       if (!db.objectStoreNames.contains(STORE)) {
         db.createObjectStore(STORE, { keyPath: 'id' })
       }
@@ -54,7 +54,7 @@ export async function enqueue(mutation: Omit<QueuedMutation, 'createdAt' | 'retr
 
 export async function getAll(): Promise<QueuedMutation[]> {
   const db = await getDB()
-  return db.getAll(STORE)
+  return db.getAll<QueuedMutation>(STORE)
 }
 
 export async function remove(id: string): Promise<void> {
@@ -64,7 +64,7 @@ export async function remove(id: string): Promise<void> {
 
 export async function incrementRetry(id: string): Promise<void> {
   const db = await getDB()
-  const mutation = await db.get(STORE, id)
+  const mutation = await db.get<QueuedMutation | undefined>(STORE, id)
   if (mutation) {
     await db.put(STORE, { ...mutation, retries: mutation.retries + 1 })
   }
@@ -77,12 +77,12 @@ export async function addConflict(conflict: SyncConflict): Promise<void> {
 
 export async function getConflicts(): Promise<SyncConflict[]> {
   const db = await getDB()
-  return db.getAll(CONFLICT_STORE)
+  return db.getAll<SyncConflict>(CONFLICT_STORE)
 }
 
 export async function resolveConflict(id: string, resolution: SyncConflict['resolution'], mergedData?: unknown): Promise<void> {
   const db = await getDB()
-  const conflict = await db.get(CONFLICT_STORE, id)
+  const conflict = await db.get<SyncConflict | undefined>(CONFLICT_STORE, id)
   if (conflict) {
     await db.put(CONFLICT_STORE, { ...conflict, resolution, mergedData })
   }

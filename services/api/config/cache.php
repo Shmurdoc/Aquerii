@@ -6,6 +6,8 @@ return [
 
     'default' => env('CACHE_STORE', 'redis'),
 
+    'fallback' => env('CACHE_STORE_FALLBACK', 'file'),
+
     'stores' => [
 
         'array' => [

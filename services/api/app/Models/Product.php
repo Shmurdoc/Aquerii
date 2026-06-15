@@ -27,13 +27,13 @@ class Product extends Model
 
     protected $fillable = [
         'workspace_id', 'category_id', 'name', 'sku',
-        'description', 'price', 'unit', 'created_by',
+        'description', 'unit_price', 'unit', 'created_by',
     ];
 
     protected function casts(): array
     {
         return [
-            'price' => 'decimal:2',
+            'unit_price' => 'decimal:2',
         ];
     }
 

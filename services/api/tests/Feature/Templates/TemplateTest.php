@@ -5,6 +5,7 @@ use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
 use App\Modules\Templates\Models\Template;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
@@ -24,7 +25,6 @@ beforeEach(function () {
 });
 
 it('creates a template', function () {
-    $this->markTestSkipped('@todo phase-0.1: template POST returns 400 — likely Template validation rule mismatch with test payload');
     $response = $this->postJson(
         "/api/workspaces/{$this->workspace->id}/templates",
         [
@@ -33,7 +33,8 @@ it('creates a template', function () {
             'description' => 'Standard project board',
             'content' => ['columns' => ['To Do', 'In Progress', 'Done']],
             'variables' => ['project_name' => 'My Project'],
-        ]
+        ],
+        ['Idempotency-Key' => Str::uuid()->toString()]
     );
     $response->assertStatus(201)
         ->assertJsonPath('data.name', 'Board Template');
@@ -62,7 +63,6 @@ it('shows a template', function () {
 });
 
 it('updates a template', function () {
-    $this->markTestSkipped('@todo phase-0.1: template PATCH returns 400 — validation rule rejects partial updates');
     $template = Template::factory()->create(['workspace_id' => $this->workspace->id]);
     $response = $this->patchJson(
         "/api/workspaces/{$this->workspace->id}/templates/{$template->id}",
@@ -73,22 +73,21 @@ it('updates a template', function () {
 });
 
 it('deletes a template', function () {
-    $this->markTestSkipped('@todo phase-0.1: template DELETE returns 400 — likely idempotent middleware failing on DELETE');
     $template = Template::factory()->create(['workspace_id' => $this->workspace->id]);
     $response = $this->deleteJson("/api/workspaces/{$this->workspace->id}/templates/{$template->id}");
     $response->assertStatus(200);
-    $this->assertDatabaseMissing('templates', ['id' => $template->id]);
+    $this->assertSoftDeleted('templates', ['id' => $template->id]);
 });
 
 it('applies a template with variables', function () {
-    $this->markTestSkipped('@todo phase-0.1: template apply returns 400 — likely variables payload validation');
     $template = Template::factory()->create([
         'workspace_id' => $this->workspace->id,
         'content' => ['greeting' => 'Hello {{name}}'],
     ]);
     $response = $this->postJson(
         "/api/workspaces/{$this->workspace->id}/templates/{$template->id}/apply",
-        ['variables' => ['name' => 'World']]
+        ['variables' => ['name' => 'World']],
+        ['Idempotency-Key' => Str::uuid()->toString()]
     );
     $response->assertStatus(200)
         ->assertJsonPath('data.applied_content.greeting', 'Hello World');

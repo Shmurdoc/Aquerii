@@ -7,6 +7,7 @@ use App\Core\Models\OAuthAccount;
 use App\Core\Models\User;
 use App\Core\Models\Workspace;
 use App\Core\Models\WorkspaceMember;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -30,12 +31,15 @@ class OAuthController extends Controller
         return $driver->redirect();
     }
 
-    public function callback(Request $request, string $provider): RedirectResponse
+    public function callback(Request $request, string $provider): JsonResponse|RedirectResponse
     {
         $this->validateProvider($provider);
 
         if ($request->has('error')) {
             $error = $request->input('error');
+            if ($request->expectsJson()) {
+                return response()->json(['error' => ['code' => 'OAUTH_FAILED', 'message' => "Provider error: {$error}"]], 401);
+            }
 
             return redirect($this->frontendUrl("/login?error=oauth_{$error}"));
         }
@@ -48,6 +52,10 @@ class OAuthController extends Controller
 
             $social = $driver->user();
         } catch (\Throwable $e) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => ['code' => 'OAUTH_FAILED', 'message' => 'Authentication failed']], 401);
+            }
+
             return redirect($this->frontendUrl('/login?error=oauth_failed'));
         }
 
@@ -105,6 +113,16 @@ class OAuthController extends Controller
 
         $expiresAt = now()->addDays(30);
         $token = $user->createToken('auth', ['*'], $expiresAt)->plainTextToken;
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'data' => [
+                    'token' => $token,
+                    'is_new' => $isNew,
+                    'user' => ['email' => $user->email],
+                ],
+            ]);
+        }
 
         $fragment = http_build_query([
             'token' => $token,

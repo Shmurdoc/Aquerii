@@ -108,11 +108,11 @@ it('serialises the register to CSV with the proper headers', function () {
         'location' => 'Processing Plant',
     ]);
 
-    $response = $this->getJson("/api/workspaces/{$this->workspace->id}/ptw/register?format=csv");
+    $response = $this->get("/api/workspaces/{$this->workspace->id}/ptw/register?format=csv");
     $response->assertStatus(200)
         ->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
 
-    $body = $response->streamedContent();
+    $body = $response->getContent();
     expect($body)->toContain('Reference,Type,Status,Risk,Title,Location');
     expect($body)->toContain($permit->reference);
     expect($body)->toContain('Welding on conveyor');

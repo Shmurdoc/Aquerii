@@ -12,7 +12,7 @@ class BoardColumn extends Model
     protected $table = 'board_columns';
 
     protected $fillable = [
-        'board_id', 'workspace_id', 'name', 'type',
+        'board_id', 'workspace_id', 'title', 'type',
         'settings', 'is_system', 'position', 'width',
     ];
 

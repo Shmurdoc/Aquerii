@@ -214,6 +214,24 @@ export interface SessionInfo {
   last_active_at: string
 }
 
+export interface StorageBreakdownItem {
+  count: number
+  bytes: number
+  last_activity: string | null
+}
+
+export interface WorkspaceStorage {
+  workspace_id: string
+  used_bytes: number
+  quota_bytes: number
+  percent_used: number
+  breakdown: {
+    files: StorageBreakdownItem
+    avatars: StorageBreakdownItem
+    exports: StorageBreakdownItem
+  }
+}
+
 export interface NotificationPreferences {
   email_invoice_sent: boolean
   email_invoice_received: boolean
@@ -230,6 +248,13 @@ export interface NotificationPreferences {
 
 export type WorkspaceRole = 'owner' | 'admin' | 'manager' | 'member' | 'viewer'
 
+/**
+ * Display names only — these are the labels used in the workspace member
+ * invitation / role-edit UI. The user's own effective permissions come
+ * from GET /api/me/permissions via the `usePermissions()` hook and are
+ * driven by their `account_type` and assigned system roles, not by this
+ * list. Keep this in sync with backend config/aquerii-roles.php.
+ */
 export const ROLES: { value: WorkspaceRole; label: string; description: string }[] = [
   { value: 'owner',  label: 'Owner',  description: 'Full access including billing' },
   { value: 'admin',  label: 'Admin',  description: 'Full access to workspace settings and billing' },
@@ -283,6 +308,12 @@ export const settingsApi = {
 
   cancelSubscription: async (): Promise<void> => {
     await api.delete(`/workspaces/${wid()}/billing/subscription`)
+  },
+
+  // Storage
+  getStorage: async (): Promise<WorkspaceStorage> => {
+    const res = await api.get(`/workspaces/${wid()}/storage`)
+    return res.data?.data ?? { workspace_id: '', used_bytes: 0, quota_bytes: 0, percent_used: 0, breakdown: { files: { count: 0, bytes: 0, last_activity: null }, avatars: { count: 0, bytes: 0, last_activity: null }, exports: { count: 0, bytes: 0, last_activity: null } } }
   },
 
   // Logo

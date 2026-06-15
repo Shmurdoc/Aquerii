@@ -46,7 +46,6 @@ const STATIC_COMMANDS = [
   { label: 'Go to Employees', to: '/employees' },
   { label: 'Go to Inbox', to: '/inbox' },
   { label: 'Go to Support', to: '/support' },
-  { label: 'Go to Marketing', to: '/marketing' },
   { label: 'Go to ERP', to: '/erp' },
 ]
 

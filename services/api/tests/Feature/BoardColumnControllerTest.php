@@ -33,7 +33,7 @@ it('creates a board column', function () {
 
     $response->assertStatus(201);
 
-    $this->assertDatabaseHas('columns', [
+    $this->assertDatabaseHas('board_columns', [
         'board_id' => $this->board->id,
         'title' => 'Status',
         'type' => 'select',
@@ -41,7 +41,7 @@ it('creates a board column', function () {
 });
 
 it('lists board columns', function () {
-    DB::table('columns')->insert([
+    DB::table('board_columns')->insert([
         ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'title' => 'Text', 'type' => 'text', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
         ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'title' => 'Number', 'type' => 'number', 'position' => 65536, 'created_at' => now(), 'updated_at' => now()],
     ]);
@@ -54,7 +54,7 @@ it('lists board columns', function () {
 
 it('shows a specific column', function () {
     $columnId = Str::uuid()->toString();
-    DB::table('columns')->insert([
+    DB::table('board_columns')->insert([
         'id' => $columnId,
         'board_id' => $this->board->id,
         'title' => 'Assignee',
@@ -72,7 +72,7 @@ it('shows a specific column', function () {
 
 it('updates a column title', function () {
     $columnId = Str::uuid()->toString();
-    DB::table('columns')->insert([
+    DB::table('board_columns')->insert([
         'id' => $columnId,
         'board_id' => $this->board->id,
         'title' => 'Old Title',
@@ -91,7 +91,7 @@ it('updates a column title', function () {
     $response->assertStatus(200)
         ->assertJsonPath('data.updated', true);
 
-    $this->assertDatabaseHas('columns', [
+    $this->assertDatabaseHas('board_columns', [
         'id' => $columnId,
         'title' => 'Updated Title',
     ]);
@@ -99,7 +99,7 @@ it('updates a column title', function () {
 
 it('deletes a column', function () {
     $columnId = Str::uuid()->toString();
-    DB::table('columns')->insert([
+    DB::table('board_columns')->insert([
         'id' => $columnId,
         'board_id' => $this->board->id,
         'title' => 'Delete Me',
@@ -118,13 +118,13 @@ it('deletes a column', function () {
     $response->assertStatus(200)
         ->assertJsonPath('data.deleted', true);
 
-    $this->assertDatabaseMissing('columns', ['id' => $columnId]);
+    $this->assertDatabaseMissing('board_columns', ['id' => $columnId]);
 });
 
 it('reorders columns by updating positions', function () {
     $colA = Str::uuid()->toString();
     $colB = Str::uuid()->toString();
-    DB::table('columns')->insert([
+    DB::table('board_columns')->insert([
         ['id' => $colA, 'board_id' => $this->board->id, 'title' => 'First', 'type' => 'text', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
         ['id' => $colB, 'board_id' => $this->board->id, 'title' => 'Second', 'type' => 'number', 'position' => 65536, 'created_at' => now(), 'updated_at' => now()],
     ]);
@@ -141,7 +141,7 @@ it('reorders columns by updating positions', function () {
         ['Idempotency-Key' => Str::uuid()->toString()]
     )->assertStatus(200);
 
-    $columns = DB::table('columns')->where('board_id', $this->board->id)->orderBy('position')->get();
+    $columns = DB::table('board_columns')->where('board_id', $this->board->id)->orderBy('position')->get();
     expect($columns->first()->id)->toBe($colB);
     expect($columns->last()->id)->toBe($colA);
 });

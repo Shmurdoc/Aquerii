@@ -1,0 +1,506 @@
+﻿
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mC:/Users/madoc/source/repos/Aquerii/services/web[39m
+
+ [32mΓ£ô[39m tests/unit/auth/apiInterceptor.test.ts[2m > [22mapi request interceptor[2m > [22mattaches Bearer token when token exists
+ [32mΓ£ô[39m tests/unit/auth/apiInterceptor.test.ts[2m > [22mapi request interceptor[2m > [22mattaches X-Workspace-ID when workspace exists
+ [32mΓ£ô[39m tests/unit/auth/apiInterceptor.test.ts[2m > [22mapi request interceptor[2m > [22mdoes not set auth header when token is null
+ [32mΓ£ô[39m tests/unit/auth/apiInterceptor.test.ts[2m > [22mapi request interceptor[2m > [22mgenerates Idempotency-Key for mutating requests
+ [32mΓ£ô[39m tests/unit/auth/apiInterceptor.test.ts[2m > [22mapi request interceptor[2m > [22mdoes not overwrite existing Idempotency-Key
+ [32mΓ£ô[39m tests/unit/auth/apiInterceptor.test.ts[2m > [22mapi request interceptor[2m > [22mdoes not generate Idempotency-Key for GET requests
+ [32mΓ£ô[39m tests/unit/auth/apiInterceptor.test.ts[2m > [22mapi response interceptor[2m > [22mpasses through successful responses
+ [32mΓ£ô[39m tests/unit/auth/apiInterceptor.test.ts[2m > [22mapi response interceptor[2m > [22mcalls logout on 401 non-MFA error
+ [32mΓ£ô[39m tests/unit/auth/apiInterceptor.test.ts[2m > [22mapi response interceptor[2m > [22mdoes not logout on 401 MFA_REQUIRED
+ [32mΓ£ô[39m tests/unit/auth/apiInterceptor.test.ts[2m > [22mapi response interceptor[2m > [22mre-throws the error
+ [32mΓ£ô[39m tests/unit/crm/deals.test.ts[2m > [22mselectPipeline[2m > [22mreturns pipeline matching given ID
+ [32mΓ£ô[39m tests/unit/crm/deals.test.ts[2m > [22mselectPipeline[2m > [22mreturns default pipeline when ID does not match
+ [32mΓ£ô[39m tests/unit/crm/deals.test.ts[2m > [22mselectPipeline[2m > [22mreturns first pipeline when no ID and no default
+ [32mΓ£ô[39m tests/unit/crm/deals.test.ts[2m > [22mselectPipeline[2m > [22mreturns undefined for empty list
+ [32mΓ£ô[39m tests/unit/crm/deals.test.ts[2m > [22mdealsByStage[2m > [22mfilters deals by stage_id
+ [32mΓ£ô[39m tests/unit/crm/deals.test.ts[2m > [22mdealsByStage[2m > [22mreturns empty array for stage with no deals
+ [32mΓ£ô[39m tests/unit/crm/deals.test.ts[2m > [22mstageValue[2m > [22msums deal values for a stage
+ [32mΓ£ô[39m tests/unit/crm/deals.test.ts[2m > [22mstageValue[2m > [22mtreats null values as 0
+ [32mΓ£ô[39m tests/unit/crm/deals.test.ts[2m > [22mstageValue[2m > [22mreturns 0 for stage with no deals
+ [32mΓ£ô[39m tests/unit/stores/authStore.test.ts[2m > [22mauthStore[2m > [22msetAuth sets token, user, and workspace
+ [32mΓ£ô[39m tests/unit/stores/authStore.test.ts[2m > [22mauthStore[2m > [22mlogout clears all state
+ [32mΓ£ô[39m tests/unit/stores/authStore.test.ts[2m > [22mauthStore[2m > [22msetWorkspace updates workspace independently
+ [32mΓ£ô[39m tests/unit/stores/authStore.test.ts[2m > [22mauthStore[2m > [22mpersists token, user and workspace to sessionStorage
+ [32mΓ£ô[39m tests/unit/stores/authStore.test.ts[2m > [22mauthStore[2m > [22mpartializes only token, user, workspace (no extra fields)
+ [32mΓ£ô[39m tests/unit/stores/authStore.test.ts[2m > [22mauthStore[2m > [22mpersisted data round-trips through sessionStorage
+ [32mΓ£ô[39m tests/unit/stores/authStore.test.ts[2m > [22mauthStore[2m > [22mhandles logout with no prior auth state (idempotent)
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatInput.test.tsx[2m > [22mChatInput[2m > [22mrenders textarea and send button[33m 2103[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatInput.test.tsx[2m > [22mChatInput[2m > [22msend button is disabled when input is empty
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatInput.test.tsx[2m > [22mChatInput[2m > [22mcalls onSend with trimmed value on button click
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatInput.test.tsx[2m > [22mChatInput[2m > [22mcalls onSend on Enter without Shift
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatInput.test.tsx[2m > [22mChatInput[2m > [22mdoes not call onSend on Shift+Enter
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatInput.test.tsx[2m > [22mChatInput[2m > [22mclears input after sending
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatInput.test.tsx[2m > [22mChatInput[2m > [22mis disabled when disabled prop is true
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatInput.test.tsx[2m > [22mChatInput[2m > [22mshows loading spinner when isLoading
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatInput.test.tsx[2m > [22mChatInput[2m > [22mshows disabledReason as placeholder when disabled
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22mrenders text from data rows in at least one viewport[33m 467[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22mrenders header labels
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22mshows empty state when data is empty
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22mshows error state with retry button
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22mshows loading skeleton
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22msorts by column on header click
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22mpaginates when data exceeds pageSize[33m 340[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22mhandles row selection[33m 1157[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22mhandles select all checkbox in desktop view
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22mdoes not render empty state when data exists
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22munwraps a paginated response object { data: [...] } without throwing
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22mrenders the empty state when data is undefined without throwing
+ [32mΓ£ô[39m src/components/ui/__tests__/DataTable.test.tsx[2m > [22mDataTable[2m > [22mrenders the empty state when data is null without throwing
+ [32mΓ£ô[39m tests/unit/hooks/useCalendarItems.test.tsx[2m > [22museCalendarItems[2m > [22mdoes NOT fire network call when workspace is null
+ [32mΓ£ô[39m tests/unit/hooks/useCalendarItems.test.tsx[2m > [22museCalendarItems[2m > [22mFIRES network call to /calendar-items when workspace is set
+ [32mΓ£ô[39m tests/unit/hooks/useCalendarItems.test.tsx[2m > [22museCalendarItems[2m > [22muses the correct queryKey including from/to and entityType
+ [32mΓ£ô[39m tests/unit/hooks/useCalendarItems.test.tsx[2m > [22museCalendarItems[2m > [22mhandles missing data field gracefully (returns empty array)
+ [32mΓ£ô[39m tests/unit/hooks/useSalesOrders.test.tsx[2m > [22museSalesOrders[2m > [22mfetches sales orders list
+ [32mΓ£ô[39m tests/unit/hooks/useSalesOrders.test.tsx[2m > [22museSalesOrders[2m > [22mpasses params to list
+ [32mΓ£ô[39m tests/unit/hooks/useSalesOrders.test.tsx[2m > [22museCreateSalesOrder[2m > [22mcalls create mutation
+node.exe : [90mstderr[2m | tests/unit/auth/routeGuards.test.tsx[2m > [22m[2mRequireAuth[2m > [22m[2mredirects 
+to /login when no token[22m[39m
+At C:\Users\madoc\AppData\Roaming\npm\npx.ps1:24 char:5
++     & "node$exe"  "$basedir/node_modules/npm/bin/npx-cli.js" $args
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([90mstderr[2m...token[22m[39m:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ΓÜá∩╕Å React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in 
+v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see 
+https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+ΓÜá∩╕Å React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use 
+the `v7_relativeSplatPath` future flag to opt-in early. For more information, see 
+https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ [32mΓ£ô[39m tests/unit/auth/routeGuards.test.tsx[2m > [22mRequireAuth[2m > [22mredirects to /login when no token[33m 386[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/auth/routeGuards.test.tsx[2m > [22mRequireAuth[2m > [22mrenders children when token exists
+ [32mΓ£ô[39m tests/unit/auth/routeGuards.test.tsx[2m > [22mRequireOnboarding[2m > [22mredirects to /onboarding when no workspace
+ [32mΓ£ô[39m tests/unit/auth/routeGuards.test.tsx[2m > [22mRequireOnboarding[2m > [22mrenders children when workspace exists
+[90mstderr[2m | tests/unit/auth/LoginPage.test.tsx[2m > [22m[2mLoginPage[2m > [22m[2mrenders the sign-in 
+form[22m[39m
+ΓÜá∩╕Å React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in 
+v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see 
+https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+ΓÜá∩╕Å React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use 
+the `v7_relativeSplatPath` future flag to opt-in early. For more information, see 
+https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ [32mΓ£ô[39m tests/unit/auth/LoginPage.test.tsx[2m > [22mLoginPage[2m > [22mrenders the sign-in form[33m 2616[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/auth/LoginPage.test.tsx[2m > [22mLoginPage[2m > [22mshows validation errors for empty fields[33m 658[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/auth/LoginPage.test.tsx[2m > [22mLoginPage[2m > [22mcalls API and sets auth on success[33m 742[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/auth/LoginPage.test.tsx[2m > [22mLoginPage[2m > [22mreveals MFA field when server requires it[33m 354[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/auth/LoginPage.test.tsx[2m > [22mLoginPage[2m > [22mshows error toast on failed login[33m 341[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/__tests__/Button.test.tsx[2m > [22mButton[2m > [22mrenders children
+ [32mΓ£ô[39m src/components/ui/__tests__/Button.test.tsx[2m > [22mButton[2m > [22mshows loading spinner when loading[33m 794[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/__tests__/Button.test.tsx[2m > [22mButton[2m > [22mis disabled when disabled prop is set
+ [32mΓ£ô[39m src/components/ui/__tests__/Button.test.tsx[2m > [22mButton[2m > [22mapplies variant classes
+ [32mΓ£ô[39m src/components/ui/__tests__/Button.test.tsx[2m > [22mButton[2m > [22mapplies size classes
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatThread.test.tsx[2m > [22mChatThread[2m > [22mrenders messages
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatThread.test.tsx[2m > [22mChatThread[2m > [22mrenders empty state when no messages
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatThread.test.tsx[2m > [22mChatThread[2m > [22mdoes not render empty state when messages exist
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatThread.test.tsx[2m > [22mChatThread[2m > [22mshows typing indicator when isLoading
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatThread.test.tsx[2m > [22mChatThread[2m > [22mrenders user messages right-aligned
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatThread.test.tsx[2m > [22mChatThread[2m > [22mrenders assistant messages left-aligned
+ [32mΓ£ô[39m src/components/ai/__tests__/ChatThread.test.tsx[2m > [22mChatThread[2m > [22mpreserves whitespace in message content
+ [32mΓ£ô[39m src/components/ai/__tests__/SuggestedPrompts.test.tsx[2m > [22mSuggestedPrompts[2m > [22mrenders all prompts
+ [32mΓ£ô[39m src/components/ai/__tests__/SuggestedPrompts.test.tsx[2m > [22mSuggestedPrompts[2m > [22mcalls onSelect with prompt text on click
+ [32mΓ£ô[39m src/components/ai/__tests__/SuggestedPrompts.test.tsx[2m > [22mSuggestedPrompts[2m > [22mdisables buttons when disabled prop is true[33m 793[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ai/__tests__/SuggestedPrompts.test.tsx[2m > [22mSuggestedPrompts[2m > [22mreturns null for empty prompts array
+[90mstderr[2m | src/components/ui/__tests__/Card.test.tsx[2m > [22m[2mCard[2m > [22m[2mrenders 
+children[22m[39m
+Warning: React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite 
+components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might 
+have mixed up default and named imports.
+
+Check your code at Card.test.tsx:6.
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite 
+components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might 
+have mixed up default and named imports.
+    at createFiberFromTypeAndProps 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28478:17)
+    at createFiberFromElement 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28504:15)
+    at reconcileSingleElement 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:13986:23)
+    at reconcileChildFibers 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:14044:35)
+    at reconcileChildren 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19186:28)
+    at updateHostComponent 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19953:3)
+    at beginWork 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:21657:14)
+    at HTMLUnknownElement.callCallback 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\jsdom\lib\generated\idl\EventListener.js:26:30)
+    at innerInvokeEventListeners (C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\jsdom\lib\jsdom\living\
+events\EventTarget-impl.js:360:16)
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite 
+components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might 
+have mixed up default and named imports.
+    at createFiberFromTypeAndProps 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28478:17)
+    at createFiberFromElement 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28504:15)
+    at reconcileSingleElement 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:13986:23)
+    at reconcileChildFibers 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:14044:35)
+    at reconcileChildren 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19186:28)
+    at updateHostComponent 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19953:3)
+    at beginWork 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:21657:14)
+    at HTMLUnknownElement.callCallback 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\jsdom\lib\generated\idl\EventListener.js:26:30)
+    at innerInvokeEventListeners (C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\jsdom\lib\jsdom\living\
+events\EventTarget-impl.js:360:16)
+The above error occurred in the <div> component:
+
+    at div
+    at C:\Users\madoc\source\repos\Aquerii\services\web\src\components\ui\Card.tsx:11:6
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+[90mstderr[2m | src/components/ui/__tests__/Card.test.tsx[2m > [22m[2mCard[2m > [22m[2mrenders header and 
+footer[22m[39m
+Warning: React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite 
+components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might 
+have mixed up default and named imports.
+
+Check your code at Card.test.tsx:13.
+Warning: React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite 
+components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might 
+have mixed up default and named imports.
+
+Check your code at Card.test.tsx:14.
+Warning: React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite 
+components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might 
+have mixed up default and named imports.
+
+Check your code at Card.test.tsx:15.
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite 
+components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might 
+have mixed up default and named imports.
+    at createFiberFromTypeAndProps 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28478:17)
+    at createFiberFromElement 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28504:15)
+    at createChild 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:13345:28)
+    at reconcileChildrenArray 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:13640:25)
+    at reconcileChildFibers 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:14057:16)
+    at reconcileChildren 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19186:28)
+    at updateHostComponent 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19953:3)
+    at beginWork 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:21657:14)
+    at HTMLUnknownElement.callCallback 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\jsdom\lib\generated\idl\EventListener.js:26:30)
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite 
+components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might 
+have mixed up default and named imports.
+    at createFiberFromTypeAndProps 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28478:17)
+    at createFiberFromElement 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28504:15)
+    at createChild 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:13345:28)
+    at reconcileChildrenArray 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:13640:25)
+    at reconcileChildFibers 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:14057:16)
+    at reconcileChildren 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19186:28)
+    at updateHostComponent 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19953:3)
+    at beginWork 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:21657:14)
+    at HTMLUnknownElement.callCallback 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\jsdom\lib\generated\idl\EventListener.js:26:30)
+The above error occurred in the <div> component:
+
+    at div
+    at C:\Users\madoc\source\repos\Aquerii\services\web\src\components\ui\Card.tsx:11:6
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+[90mstderr[2m | src/components/ui/__tests__/Card.test.tsx[2m > [22m[2mCard[2m > [22m[2mapplies variant 
+classes[22m[39m
+Warning: React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite 
+components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might 
+have mixed up default and named imports.
+
+Check your code at Card.test.tsx:24.
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite 
+components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might 
+have mixed up default and named imports.
+    at createFiberFromTypeAndProps 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28478:17)
+    at createFiberFromElement 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28504:15)
+    at reconcileSingleElement 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:13986:23)
+    at reconcileChildFibers 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:14044:35)
+    at reconcileChildren 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19186:28)
+    at updateHostComponent 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19953:3)
+    at beginWork 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:21657:14)
+    at HTMLUnknownElement.callCallback 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\jsdom\lib\generated\idl\EventListener.js:26:30)
+    at innerInvokeEventListeners (C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\jsdom\lib\jsdom\living\
+events\EventTarget-impl.js:360:16)
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite 
+components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might 
+have mixed up default and named imports.
+    at createFiberFromTypeAndProps 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28478:17)
+    at createFiberFromElement 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:28504:15)
+    at reconcileSingleElement 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:13986:23)
+    at reconcileChildFibers 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:14044:35)
+    at reconcileChildren 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19186:28)
+    at updateHostComponent 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:19953:3)
+    at beginWork 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:21657:14)
+    at HTMLUnknownElement.callCallback 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation 
+(C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\jsdom\lib\generated\idl\EventListener.js:26:30)
+    at innerInvokeEventListeners (C:\Users\madoc\source\repos\Aquerii\services\web\node_modules\jsdom\lib\jsdom\living\
+events\EventTarget-impl.js:360:16)
+The above error occurred in the <div> component:
+
+    at div
+    at C:\Users\madoc\source\repos\Aquerii\services\web\src\components\ui\Card.tsx:11:6
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+ [31m├ù[39m src/components/ui/__tests__/Card.test.tsx[2m > [22mCard[2m > [22mrenders children
+[31m   ΓåÆ Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.[39m
+ [31m├ù[39m src/components/ui/__tests__/Card.test.tsx[2m > [22mCard[2m > [22mrenders header and footer
+[31m   ΓåÆ Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.[39m
+ [31m├ù[39m src/components/ui/__tests__/Card.test.tsx[2m > [22mCard[2m > [22mapplies variant classes
+[31m   ΓåÆ Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.[39m
+ [32mΓ£ô[39m src/components/ui/__tests__/Badge.test.tsx[2m > [22mBadge[2m > [22mrenders text content
+ [31m├ù[39m src/components/ui/__tests__/Badge.test.tsx[2m > [22mBadge[2m > [22mapplies variant classes
+[31m   ΓåÆ expected 'inline-flex items-center gap-1.5 fontΓÇª' to contain 'status-done'[39m
+ [32mΓ£ô[39m src/components/ui/__tests__/Badge.test.tsx[2m > [22mBadge[2m > [22mapplies size classes
+ [32mΓ£ô[39m src/components/ui/__tests__/Input.test.tsx[2m > [22mInput[2m > [22mrenders label when provided[33m 463[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/__tests__/Input.test.tsx[2m > [22mInput[2m > [22mdisplays error message
+ [32mΓ£ô[39m src/components/ui/__tests__/Input.test.tsx[2m > [22mInput[2m > [22mdisplays helper text
+ [32mΓ£ô[39m src/components/ui/__tests__/Input.test.tsx[2m > [22mInput[2m > [22mforwards ref correctly
+ [32mΓ£ô[39m src/components/ui/__tests__/Input.test.tsx[2m > [22mInput[2m > [22mfires onChange handler[33m 1531[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/__tests__/Input.test.tsx[2m > [22mInput[2m > [22mdoes not show helper text when error is present
+ [32mΓ£ô[39m tests/unit/crm/contacts.test.ts[2m > [22mscoreColor[2m > [22mreturns green for score >= 70
+ [32mΓ£ô[39m tests/unit/crm/contacts.test.ts[2m > [22mscoreColor[2m > [22mreturns yellow for score between 40 and 69
+ [32mΓ£ô[39m tests/unit/crm/contacts.test.ts[2m > [22mscoreColor[2m > [22mreturns red for score < 40
+ [32mΓ£ô[39m tests/unit/crm/contacts.test.ts[2m > [22mvalidateContactForm[2m > [22mreturns error when first name is empty
+ [32mΓ£ô[39m tests/unit/crm/contacts.test.ts[2m > [22mvalidateContactForm[2m > [22mreturns error when last name is empty
+ [32mΓ£ô[39m tests/unit/crm/contacts.test.ts[2m > [22mvalidateContactForm[2m > [22mreturns error when both names are empty
+ [32mΓ£ô[39m tests/unit/crm/contacts.test.ts[2m > [22mvalidateContactForm[2m > [22mreturns error when names are only whitespace
+ [32mΓ£ô[39m tests/unit/crm/contacts.test.ts[2m > [22mvalidateContactForm[2m > [22mreturns null when both names are valid
+ [32mΓ£ô[39m src/components/ui/__tests__/Toggle.test.tsx[2m > [22mToggle[2m > [22mrenders label
+ [32mΓ£ô[39m src/components/ui/__tests__/Toggle.test.tsx[2m > [22mToggle[2m > [22mfires onChange when clicked[33m 499[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/__tests__/Toggle.test.tsx[2m > [22mToggle[2m > [22mis disabled when disabled prop is set
+ [32mΓ£ô[39m src/components/ui/__tests__/Modal.test.tsx[2m > [22mModal[2m > [22mrenders when open
+ [32mΓ£ô[39m src/components/ui/__tests__/Modal.test.tsx[2m > [22mModal[2m > [22mdoes not render when closed
+ [32mΓ£ô[39m src/components/ui/__tests__/Modal.test.tsx[2m > [22mModal[2m > [22mcalls onClose when close button clicked[33m 620[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/__tests__/Modal.test.tsx[2m > [22mModal[2m > [22mrenders footer content
+ [31m├ù[39m tests/unit/helpers/formatCurrency.test.ts[2m > [22mformatCurrency[2m > [22mreturns $0.00 for NaN input
+[31m   ΓåÆ expected 'R┬á0,00' to be '$0.00' // Object.is equality[39m
+ [31m├ù[39m tests/unit/helpers/formatCurrency.test.ts[2m > [22mformatCurrency[2m > [22mformats positive numbers correctly
+[31m   ΓåÆ expected 'R┬á0,00' to be '$0.00' // Object.is equality[39m
+ [31m├ù[39m tests/unit/helpers/formatCurrency.test.ts[2m > [22mformatCurrency[2m > [22mformats negative numbers correctly
+[31m   ΓåÆ expected '-R┬á1,00' to be '-$1.00' // Object.is equality[39m
+ [31m├ù[39m tests/unit/helpers/formatCurrency.test.ts[2m > [22mformatCurrency[2m > [22mhandles string input
+[31m   ΓåÆ expected 'R┬á42,00' to be '$42.00' // Object.is equality[39m
+ [32mΓ£ô[39m tests/unit/helpers/formatDate.test.ts[2m > [22mformatDate[2m > [22mreturns em dash for null or undefined
+ [32mΓ£ô[39m tests/unit/helpers/formatDate.test.ts[2m > [22mformatDate[2m > [22mreturns em dash for empty string
+ [32mΓ£ô[39m tests/unit/helpers/formatDate.test.ts[2m > [22mformatDate[2m > [22mformats ISO date string correctly
+ [32mΓ£ô[39m tests/unit/helpers/formatDate.test.ts[2m > [22mformatDate[2m > [22mformats ISO datetime string correctly
+
+[31mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1m[7m Failed Tests 8 [27m[22mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/helpers/formatCurrency.test.ts[2m > [22mformatCurrency[2m > 
+[22mreturns $0.00 for NaN input
+[31m[1mAssertionError[22m: expected 'R┬á0,00' to be '$0.00' // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- $0.00[39m
+[31m+ R┬á0,00[39m
+
+[36m [2mΓ¥»[22m tests/unit/helpers/formatCurrency.test.ts:[2m5:33[22m[39m
+    [90m  3| [39m[34mdescribe[39m([32m'formatCurrency'[39m[33m,[39m () [33m=>[39m {
+    [90m  4| [39m  [34mit[39m([32m'returns $0.00 for NaN input'[39m[33m,[39m () [33m=>[39m {
+    [90m  5| [39m    
+[34mexpect[39m([34mformatCurrency[39m([33mNaN[39m))[33m.[39m[34mtoBe[39m([32m'$0.00'[39m)
+    [90m   | [39m                                [31m^[39m
+    [90m  6| [39m    
+[34mexpect[39m([34mformatCurrency[39m([32m'not-a-number'[39m))[33m.[39m[34mtoBe[39m([32m'$0.00'[39m)
+    [90m  7| [39m    [34mexpect[39m([34mformatCurrency[39m(undefined [35mas[39m 
+any))[33m.[39m[34mtoBe[39m([32m'$0.00'[39m)
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/8]ΓÄ»[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/helpers/formatCurrency.test.ts[2m > [22mformatCurrency[2m > 
+[22mformats positive numbers correctly
+[31m[1mAssertionError[22m: expected 'R┬á0,00' to be '$0.00' // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- $0.00[39m
+[31m+ R┬á0,00[39m
+
+[36m [2mΓ¥»[22m tests/unit/helpers/formatCurrency.test.ts:[2m11:31[22m[39m
+    [90m  9| [39m
+    [90m 10| [39m  [34mit[39m([32m'formats positive numbers correctly'[39m[33m,[39m () [33m=>[39m {
+    [90m 11| [39m    
+[34mexpect[39m([34mformatCurrency[39m([34m0[39m))[33m.[39m[34mtoBe[39m([32m'$0.00'[39m)
+    [90m   | [39m                              [31m^[39m
+    [90m 12| [39m    
+[34mexpect[39m([34mformatCurrency[39m([34m1[39m))[33m.[39m[34mtoBe[39m([32m'$1.00'[39m)
+    [90m 13| [39m    
+[34mexpect[39m([34mformatCurrency[39m([34m1234.5[39m))[33m.[39m[34mtoBe[39m([32m'$1,234.50'[39m)
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[2/8]ΓÄ»[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/helpers/formatCurrency.test.ts[2m > [22mformatCurrency[2m > 
+[22mformats negative numbers correctly
+[31m[1mAssertionError[22m: expected '-R┬á1,00' to be '-$1.00' // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- -$1.00[39m
+[31m+ -R┬á1,00[39m
+
+[36m [2mΓ¥»[22m tests/unit/helpers/formatCurrency.test.ts:[2m18:32[22m[39m
+    [90m 16| [39m
+    [90m 17| [39m  [34mit[39m([32m'formats negative numbers correctly'[39m[33m,[39m () [33m=>[39m {
+    [90m 18| [39m    
+[34mexpect[39m([34mformatCurrency[39m([33m-[39m[34m1[39m))[33m.[39m[34mtoBe[39m([32m'-$1.00'[39m)
+    [90m   | [39m                               [31m^[39m
+    [90m 19| [39m    [34mexpect[39m([34mformatCurrency[39m([33m-[39m[34m1234.5[39m))[33m.[39m[34mtoBe[39m
+([32m'-$1,234.50'[39m)
+    [90m 20| [39m    
+[34mexpect[39m([34mformatCurrency[39m([33m-[39m[34m0.5[39m))[33m.[39m[34mtoBe[39m([32m'-$0.50'[39m)
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[3/8]ΓÄ»[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/helpers/formatCurrency.test.ts[2m > [22mformatCurrency[2m > 
+[22mhandles string input
+[31m[1mAssertionError[22m: expected 'R┬á42,00' to be '$42.00' // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- $42.00[39m
+[31m+ R┬á42,00[39m
+
+[36m [2mΓ¥»[22m tests/unit/helpers/formatCurrency.test.ts:[2m24:34[22m[39m
+    [90m 22| [39m
+    [90m 23| [39m  [34mit[39m([32m'handles string input'[39m[33m,[39m () [33m=>[39m {
+    [90m 24| [39m    
+[34mexpect[39m([34mformatCurrency[39m([32m'42'[39m))[33m.[39m[34mtoBe[39m([32m'$42.00'[39m)
+    [90m   | [39m                                 [31m^[39m
+    [90m 25| [39m    
+[34mexpect[39m([34mformatCurrency[39m([32m'1234.56'[39m))[33m.[39m[34mtoBe[39m([32m'$1,234.56'[39m)
+    [90m 26| [39m    
+[34mexpect[39m([34mformatCurrency[39m([32m'0'[39m))[33m.[39m[34mtoBe[39m([32m'$0.00'[39m)
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[4/8]ΓÄ»[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m src/components/ui/__tests__/Badge.test.tsx[2m > [22mBadge[2m > [22mapplies 
+variant classes
+[31m[1mAssertionError[22m: expected 'inline-flex items-center gap-1.5 fontΓÇª' to contain 'status-done'[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- status-done[39m
+[31m+ inline-flex items-center gap-1.5 font-medium rounded-full bg-green-900/50 text-green-300 px-2 py-0.5 text-xs 
+[39m
+
+[36m [2mΓ¥»[22m src/components/ui/__tests__/Badge.test.tsx:[2m12:48[22m[39m
+    [90m 10| [39m  [34mit[39m([32m'applies variant classes'[39m[33m,[39m () [33m=>[39m {
+    [90m 11| [39m    [34mrender[39m([33m<[39m[33mBadge[39m 
+[33mvariant[39m[33m=[39m[32m"success"[39m[33m>[39mDone[33m<[39m[33m/[39m[33mBadge[39m[33m>[39m)
+    [90m 12| [39m    [34mexpect[39m(screen[33m.[39m[34mgetByText[39m([32m'Done'[39m)[33m.[39mclassName)[33
+m.[39m[34mtoContain[39m([32m'status-done'[39m)
+    [90m   | [39m                                               [31m^[39m
+    [90m 13| [39m  })
+    [90m 14| [39m
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[5/8]ΓÄ»[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m src/components/ui/__tests__/Card.test.tsx[2m > [22mCard[2m > [22mrenders 
+children
+[31m[1m[7m FAIL [27m[22m[39m src/components/ui/__tests__/Card.test.tsx[2m > [22mCard[2m > [22mapplies 
+variant classes
+[31m[1mError[22m: Element type is invalid: expected a string (for built-in components) or a class/function (for 
+composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or 
+you might have mixed up default and named imports.[39m
+[90m [2mΓ¥»[22m createFiberFromTypeAndProps 
+node_modules/react-dom/cjs/react-dom.development.js:[2m28478:17[22m[39m
+[90m [2mΓ¥»[22m createFiberFromElement node_modules/react-dom/cjs/react-dom.development.js:[2m28504:15[22m[39m
+[90m [2mΓ¥»[22m reconcileSingleElement node_modules/react-dom/cjs/react-dom.development.js:[2m13986:23[22m[39m
+[90m [2mΓ¥»[22m reconcileChildFibers node_modules/react-dom/cjs/react-dom.development.js:[2m14044:35[22m[39m
+[90m [2mΓ¥»[22m reconcileChildren node_modules/react-dom/cjs/react-dom.development.js:[2m19186:28[22m[39m
+[90m [2mΓ¥»[22m updateHostComponent node_modules/react-dom/cjs/react-dom.development.js:[2m19953:3[22m[39m
+[90m [2mΓ¥»[22m beginWork node_modules/react-dom/cjs/react-dom.development.js:[2m21657:14[22m[39m
+[90m [2mΓ¥»[22m beginWork$1 node_modules/react-dom/cjs/react-dom.development.js:[2m27465:14[22m[39m
+[90m [2mΓ¥»[22m performUnitOfWork node_modules/react-dom/cjs/react-dom.development.js:[2m26599:12[22m[39m
+[90m [2mΓ¥»[22m workLoopSync node_modules/react-dom/cjs/react-dom.development.js:[2m26505:5[22m[39m
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[6/8]ΓÄ»[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m src/components/ui/__tests__/Card.test.tsx[2m > [22mCard[2m > [22mrenders header 
+and footer
+[31m[1mError[22m: Element type is invalid: expected a string (for built-in components) or a class/function (for 
+composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or 
+you might have mixed up default and named imports.[39m
+[90m [2mΓ¥»[22m createFiberFromTypeAndProps 
+node_modules/react-dom/cjs/react-dom.development.js:[2m28478:17[22m[39m
+[90m [2mΓ¥»[22m createFiberFromElement node_modules/react-dom/cjs/react-dom.development.js:[2m28504:15[22m[39m
+[90m [2mΓ¥»[22m createChild node_modules/react-dom/cjs/react-dom.development.js:[2m13345:28[22m[39m
+[90m [2mΓ¥»[22m reconcileChildrenArray node_modules/react-dom/cjs/react-dom.development.js:[2m13640:25[22m[39m
+[90m [2mΓ¥»[22m reconcileChildFibers node_modules/react-dom/cjs/react-dom.development.js:[2m14057:16[22m[39m
+[90m [2mΓ¥»[22m reconcileChildren node_modules/react-dom/cjs/react-dom.development.js:[2m19186:28[22m[39m
+[90m [2mΓ¥»[22m updateHostComponent node_modules/react-dom/cjs/react-dom.development.js:[2m19953:3[22m[39m
+[90m [2mΓ¥»[22m beginWork node_modules/react-dom/cjs/react-dom.development.js:[2m21657:14[22m[39m
+[90m [2mΓ¥»[22m beginWork$1 node_modules/react-dom/cjs/react-dom.development.js:[2m27465:14[22m[39m
+[90m [2mΓ¥»[22m performUnitOfWork node_modules/react-dom/cjs/react-dom.development.js:[2m26599:12[22m[39m
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[7/8]ΓÄ»[22m[39m
+
+[2m Test Files [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m17 passed[39m[22m[90m (20)[39m
+[2m      Tests [22m [1m[31m8 failed[39m[22m[2m | [22m[1m[32m107 passed[39m[22m[90m (115)[39m
+[2m   Start at [22m 16:07:47
+[2m   Duration [22m 117.81s[2m (transform 23.10s, setup 81.09s, collect 150.65s, tests 19.42s, environment 418.87s, prepare 58.46s)[22m
+

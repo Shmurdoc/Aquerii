@@ -4,6 +4,8 @@ return [
 
     'default' => env('QUEUE_CONNECTION', 'redis'),
 
+    'fallback' => env('QUEUE_CONNECTION_FALLBACK', 'database'),
+
     'connections' => [
 
         'sync' => [

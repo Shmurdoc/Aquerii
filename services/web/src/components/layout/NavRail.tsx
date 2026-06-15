@@ -91,7 +91,6 @@ const SECTIONS: NavSection[] = [
       { to: '/plugins',    icon: Package,       label: 'Plugins' },
       { to: '/reports',    icon: BarChart2,     label: 'Reports',   permission: 'reports.*' },
       { to: '/support',    icon: HeadphonesIcon,label: 'Support'  },
-      { to: '/marketing',  icon: Megaphone,     label: 'Marketing'  },
       { to: '/employees',  icon: UserCheck,     label: 'Employees', permission: 'employees.*' },
     ],
   },

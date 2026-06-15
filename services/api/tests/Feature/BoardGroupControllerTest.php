@@ -33,14 +33,14 @@ it('creates a board group', function () {
 
     $response->assertStatus(201);
 
-    $this->assertDatabaseHas('groups', [
+    $this->assertDatabaseHas('board_groups', [
         'board_id' => $this->board->id,
         'name' => 'In Progress',
     ]);
 });
 
 it('lists board groups', function () {
-    DB::table('groups')->insert([
+    DB::table('board_groups')->insert([
         ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'name' => 'To Do', 'color' => '#6366f1', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
         ['id' => Str::uuid()->toString(), 'board_id' => $this->board->id, 'name' => 'Done', 'color' => '#22c55e', 'position' => 1, 'created_at' => now(), 'updated_at' => now()],
     ]);
@@ -53,7 +53,7 @@ it('lists board groups', function () {
 
 it('shows a specific group', function () {
     $groupId = Str::uuid()->toString();
-    DB::table('groups')->insert([
+    DB::table('board_groups')->insert([
         'id' => $groupId,
         'board_id' => $this->board->id,
         'name' => 'Review',
@@ -71,7 +71,7 @@ it('shows a specific group', function () {
 
 it('updates a group name', function () {
     $groupId = Str::uuid()->toString();
-    DB::table('groups')->insert([
+    DB::table('board_groups')->insert([
         'id' => $groupId,
         'board_id' => $this->board->id,
         'name' => 'Old Name',
@@ -90,7 +90,7 @@ it('updates a group name', function () {
     $response->assertStatus(200)
         ->assertJsonPath('data.updated', true);
 
-    $this->assertDatabaseHas('groups', [
+    $this->assertDatabaseHas('board_groups', [
         'id' => $groupId,
         'name' => 'Updated Name',
     ]);
@@ -98,7 +98,7 @@ it('updates a group name', function () {
 
 it('deletes a group', function () {
     $groupId = Str::uuid()->toString();
-    DB::table('groups')->insert([
+    DB::table('board_groups')->insert([
         'id' => $groupId,
         'board_id' => $this->board->id,
         'name' => 'Delete Me',
@@ -117,13 +117,13 @@ it('deletes a group', function () {
     $response->assertStatus(200)
         ->assertJsonPath('data.deleted', true);
 
-    $this->assertDatabaseMissing('groups', ['id' => $groupId]);
+    $this->assertDatabaseMissing('board_groups', ['id' => $groupId]);
 });
 
 it('reorders groups by updating positions', function () {
     $groupA = Str::uuid()->toString();
     $groupB = Str::uuid()->toString();
-    DB::table('groups')->insert([
+    DB::table('board_groups')->insert([
         ['id' => $groupA, 'board_id' => $this->board->id, 'name' => 'First', 'color' => '#6366f1', 'position' => 0, 'created_at' => now(), 'updated_at' => now()],
         ['id' => $groupB, 'board_id' => $this->board->id, 'name' => 'Second', 'color' => '#22c55e', 'position' => 65536, 'created_at' => now(), 'updated_at' => now()],
     ]);
@@ -140,7 +140,7 @@ it('reorders groups by updating positions', function () {
         ['Idempotency-Key' => Str::uuid()->toString()]
     )->assertStatus(200);
 
-    $groups = DB::table('groups')->where('board_id', $this->board->id)->orderBy('position')->get();
+    $groups = DB::table('board_groups')->where('board_id', $this->board->id)->orderBy('position')->get();
     expect($groups->first()->id)->toBe($groupB);
     expect($groups->last()->id)->toBe($groupA);
 });
@@ -148,7 +148,7 @@ it('reorders groups by updating positions', function () {
 it('returns 404 for group in a different board', function () {
     $otherBoard = Board::factory()->create(['workspace_id' => $this->workspace->id]);
     $groupId = Str::uuid()->toString();
-    DB::table('groups')->insert([
+    DB::table('board_groups')->insert([
         'id' => $groupId,
         'board_id' => $otherBoard->id,
         'name' => 'Hidden',

@@ -11,6 +11,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('ptw/permits/{permit}/request', [PermitController::class, 'request']);
         Route::post('ptw/permits/{permit}/approve', [PermitController::class, 'approve']);
         Route::post('ptw/permits/{permit}/reject', [PermitController::class, 'reject']);
+        Route::post('ptw/permits/{permit}/hsse-review', [PermitController::class, 'hsseReview']);
         Route::post('ptw/permits/{permit}/issue', [PermitController::class, 'issue']);
         Route::post('ptw/permits/{permit}/activate', [PermitController::class, 'activate']);
         Route::post('ptw/permits/{permit}/suspend', [PermitController::class, 'suspend']);

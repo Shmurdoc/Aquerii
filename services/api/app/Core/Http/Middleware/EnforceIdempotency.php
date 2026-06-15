@@ -26,7 +26,7 @@ class EnforceIdempotency
 
     public function handle(Request $request, Closure $next): Response
     {
-        if (! in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+        if (! in_array($request->method(), ['POST', 'PUT'])) {
             return $next($request);
         }
 

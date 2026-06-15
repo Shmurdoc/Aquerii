@@ -43,10 +43,10 @@ class BoardService
 
             // Default columns
             $defaultColumns = [
-                ['name' => 'Status',    'type' => 'status',  'position' => 65536,  'is_system' => true],
-                ['name' => 'Assignee',  'type' => 'people',  'position' => 131072, 'is_system' => true],
-                ['name' => 'Due Date',  'type' => 'date',    'position' => 196608, 'is_system' => true],
-                ['name' => 'Priority',  'type' => 'priority', 'position' => 262144, 'is_system' => true],
+                ['title' => 'Status',   'type' => 'status',  'position' => 65536,  'is_system' => true],
+                ['title' => 'Assignee', 'type' => 'people',  'position' => 131072, 'is_system' => true],
+                ['title' => 'Due Date', 'type' => 'date',    'position' => 196608, 'is_system' => true],
+                ['title' => 'Priority', 'type' => 'priority', 'position' => 262144, 'is_system' => true],
             ];
 
             foreach ($defaultColumns as $col) {

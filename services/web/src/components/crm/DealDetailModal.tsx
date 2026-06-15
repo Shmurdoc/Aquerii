@@ -38,7 +38,7 @@ export default function DealDetailModal({ deal, workspaceId, onClose }: Props) {
   const [title, setTitle] = useState(deal.title)
   const [value, setValue] = useState(deal.value?.toString() ?? '')
   const [stageId, setStageId] = useState(deal.stage_id)
-  const [notes, setNotes] = useState((deal as any).description ?? (deal as any).notes ?? '')
+  const [notes, setNotes] = useState(deal.description ?? deal.notes ?? '')
   const [mentionUserIds, setMentionUserIds] = useState<string[]>([])
   const [activityType, setActivityType] = useState<string>('note')
   const [activityBody, setActivityBody] = useState('')
@@ -159,7 +159,7 @@ export default function DealDetailModal({ deal, workspaceId, onClose }: Props) {
     const numValue = value ? Number(value) : null
     if (numValue !== deal.value) payload.value = numValue
     if (stageId !== deal.stage_id) payload.stage_id = stageId
-    const currentNotes = (deal as any).description ?? (deal as any).notes ?? ''
+    const currentNotes = deal.description ?? deal.notes ?? ''
     if (notes !== currentNotes) {
       payload.description = notes
       payload.notes = notes
@@ -243,7 +243,7 @@ export default function DealDetailModal({ deal, workspaceId, onClose }: Props) {
             onChange={e => setValue(e.target.value)}
             disabled={!editing}
             size="sm"
-            icon={DollarSign}
+            icon={<DollarSign />}
           />
         </div>
 

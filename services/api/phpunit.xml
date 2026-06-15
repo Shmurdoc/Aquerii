@@ -29,7 +29,7 @@
         <env name="DB_DATABASE" value="aquerii_test" force="true"/>
         <env name="DB_CHARSET" value="utf8" force="true"/>
         <env name="DB_USERNAME" value="aquerii_app"/>
-        <env name="DB_PASSWORD" value="${DB_PASSWORD}" force="true"/>
+        <env name="DB_PASSWORD" value="secret_app_password" force="true"/>
         <env name="REDIS_CLIENT" value="predis" force="true"/>
         <env name="REDIS_HOST" value="redis"/>
         <env name="REDIS_PORT" value="6379" force="true"/>

@@ -272,7 +272,7 @@ export default function SecurityTab() {
                 placeholder="Search audit log..."
                 value={auditSearch}
                 onChange={(e) => setAuditSearch(e.target.value)}
-                icon={Search}
+                icon={<Search />}
                 size="sm"
                 clearable
                 onClear={() => setAuditSearch('')}

@@ -7,8 +7,11 @@ let socket: Socket | null = null
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null
 let genericReconnectTimer: ReturnType<typeof setTimeout> | null = null
 let reconnectAttempts = 0
-const MAX_BACKOFF = 30_000
+const MAX_BACKOFF = 300_000 // 5 minutes
 const GENERIC_DISCONNECT_GRACE_MS = 30_000
+
+// Backoff sequence: 10s → 30s → 60s → 5min
+const BACKOFF_SEQUENCE = [10_000, 30_000, 60_000, 300_000]
 
 export interface SocketEventMap {
   notification: (n: AppNotification) => void
@@ -18,6 +21,36 @@ export interface SocketEventMap {
   connect: () => void
   disconnect: (reason: string) => void
   connect_error: (err: Error) => void
+}
+
+type CriticalHandler = () => Promise<void> | void
+let criticalFallbacks: Map<string, CriticalHandler> = new Map()
+
+export function registerCriticalFallback(key: string, handler: CriticalHandler) {
+  criticalFallbacks.set(key, handler)
+}
+
+export function unregisterCriticalFallback(key: string) {
+  criticalFallbacks.delete(key)
+}
+
+export function isConnected(): boolean {
+  return socket?.connected ?? false
+}
+
+function getBackoffDelay(attempt: number): number {
+  const index = Math.min(attempt, BACKOFF_SEQUENCE.length - 1)
+  return BACKOFF_SEQUENCE[index]
+}
+
+async function runCriticalFallbacks() {
+  for (const [key, handler] of criticalFallbacks) {
+    try {
+      await handler()
+    } catch (err) {
+      console.error(`[realtime] critical fallback "${key}" failed`, err)
+    }
+  }
 }
 
 function attachGlobalListeners(s: Socket) {
@@ -34,20 +67,17 @@ function attachGlobalListeners(s: Socket) {
     if (import.meta.env.DEV) console.debug('[realtime] disconnected', reason)
 
     if (reason === 'io server disconnect') {
-      // Server forced disconnect — likely auth/session expired. Refresh now.
       refreshTokenAndReconnect()
       return
     }
 
     if (reason === 'io client disconnect') {
-      // We disconnected on purpose — do nothing.
       return
     }
 
-    // Generic disconnect (transport close / transport error / ping timeout).
-    // socket.io's built-in reconnection will retry with backoff. If it can't
-    // re-establish within the grace window, force a token refresh and a
-    // fresh socket so a stale token can't keep blocking us indefinitely.
+    // Run critical fallbacks immediately when disconnected
+    runCriticalFallbacks()
+
     if (genericReconnectTimer) clearTimeout(genericReconnectTimer)
     genericReconnectTimer = setTimeout(() => {
       genericReconnectTimer = null
@@ -59,12 +89,21 @@ function attachGlobalListeners(s: Socket) {
 
   s.on('connect_error', (err) => {
     reconnectAttempts++
+    // Apply exponential backoff for reconnect on error
+    const delay = getBackoffDelay(reconnectAttempts)
+    if (import.meta.env.DEV) console.debug(`[realtime] connect_error backoff ${delay}ms`, err.message)
+
     if (
       err.message === 'AUTH_REQUIRED' ||
       err.message === 'AUTH_INVALID' ||
       reconnectAttempts >= 3
     ) {
       refreshTokenAndReconnect()
+    }
+
+    // Run critical fallbacks on persistent connect errors
+    if (reconnectAttempts >= 2) {
+      runCriticalFallbacks()
     }
   })
 
@@ -80,9 +119,6 @@ function attachGlobalListeners(s: Socket) {
 export function getSocket(): Socket {
   if (socket?.connected) return socket
 
-  // Explicitly tear down any stale instance before creating a new one,
-  // otherwise listeners on the orphaned socket can still fire and dispatch
-  // into the stores after a brief network blip.
   if (socket) {
     socket.removeAllListeners()
     socket.disconnect()
@@ -99,6 +135,7 @@ export function getSocket(): Socket {
     reconnectionAttempts: Infinity,
     reconnectionDelay: 1000,
     reconnectionDelayMax: MAX_BACKOFF,
+    randomizationFactor: 0.5,
   })
 
   attachGlobalListeners(socket)
@@ -119,7 +156,6 @@ async function refreshTokenAndReconnect() {
 
     useAuthStore.setState((s) => ({ ...s, token: newToken }))
 
-    // Force a fresh socket with the new token.
     if (socket) {
       socket.removeAllListeners()
       socket.disconnect()

@@ -9,7 +9,7 @@ describe('Badge', () => {
 
   it('applies variant classes', () => {
     render(<Badge variant="success">Done</Badge>)
-    expect(screen.getByText('Done').className).toContain('status-done')
+    expect(screen.getByText('Done').className).toContain('bg-green-900/50')
   })
 
   it('applies size classes', () => {

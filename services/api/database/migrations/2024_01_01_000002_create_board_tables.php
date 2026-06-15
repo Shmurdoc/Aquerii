@@ -29,9 +29,9 @@ return new class extends Migration
 
         Schema::create('board_columns', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('workspace_id');
+            $table->uuid('workspace_id')->nullable();
             $table->uuid('board_id');
-            $table->string('name');
+            $table->string('title');
             $table->string('type', 50);
             $table->float('position')->default(0);
             $table->integer('width')->default(200);
@@ -43,7 +43,7 @@ return new class extends Migration
 
         Schema::create('board_groups', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('workspace_id');
+            $table->uuid('workspace_id')->nullable();
             $table->uuid('board_id');
             $table->string('name')->default('New Group');
             $table->string('color', 20)->nullable();

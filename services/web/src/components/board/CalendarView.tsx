@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect, useLayoutEffect } from 'react'
-import { createPortal } from 'react-dom'
+import { useState } from 'react'
 import type { Board } from '@/hooks/useBoards'
 import type { Item } from '@/hooks/useItems'
 import {
@@ -7,7 +6,7 @@ import {
   addDays, addMonths, subMonths,
   isSameMonth, isToday, format,
 } from 'date-fns'
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import clsx from 'clsx'
 import ItemDetailModal from './ItemDetailModal'
 
@@ -17,66 +16,9 @@ interface Props {
   boardId: string
 }
 
-type OverflowPos = { top: number; left: number }
-
 export default function CalendarView({ board, items, boardId }: Props) {
-  const [current,     setCurrent]     = useState(new Date())
-  const [selected,    setSelected]    = useState<Item | null>(null)
-  const [expandedDay, setExpandedDay] = useState<string | null>(null)
-  const [overflowPos, setOverflowPos] = useState<OverflowPos | null>(null)
-  const popoverRef = useRef<HTMLDivElement>(null)
-  const cellRefs = useRef<Record<string, HTMLDivElement | null>>({})
-
-  // Close popover on outside click / Esc
-  useEffect(() => {
-    if (!expandedDay) return
-    const onDown = (e: MouseEvent) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
-        setExpandedDay(null)
-      }
-    }
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setExpandedDay(null)
-    }
-    document.addEventListener('mousedown', onDown)
-    document.addEventListener('keydown', onKey)
-    return () => {
-      document.removeEventListener('mousedown', onDown)
-      document.removeEventListener('keydown', onKey)
-    }
-  }, [expandedDay])
-
-  // Recompute popover position whenever it opens, on resize, or on scroll.
-  useLayoutEffect(() => {
-    if (!expandedDay) {
-      setOverflowPos(null)
-      return
-    }
-    const compute = () => {
-      const cell = cellRefs.current[expandedDay]
-      if (!cell) return
-      const r = cell.getBoundingClientRect()
-      const POPOVER_W = 224
-      const GAP = 8
-      const margin = 8
-      // Flip left if the day is on the right half of the viewport, OR if
-      // opening rightward would push the popover past the viewport edge.
-      const wouldOverflowRight = r.right + GAP + POPOVER_W + margin > window.innerWidth
-      const cellIsRightHalf    = r.left + r.width / 2 > window.innerWidth / 2
-      const left = wouldOverflowRight || cellIsRightHalf
-        ? Math.max(margin, r.left - GAP - POPOVER_W)
-        : r.right + GAP
-      const top = Math.max(margin, r.top)
-      setOverflowPos({ top, left })
-    }
-    compute()
-    window.addEventListener('resize', compute)
-    window.addEventListener('scroll', compute, true)
-    return () => {
-      window.removeEventListener('resize', compute)
-      window.removeEventListener('scroll', compute, true)
-    }
-  }, [expandedDay])
+  const [current,  setCurrent]  = useState(new Date())
+  const [selected, setSelected] = useState<Item | null>(null)
 
   const monthStart = startOfMonth(current)
   const monthEnd   = endOfMonth(current)
@@ -148,16 +90,13 @@ export default function CalendarView({ board, items, boardId }: Props) {
                 const dayItems = itemsByDate[key] ?? []
                 const outside  = !isSameMonth(d, current)
                 const today    = isToday(d)
-                const isOpen   = expandedDay === key
 
                 return (
                   <div
                     key={di}
-                    ref={(el) => { cellRefs.current[key] = el }}
                     className={clsx(
-                      'bg-gray-950 p-1.5 min-h-[90px] relative',
-                      outside && 'opacity-40',
-                      isOpen && 'z-30'
+                      'bg-gray-950 p-1.5 min-h-[90px]',
+                      outside && 'opacity-40'
                     )}
                   >
                     {/* Date number */}
@@ -184,18 +123,9 @@ export default function CalendarView({ board, items, boardId }: Props) {
                         </button>
                       ))}
                       {dayItems.length > 3 && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setExpandedDay(isOpen ? null : key)
-                          }}
-                          className={clsx(
-                            'text-[10px] px-1 transition-colors w-full text-left',
-                            isOpen ? 'text-indigo-300' : 'text-gray-500 hover:text-indigo-400'
-                          )}
-                        >
-                          {isOpen ? '− hide' : `+${dayItems.length - 3} more`}
-                        </button>
+                        <p className="text-[10px] text-gray-600 px-1">
+                          +{dayItems.length - 3} more
+                        </p>
                       )}
                     </div>
                   </div>
@@ -206,59 +136,13 @@ export default function CalendarView({ board, items, boardId }: Props) {
         </div>
       </div>
 
-      {expandedDay && overflowPos && createPortal(
-        <div
-          ref={popoverRef}
-          role="dialog"
-          aria-label="Day overflow"
-          className="fixed z-[1000] w-56 bg-gray-900/95 backdrop-blur-md border border-gray-700 rounded-xl shadow-2xl p-2 animate-fade-in"
-          style={{ top: overflowPos.top, left: overflowPos.left }}
-          onClick={e => e.stopPropagation()}
-        >
-          <div className="flex items-center justify-between px-1 pb-1.5 mb-1 border-b border-gray-800">
-            <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">
-              {(() => {
-                const d = new Date(expandedDay)
-                return Number.isNaN(d.getTime()) ? 'Remaining items' : `${format(d, 'EEE, MMM d')} — ${(() => {
-                  const arr = itemsByDate[expandedDay] ?? []
-                  return arr.length
-                })()} items`
-              })()}
-            </p>
-            <button
-              onClick={() => setExpandedDay(null)}
-              className="p-0.5 rounded text-gray-500 hover:text-white hover:bg-gray-800 transition-colors"
-              aria-label="Close"
-            >
-              <X size={12} />
-            </button>
-          </div>
-          <div className="max-h-64 overflow-y-auto space-y-0.5">
-            {(itemsByDate[expandedDay] ?? []).slice(3).map(item => (
-              <button
-                key={item.id}
-                onClick={() => { setSelected(item); setExpandedDay(null) }}
-                className="w-full text-left truncate text-[11px] px-2 py-1.5 rounded font-medium transition-all hover:translate-x-0.5"
-                style={{
-                  backgroundColor: groupColor(item) + '25',
-                  color:           groupColor(item),
-                  border:          `1px solid ${groupColor(item)}40`,
-                }}
-              >
-                {item.title}
-              </button>
-            ))}
-          </div>
-        </div>,
-        document.body
+      {selected && (
+        <ItemDetailModal
+          item={selected}
+          boardId={boardId}
+          onClose={() => setSelected(null)}
+        />
       )}
-
-      <ItemDetailModal
-        itemId={selected?.id ?? ''}
-        boardId={boardId}
-        open={!!selected}
-        onClose={() => setSelected(null)}
-      />
     </>
   )
 }

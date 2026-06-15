@@ -45,6 +45,8 @@ export const useAuthStore = create<AuthState>()(
       logout: () => set({ token: null, user: null, workspace: null, role: null }),
     }),
     {
+      // ⚠ XSS risk: token in sessionStorage is readable by any JS running on the page.
+      // Migrate to HttpOnly cookies for better security.
       name: 'aquerii-auth',
       storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({

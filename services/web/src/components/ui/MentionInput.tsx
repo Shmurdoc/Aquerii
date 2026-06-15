@@ -18,6 +18,7 @@ export interface MentionInputProps {
   placeholder?: string
   className?: string
   rows?: number
+  required?: boolean
 }
 
 const MENTION_REGEX = /(^|\s)@([^\s@]*)$/

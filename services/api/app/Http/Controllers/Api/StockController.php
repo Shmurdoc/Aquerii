@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 
 class StockController extends Controller
 {
-    public function show(Product $product): JsonResponse
+    public function show(string $workspace, Product $product): JsonResponse
     {
         $in = (int) StockMovement::where('product_id', $product->id)
             ->where('type', 'in')
@@ -39,7 +39,7 @@ class StockController extends Controller
         ]);
     }
 
-    public function adjust(Request $request, Product $product): JsonResponse
+    public function adjust(Request $request, string $workspace, Product $product): JsonResponse
     {
         $validated = $request->validate([
             'type' => 'required|string|in:in,out,adjustment',
@@ -50,7 +50,6 @@ class StockController extends Controller
 
         $movement = DB::transaction(function () use ($validated, $product, $request) {
             return StockMovement::create([
-                'id' => Str::uuid()->toString(),
                 'workspace_id' => $product->workspace_id,
                 'product_id' => $product->id,
                 'quantity' => $validated['quantity'],
@@ -64,7 +63,7 @@ class StockController extends Controller
         return response()->json(['data' => $movement], 201);
     }
 
-    public function movements(Product $product): JsonResponse
+    public function movements(string $workspace, Product $product): JsonResponse
     {
         $movements = StockMovement::where('product_id', $product->id)
             ->orderBy('created_at', 'desc')

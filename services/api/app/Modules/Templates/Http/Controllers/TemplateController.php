@@ -88,7 +88,11 @@ class TemplateController extends Controller
 
         $content = $template->content;
         foreach ($variables as $key => $value) {
-            $content = str_replace("{{$key}}", $value, $content);
+            array_walk_recursive($content, function (&$item) use ($key, $value) {
+                if (is_string($item)) {
+                    $item = str_replace("{{{$key}}}", $value, $item);
+                }
+            });
         }
 
         return response()->json(['data' => ['template' => $template, 'applied_content' => $content]]);

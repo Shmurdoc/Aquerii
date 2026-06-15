@@ -6,7 +6,7 @@ import {
   formatPermitType, isHighRiskType,
   type PermitType, type PermitRiskLevel, type PermitPayload, type EnergyType,
 } from '@/lib/ptw'
-import { Card, Button, Input, MentionInput, Select } from '@/components/ui'
+import { Card, Button, Input, MentionInput, Select, Textarea } from '@/components/ui'
 import { ArrowLeft, AlertTriangle, Plus, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 

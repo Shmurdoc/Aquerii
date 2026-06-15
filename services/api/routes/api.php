@@ -28,6 +28,7 @@ use App\Core\Http\Controllers\Api\ScimController;
 use App\Core\Http\Controllers\Api\SentimentController;
 use App\Core\Http\Controllers\Api\UserSettingsController;
 use App\Core\Http\Controllers\Api\WebhookController;
+use App\Core\Http\Controllers\Api\WebhookEndpointController;
 use App\Core\Http\Controllers\Api\WorkspaceController;
 use App\Core\Http\Controllers\Api\WorkspaceLogoController;
 use App\Core\Http\Controllers\Auth\AuthController;
@@ -39,6 +40,8 @@ use App\Core\Http\Controllers\ItemController;
 use App\Core\Http\Controllers\UserController;
 use App\Core\Models\Item;
 use App\Http\Controllers\Api\CalendarItemController;
+use App\Http\Controllers\Api\PortalController;
+use App\Http\Controllers\Api\StorageController;
 use App\Http\Controllers\Api\WorkspaceInvitationController;
 use App\Modules\AI\Http\Controllers\AIController;
 use App\Modules\Automation\Http\Controllers\AutomationController;
@@ -63,6 +66,8 @@ use App\Modules\CRM\Http\Controllers\QuotaController;
 use App\Modules\CRM\Http\Controllers\QuoteController;
 use App\Modules\CRM\Http\Controllers\SequenceController;
 use App\Modules\CRM\Http\Controllers\StageController;
+use App\Modules\CRM\Http\Controllers\WorkOrderController;
+use App\Modules\CRM\Http\Controllers\ContractMilestoneController;
 use App\Modules\Email\Http\Controllers\InboundEmailController;
 use App\Modules\Email\Http\Controllers\ProjectEmailAddressController;
 use Illuminate\Http\Request;
@@ -70,8 +75,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 // ── Health check (public) ─────────────────────────────────────────────────────
-Route::get('healthz', fn () => response()->json(['status' => 'ok', 'service' => 'api']));
-Route::get('health', fn () => response()->json(['status' => 'ok', 'service' => 'api']));
+Route::get('health', App\Http\Controllers\Api\HealthController::class);
+Route::get('healthz', App\Http\Controllers\Api\HealthController::class);
 
 // ── Branding (public — used by login page to load workspace theme) ────────────
 Route::get('branding', [BrandingController::class, 'show']);
@@ -113,6 +118,14 @@ Route::middleware('auth:sanctum')->group(function () {
 // ── Billing webhooks (raw body — bypass idempotency & auth) ──────────────────
 Route::post('webhooks/stripe', [WebhookController::class, 'stripe']);
 Route::post('webhooks/payfast', [WebhookController::class, 'payfast']);
+
+// ── Portal (token-authenticated compliance views) ──────────────────────────
+Route::prefix('portal')->middleware('throttle:30,1')->group(function () {
+    Route::get('{token}/summary', [PortalController::class, 'summary']);
+    Route::get('{token}/contractors/{contractorId}/workers', [PortalController::class, 'contractorWorkers']);
+    Route::get('{token}/heatmap', [PortalController::class, 'heatmap']);
+    Route::get('{token}/export', [PortalController::class, 'export']);
+});
 
 // ── Authenticated ─────────────────────────────────────────────────────────────
 Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
@@ -264,6 +277,15 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::get('integrations/webhook-events', [IntegrationReliabilityController::class, 'index'])->middleware('workspace.role:owner,admin');
         Route::post('integrations/webhook-events/{event}/retry', [IntegrationReliabilityController::class, 'retry'])->middleware(['idempotent', 'workspace.role:owner,admin']);
         Route::post('integrations/webhook-events/{event}/replay-now', [IntegrationReliabilityController::class, 'replayNow'])->middleware(['idempotent', 'workspace.role:owner,admin']);
+
+        // Webhook Endpoints (user-managed outgoing webhooks)
+        Route::get('webhook-endpoints', [WebhookEndpointController::class, 'index']);
+        Route::post('webhook-endpoints', [WebhookEndpointController::class, 'store'])->middleware('idempotent');
+        Route::get('webhook-endpoints/{webhookEndpoint}', [WebhookEndpointController::class, 'show']);
+        Route::put('webhook-endpoints/{webhookEndpoint}', [WebhookEndpointController::class, 'update'])->middleware('idempotent');
+        Route::delete('webhook-endpoints/{webhookEndpoint}', [WebhookEndpointController::class, 'destroy'])->middleware('idempotent');
+        Route::post('webhook-endpoints/{webhookEndpoint}/rotate-secret', [WebhookEndpointController::class, 'rotateSecret'])->middleware('idempotent');
+        Route::get('webhook-endpoints/{webhookEndpoint}/deliveries', [WebhookEndpointController::class, 'deliveries']);
 
         // Entity exports (xlsx, csv, json)
         Route::get('exports/{entity}/{format}', [ExportController::class, 'export']);
@@ -452,6 +474,22 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::post('crm/calendar-syncs/{sync}/sync', [CalendarSyncController::class, 'sync'])->middleware('idempotent');
         Route::get('crm/provider-calendars', [CalendarSyncController::class, 'listProviderCalendars']);
 
+        // CRM Work Orders
+        Route::get('crm/work-orders', [WorkOrderController::class, 'index']);
+        Route::post('crm/work-orders', [WorkOrderController::class, 'store'])->middleware('idempotent');
+        Route::get('crm/work-orders/{workOrder}', [WorkOrderController::class, 'show']);
+        Route::put('crm/work-orders/{workOrder}', [WorkOrderController::class, 'update'])->middleware('idempotent');
+        Route::delete('crm/work-orders/{workOrder}', [WorkOrderController::class, 'destroy'])->middleware('idempotent');
+        Route::post('crm/work-orders/{workOrder}/issue', [WorkOrderController::class, 'issue'])->middleware('idempotent');
+        Route::post('crm/work-orders/{workOrder}/complete', [WorkOrderController::class, 'complete'])->middleware('idempotent');
+
+        // CRM Contract Milestones
+        Route::get('crm/deals/{deal}/milestones', [ContractMilestoneController::class, 'index']);
+        Route::post('crm/deals/{deal}/milestones', [ContractMilestoneController::class, 'store'])->middleware('idempotent');
+        Route::put('crm/milestones/{milestone}', [ContractMilestoneController::class, 'update'])->middleware('idempotent');
+        Route::delete('crm/milestones/{milestone}', [ContractMilestoneController::class, 'destroy'])->middleware('idempotent');
+        Route::post('crm/milestones/{milestone}/complete', [ContractMilestoneController::class, 'complete'])->middleware('idempotent');
+
         // CRM Telephony
         Route::post('crm/telephony', [CalendarSyncController::class, 'telephony'])->middleware('idempotent');
 
@@ -560,11 +598,18 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
             Route::delete('email/project-addresses/{address}', [ProjectEmailAddressController::class, 'destroy']);
         });
 
-        // ── Job Cards module ────────────────────────────────────────────────
-        require __DIR__.'/modules/jobcards.php';
+        // Storage
+        Route::get('storage', [StorageController::class, 'show']);
 
-        // ── Delegation module ───────────────────────────────────────────────
-        require __DIR__.'/modules/delegation.php';
+        // ── Job Cards module (killed per scope.md) ──────────────────────────
+        Route::middleware('feature:module.jobcards')->group(function () {
+            require __DIR__.'/modules/jobcards.php';
+        });
+
+        // ── Delegation module (killed per scope.md) ─────────────────────────
+        Route::middleware('feature:module.delegation')->group(function () {
+            require __DIR__.'/modules/delegation.php';
+        });
 
         // ── Template System module ─────────────────────────────────────────
         require __DIR__.'/modules/templates.php';

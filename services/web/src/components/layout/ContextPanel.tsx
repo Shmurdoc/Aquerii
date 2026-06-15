@@ -48,14 +48,6 @@ const SECTIONS: Record<string, { label: string; items: { to: string; label: stri
       { to: '/support/slas',           label: 'SLAs'           },
     ],
   },
-  '/marketing': {
-    label: 'Marketing',
-    items: [
-      { to: '/marketing/campaigns',       label: 'Campaigns'       },
-      { to: '/marketing/email-templates', label: 'Email Templates' },
-      { to: '/marketing/segments',        label: 'Segments'        },
-    ],
-  },
   '/settings': {
     label: 'Settings',
     items: [
@@ -79,14 +71,7 @@ const SECTIONS: Record<string, { label: string; items: { to: string; label: stri
   },
   '/erp': {
     label: 'ERP',
-    items: [
-      { to: '/erp/job-cards',  label: 'Job Cards'  },
-      { to: '/erp/invoicing',  label: 'Invoicing'  },
-      { to: '/erp/purchasing', label: 'Purchasing' },
-      { to: '/erp/sales',      label: 'Sales'      },
-      { to: '/erp/inventory',  label: 'Inventory'  },
-      { to: '/erp/accounting', label: 'Accounting' },
-    ],
+    items: [],
   },
 }
 

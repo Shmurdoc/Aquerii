@@ -1,62 +1,51 @@
-import { type ReactNode } from 'react'
-import { type LucideIcon } from 'lucide-react'
-import { clsx } from 'clsx'
-import { X } from 'lucide-react'
+import { HTMLAttributes, forwardRef } from 'react'
 
-type BadgeVariant = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'error' | 'info'
-type BadgeSize = 'sm' | 'md' | 'lg'
+type Variant = 'default' | 'success' | 'warning' | 'danger' | 'info' | 'primary' | 'error'
+type Size = 'sm' | 'md' | 'lg'
 
-type BadgeProps = {
-  variant?: BadgeVariant
-  size?: BadgeSize
+interface Props extends HTMLAttributes<HTMLSpanElement> {
+  variant?: Variant
   dot?: boolean
-  pill?: boolean
-  removable?: boolean
-  onRemove?: () => void
-  icon?: LucideIcon
-  children?: ReactNode
-  className?: string
+  size?: Size
 }
 
-const variantStyles: Record<BadgeVariant, string> = {
-  default: 'bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] border border-[var(--color-glass-border)]',
-  primary: 'bg-[var(--color-accent)] text-white',
-  success: 'bg-[var(--color-status-done)] text-white',
-  warning: 'bg-[var(--color-status-progress)] text-white',
-  danger: 'bg-[var(--color-status-blocked)] text-white',
-  error: 'bg-[var(--color-status-blocked)] text-white',
-  info: 'bg-[var(--color-status-review)] text-white',
+const variantStyles: Record<Variant, string> = {
+  default: 'bg-gray-700 text-gray-200',
+  success: 'bg-green-900/50 text-green-300',
+  warning: 'bg-yellow-900/50 text-yellow-300',
+  danger:  'bg-red-900/50 text-red-300',
+  info:    'bg-blue-900/50 text-blue-300',
+  primary: 'bg-indigo-900/50 text-indigo-300',
+  error:   'bg-red-900/50 text-red-300',
 }
 
-const sizeStyles: Record<BadgeSize, string> = {
-  sm: 'px-1.5 py-0.5 text-[10px] gap-1',
-  md: 'px-2 py-0.5 text-xs gap-1',
-  lg: 'px-2.5 py-1 text-sm gap-1.5',
+const dotColors: Record<Variant, string> = {
+  default: 'bg-gray-400',
+  success: 'bg-green-400',
+  warning: 'bg-yellow-400',
+  danger:  'bg-red-400',
+  info:    'bg-blue-400',
+  primary: 'bg-indigo-400',
+  error:   'bg-red-400',
 }
 
-export function Badge({ variant = 'default', size = 'md', dot, pill, removable, onRemove, icon: Icon, children, className }: BadgeProps) {
-  return (
+const sizeStyles: Record<Size, string> = {
+  sm: 'px-2 py-0.5 text-xs',
+  md: 'px-2.5 py-1 text-xs',
+  lg: 'px-3 py-1.5 text-sm',
+}
+
+export const Badge = forwardRef<HTMLSpanElement, Props>(
+  ({ variant = 'default', dot, size = 'sm', className = '', children, ...props }, ref) => (
     <span
-      className={clsx(
-        'inline-flex items-center font-medium select-none',
-        variantStyles[variant],
-        sizeStyles[size],
-        pill ? 'rounded-full' : 'rounded-md',
-        className,
-      )}
+      ref={ref}
+      className={`inline-flex items-center gap-1.5 font-medium rounded-full ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      {...props}
     >
-      {dot && <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />}
-      {Icon && <Icon size={size === 'sm' ? 10 : size === 'lg' ? 14 : 12} />}
+      {dot && <span className={`w-1.5 h-1.5 rounded-full ${dotColors[variant]}`} />}
       {children}
-      {removable && (
-        <button
-          type="button"
-          onClick={onRemove}
-          className="ml-0.5 p-0.5 rounded-full hover:bg-black/20 transition-colors"
-        >
-          <X size={size === 'sm' ? 8 : 10} />
-        </button>
-      )}
     </span>
   )
-}
+)
+
+Badge.displayName = 'Badge'

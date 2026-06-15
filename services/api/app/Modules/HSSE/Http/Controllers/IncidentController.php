@@ -6,10 +6,12 @@ use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Workspace;
 use App\Core\Services\AuditService;
 use App\Core\Services\ReferenceSequenceService;
+use App\Jobs\UploadIncidentPhoto;
 use App\Modules\HSSE\Models\Incident;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class IncidentController extends Controller
 {
@@ -75,6 +77,8 @@ class IncidentController extends Controller
             'coida_reportable' => 'sometimes|boolean',
             'coida_reference' => 'nullable|string|max:50',
             'investigator_id' => 'nullable|uuid',
+            'photos' => 'nullable|array',
+            'photos.*' => 'file|image|max:10240',
         ]);
 
         $incident = DB::transaction(function () use ($request, $workspace, $validated) {
@@ -102,6 +106,17 @@ class IncidentController extends Controller
                 'investigator_id' => $validated['investigator_id'] ?? null,
             ]);
         });
+
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                $tempPath = $photo->store('tmp/incident-photos', 'local');
+                UploadIncidentPhoto::dispatch(
+                    incidentId: $incident->id,
+                    tempPath: $tempPath,
+                    fileName: $photo->getClientOriginalName(),
+                );
+            }
+        }
 
         $this->audit->log(
             action: 'hsse.incident.reported',

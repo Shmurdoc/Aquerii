@@ -25,7 +25,7 @@ it('creates a product', function () {
         "/api/workspaces/{$this->workspace->id}/products",
         [
             'name' => 'Widget',
-            'price' => 19.99,
+            'unit_price' => 19.99,
             'sku' => 'WDG-001',
             'description' => 'A useful widget',
             'unit' => 'pcs',
@@ -43,22 +43,24 @@ it('creates a product', function () {
 });
 
 it('lists products', function () {
+    DB::table('products')->where('workspace_id', $this->workspace->id)->delete();
+
     DB::table('products')->insert([
-        ['id' => Str::uuid()->toString(), 'workspace_id' => $this->workspace->id, 'name' => 'Product A', 'price' => 10, 'created_by' => $this->user->id, 'created_at' => now(), 'updated_at' => now()],
-        ['id' => Str::uuid()->toString(), 'workspace_id' => $this->workspace->id, 'name' => 'Product B', 'price' => 20, 'created_by' => $this->user->id, 'created_at' => now(), 'updated_at' => now()],
+        ['id' => Str::uuid()->toString(), 'workspace_id' => $this->workspace->id, 'name' => 'Product A', 'unit_price' => 10, 'created_by' => $this->user->id, 'created_at' => now(), 'updated_at' => now()],
+        ['id' => Str::uuid()->toString(), 'workspace_id' => $this->workspace->id, 'name' => 'Product B', 'unit_price' => 20, 'created_by' => $this->user->id, 'created_at' => now(), 'updated_at' => now()],
     ]);
 
     $response = $this->getJson("/api/workspaces/{$this->workspace->id}/products");
 
     $response->assertStatus(200)
-        ->assertJsonCount(2, 'data');
+        ->assertJsonCount(2, 'data.data');
 });
 
 it('shows a product', function () {
     $product = Product::create([
         'workspace_id' => $this->workspace->id,
         'name' => 'Visible Product',
-        'price' => 15.50,
+        'unit_price' => 15.50,
         'created_by' => $this->user->id,
     ]);
 
@@ -72,13 +74,13 @@ it('updates a product', function () {
     $product = Product::create([
         'workspace_id' => $this->workspace->id,
         'name' => 'Old Name',
-        'price' => 10,
+        'unit_price' => 10,
         'created_by' => $this->user->id,
     ]);
 
     $response = $this->patchJson(
         "/api/workspaces/{$this->workspace->id}/products/{$product->id}",
-        ['name' => 'New Name', 'price' => 25],
+        ['name' => 'New Name', 'unit_price' => 25],
         ['Idempotency-Key' => Str::uuid()->toString()]
     );
 
@@ -90,7 +92,7 @@ it('deletes a product', function () {
     $product = Product::create([
         'workspace_id' => $this->workspace->id,
         'name' => 'Delete Me',
-        'price' => 5,
+        'unit_price' => 5,
         'created_by' => $this->user->id,
     ]);
 
@@ -107,7 +109,7 @@ it('shows stock information for a product', function () {
     $product = Product::create([
         'workspace_id' => $this->workspace->id,
         'name' => 'Stocked Product',
-        'price' => 10,
+        'unit_price' => 10,
         'created_by' => $this->user->id,
     ]);
 
@@ -123,7 +125,7 @@ it('adjusts stock with an inbound movement', function () {
     $product = Product::create([
         'workspace_id' => $this->workspace->id,
         'name' => 'Restocked Product',
-        'price' => 10,
+        'unit_price' => 10,
         'created_by' => $this->user->id,
     ]);
 
@@ -146,7 +148,7 @@ it('adjusts stock with an outward movement', function () {
     $product = Product::create([
         'workspace_id' => $this->workspace->id,
         'name' => 'Shipped Product',
-        'price' => 10,
+        'unit_price' => 10,
         'created_by' => $this->user->id,
     ]);
 
@@ -172,7 +174,7 @@ it('detects low stock threshold', function () {
     $product = Product::create([
         'workspace_id' => $this->workspace->id,
         'name' => 'Low Stock Item',
-        'price' => 5,
+        'unit_price' => 5,
         'created_by' => $this->user->id,
     ]);
 
@@ -196,7 +198,7 @@ it('lists stock movements for a product', function () {
     $product = Product::create([
         'workspace_id' => $this->workspace->id,
         'name' => 'Tracked Product',
-        'price' => 10,
+        'unit_price' => 10,
         'created_by' => $this->user->id,
     ]);
 

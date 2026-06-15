@@ -5,6 +5,7 @@ namespace App\Modules\PTW\Services;
 use App\Core\Models\User;
 use App\Core\Services\AuditService;
 use App\Modules\PTW\Models\Permit;
+use App\Services\FatigueService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -31,6 +32,8 @@ class PermitWorkflowService
     public const TRANSITION_ISSUE = 'issue';
 
     public const TRANSITION_ACTIVATE = 'activate';
+
+    public const TRANSITION_HSSE_REVIEW = 'hsse_review';
 
     public const TRANSITION_SUSPEND = 'suspend';
 
@@ -115,8 +118,8 @@ class PermitWorkflowService
         $out = [];
         foreach ([
             self::TRANSITION_REQUEST, self::TRANSITION_APPROVE, self::TRANSITION_REJECT,
-            self::TRANSITION_ISSUE, self::TRANSITION_ACTIVATE, self::TRANSITION_SUSPEND,
-            self::TRANSITION_RESUME, self::TRANSITION_CLOSE,
+            self::TRANSITION_HSSE_REVIEW, self::TRANSITION_ISSUE, self::TRANSITION_ACTIVATE,
+            self::TRANSITION_SUSPEND, self::TRANSITION_RESUME, self::TRANSITION_CLOSE,
         ] as $action) {
             if ($this->canTransition($permit, $action, $user)) {
                 $out[] = $action;
@@ -132,6 +135,7 @@ class PermitWorkflowService
             self::TRANSITION_REQUEST => Permit::STATUS_REQUESTED,
             self::TRANSITION_APPROVE => Permit::STATUS_APPROVED,
             self::TRANSITION_REJECT => Permit::STATUS_REJECTED,
+            self::TRANSITION_HSSE_REVIEW => Permit::STATUS_HSSE_REVIEWED,
             self::TRANSITION_ISSUE => Permit::STATUS_ISSUED,
             self::TRANSITION_ACTIVATE => Permit::STATUS_ACTIVE,
             self::TRANSITION_SUSPEND => Permit::STATUS_SUSPENDED,
@@ -153,7 +157,10 @@ class PermitWorkflowService
             self::TRANSITION_REQUEST => $from === Permit::STATUS_DRAFT,
             self::TRANSITION_APPROVE => $from === Permit::STATUS_REQUESTED,
             self::TRANSITION_REJECT => $from === Permit::STATUS_REQUESTED,
-            self::TRANSITION_ISSUE => $from === Permit::STATUS_APPROVED,
+            self::TRANSITION_HSSE_REVIEW => $from === Permit::STATUS_APPROVED,
+            self::TRANSITION_ISSUE => in_array($from, [
+                Permit::STATUS_APPROVED, Permit::STATUS_HSSE_REVIEWED,
+            ], true),
             self::TRANSITION_ACTIVATE => $from === Permit::STATUS_ISSUED,
             self::TRANSITION_SUSPEND => $from === Permit::STATUS_ACTIVE,
             self::TRANSITION_RESUME => $from === Permit::STATUS_SUSPENDED,
@@ -181,6 +188,15 @@ class PermitWorkflowService
                 'valid_until' => 'Cannot activate an expired permit. Issue a new one.',
             ]);
         }
+
+        if ($action === self::TRANSITION_ACTIVATE) {
+            $fatigue = (new FatigueService)->check($permit->holder_id);
+            if ($fatigue->hard_blocked) {
+                throw ValidationException::withMessages([
+                    'fatigue' => 'Holder has worked 16+ hours in the last 24h and cannot activate this permit.',
+                ]);
+            }
+        }
     }
 
     private function assertRoleAllowed(Permit $permit, string $action, User $user): void
@@ -194,6 +210,7 @@ class PermitWorkflowService
         $allowed = match ($action) {
             self::TRANSITION_REQUEST => $isIssuer,
             self::TRANSITION_APPROVE, self::TRANSITION_REJECT => $isApprover,
+            self::TRANSITION_HSSE_REVIEW => $isApprover,
             self::TRANSITION_ISSUE => $isIssuer,
             self::TRANSITION_ACTIVATE => $isHolder || $isOwnerLike,
             self::TRANSITION_SUSPEND => $isIssuer || $isHolder,
@@ -232,6 +249,7 @@ class PermitWorkflowService
                 'rejection_reason' => $reason,
                 'approved_at' => null,
             ],
+            self::TRANSITION_HSSE_REVIEW => $now + ['hsse_reviewed_at' => now()],
             self::TRANSITION_ISSUE => $now + [
                 'issued_at' => now(),
                 'valid_from' => $meta['valid_from'] ?? now(),
