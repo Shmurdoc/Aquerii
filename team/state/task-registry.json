@@ -1,0 +1,146 @@
+{
+  "version": "5.0",
+  "last_updated": "2026-06-11T00:00:00Z",
+  "sprints": [
+    {
+      "id": "sprint-1",
+      "name": "Production Fixes",
+      "status": "completed",
+      "tasks": [
+        {
+          "id": "TASK-001",
+          "title": "Fix calendar endpoint 404",
+          "type": "debugger",
+          "status": "completed",
+          "assigned_to": "debugger-1",
+          "priority": "high",
+          "estimate_h": 2,
+          "dependencies": [],
+          "created_at": "2026-06-08T00:00:00Z",
+          "completed_at": "2026-06-08T02:00:00Z"
+        },
+        {
+          "id": "TASK-002",
+          "title": "Fix worker memory leak",
+          "type": "builder",
+          "status": "completed",
+          "assigned_to": "builder-3",
+          "priority": "critical",
+          "estimate_h": 5,
+          "dependencies": [],
+          "created_at": "2026-06-08T00:00:00Z",
+          "completed_at": "2026-06-08T05:00:00Z"
+        },
+        {
+          "id": "TASK-003",
+          "title": "Fix auth 403 errors",
+          "type": "debugger",
+          "status": "completed",
+          "assigned_to": "debugger-2",
+          "priority": "high",
+          "estimate_h": 2,
+          "dependencies": [],
+          "created_at": "2026-06-08T00:00:00Z",
+          "completed_at": "2026-06-08T02:00:00Z"
+        },
+        {
+          "id": "TASK-004",
+          "title": "Add permit compliance checks",
+          "type": "builder",
+          "status": "completed",
+          "assigned_to": "builder-1",
+          "priority": "high",
+          "estimate_h": 2,
+          "dependencies": [],
+          "created_at": "2026-06-08T00:00:00Z",
+          "completed_at": "2026-06-08T02:00:00Z"
+        },
+        {
+          "id": "TASK-005",
+          "title": "Design PTW frontend",
+          "type": "designer",
+          "status": "completed",
+          "assigned_to": "designer",
+          "priority": "high",
+          "estimate_h": 6,
+          "dependencies": [],
+          "created_at": "2026-06-08T00:00:00Z",
+          "completed_at": "2026-06-08T06:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "sprint-2",
+      "name": "Feature Development",
+      "status": "active",
+      "tasks": [
+        {
+          "id": "TASK-006",
+          "title": "Implement CRM calendar sync",
+          "type": "builder",
+          "status": "pending",
+          "assigned_to": null,
+          "priority": "high",
+          "estimate_h": 8,
+          "dependencies": ["TASK-001"],
+          "created_at": "2026-06-11T00:00:00Z"
+        },
+        {
+          "id": "TASK-007",
+          "title": "Add billing module API endpoints",
+          "type": "builder",
+          "status": "pending",
+          "assigned_to": null,
+          "priority": "medium",
+          "estimate_h": 6,
+          "dependencies": [],
+          "created_at": "2026-06-11T00:00:00Z"
+        },
+        {
+          "id": "TASK-008",
+          "title": "Write E2E tests for PTW flow",
+          "type": "qa-lead",
+          "status": "pending",
+          "assigned_to": null,
+          "priority": "high",
+          "estimate_h": 4,
+          "dependencies": ["TASK-005"],
+          "created_at": "2026-06-11T00:00:00Z"
+        },
+        {
+          "id": "TASK-009",
+          "title": "Update API documentation",
+          "type": "doc-engineer",
+          "status": "pending",
+          "assigned_to": null,
+          "priority": "medium",
+          "estimate_h": 3,
+          "dependencies": ["TASK-006", "TASK-007"],
+          "created_at": "2026-06-11T00:00:00Z"
+        },
+        {
+          "id": "TASK-010",
+          "title": "Set up canary monitoring",
+          "type": "dev-ops",
+          "status": "pending",
+          "assigned_to": null,
+          "priority": "medium",
+          "estimate_h": 4,
+          "dependencies": [],
+          "created_at": "2026-06-11T00:00:00Z"
+        },
+        {
+          "id": "TASK-011",
+          "title": "Performance benchmarking",
+          "type": "qa-lead",
+          "status": "pending",
+          "assigned_to": null,
+          "priority": "low",
+          "estimate_h": 3,
+          "dependencies": ["TASK-006"],
+          "created_at": "2026-06-11T00:00:00Z"
+        }
+      ]
+    }
+  ]
+}

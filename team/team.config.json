@@ -1,0 +1,290 @@
+{
+  "members": [
+    {
+      "id": "ceo",
+      "type": "ceo",
+      "role": "Strategic direction and decomposition",
+      "instance": 1,
+      "area": "docs/strategy/",
+      "tech": "strategy",
+      "quality_gates": [
+        "team validate",
+        "/office-hours",
+        "/plan-ceo-review"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "eng-manager",
+      "type": "eng-manager",
+      "role": "Planning and execution framing (Leader)",
+      "instance": 1,
+      "area": "team/",
+      "tech": "orchestration",
+      "quality_gates": [
+        "team validate",
+        "project tests",
+        "/plan-eng-review",
+        "/investigate"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "designer",
+      "type": "designer",
+      "role": "UX and product-design decisions",
+      "instance": 1,
+      "area": "docs/design/, services/web/src/components/",
+      "tech": "Tailwind / CSS / Figma",
+      "quality_gates": [
+        "design review",
+        "/design-shotgun",
+        "/design-html",
+        "/design-review"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "builder-1",
+      "type": "builder",
+      "role": "Implementation — Core API / Integration",
+      "instance": 1,
+      "area": "services/api/",
+      "tech": "PHP 8.3 / Laravel 11",
+      "quality_gates": [
+        "project tests",
+        "linter",
+        "type check",
+        "/browse",
+        "/qa"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "builder-2",
+      "type": "builder",
+      "role": "Implementation — Feature Modules (CRM/ERP)",
+      "instance": 2,
+      "area": "services/api/app/Modules/CRM/, services/api/app/Modules/ERP/",
+      "tech": "PHP 8.3 / Laravel 11",
+      "quality_gates": [
+        "project tests",
+        "linter",
+        "type check",
+        "/browse",
+        "/qa"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "builder-3",
+      "type": "builder",
+      "role": "Implementation — Feature Modules (Billing/Inventory)",
+      "instance": 3,
+      "area": "services/api/app/Modules/Billing/, services/api/app/Modules/Inventory/",
+      "tech": "PHP 8.3 / Laravel 11",
+      "quality_gates": [
+        "project tests",
+        "linter",
+        "type check",
+        "/browse",
+        "/qa"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "reviewer",
+      "type": "reviewer",
+      "role": "Code quality and review (Senior Lead)",
+      "instance": 1,
+      "area": "team/reviews/",
+      "tech": "code-review",
+      "quality_gates": [
+        "review check",
+        "/review"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "debugger-1",
+      "type": "debugger",
+      "role": "Root-cause analysis #1 (on-call)",
+      "instance": 1,
+      "area": "src/",
+      "tech": "any",
+      "quality_gates": [
+        "regression test",
+        "project tests",
+        "/investigate",
+        "/browse"
+      ],
+      "reviews_by": [],
+      "strict_scope": true
+    },
+    {
+      "id": "debugger-2",
+      "type": "debugger",
+      "role": "Root-cause analysis #2",
+      "instance": 2,
+      "area": "src/",
+      "tech": "any",
+      "quality_gates": [
+        "regression test",
+        "project tests",
+        "/investigate",
+        "/browse"
+      ],
+      "reviews_by": [],
+      "strict_scope": true
+    },
+    {
+      "id": "debugger-3",
+      "type": "debugger",
+      "role": "Root-cause analysis #3",
+      "instance": 3,
+      "area": "src/",
+      "tech": "any",
+      "quality_gates": [
+        "regression test",
+        "project tests",
+        "/investigate",
+        "/browse"
+      ],
+      "reviews_by": [],
+      "strict_scope": true
+    },
+    {
+      "id": "debugger-4",
+      "type": "debugger",
+      "role": "Root-cause analysis #4 (overflow)",
+      "instance": 4,
+      "area": "src/",
+      "tech": "any",
+      "quality_gates": [
+        "regression test",
+        "project tests",
+        "/investigate",
+        "/browse"
+      ],
+      "reviews_by": [],
+      "strict_scope": true
+    },
+    {
+      "id": "qa-lead-backend",
+      "type": "qa-lead",
+      "role": "QA — Backend (PHP/Pest, API integration)",
+      "instance": 1,
+      "area": "services/api/tests/",
+      "tech": "Pest PHP / PHPUnit",
+      "quality_gates": [
+        "test coverage",
+        "qa report",
+        "project tests",
+        "/qa",
+        "/qa-only",
+        "/browse"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "qa-lead-frontend",
+      "type": "qa-lead",
+      "role": "QA — Frontend (Playwright, Vitest, React)",
+      "instance": 2,
+      "area": "services/web/tests/",
+      "tech": "Playwright / Vitest / React Testing Library",
+      "quality_gates": [
+        "test coverage",
+        "qa report",
+        "project tests",
+        "/qa",
+        "/qa-only",
+        "/browse"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "qa-lead-integration",
+      "type": "qa-lead",
+      "role": "QA — Integration (k6 load, E2E, CI)",
+      "instance": 3,
+      "area": "tests/, .github/workflows/",
+      "tech": "k6 / Docker / GitHub Actions",
+      "quality_gates": [
+        "test coverage",
+        "qa report",
+        "project tests",
+        "/qa",
+        "/qa-only",
+        "/browse"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "release-engineer",
+      "type": "release-engineer",
+      "role": "Release readiness and publishing flow",
+      "instance": 1,
+      "area": "infra/, deploy/",
+      "tech": "Docker / Helm / Terraform / GitHub Actions",
+      "quality_gates": [
+        "CI green",
+        "canary check",
+        "smoke test",
+        "/ship",
+        "/canary",
+        "/land-and-deploy"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "doc-engineer",
+      "type": "doc-engineer",
+      "role": "Documentation and handoff quality",
+      "instance": 1,
+      "area": "docs/",
+      "tech": "Markdown / PDF",
+      "quality_gates": [
+        "docs build",
+        "link check",
+        "/document-generate",
+        "/document-release"
+      ],
+      "reviews_by": [],
+      "strict_scope": false
+    },
+    {
+      "id": "dev-ops",
+      "type": "dev-ops",
+      "role": "Infrastructure, CI/CD, Docker, deploy pipelines, monitoring, security",
+      "instance": 1,
+      "area": "infra/, .github/, docker-compose.yml, Dockerfile*, team/scripts/",
+      "tech": "Docker / GitHub Actions / Cloud Run / Terraform / Helm / k8s",
+      "quality_gates": [
+        "CI green",
+        "canary check",
+        "smoke test",
+        "security scan",
+        "/canary",
+        "/benchmark",
+        "/cso"
+      ],
+      "reviews_by": ["reviewer"],
+      "strict_scope": false
+    }
+  ],
+  "version": "5.0",
+  "project_type": "api",
+  "project_name": "Aquerii"
+}

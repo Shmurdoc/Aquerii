@@ -1,0 +1,95 @@
+{
+  "version": "5.0",
+  "last_updated": "2026-06-11T00:00:00Z",
+  "rules": [
+    {
+      "task_type": "debugger",
+      "file_patterns": [
+        "services/api/app/**/*.php",
+        "services/web/src/**/*.{ts,tsx}",
+        "services/ai/**/*.py"
+      ],
+      "context_strategy": "error-first"
+    },
+    {
+      "task_type": "builder",
+      "file_patterns": [
+        "services/api/app/Modules/**/*",
+        "services/web/src/components/**/*"
+      ],
+      "context_strategy": "related-modules"
+    },
+    {
+      "task_type": "designer",
+      "file_patterns": [
+        "services/web/src/components/**/*",
+        "docs/design/**/*"
+      ],
+      "context_strategy": "visual-components"
+    },
+    {
+      "task_type": "qa-lead",
+      "file_patterns": [
+        "services/api/tests/**/*",
+        "services/web/tests/**/*",
+        "tests/**/*"
+      ],
+      "context_strategy": "test-coverage"
+    },
+    {
+      "task_type": "release-engineer",
+      "file_patterns": [
+        "infra/**/*",
+        ".github/workflows/**/*",
+        "docker-compose*.yml",
+        "Dockerfile*"
+      ],
+      "context_strategy": "deployment"
+    },
+    {
+      "task_type": "dev-ops",
+      "file_patterns": [
+        "infra/**/*",
+        ".github/**/*",
+        "docker-compose*.yml",
+        "Dockerfile*",
+        "team/scripts/**/*"
+      ],
+      "context_strategy": "infrastructure"
+    },
+    {
+      "task_type": "doc-engineer",
+      "file_patterns": [
+        "docs/**/*",
+        "README.md",
+        "CHANGELOG.md"
+      ],
+      "context_strategy": "documentation"
+    },
+    {
+      "task_type": "reviewer",
+      "file_patterns": [
+        "services/api/app/**/*.php",
+        "services/web/src/**/*.{ts,tsx}",
+        "services/ai/**/*.py"
+      ],
+      "context_strategy": "diff-focused"
+    },
+    {
+      "task_type": "eng-manager",
+      "file_patterns": [
+        "team/**/*",
+        "services/**/*"
+      ],
+      "context_strategy": "overview"
+    },
+    {
+      "task_type": "ceo",
+      "file_patterns": [
+        "docs/strategy/**/*",
+        "team/state/**/*"
+      ],
+      "context_strategy": "strategic"
+    }
+  ]
+}

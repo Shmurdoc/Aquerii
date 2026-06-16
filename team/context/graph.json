@@ -1,0 +1,5530 @@
+{
+  "routes": {
+    "GET /api/workspaces/{wid}/healthz": {
+      "controller": "fn.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/health": {
+      "controller": "fn.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/branding": {
+      "controller": "BrandingController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/register": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/login": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/forgot-password": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/reset-password": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/refresh": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/verify-email/resend": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/verify-email/{id}/{hash}": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/oauth/{provider}": {
+      "controller": "OAuthController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/oauth/{provider}/callback": {
+      "controller": "OAuthController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/invitations/{token}/accept": {
+      "controller": "WorkspaceInvitationController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/invites/{token}/accept": {
+      "controller": "WorkspaceController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/webhooks/stripe": {
+      "controller": "WebhookController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/webhooks/payfast": {
+      "controller": "WebhookController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/auth/logout": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/auth/mfa/enable": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/auth/mfa/verify": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/auth/mfa/verify-token": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/auth/mfa/disable": {
+      "controller": "AuthController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/me": {
+      "controller": "UserController.php",
+      "method": "get"
+    },
+    "PUT /api/workspaces/{wid}/me": {
+      "controller": "UserController.php",
+      "method": "put"
+    },
+    "POST /api/workspaces/{wid}/me/avatar": {
+      "controller": "UserController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/me/permissions": {
+      "controller": "PermissionController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/me/push-subscriptions": {
+      "controller": "PushSubscriptionController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/me/push-subscriptions": {
+      "controller": "PushSubscriptionController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/me/push-subscriptions/{id}": {
+      "controller": "PushSubscriptionController.php",
+      "method": "delete"
+    },
+    "GET /api/workspaces/{wid}/me/personal-access-tokens": {
+      "controller": "PersonalAccessTokenController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/me/personal-access-tokens": {
+      "controller": "PersonalAccessTokenController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/me/personal-access-tokens/{id}": {
+      "controller": "PersonalAccessTokenController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/user/two-factor-authentication": {
+      "controller": "UserSettingsController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/user/confirmed-two-factor-authentication": {
+      "controller": "UserSettingsController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/user/two-factor-authentication": {
+      "controller": "UserSettingsController.php",
+      "method": "delete"
+    },
+    "GET /api/workspaces/{wid}/user/two-factor-qr-code": {
+      "controller": "UserSettingsController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/user/two-factor-recovery-codes": {
+      "controller": "UserSettingsController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/user/sessions": {
+      "controller": "UserSettingsController.php",
+      "method": "get"
+    },
+    "DELETE /api/workspaces/{wid}/user/sessions/{sessionId}": {
+      "controller": "UserSettingsController.php",
+      "method": "delete"
+    },
+    "GET /api/workspaces/{wid}/user/notifications/preferences": {
+      "controller": "UserSettingsController.php",
+      "method": "get"
+    },
+    "PUT /api/workspaces/{wid}/user/notifications/preferences": {
+      "controller": "UserSettingsController.php",
+      "method": "put"
+    },
+    "POST /api/workspaces/{wid}/user/password": {
+      "controller": "UserSettingsController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/me/notifications": {
+      "controller": "NotificationController.php",
+      "method": "get"
+    },
+    "PATCH /api/workspaces/{wid}/me/notifications/{id}/read": {
+      "controller": "NotificationController.php",
+      "method": "patch"
+    },
+    "POST /api/workspaces/{wid}/me/notifications/read-all": {
+      "controller": "NotificationController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/me/notification-preferences": {
+      "controller": "UserSettingsController.php",
+      "method": "get"
+    },
+    "PUT /api/workspaces/{wid}/me/notification-preferences": {
+      "controller": "UserSettingsController.php",
+      "method": "put"
+    },
+    "GET /api/workspaces/{wid}/workspaces": {
+      "controller": "WorkspaceController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/workspaces": {
+      "controller": "WorkspaceController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/logo": {
+      "controller": "WorkspaceLogoController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/logo": {
+      "controller": "WorkspaceLogoController.php",
+      "method": "delete"
+    },
+    "GET /api/workspaces/{wid}/search": {
+      "controller": "WorkspaceController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/members": {
+      "controller": "WorkspaceController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/members": {
+      "controller": "WorkspaceController.php",
+      "method": "post"
+    },
+    "PATCH /api/workspaces/{wid}/members/{userId}": {
+      "controller": "WorkspaceController.php",
+      "method": "patch"
+    },
+    "DELETE /api/workspaces/{wid}/members/{userId}": {
+      "controller": "WorkspaceController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/invitations": {
+      "controller": "WorkspaceInvitationController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/employee-groups/org-chart": {
+      "controller": "EmployeeGroupController.php",
+      "method": "get"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/employee-groups": {
+      "controller": "EmployeeGroupController.php",
+      "method": "apiResource"
+    },
+    "GET /api/workspaces/{wid}/invitations": {
+      "controller": "WorkspaceInvitationController.php",
+      "method": "get"
+    },
+    "DELETE /api/workspaces/{wid}/invitations/{token}": {
+      "controller": "WorkspaceInvitationController.php",
+      "method": "delete"
+    },
+    "GET /api/workspaces/{wid}/compliance": {
+      "controller": "ComplianceController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/compliance/dashboard": {
+      "controller": "ComplianceController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/compliance/equipment": {
+      "controller": "ComplianceController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/compliance/equipment/{equipment}": {
+      "controller": "ComplianceController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/roi/dashboard": {
+      "controller": "ROIController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/plans": {
+      "controller": "ShiftReadinessController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/plans": {
+      "controller": "ShiftReadinessController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/plans/{plan}/assign": {
+      "controller": "ShiftReadinessController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/plans/{plan}/publish": {
+      "controller": "ShiftReadinessController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/plans/{plan}/complete": {
+      "controller": "ShiftReadinessController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/checkout": {
+      "controller": "BillingController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/portal": {
+      "controller": "BillingController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/subscription": {
+      "controller": "BillingController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/payfast/checkout": {
+      "controller": "BillingController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/storage": {
+      "controller": "StorageController.php",
+      "method": "get"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/boards": {
+      "controller": "BoardController.php",
+      "method": "apiResource"
+    },
+    "GET /api/workspaces/{wid}/boards": {
+      "controller": "BoardController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/my-day": {
+      "controller": "ItemController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/calendar-items": {
+      "controller": "CalendarItemController.php",
+      "method": "get"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/columns": {
+      "controller": "BoardColumnController.php",
+      "method": "apiResource"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/groups": {
+      "controller": "BoardGroupController.php",
+      "method": "apiResource"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/items": {
+      "controller": "ItemController.php",
+      "method": "apiResource"
+    },
+    "GET /api/workspaces/{wid}/items/{item}/activity": {
+      "controller": "ItemController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/items/{item}/linked-documents": {
+      "controller": "function.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/items/{item}/linked-deals": {
+      "controller": "function.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/items/{item}/subitems": {
+      "controller": "ItemController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/items/{item}/subitems": {
+      "controller": "ItemController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/items/{item}/duplicate": {
+      "controller": "ItemController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/items/{item}/move": {
+      "controller": "ItemController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/items/{item}/assignees": {
+      "controller": "ItemController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/items/{item}/assignees/{userId}": {
+      "controller": "ItemController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/bulk": {
+      "controller": "BulkActionController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/saved-views": {
+      "controller": "SavedViewController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/saved-views": {
+      "controller": "SavedViewController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/saved-views/{view}": {
+      "controller": "SavedViewController.php",
+      "method": "get"
+    },
+    "PUT /api/workspaces/{wid}/saved-views/{view}": {
+      "controller": "SavedViewController.php",
+      "method": "put"
+    },
+    "DELETE /api/workspaces/{wid}/saved-views/{view}": {
+      "controller": "SavedViewController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/saved-views/{view}/share": {
+      "controller": "SavedViewController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/items/{item}/comments": {
+      "controller": "CommentController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/items/{item}/comments": {
+      "controller": "CommentController.php",
+      "method": "post"
+    },
+    "PATCH /api/workspaces/{wid}/items/{item}/comments/{comment}": {
+      "controller": "CommentController.php",
+      "method": "patch"
+    },
+    "DELETE /api/workspaces/{wid}/items/{item}/comments/{comment}": {
+      "controller": "CommentController.php",
+      "method": "delete"
+    },
+    "GET /api/workspaces/{wid}/items/{item}/files": {
+      "controller": "FileController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/items/{item}/files": {
+      "controller": "FileController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/files/{file}": {
+      "controller": "FileController.php",
+      "method": "delete"
+    },
+    "GET /api/workspaces/{wid}/notifications": {
+      "controller": "NotificationController.php",
+      "method": "get"
+    },
+    "PATCH /api/workspaces/{wid}/notifications/{id}/read": {
+      "controller": "NotificationController.php",
+      "method": "patch"
+    },
+    "POST /api/workspaces/{wid}/notifications/read-all": {
+      "controller": "NotificationController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/reports/dashboard": {
+      "controller": "ReportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/reports/invoices": {
+      "controller": "ReportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/reports/expenses": {
+      "controller": "ReportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/reports/procurement": {
+      "controller": "ReportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/reports/inventory": {
+      "controller": "ReportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/reports/export/{type}": {
+      "controller": "ReportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/reports/schedules": {
+      "controller": "ReportScheduleController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/reports/schedules": {
+      "controller": "ReportScheduleController.php",
+      "method": "post"
+    },
+    "PATCH /api/workspaces/{wid}/reports/schedules/{schedule}": {
+      "controller": "ReportScheduleController.php",
+      "method": "patch"
+    },
+    "DELETE /api/workspaces/{wid}/reports/schedules/{schedule}": {
+      "controller": "ReportScheduleController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/reports/schedules/{schedule}/run-now": {
+      "controller": "ReportScheduleController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/reports/schedules/exceptions": {
+      "controller": "ReportScheduleController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/integrations/webhook-events": {
+      "controller": "IntegrationReliabilityController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/integrations/webhook-events/{event}/retry": {
+      "controller": "IntegrationReliabilityController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/integrations/webhook-events/{event}/replay-now": {
+      "controller": "IntegrationReliabilityController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/exports/{entity}/{format}": {
+      "controller": "ExportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/audit-logs": {
+      "controller": "AuditLogController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/activity": {
+      "controller": "function.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/audit-logs/export": {
+      "controller": "function.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/field-permissions": {
+      "controller": "FieldPermissionController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/field-permissions": {
+      "controller": "FieldPermissionController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/field-permissions/{permission}": {
+      "controller": "FieldPermissionController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/field-permissions/bulk": {
+      "controller": "FieldPermissionController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/scim/tokens": {
+      "controller": "FieldPermissionController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/scim/tokens": {
+      "controller": "FieldPermissionController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/scim/tokens/{token}": {
+      "controller": "FieldPermissionController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/scim/users": {
+      "controller": "FieldPermissionController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/webhook-endpoints": {
+      "controller": "WebhookEndpointController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/webhook-endpoints": {
+      "controller": "WebhookEndpointController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/webhook-endpoints/{endpoint}": {
+      "controller": "WebhookEndpointController.php",
+      "method": "get"
+    },
+    "PUT /api/workspaces/{wid}/webhook-endpoints/{endpoint}": {
+      "controller": "WebhookEndpointController.php",
+      "method": "put"
+    },
+    "DELETE /api/workspaces/{wid}/webhook-endpoints/{endpoint}": {
+      "controller": "WebhookEndpointController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/webhook-endpoints/{endpoint}/rotate-secret": {
+      "controller": "WebhookEndpointController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/webhook-endpoints/{endpoint}/deliveries": {
+      "controller": "WebhookEndpointController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/pipelines": {
+      "controller": "PipelineController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/crm/pipelines": {
+      "controller": "PipelineController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/crm/pipelines/{pipeline}": {
+      "controller": "PipelineController.php",
+      "method": "get"
+    },
+    "PATCH /api/workspaces/{wid}/crm/pipelines/{pipeline}": {
+      "controller": "PipelineController.php",
+      "method": "patch"
+    },
+    "DELETE /api/workspaces/{wid}/crm/pipelines/{pipeline}": {
+      "controller": "PipelineController.php",
+      "method": "delete"
+    },
+    "GET /api/workspaces/{wid}/crm/pipelines/{pipeline}/stages": {
+      "controller": "StageController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/crm/pipelines/{pipeline}/stages": {
+      "controller": "StageController.php",
+      "method": "post"
+    },
+    "PATCH /api/workspaces/{wid}/crm/pipelines/{pipeline}/stages/{stage}": {
+      "controller": "StageController.php",
+      "method": "patch"
+    },
+    "DELETE /api/workspaces/{wid}/crm/pipelines/{pipeline}/stages/{stage}": {
+      "controller": "StageController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/crm/pipelines/{pipeline}/stages/reorder": {
+      "controller": "StageController.php",
+      "method": "post"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/crm/deals": {
+      "controller": "DealController.php",
+      "method": "apiResource"
+    },
+    "POST /api/workspaces/{wid}/crm/deals/{deal}/move": {
+      "controller": "DealController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/crm/deals/{deal}/score": {
+      "controller": "DealController.php",
+      "method": "post"
+    },
+    "PATCH /api/workspaces/{wid}/crm/deals/{deal}/link-item": {
+      "controller": "DealController.php",
+      "method": "patch"
+    },
+    "PATCH /api/workspaces/{wid}/crm/deals/{deal}/unlink-item": {
+      "controller": "DealController.php",
+      "method": "patch"
+    },
+    "POST /api/workspaces/{wid}/crm/deals/{deal}/won": {
+      "controller": "DealController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/crm/deals/{deal}/lost": {
+      "controller": "DealController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/crm/forecast": {
+      "controller": "ForecastController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/forecast/by-rep": {
+      "controller": "ForecastController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/forecast/by-pipeline": {
+      "controller": "ForecastController.php",
+      "method": "get"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/crm/quotas": {
+      "controller": "QuotaController.php",
+      "method": "apiResource"
+    },
+    "POST /api/workspaces/{wid}/crm/quotas/{quota}/attainment": {
+      "controller": "QuotaController.php",
+      "method": "post"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/crm/sequences": {
+      "controller": "SequenceController.php",
+      "method": "apiResource"
+    },
+    "POST /api/workspaces/{wid}/crm/sequences/{sequence}/enroll": {
+      "controller": "SequenceController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/crm/sequences/{sequence}/enrollments/{enrollment}/unenroll": {
+      "controller": "SequenceController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/crm/sequences/{sequence}/progress": {
+      "controller": "SequenceController.php",
+      "method": "get"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/crm/call-logs": {
+      "controller": "CallLogController.php",
+      "method": "apiResource"
+    },
+    "GET /api/workspaces/{wid}/crm/deals/{deal}/activities": {
+      "controller": "CrmActivityController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/crm/deals/{deal}/activities": {
+      "controller": "CrmActivityController.php",
+      "method": "post"
+    },
+    "PATCH /api/workspaces/{wid}/crm/deals/{deal}/activities/{activity}": {
+      "controller": "CrmActivityController.php",
+      "method": "patch"
+    },
+    "DELETE /api/workspaces/{wid}/crm/deals/{deal}/activities/{activity}": {
+      "controller": "CrmActivityController.php",
+      "method": "delete"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/crm/contacts": {
+      "controller": "ContactController.php",
+      "method": "apiResource"
+    },
+    "POST /api/workspaces/{wid}/crm/contacts/{contact}/transition": {
+      "controller": "ContactController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/crm/contacts/{contact}/duplicates": {
+      "controller": "ContactController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/crm/contacts/{contact}/merge": {
+      "controller": "ContactController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/crm/contacts/{contact}/relationships": {
+      "controller": "ContactController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/crm/contacts/{contact}/relationships/{relationshipId}": {
+      "controller": "ContactController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/crm/contacts/{contact}/touch": {
+      "controller": "ContactController.php",
+      "method": "post"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/crm/companies": {
+      "controller": "CompanyController.php",
+      "method": "apiResource"
+    },
+    "GET /api/workspaces/{wid}/crm/contacts/{contact}/consent": {
+      "controller": "ConsentController.php",
+      "method": "get"
+    },
+    "PATCH /api/workspaces/{wid}/crm/contacts/{contact}/consent": {
+      "controller": "ConsentController.php",
+      "method": "patch"
+    },
+    "POST /api/workspaces/{wid}/crm/contacts/{contact}/consent/export": {
+      "controller": "ConsentController.php",
+      "method": "post"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/crm/leads": {
+      "controller": "LeadController.php",
+      "method": "apiResource"
+    },
+    "POST /api/workspaces/{wid}/crm/leads/{lead}/assign": {
+      "controller": "LeadController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/crm/leads/{lead}/convert": {
+      "controller": "LeadController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/crm/contacts/import": {
+      "controller": "ContactImportController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/crm/contacts/import/{importId}/status": {
+      "controller": "ContactImportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/reports/pipeline-velocity": {
+      "controller": "CrmReportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/reports/revenue": {
+      "controller": "CrmReportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/reports/win-loss": {
+      "controller": "CrmReportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/reports/activities": {
+      "controller": "CrmReportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/reports/lead-sources": {
+      "controller": "CrmReportController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/analytics/funnel": {
+      "controller": "CrmAnalyticsController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/analytics/cohort": {
+      "controller": "CrmAnalyticsController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/analytics/churn-risk": {
+      "controller": "CrmAnalyticsController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/crm/analytics/clv": {
+      "controller": "CrmAnalyticsController.php",
+      "method": "get"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/crm/automation-rules": {
+      "controller": "CrmAutomationRuleController.php",
+      "method": "apiResource"
+    },
+    "GET /api/workspaces/{wid}/crm/approval-rules": {
+      "controller": "DealApprovalController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/crm/approval-rules": {
+      "controller": "DealApprovalController.php",
+      "method": "post"
+    },
+    "PATCH /api/workspaces/{wid}/crm/approval-rules/{rule}": {
+      "controller": "DealApprovalController.php",
+      "method": "patch"
+    },
+    "DELETE /api/workspaces/{wid}/crm/approval-rules/{rule}": {
+      "controller": "DealApprovalController.php",
+      "method": "delete"
+    },
+    "GET /api/workspaces/{wid}/crm/deal-approvals": {
+      "controller": "DealApprovalController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/crm/deal-approvals/{approval}/approve": {
+      "controller": "DealApprovalController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/crm/deal-approvals/{approval}/reject": {
+      "controller": "DealApprovalController.php",
+      "method": "post"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/crm/products": {
+      "controller": "CrmProductController.php",
+      "method": "apiResource"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/crm/quotes": {
+      "controller": "QuoteController.php",
+      "method": "apiResource"
+    },
+    "POST /api/workspaces/{wid}/crm/quotes/{quote}/send": {
+      "controller": "QuoteController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/crm/quotes/{quote}/accept": {
+      "controller": "QuoteController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/crm/quotes/{quote}/reject": {
+      "controller": "QuoteController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/crm/quotes/{quote}/duplicate": {
+      "controller": "QuoteController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/crm/calendar-syncs": {
+      "controller": "CalendarSyncController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/crm/calendar-syncs": {
+      "controller": "CalendarSyncController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/crm/calendar-syncs/{sync}": {
+      "controller": "CalendarSyncController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/crm/calendar-syncs/{sync}/sync": {
+      "controller": "CalendarSyncController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/crm/provider-calendars": {
+      "controller": "CalendarSyncController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/crm/telephony": {
+      "controller": "CalendarSyncController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/crm/deals/{deal}/milestones": {
+      "controller": "ContractMilestoneController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/crm/deals/{deal}/milestones": {
+      "controller": "ContractMilestoneController.php",
+      "method": "post"
+    },
+    "PUT /api/workspaces/{wid}/crm/milestones/{milestone}": {
+      "controller": "ContractMilestoneController.php",
+      "method": "put"
+    },
+    "DELETE /api/workspaces/{wid}/crm/milestones/{milestone}": {
+      "controller": "ContractMilestoneController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/crm/milestones/{milestone}/complete": {
+      "controller": "ContractMilestoneController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/crm/work-orders": {
+      "controller": "WorkOrderController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/crm/work-orders": {
+      "controller": "WorkOrderController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/crm/work-orders/{workOrder}": {
+      "controller": "WorkOrderController.php",
+      "method": "get"
+    },
+    "PUT /api/workspaces/{wid}/crm/work-orders/{workOrder}": {
+      "controller": "WorkOrderController.php",
+      "method": "put"
+    },
+    "DELETE /api/workspaces/{wid}/crm/work-orders/{workOrder}": {
+      "controller": "WorkOrderController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/crm/work-orders/{workOrder}/issue": {
+      "controller": "WorkOrderController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/crm/work-orders/{workOrder}/complete": {
+      "controller": "WorkOrderController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/automation-templates": {
+      "controller": "AutomationController.php",
+      "method": "get"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/automations": {
+      "controller": "AutomationController.php",
+      "method": "apiResource"
+    },
+    "GET /api/workspaces/{wid}/automations/{automation}/runs": {
+      "controller": "AutomationController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/chat": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/summarize": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/score-deal": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/credits": {
+      "controller": "AIController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/task/generate-description": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/document/generate": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/document/analyze": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/document/auto-tag": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/document/link-deal": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/automation/generate": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/flowchart/generate": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/deal-summary": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/churn-risk": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/next-action": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/email-compose": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/data-clean": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/automation-recommendations": {
+      "controller": "RecommendationController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/automation-recommendations/refresh": {
+      "controller": "RecommendationController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/automation-recommendations/{recommendation}/accept": {
+      "controller": "RecommendationController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/automation-recommendations/{recommendation}/dismiss": {
+      "controller": "RecommendationController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/plugins/marketplace": {
+      "controller": "PluginController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/plugins/installed": {
+      "controller": "PluginController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/plugins/{plugin}/install": {
+      "controller": "PluginController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/plugins/{plugin}/uninstall": {
+      "controller": "PluginController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/plugins/{plugin}/toggle": {
+      "controller": "PluginController.php",
+      "method": "post"
+    },
+    "PATCH /api/workspaces/{wid}/plugins/{plugin}/settings": {
+      "controller": "PluginController.php",
+      "method": "patch"
+    },
+    "POST /api/workspaces/{wid}/anomaly-detection": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/predictions/task-duration": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/predictions/delay-risk": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/predictions/okr-progress": {
+      "controller": "AIController.php",
+      "method": "post"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/products": {
+      "controller": "ProductController.php",
+      "method": "apiResource"
+    },
+    "GET /api/workspaces/{wid}/products/{product}/stock": {
+      "controller": "StockController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/products/{product}/stock/adjust": {
+      "controller": "StockController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/products/{product}/stock/movements": {
+      "controller": "StockController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/invoices/{invoice}/pdf": {
+      "controller": "InvoicePdfController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/invoices/{invoice}/payments": {
+      "controller": "InvoiceWorkflowController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/invoices/{invoice}/payments": {
+      "controller": "InvoiceWorkflowController.php",
+      "method": "post"
+    },
+    "PATCH /api/workspaces/{wid}/invoices/{invoice}/status": {
+      "controller": "InvoiceWorkflowController.php",
+      "method": "patch"
+    },
+    "POST /api/workspaces/{wid}/sales/orders/{so}/convert-to-invoice": {
+      "controller": "InvoiceWorkflowController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/finance/invoice-approvals": {
+      "controller": "FinancialApprovalController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/finance/invoices/{invoice}/submit-approval": {
+      "controller": "FinancialApprovalController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/finance/invoice-approvals/{approval}/approve": {
+      "controller": "FinancialApprovalController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/finance/invoice-approvals/{approval}/reject": {
+      "controller": "FinancialApprovalController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/finance/invoices/{invoice}/reverse": {
+      "controller": "FinancialApprovalController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/quotes/{id}/pdf": {
+      "controller": "DocumentPdfController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/sales-orders/{id}/pdf": {
+      "controller": "DocumentPdfController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/purchase-orders/{id}/pdf": {
+      "controller": "DocumentPdfController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/goods-receipts/{id}/pdf": {
+      "controller": "DocumentPdfController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/receipts/{id}/pdf": {
+      "controller": "DocumentPdfController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/credit-notes/{id}/pdf": {
+      "controller": "DocumentPdfController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/sync/conflicts": {
+      "controller": "OfflineSyncController.php",
+      "method": "get"
+    },
+    "PATCH /api/workspaces/{wid}/sync/conflicts/{conflict}": {
+      "controller": "OfflineSyncController.php",
+      "method": "patch"
+    },
+    "POST /api/workspaces/{wid}/sync/conflicts/resolve-all": {
+      "controller": "OfflineSyncController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/sentiment/team": {
+      "controller": "SentimentController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/sentiment/member/{userId}": {
+      "controller": "SentimentController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/sentiment/refresh": {
+      "controller": "SentimentController.php",
+      "method": "post"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/goals": {
+      "controller": "GoalController.php",
+      "method": "apiResource"
+    },
+    "GET /api/workspaces/{wid}/meeting-outcomes": {
+      "controller": "MeetingOutcomeController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/meetings/{meeting}/outcome": {
+      "controller": "MeetingOutcomeController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/meetings/{meeting}/outcome": {
+      "controller": "MeetingOutcomeController.php",
+      "method": "get"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/scenarios": {
+      "controller": "ScenarioController.php",
+      "method": "apiResource"
+    },
+    "POST /api/workspaces/{wid}/scenarios/{scenario}/adjustments": {
+      "controller": "ScenarioController.php",
+      "method": "post"
+    },
+    "DELETE /api/workspaces/{wid}/scenarios/{scenario}/adjustments/{adjustment}": {
+      "controller": "ScenarioController.php",
+      "method": "delete"
+    },
+    "POST /api/workspaces/{wid}/scenarios/{scenario}/simulate": {
+      "controller": "ScenarioController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/scenarios/compare": {
+      "controller": "ScenarioController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/email/project-addresses": {
+      "controller": "ProjectEmailAddressController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/email/project-addresses": {
+      "controller": "ProjectEmailAddressController.php",
+      "method": "post"
+    },
+    "PATCH /api/workspaces/{wid}/email/project-addresses/{address}": {
+      "controller": "ProjectEmailAddressController.php",
+      "method": "patch"
+    },
+    "DELETE /api/workspaces/{wid}/email/project-addresses/{address}": {
+      "controller": "ProjectEmailAddressController.php",
+      "method": "delete"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/equipment.cert-types": {
+      "controller": "EquipmentCertTypeController.php",
+      "method": "apiResource"
+    },
+    "APIRESOURCE /api/workspaces/{wid}/equipment.cert-records": {
+      "controller": "EquipmentCertRecordController.php",
+      "method": "apiResource"
+    },
+    "POST /api/workspaces/{wid}/equipment/{equipment}/cert-records/{cert_record}/verify": {
+      "controller": "EquipmentCertRecordController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/logs": {
+      "controller": "GateController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/stats": {
+      "controller": "GateController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/kiosk-tokens": {
+      "controller": "GateController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/portal/token": {
+      "controller": "ClientPortalController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/scan": {
+      "controller": "GateController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/scan-equipment": {
+      "controller": "GateController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/sign-in": {
+      "controller": "VisitorController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/active": {
+      "controller": "VisitorController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/{visitor}/sign-out": {
+      "controller": "VisitorController.php",
+      "method": "post"
+    },
+    "POST /api/workspaces/{wid}/{visitor}/badge-printed": {
+      "controller": "VisitorController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/portal/contractors": {
+      "controller": "ClientPortalController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/portal/contractors/{companyId}/workers": {
+      "controller": "ClientPortalController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/portal/heatmap": {
+      "controller": "ClientPortalController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/portal/export": {
+      "controller": "ClientPortalController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/email/inbound": {
+      "controller": "InboundEmailController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/ServiceProviderConfig": {
+      "controller": "ScimController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/Schemas": {
+      "controller": "ScimController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/Schemas/{id}": {
+      "controller": "ScimController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/ResourceTypes": {
+      "controller": "ScimController.php",
+      "method": "get"
+    },
+    "GET /api/workspaces/{wid}/Users": {
+      "controller": "ScimController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/Users": {
+      "controller": "ScimController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/Users/{id}": {
+      "controller": "ScimController.php",
+      "method": "get"
+    },
+    "PUT /api/workspaces/{wid}/Users/{id}": {
+      "controller": "ScimController.php",
+      "method": "put"
+    },
+    "PATCH /api/workspaces/{wid}/Users/{id}": {
+      "controller": "ScimController.php",
+      "method": "patch"
+    },
+    "DELETE /api/workspaces/{wid}/Users/{id}": {
+      "controller": "ScimController.php",
+      "method": "delete"
+    },
+    "GET /api/workspaces/{wid}/Groups": {
+      "controller": "ScimController.php",
+      "method": "get"
+    },
+    "POST /api/workspaces/{wid}/Groups": {
+      "controller": "ScimController.php",
+      "method": "post"
+    },
+    "GET /api/workspaces/{wid}/Groups/{id}": {
+      "controller": "ScimController.php",
+      "method": "get"
+    },
+    "PUT /api/workspaces/{wid}/Groups/{id}": {
+      "controller": "ScimController.php",
+      "method": "put"
+    },
+    "PATCH /api/workspaces/{wid}/Groups/{id}": {
+      "controller": "ScimController.php",
+      "method": "patch"
+    },
+    "DELETE /api/workspaces/{wid}/Groups/{id}": {
+      "controller": "ScimController.php",
+      "method": "delete"
+    }
+  },
+  "imports": {
+    "services/api/app/Console/Commands/CleanupTestData.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Console/Commands/EnsureTestUser.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Console/Commands/ProvisionPilot.php": [
+      "App/Core/Models/Board.php",
+      "App/Core/Models/BoardColumn.php",
+      "App/Core/Models/BoardGroup.php",
+      "App/Core/Models/Item.php",
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Modules/CRM/Models/CrmCompany.php",
+      "App/Modules/CRM/Models/CrmContact.php",
+      "App/Modules/CRM/Models/CrmDeal.php",
+      "App/Modules/CRM/Models/CrmLead.php",
+      "App/Modules/CRM/Models/CrmProduct.php",
+      "App/Modules/HSSE/Models/CorrectiveAction.php",
+      "App/Modules/HSSE/Models/Hazard.php",
+      "App/Modules/HSSE/Models/Incident.php",
+      "App/Modules/Inventory/Models/InventoryCategory.php",
+      "App/Modules/Inventory/Models/Product.php",
+      "App/Modules/PTW/Models/Permit.php",
+      "App/Modules/Support/Models/Ticket.php"
+    ],
+    "services/api/app/Core/Auth/GateKioskGuard.php": [
+      "App/Models/GateKiosk.php"
+    ],
+    "services/api/app/Core/Console/Commands/CheckCertExpiry.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Modules/Competency/Models/CofRecord.php",
+      "App/Modules/Competency/Models/CompetencyRecord.php",
+      "App/Notifications/CertExpiryNotification.php"
+    ],
+    "services/api/app/Core/Console/Commands/PurgeExpiredTrials.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Core/Console/Commands/RecalculateUsage.php": [
+      "App/Core/Models/Workspace.php",
+      "App/Core/Services/UsageService.php"
+    ],
+    "services/api/app/Core/Console/Commands/ResetAiCredits.php": [
+      "App/Core/Enums/SubscriptionPlan.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Core/Console/Commands/RunDunning.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Core/Console/Commands/SyncStripePlans.php": [
+      "App/Core/Enums/SubscriptionPlan.php"
+    ],
+    "services/api/app/Core/Enums/SubscriptionPlan.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Core/Http/Middleware/AuthenticateScimToken.php": [
+      "App/Core/Models/ScimToken.php"
+    ],
+    "services/api/app/Core/Http/Middleware/CheckFeatureAccess.php": [
+      "App/Core/Models/Workspace.php",
+      "App/Core/Services/FeatureService.php"
+    ],
+    "services/api/app/Core/Http/Middleware/InternalJwt.php": [
+      "App/Services/InternalAuthService.php"
+    ],
+    "services/api/app/Core/Observers/ComplianceObserver.php": [
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Modules/Competency/Models/CofRecord.php",
+      "App/Modules/Competency/Models/CompetencyRecord.php",
+      "App/Modules/Competency/Models/TrainingRecord.php"
+    ],
+    "services/api/app/Core/Services/AuditService.php": [
+      "App/Core/Models/AuditLog.php"
+    ],
+    "services/api/app/Core/Services/FeatureService.php": [
+      "App/Core/Enums/SubscriptionPlan.php",
+      "App/Core/Models/FeatureFlag.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Core/Services/IntegrationWebhookReplayService.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Core/Services/PluginEngine.php": [
+      "App/Core/Models/PluginHookLog.php",
+      "App/Core/Models/PluginInstallation.php"
+    ],
+    "services/api/app/Core/Services/PushNotificationService.php": [
+      "App/Core/Models/PushSubscription.php",
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Core/Services/ReferenceSequenceService.php": [
+      "App/Modules/HSSE/Models/CorrectiveAction.php",
+      "App/Modules/HSSE/Models/Hazard.php",
+      "App/Modules/HSSE/Models/Incident.php",
+      "App/Modules/PTW/Models/Permit.php"
+    ],
+    "services/api/app/Core/Services/UsageService.php": [
+      "App/Core/Enums/SubscriptionPlan.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Events/ItemUpdated.php": [
+      "App/Models/Item.php"
+    ],
+    "services/api/app/Filament/AdminPanelProvider.php": [
+      "App/Filament/Resources/FeatureFlagResource.php",
+      "App/Filament/Resources/UserResource.php",
+      "App/Filament/Resources/WorkspaceResource.php"
+    ],
+    "services/api/app/Filament/Resources/FeatureFlagResource/Pages/CreateFeatureFlag.php": [
+      "App/Filament/Resources/FeatureFlagResource.php"
+    ],
+    "services/api/app/Filament/Resources/FeatureFlagResource/Pages/EditFeatureFlag.php": [
+      "App/Filament/Resources/FeatureFlagResource.php"
+    ],
+    "services/api/app/Filament/Resources/FeatureFlagResource/Pages/ListFeatureFlags.php": [
+      "App/Filament/Resources/FeatureFlagResource.php"
+    ],
+    "services/api/app/Filament/Resources/FeatureFlagResource.php": [
+      "App/Filament/Resources/FeatureFlagResource/Pages.php",
+      "App/Models/FeatureFlag.php"
+    ],
+    "services/api/app/Filament/Resources/UserResource/Pages/CreateUser.php": [
+      "App/Filament/Resources/UserResource.php"
+    ],
+    "services/api/app/Filament/Resources/UserResource/Pages/EditUser.php": [
+      "App/Filament/Resources/UserResource.php"
+    ],
+    "services/api/app/Filament/Resources/UserResource/Pages/ListUsers.php": [
+      "App/Filament/Resources/UserResource.php"
+    ],
+    "services/api/app/Filament/Resources/UserResource.php": [
+      "App/Filament/Resources/UserResource/Pages.php",
+      "App/Models/User.php"
+    ],
+    "services/api/app/Filament/Resources/WorkspaceResource/Pages/CreateWorkspace.php": [
+      "App/Filament/Resources/WorkspaceResource.php"
+    ],
+    "services/api/app/Filament/Resources/WorkspaceResource/Pages/EditWorkspace.php": [
+      "App/Filament/Resources/WorkspaceResource.php"
+    ],
+    "services/api/app/Filament/Resources/WorkspaceResource/Pages/ListWorkspaces.php": [
+      "App/Filament/Resources/WorkspaceResource.php"
+    ],
+    "services/api/app/Filament/Resources/WorkspaceResource.php": [
+      "App/Filament/Resources/WorkspaceResource/Pages.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/AIController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/AuditLogController.php": [
+      "App/Core/Models/AuditLog.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/AutomationController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/BillingController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/CalendarItemController.php": [
+      "App/Core/Models/Item.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/ClientPortalController.php": [
+      "App/Core/Models/PortalToken.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Modules/Competency/Models/CofRecord.php",
+      "App/Modules/Competency/Models/CompetencyRecord.php",
+      "App/Modules/Competency/Models/CompetencyType.php",
+      "App/Modules/CRM/Models/CrmCompany.php",
+      "App/Services/ComplianceService.php"
+    ],
+    "services/api/app/Http/Controllers/Api/CommentController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/ComplianceController.php": [
+      "App/Core/Models/Workspace.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Modules/Competency/Models/CofRecord.php",
+      "App/Modules/Competency/Models/CompetencyRecord.php",
+      "App/Modules/Competency/Models/CompetencyRequirement.php",
+      "App/Modules/Competency/Models/CompetencyType.php",
+      "App/Modules/Competency/Models/TrainingRecord.php",
+      "App/Modules/Equipment/Models/Equipment.php",
+      "App/Services/ComplianceService.php"
+    ],
+    "services/api/app/Http/Controllers/Api/CRM/CompanyController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/CRM/ContactController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/CrmContact.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/CRM/DealController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/CrmDeal.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/CRM/StageController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/CrmPipeline.php",
+      "App/Models/CrmPipelineStage.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/DmrExportController.php": [
+      "App/Core/Services/PdfService.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Modules/HSSE/Models/Incident.php"
+    ],
+    "services/api/app/Http/Controllers/Api/DocumentController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/EmployeeGroupController.php": [
+      "App/Core/Models/EmployeeGroup.php",
+      "App/Core/Models/Workspace.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/EquipmentCertRecordController.php": [
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Modules/Equipment/Models/Equipment.php",
+      "App/Modules/Equipment/Models/EquipmentCertRecord.php"
+    ],
+    "services/api/app/Http/Controllers/Api/EquipmentCertTypeController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Modules/Equipment/Models/EquipmentCertType.php"
+    ],
+    "services/api/app/Http/Controllers/Api/EquipmentComplianceController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Modules/Equipment/Models/Equipment.php",
+      "App/Modules/Equipment/Models/EquipmentCertRecord.php",
+      "App/Modules/Equipment/Models/EquipmentCertType.php"
+    ],
+    "services/api/app/Http/Controllers/Api/EquipmentController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Modules/Equipment/Models/Equipment.php"
+    ],
+    "services/api/app/Http/Controllers/Api/ExportController.php": [
+      "App/Core/Exports/EntityExport.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Modules/Accounting/Models/Account.php",
+      "App/Modules/Accounting/Models/JournalEntry.php",
+      "App/Modules/CRM/Models/CrmCompany.php",
+      "App/Modules/CRM/Models/CrmContact.php",
+      "App/Modules/CRM/Models/CrmDeal.php",
+      "App/Modules/CRM/Models/CrmLead.php",
+      "App/Modules/CRM/Models/CrmProduct.php",
+      "App/Modules/CRM/Models/CrmQuote.php",
+      "App/Modules/HSSE/Models/CorrectiveAction.php",
+      "App/Modules/HSSE/Models/Hazard.php",
+      "App/Modules/HSSE/Models/Incident.php",
+      "App/Modules/PTW/Models/Permit.php",
+      "App/Modules/Support/Models/Ticket.php"
+    ],
+    "services/api/app/Http/Controllers/Api/FieldPermissionController.php": [
+      "App/Core/Models/FieldPermission.php",
+      "App/Core/Models/ScimToken.php",
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Services/AuditService.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/FileController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/FinancialApprovalController.php": [
+      "App/Core/Services/AuditService.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/GateController.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Models/GateKiosk.php",
+      "App/Models/SiteAccessLog.php",
+      "App/Modules/Equipment/Models/Equipment.php",
+      "App/Services/ComplianceService.php"
+    ],
+    "services/api/app/Http/Controllers/Api/GoalController.php": [
+      "App/Core/Models/Goal.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/IntegrationReliabilityController.php": [
+      "App/Core/Services/AuditService.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Jobs/ReplayIntegrationWebhookEvent.php"
+    ],
+    "services/api/app/Http/Controllers/Api/MeetingOutcomeController.php": [
+      "App/Core/Models/Goal.php",
+      "App/Core/Models/MeetingOutcome.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/NotificationController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/OfflineSyncController.php": [
+      "App/Core/Models/Board.php",
+      "App/Core/Models/Item.php",
+      "App/Core/Models/SyncConflict.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Modules/Documents/Models/Document.php"
+    ],
+    "services/api/app/Http/Controllers/Api/PluginController.php": [
+      "App/Core/Models/Plugin.php",
+      "App/Core/Models/PluginInstallation.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/ProductController.php": [
+      "App/Core/Models/Workspace.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Http/Requests/StoreProductRequest.php",
+      "App/Http/Requests/UpdateProductRequest.php",
+      "App/Http/Resources/ProductResource.php",
+      "App/Models/Product.php"
+    ],
+    "services/api/app/Http/Controllers/Api/ReportScheduleController.php": [
+      "App/Core/Services/AuditService.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/ROIController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Services/ROIDashboardService.php"
+    ],
+    "services/api/app/Http/Controllers/Api/ScenarioController.php": [
+      "App/Core/Models/Goal.php",
+      "App/Core/Models/Item.php",
+      "App/Core/Models/Scenario.php",
+      "App/Core/Models/ScenarioAdjustment.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/ScimController.php": [
+      "App/Core/Models/EmployeeGroup.php",
+      "App/Core/Models/ScimIdentity.php",
+      "App/Core/Models/ScimToken.php",
+      "App/Core/Models/User.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Core/Services/AuditService.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/SentimentController.php": [
+      "App/Core/Jobs/BurnoutDetector.php",
+      "App/Core/Models/BurnoutScore.php",
+      "App/Core/Models/TeamActivityMetric.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/ShiftController.php": [
+      "App/Core/Models/Shift.php",
+      "App/Core/Models/ShiftAssignment.php",
+      "App/Core/Models/ShiftHandover.php",
+      "App/Core/Models/Workspace.php",
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/ShiftReadinessController.php": [
+      "App/Core/Models/ShiftPlan.php",
+      "App/Core/Models/ShiftPlanAssignment.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Services/ShiftReadinessService.php"
+    ],
+    "services/api/app/Http/Controllers/Api/StockController.php": [
+      "App/Core/Models/Workspace.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Product.php",
+      "App/Models/StockMovement.php"
+    ],
+    "services/api/app/Http/Controllers/Api/TeamCapacityController.php": [
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/UserSettingsController.php": [
+      "App/Http/Controllers/Controller.php"
+    ],
+    "services/api/app/Http/Controllers/Api/VisitorController.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/VisitorLog.php",
+      "App/Core/Models/Workspace.php",
+      "App/Http/Controllers/Controller.php",
+      "App/Notifications/VisitorArrivedNotification.php"
+    ],
+    "services/api/app/Http/Controllers/Api/WebhookController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/WorkspaceController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Api/WorkspaceInvitationController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Mail/WorkspaceInvite.php",
+      "App/Models/Workspace.php",
+      "App/Models/WorkspaceInvitation.php"
+    ],
+    "services/api/app/Http/Controllers/Auth/AuthController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/User.php",
+      "App/Models/Workspace.php",
+      "App/Services/AuthService.php"
+    ],
+    "services/api/app/Http/Controllers/Auth/OAuthController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/OAuthAccount.php",
+      "App/Models/User.php",
+      "App/Models/Workspace.php",
+      "App/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Http/Controllers/BoardColumnController.php": [
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/BoardController.php": [
+      "App/Models/Board.php",
+      "App/Services/BoardService.php"
+    ],
+    "services/api/app/Http/Controllers/BoardGroupController.php": [
+      "App/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/Internal/DocumentYdocController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/Document.php"
+    ],
+    "services/api/app/Http/Controllers/Internal/RealtimeEventController.php": [
+      "App/Http/Controllers/Controller.php",
+      "App/Models/RealtimeEvent.php"
+    ],
+    "services/api/app/Http/Controllers/ItemController.php": [
+      "App/Models/Board.php",
+      "App/Models/BoardGroup.php",
+      "App/Models/Item.php",
+      "App/Services/ItemService.php"
+    ],
+    "services/api/app/Http/Controllers/PushSubscriptionController.php": [
+      "App/Core/Models/PushSubscription.php"
+    ],
+    "services/api/app/Http/Controllers/SavedViewController.php": [
+      "App/Core/Models/SavedView.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/StorageController.php": [
+      "App/Core/Enums/SubscriptionPlan.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Http/Controllers/WebhookEndpointController.php": [
+      "App/Core/Models/WebhookDelivery.php",
+      "App/Core/Models/WebhookEndpoint.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Services/AuditService.php"
+    ],
+    "services/api/app/Http/Resources/ProductResource.php": [
+      "App/Models/Product.php"
+    ],
+    "services/api/app/Jobs/BurnoutDetector.php": [
+      "App/Core/Models/BurnoutScore.php",
+      "App/Core/Models/Item.php",
+      "App/Core/Models/TeamActivityMetric.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Modules/Chat/Models/ChatMessage.php"
+    ],
+    "services/api/app/Jobs/EvaluateAutomationTriggers.php": [
+      "App/Core/Jobs/SendNotification.php",
+      "App/Core/Services/ItemService.php",
+      "App/Models/Automation.php",
+      "App/Models/AutomationRun.php",
+      "App/Models/Item.php",
+      "App/Modules/Automation/Jobs/SendAutomationEmail.php"
+    ],
+    "services/api/app/Jobs/ProcessAutomations.php": [
+      "App/Models/Item.php",
+      "App/Services/AutomationEngine.php"
+    ],
+    "services/api/app/Jobs/PurgeUserData.php": [
+      "App/Models/User.php",
+      "App/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Jobs/ReplayIntegrationWebhookEvent.php": [
+      "App/Core/Services/IntegrationWebhookReplayService.php"
+    ],
+    "services/api/app/Jobs/SendBillingConfirmationEmail.php": [
+      "App/Mail/BillingConfirmation.php",
+      "App/Models/User.php"
+    ],
+    "services/api/app/Jobs/SendNotification.php": [
+      "App/Models/User.php"
+    ],
+    "services/api/app/Jobs/SyncStripeSubscriptionQuantity.php": [
+      "App/Models/Workspace.php",
+      "App/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Jobs/UpdateMeilisearchIndex.php": [
+      "App/Models/Board.php",
+      "App/Models/Comment.php",
+      "App/Models/Document.php",
+      "App/Models/Item.php"
+    ],
+    "services/api/app/Mail/WorkspaceInvite.php": [
+      "App/Core/Models/WorkspaceInvitation.php"
+    ],
+    "services/api/app/Models/GateKiosk.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Models/SiteAccessLog.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Modules/Equipment/Models/Equipment.php"
+    ],
+    "services/api/app/Modules/Accounting/Http/Controllers/JournalEntryController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Accounting/Models/JournalEntry.php"
+    ],
+    "services/api/app/Modules/Accounting/Models/Account.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Accounting/Models/JournalEntry.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Admin/Filament/Pages/Dashboard.php": [
+      "App/Modules/Admin/Filament/Widgets/PlanDistributionWidget.php",
+      "App/Modules/Admin/Filament/Widgets/StatsOverviewWidget.php"
+    ],
+    "services/api/app/Modules/Admin/Filament/Pages/EmailAnalytics.php": [
+      "App/Modules/Email/Models/EmailAccount.php"
+    ],
+    "services/api/app/Modules/Admin/Filament/Pages/StorageAnalytics.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Admin/Filament/Resources/BillingResource/Pages/ListBillingEvents.php": [
+      "App/Modules/Admin/Filament/Resources/BillingResource.php"
+    ],
+    "services/api/app/Modules/Admin/Filament/Resources/BillingResource.php": [
+      "App/Core/Models/BillingEvent.php",
+      "App/Modules/Admin/Filament/Resources/BillingResource/Pages.php"
+    ],
+    "services/api/app/Modules/Admin/Filament/Resources/TicketResource/Pages/ListTickets.php": [
+      "App/Modules/Admin/Filament/Resources/TicketResource.php"
+    ],
+    "services/api/app/Modules/Admin/Filament/Resources/TicketResource.php": [
+      "App/Modules/Admin/Filament/Resources/TicketResource/Pages.php",
+      "App/Modules/Support/Models/Ticket.php"
+    ],
+    "services/api/app/Modules/Admin/Filament/Resources/WorkspaceResource.php": [
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Admin/Filament/Resources/WorkspaceResource/Pages.php"
+    ],
+    "services/api/app/Modules/Admin/Filament/Widgets/PlanDistributionWidget.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Admin/Filament/Widgets/StatsOverviewWidget.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Admin/Models/SuperAdmin.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/Admin/Providers/Filament/AdminPanelProvider.php": [
+      "App/Modules/Admin/Filament/Pages/Dashboard.php",
+      "App/Modules/Admin/Filament/Pages/EmailAnalytics.php",
+      "App/Modules/Admin/Filament/Pages/StorageAnalytics.php",
+      "App/Modules/Admin/Filament/Resources/AuditLogResource.php",
+      "App/Modules/Admin/Filament/Resources/BillingResource.php",
+      "App/Modules/Admin/Filament/Resources/FeatureFlagResource.php",
+      "App/Modules/Admin/Filament/Resources/TicketResource.php",
+      "App/Modules/Admin/Filament/Resources/UserResource.php",
+      "App/Modules/Admin/Filament/Resources/WorkspaceResource.php"
+    ],
+    "services/api/app/Modules/AI/Http/Controllers/AIController.php": [
+      "App/Core/Enums/SubscriptionPlan.php",
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Automation/Http/Controllers/AutomationController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Services/UsageService.php"
+    ],
+    "services/api/app/Modules/Automation/Http/Controllers/RecommendationController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Modules/Automation/Models/Automation.php",
+      "App/Modules/Automation/Models/AutomationRecommendation.php",
+      "App/Modules/Automation/Services/PatternDetector.php"
+    ],
+    "services/api/app/Modules/Automation/Models/AutomationRecommendation.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Automation/Services/PatternDetector.php": [
+      "App/Core/Models/Item.php",
+      "App/Modules/Automation/Models/Automation.php",
+      "App/Modules/Automation/Models/AutomationRecommendation.php"
+    ],
+    "services/api/app/Modules/Chat/Http/Controllers/ChatController.php": [
+      "App/Core/Jobs/SendNotification.php",
+      "App/Modules/Chat/Models/ChatChannel.php",
+      "App/Modules/Chat/Models/ChatMessage.php",
+      "App/Modules/Chat/Models/ChatParticipant.php"
+    ],
+    "services/api/app/Modules/Chat/Models/ChatChannel.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Chat/Models/ChatMessage.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/Chat/Models/ChatParticipant.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/Competency/Http/Controllers/CompetencyController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Competency/Models/CofRecord.php",
+      "App/Modules/Competency/Models/CompetencyRecord.php",
+      "App/Modules/Competency/Models/CompetencyRequirement.php",
+      "App/Modules/Competency/Models/CompetencyType.php",
+      "App/Modules/Competency/Models/TrainingRecord.php"
+    ],
+    "services/api/app/Modules/Competency/Models/CofRecord.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Competency/Models/CompetencyRecord.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Competency/Models/CompetencyRequirement.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Competency/Models/CompetencyType.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Competency/Models/TrainingRecord.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/CRM/Console/Commands/CheckDealAging.php": [
+      "App/Modules/CRM/Models/CrmDeal.php",
+      "App/Modules/CRM/Services/CrmAutomationService.php"
+    ],
+    "services/api/app/Modules/CRM/Console/Commands/CheckDealEscalations.php": [
+      "App/Modules/CRM/Services/DealApprovalService.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/CalendarSyncController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/OAuthAccount.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/CrmCalendarSync.php",
+      "App/Modules/CRM/Services/CalendarSyncService.php",
+      "App/Modules/CRM/Services/TelephonyService.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/CompanyController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/ContactController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Http/Resources/CrmContactResource.php",
+      "App/Modules/CRM/Models/CrmContact.php",
+      "App/Modules/CRM/Services/ContactLifecycleService.php",
+      "App/Modules/CRM/Services/CrmAutomationService.php",
+      "App/Modules/CRM/Services/DuplicateDetectionService.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/ContactImportController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Jobs/ImportCrmContactsJob.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/ContractMilestoneController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/ContractMilestone.php",
+      "App/Modules/CRM/Models/CrmDeal.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/CrmAnalyticsController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/CrmContact.php",
+      "App/Modules/CRM/Models/CrmDeal.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/CrmAutomationRuleController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/CrmAutomationRule.php",
+      "App/Modules/CRM/Services/CrmAutomationService.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/CrmReportController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/CrmActivity.php",
+      "App/Modules/CRM/Models/CrmDeal.php",
+      "App/Modules/CRM/Models/CrmLead.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/DealApprovalController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/CrmApprovalRule.php",
+      "App/Modules/CRM/Models/CrmDealApproval.php",
+      "App/Modules/CRM/Services/DealApprovalService.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/DealController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/CrmDeal.php",
+      "App/Modules/CRM/Services/CrmAutomationService.php",
+      "App/Modules/CRM/Services/DealApprovalService.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/ForecastController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/CrmDeal.php",
+      "App/Modules/CRM/Models/CrmPipeline.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/LeadController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/CrmContact.php",
+      "App/Modules/CRM/Models/CrmDeal.php",
+      "App/Modules/CRM/Models/CrmLead.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/PipelineController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Services/UsageService.php",
+      "App/Modules/CRM/Models/CrmPipeline.php",
+      "App/Modules/CRM/Models/CrmPipelineStage.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/ProductController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/CrmProduct.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/QuotaController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/CrmDeal.php",
+      "App/Modules/CRM/Models/CrmQuota.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/QuoteController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/CrmQuote.php"
+    ],
+    "services/api/app/Modules/CRM/Http/Controllers/WorkOrderController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/CRM/Models/WorkOrder.php"
+    ],
+    "services/api/app/Modules/CRM/Jobs/ImportCrmContactsJob.php": [
+      "App/Modules/CRM/Models/CrmContact.php"
+    ],
+    "services/api/app/Modules/CRM/Models/ContractMilestone.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmApprovalRule.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmAutomationRule.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmCalendarSync.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmCompany.php": [
+      "App/Core/Enums/SubscriptionPlan.php",
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmContact.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmContactStageHistory.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmDeal.php": [
+      "App/Core/Models/Item.php",
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmDealApproval.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmLead.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmPipeline.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmProduct.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/CRM/Models/CrmQuote.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/CRM/Models/WorkOrder.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/CRM/Policies/CrmDealPolicy.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Modules/CRM/Models/CrmDeal.php"
+    ],
+    "services/api/app/Modules/CRM/Services/CalendarSyncService.php": [
+      "App/Core/Models/OAuthAccount.php",
+      "App/Modules/CRM/Models/CrmCalendarSync.php"
+    ],
+    "services/api/app/Modules/CRM/Services/ContactLifecycleService.php": [
+      "App/Modules/CRM/Models/CrmContact.php",
+      "App/Modules/CRM/Models/CrmContactStageHistory.php"
+    ],
+    "services/api/app/Modules/CRM/Services/CrmAutomationService.php": [
+      "App/Core/Jobs/SendNotification.php",
+      "App/Modules/CRM/Models/CrmAutomationRule.php",
+      "App/Modules/CRM/Models/CrmContact.php",
+      "App/Modules/CRM/Models/CrmDeal.php",
+      "App/Modules/Support/Models/Ticket.php"
+    ],
+    "services/api/app/Modules/CRM/Services/DealApprovalService.php": [
+      "App/Core/Jobs/SendNotification.php",
+      "App/Modules/CRM/Models/CrmApprovalRule.php",
+      "App/Modules/CRM/Models/CrmDeal.php",
+      "App/Modules/CRM/Models/CrmDealApproval.php"
+    ],
+    "services/api/app/Modules/CRM/Services/DuplicateDetectionService.php": [
+      "App/Modules/CRM/Models/CrmContact.php"
+    ],
+    "services/api/app/Modules/Delegation/Http/Controllers/DelegationController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Board.php",
+      "App/Core/Models/Item.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Delegation/Models/Delegation.php"
+    ],
+    "services/api/app/Modules/Delegation/Models/Delegation.php": [
+      "App/Core/Models/Item.php",
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Documents/Http/Controllers/DocumentFolderController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Documents/Http/Controllers/ScannedDocumentController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Documents/Http/Resources/ScannedDocumentResource.php",
+      "App/Modules/Documents/Jobs/ProcessDocumentOcr.php",
+      "App/Modules/Documents/Models/ScannedDocument.php"
+    ],
+    "services/api/app/Modules/Documents/Models/Document.php": [
+      "App/Core/Models/Item.php",
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Documents/Providers/DocumentsServiceProvider.php": [
+      "App/Core/Http/Middleware/InternalSecret.php",
+      "App/Modules/Documents/Http/Controllers/DocumentYdocController.php",
+      "App/Modules/Documents/Http/Controllers/InternalScannedDocumentController.php",
+      "App/Modules/Documents/Models/Document.php",
+      "App/Modules/Documents/Observers/DocumentObserver.php",
+      "App/Modules/Documents/Policies/DocumentPolicy.php"
+    ],
+    "services/api/app/Modules/Email/Http/Controllers/EmailController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Email/Jobs/SyncEmailAccount.php",
+      "App/Modules/Email/Mail/RawEmail.php",
+      "App/Modules/Email/Models/Email.php",
+      "App/Modules/Email/Models/EmailAccount.php",
+      "App/Modules/Email/Models/EmailAiSuggestion.php",
+      "App/Modules/Email/Models/EmailThread.php",
+      "App/Modules/Sales/Models/Task.php"
+    ],
+    "services/api/app/Modules/Email/Http/Controllers/InboundEmailController.php": [
+      "App/Core/Models/Board.php",
+      "App/Core/Models/BoardGroup.php",
+      "App/Core/Models/Item.php",
+      "App/Modules/Email/Models/InboundEmail.php",
+      "App/Modules/Email/Models/ProjectEmailAddress.php"
+    ],
+    "services/api/app/Modules/Email/Http/Controllers/ProjectEmailAddressController.php": [
+      "App/Modules/Email/Models/ProjectEmailAddress.php"
+    ],
+    "services/api/app/Modules/Email/Jobs/SyncEmailAccount.php": [
+      "App/Modules/Email/Models/Email.php",
+      "App/Modules/Email/Models/EmailAccount.php",
+      "App/Modules/Email/Models/EmailThread.php"
+    ],
+    "services/api/app/Modules/Email/Models/InboundEmail.php": [
+      "App/Core/Models/Item.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Email/Models/ProjectEmailAddress.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Equipment/Http/Controllers/EquipmentController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Equipment/Models/Equipment.php",
+      "App/Modules/Equipment/Models/EquipmentBreakdown.php",
+      "App/Modules/Equipment/Models/EquipmentCategory.php",
+      "App/Modules/Equipment/Models/EquipmentInspection.php",
+      "App/Modules/Equipment/Models/EquipmentInspectionItem.php",
+      "App/Modules/Equipment/Models/MaintenanceSchedule.php"
+    ],
+    "services/api/app/Modules/Equipment/Models/Equipment.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Equipment/Models/EquipmentBreakdown.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Equipment/Models/EquipmentCategory.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Equipment/Models/EquipmentCertRecord.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Equipment/Models/EquipmentCertType.php": [
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Equipment/Models/EquipmentInspection.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/Equipment/Models/MaintenanceSchedule.php": [
+      "App/Core/Models/Workspace.php",
+      "App/Modules/JobCards/Models/JobCardTemplate.php"
+    ],
+    "services/api/app/Modules/HSSE/Http/Controllers/CorrectiveActionController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Services/AuditService.php",
+      "App/Core/Services/ReferenceSequenceService.php",
+      "App/Modules/HSSE/Models/CorrectiveAction.php"
+    ],
+    "services/api/app/Modules/HSSE/Http/Controllers/HazardController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Services/AuditService.php",
+      "App/Core/Services/ReferenceSequenceService.php",
+      "App/Modules/HSSE/Models/Hazard.php"
+    ],
+    "services/api/app/Modules/HSSE/Http/Controllers/HSSEController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/HSSE/Models/Hazard.php",
+      "App/Modules/HSSE/Models/Incident.php",
+      "App/Modules/HSSE/Services/CoidaReportService.php",
+      "App/Modules/HSSE/Services/MhsaReportService.php"
+    ],
+    "services/api/app/Modules/HSSE/Http/Controllers/IncidentController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Services/AuditService.php",
+      "App/Core/Services/ReferenceSequenceService.php",
+      "App/Modules/HSSE/Models/Incident.php"
+    ],
+    "services/api/app/Modules/HSSE/Models/CorrectiveAction.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/HSSE/Models/Hazard.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/HSSE/Models/Incident.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/HSSE/Services/CoidaReportService.php": [
+      "App/Core/Models/Workspace.php",
+      "App/Modules/HSSE/Models/Incident.php"
+    ],
+    "services/api/app/Modules/HSSE/Services/MhsaReportService.php": [
+      "App/Modules/HSSE/Models/Incident.php"
+    ],
+    "services/api/app/Modules/Inventory/Http/Controllers/ProductController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Inventory/Models/Product.php"
+    ],
+    "services/api/app/Modules/Invoicing/Http/Controllers/InvoiceController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Invoicing/Models/Invoice.php"
+    ],
+    "services/api/app/Modules/Invoicing/Models/Invoice.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/JobCards/Http/Controllers/JobCardController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/JobCards/Models/JobCard.php",
+      "App/Modules/JobCards/Models/JobCardAttachment.php",
+      "App/Modules/JobCards/Models/JobCardMaterial.php",
+      "App/Modules/JobCards/Models/JobCardTask.php",
+      "App/Modules/JobCards/Models/JobCardTemplate.php",
+      "App/Modules/JobCards/Models/JobCardTimeEntry.php"
+    ],
+    "services/api/app/Modules/JobCards/Models/JobCard.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/JobCards/Models/JobCardAttachment.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/JobCards/Models/JobCardMaterial.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/JobCards/Models/JobCardTask.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/JobCards/Models/JobCardTemplate.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/JobCards/Models/JobCardTimeEntry.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/Marketing/Http/Controllers/CampaignController.php": [
+      "App/Modules/Marketing/Models/Campaign.php",
+      "App/Modules/Marketing/Models/CampaignAudience.php"
+    ],
+    "services/api/app/Modules/Marketing/Http/Controllers/EmailTemplateController.php": [
+      "App/Modules/Marketing/Models/EmailTemplate.php"
+    ],
+    "services/api/app/Modules/Marketing/Http/Controllers/SegmentController.php": [
+      "App/Modules/CRM/Models/CrmContact.php",
+      "App/Modules/Marketing/Models/Segment.php"
+    ],
+    "services/api/app/Modules/Marketing/Models/Campaign.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/Marketing/Models/CampaignAudience.php": [
+      "App/Modules/CRM/Models/CrmContact.php"
+    ],
+    "services/api/app/Modules/Marketing/Models/EmailTemplate.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/Marketing/Models/Segment.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/Marketing/Services/CampaignService.php": [
+      "App/Modules/Marketing/Models/Campaign.php",
+      "App/Modules/Marketing/Models/CampaignAudience.php"
+    ],
+    "services/api/app/Modules/PTW/Http/Controllers/PermitController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Services/AuditService.php",
+      "App/Core/Services/ReferenceSequenceService.php",
+      "App/Modules/PTW/Models/Permit.php",
+      "App/Modules/PTW/Models/PermitHazard.php",
+      "App/Modules/PTW/Models/PermitIsolation.php",
+      "App/Modules/PTW/Services/DmrPermitRegisterService.php",
+      "App/Modules/PTW/Services/PermitWorkflowService.php"
+    ],
+    "services/api/app/Modules/PTW/Models/Permit.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/PTW/Models/PermitHazard.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/HSSE/Models/Hazard.php"
+    ],
+    "services/api/app/Modules/PTW/Models/PermitIsolation.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Modules/PTW/Services/DmrPermitRegisterService.php": [
+      "App/Modules/PTW/Models/Permit.php"
+    ],
+    "services/api/app/Modules/PTW/Services/PermitWorkflowService.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Core/Services/AuditService.php",
+      "App/Modules/PTW/Models/Permit.php",
+      "App/Services/ComplianceService.php"
+    ],
+    "services/api/app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Purchasing/Models/PurchaseOrder.php",
+      "App/Modules/Purchasing/Models/PurchaseOrderItem.php"
+    ],
+    "services/api/app/Modules/Sales/Http/Controllers/SalesOrderController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Sales/Models/SalesOrder.php",
+      "App/Modules/Sales/Models/SalesOrderItem.php"
+    ],
+    "services/api/app/Modules/Support/Events/TicketResolved.php": [
+      "App/Modules/Support/Models/Ticket.php"
+    ],
+    "services/api/app/Modules/Support/Http/Controllers/KnowledgeBaseController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Modules/Support/Models/KnowledgeBaseArticle.php"
+    ],
+    "services/api/app/Modules/Support/Http/Controllers/SlaController.php": [
+      "App/Modules/Support/Models/SlaBreach.php",
+      "App/Modules/Support/Models/Ticket.php",
+      "App/Modules/Support/Models/TicketSla.php"
+    ],
+    "services/api/app/Modules/Support/Http/Controllers/TicketController.php": [
+      "App/Modules/Support/Events/TicketResolved.php",
+      "App/Modules/Support/Models/Ticket.php"
+    ],
+    "services/api/app/Modules/Support/Http/Controllers/TicketMessageController.php": [
+      "App/Modules/Support/Models/Ticket.php",
+      "App/Modules/Support/Models/TicketMessage.php"
+    ],
+    "services/api/app/Modules/Support/Jobs/EnforceSlaJob.php": [
+      "App/Modules/Support/Models/SlaBreach.php",
+      "App/Modules/Support/Models/Ticket.php"
+    ],
+    "services/api/app/Modules/Support/Listeners/GenerateKbFromTicket.php": [
+      "App/Modules/Support/Events/TicketResolved.php",
+      "App/Modules/Support/Models/KnowledgeBaseArticle.php",
+      "App/Modules/Support/Models/TicketMessage.php"
+    ],
+    "services/api/app/Modules/Support/Models/KnowledgeBaseArticle.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/Support/Models/Ticket.php": [
+      "App/Core/Models/User.php",
+      "App/Modules/CRM/Models/CrmContact.php"
+    ],
+    "services/api/app/Modules/Support/Models/TicketMessage.php": [
+      "App/Core/Models/User.php"
+    ],
+    "services/api/app/Modules/Support/Providers/SupportServiceProvider.php": [
+      "App/Modules/Support/Events/TicketResolved.php",
+      "App/Modules/Support/Listeners/GenerateKbFromTicket.php"
+    ],
+    "services/api/app/Modules/Templates/Http/Controllers/TemplateController.php": [
+      "App/Core/Http/Controllers/Controller.php",
+      "App/Core/Models/Workspace.php",
+      "App/Modules/Templates/Models/Template.php"
+    ],
+    "services/api/app/Modules/Templates/Models/Template.php": [
+      "App/Core/Models/User.php",
+      "App/Core/Models/Workspace.php"
+    ],
+    "services/api/app/Observers/BoardObserver.php": [
+      "App/Jobs/UpdateMeilisearchIndex.php",
+      "App/Models/Board.php"
+    ],
+    "services/api/app/Observers/CommentObserver.php": [
+      "App/Jobs/UpdateMeilisearchIndex.php",
+      "App/Models/Comment.php"
+    ],
+    "services/api/app/Observers/DocumentObserver.php": [
+      "App/Jobs/UpdateAIEmbedding.php",
+      "App/Models/Document.php"
+    ],
+    "services/api/app/Observers/ItemObserver.php": [
+      "App/Jobs/EvaluateAutomationTriggers.php",
+      "App/Jobs/UpdateAIEmbedding.php",
+      "App/Jobs/UpdateClickHouseAnalytics.php",
+      "App/Jobs/UpdateMeilisearchIndex.php",
+      "App/Models/Item.php"
+    ],
+    "services/api/app/Policies/AutomationPolicy.php": [
+      "App/Models/Automation.php",
+      "App/Models/User.php",
+      "App/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Policies/BoardPolicy.php": [
+      "App/Models/Board.php",
+      "App/Models/User.php",
+      "App/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Policies/CommentPolicy.php": [
+      "App/Models/Comment.php",
+      "App/Models/User.php",
+      "App/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Policies/DocumentPolicy.php": [
+      "App/Models/Document.php",
+      "App/Models/User.php",
+      "App/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Policies/FilePolicy.php": [
+      "App/Models/File.php",
+      "App/Models/User.php",
+      "App/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Policies/ItemPolicy.php": [
+      "App/Models/Item.php",
+      "App/Models/User.php",
+      "App/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Policies/WorkspacePolicy.php": [
+      "App/Models/User.php",
+      "App/Models/Workspace.php",
+      "App/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Providers/AppServiceProvider.php": [
+      "App/Models/Board.php",
+      "App/Models/Comment.php",
+      "App/Models/Document.php",
+      "App/Models/Item.php",
+      "App/Observers/BoardObserver.php",
+      "App/Observers/CommentObserver.php",
+      "App/Observers/DocumentObserver.php",
+      "App/Observers/ItemObserver.php"
+    ],
+    "services/api/app/Providers/AuthServiceProvider.php": [
+      "App/Core/Auth/GateKioskGuard.php"
+    ],
+    "services/api/app/Services/AuthService.php": [
+      "App/Models/User.php",
+      "App/Models/Workspace.php",
+      "App/Models/WorkspaceMember.php"
+    ],
+    "services/api/app/Services/BoardService.php": [
+      "App/Models/Board.php",
+      "App/Models/BoardGroup.php"
+    ],
+    "services/api/app/Services/ComplianceService.php": [
+      "App/Core/Models/Workspace.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Modules/Competency/Models/CofRecord.php",
+      "App/Modules/Competency/Models/CompetencyRecord.php",
+      "App/Modules/Competency/Models/CompetencyRequirement.php",
+      "App/Modules/Competency/Models/CompetencyType.php",
+      "App/Modules/Competency/Models/TrainingRecord.php",
+      "App/Modules/Equipment/Models/Equipment.php",
+      "App/Modules/Equipment/Models/EquipmentCertType.php"
+    ],
+    "services/api/app/Services/ItemService.php": [
+      "App/Events/ItemUpdated.php",
+      "App/Models/Board.php",
+      "App/Models/BoardGroup.php",
+      "App/Models/Item.php"
+    ],
+    "services/api/app/Services/ROIDashboardService.php": [
+      "App/Core/Enums/SubscriptionPlan.php",
+      "App/Core/Models/Workspace.php",
+      "App/Core/Models/WorkspaceMember.php",
+      "App/Models/SiteAccessLog.php",
+      "App/Modules/Competency/Models/CofRecord.php",
+      "App/Modules/Competency/Models/CompetencyRecord.php",
+      "App/Modules/PTW/Models/Permit.php"
+    ],
+    "services/api/app/Services/ShiftReadinessService.php": [
+      "App/Core/Models/ShiftPlan.php",
+      "App/Models/SiteAccessLog.php"
+    ],
+    "services/web/src/App.tsx": [
+      "@/components/ErrorBoundary",
+      "@/components/auth/RouteGuards",
+      "@/contexts/BrandingContext",
+      "@/layouts/AuthLayout",
+      "@/layouts/AppLayout",
+      "@/layouts/ERPLayout",
+      "@/pages/auth/LoginPage",
+      "@/pages/auth/RegisterPage",
+      "@/pages/auth/ForgotPasswordPage",
+      "@/pages/auth/ResetPasswordPage",
+      "@/pages/auth/TwoFactorSetup",
+      "@/pages/auth/TwoFactorChallenge",
+      "@/pages/onboarding/OnboardingPage",
+      "@/pages/boards/BoardsPage",
+      "@/pages/boards/BoardPage",
+      "@/pages/documents/DocumentPage",
+      "@/pages/documents/DocumentsPage",
+      "@/pages/documents/NotesPage",
+      "@/pages/documents/FilesPage",
+      "@/pages/crm/CRMPage",
+      "@/pages/crm/ContactsPage",
+      "@/pages/crm/LeadsPage",
+      "@/pages/crm/ProductsPage",
+      "@/pages/crm/QuotesPage",
+      "@/pages/crm/CalendarSyncPage",
+      "@/pages/crm/ApprovalRulesPage",
+      "@/pages/crm/DealApprovalsPage",
+      "@/pages/crm/AutomationRulesPage",
+      "@/pages/crm/ContractMilestonesPage",
+      "@/pages/crm/WorkOrdersPage",
+      "@/pages/crm/ForecastPage",
+      "@/pages/crm/QuotasPage",
+      "@/pages/crm/SequencesPage",
+      "@/pages/support/TicketsPage",
+      "@/pages/support/TicketDetailPage",
+      "@/pages/support/KnowledgeBasePage",
+      "@/pages/support/SlaPage",
+      "@/pages/DashboardPage",
+      "@/pages/marketing/CampaignsPage",
+      "@/pages/marketing/EmailTemplatesPage",
+      "@/pages/marketing/SegmentsPage",
+      "@/pages/settings/SettingsPage",
+      "@/pages/employees/EmployeePage",
+      "@/pages/inbox/InboxPage",
+      "@/pages/invoicing/InvoicingPage",
+      "@/pages/purchasing/PurchasingPage",
+      "@/pages/sales/SalesPage",
+      "@/pages/inventory/InventoryPage",
+      "@/pages/jobcards/JobCardsPage",
+      "@/pages/delegations/DelegationsPage",
+      "@/pages/meetings/MeetingsPage",
+      "@/pages/accounting/AccountingPage",
+      "@/pages/erp/FinancialApprovalsPage",
+      "@/pages/erp/ReportSchedulesPage",
+      "@/pages/erp/GoalsPage",
+      "@/pages/erp/MeetingOutcomesPage",
+      "@/pages/erp/EmailAddressesPage",
+      "@/pages/erp/EmployeeGroupsPage",
+      "@/pages/erp/AuditLogsPage",
+      "@/pages/erp/WebhookEventsPage",
+      "@/pages/erp/FieldPermissionsPage",
+      "@/pages/templates/TemplatesPage",
+      "@/components/settings/GeneralTab",
+      "@/components/settings/ProfileTab",
+      "@/components/settings/MembersTab",
+      "@/components/settings/BillingTab",
+      "@/components/settings/StorageTab",
+      "@/components/settings/SecurityTab",
+      "@/components/settings/NotificationsTab",
+      "@/pages/automation/AutomationPage",
+      "@/pages/hsse/HSSEPage",
+      "@/pages/hsse/IncidentsPage",
+      "@/pages/hsse/HazardsPage",
+      "@/pages/hsse/CorrectiveActionsPage",
+      "@/pages/ptw/PermitsPage",
+      "@/pages/ptw/PermitDetailPage",
+      "@/pages/ptw/NewPermitPage",
+      "@/pages/ptw/PermitApprovalQueue",
+      "@/pages/ptw/PermitRegister",
+      "@/pages/compliance/ComplianceDashboard",
+      "@/pages/gate/GateKiosk",
+      "@/pages/equipment/EquipmentListPage",
+      "@/pages/equipment/EquipmentDetailPage",
+      "@/pages/reports/ReportsPage",
+      "@/pages/roi/ROIDashboardPage",
+      "@/pages/ai/AIChatPage",
+      "@/pages/chat/ChatPage",
+      "@/pages/scenarios/ScenariosPage",
+      "@/pages/plugins/MarketplacePage",
+      "@/pages/email/EmailPage",
+      "@/pages/my-day/MyDayPage",
+      "@/pages/calendar/CalendarPage",
+      "@/pages/shift/ShiftReadinessPage",
+      "@/pages/portal/PortalLayout",
+      "@/pages/portal/PortalPage",
+      "@/pages/NotFoundPage"
+    ],
+    "services/web/src/components/ai/ChatThread.tsx": [
+      "@/components/ui"
+    ],
+    "services/web/src/components/ai/__tests__/ChatInput.test.tsx": [
+      "@testing-library/react",
+      "../ChatInput"
+    ],
+    "services/web/src/components/ai/__tests__/ChatThread.test.tsx": [
+      "@testing-library/react",
+      "../ChatThread"
+    ],
+    "services/web/src/components/ai/__tests__/SuggestedPrompts.test.tsx": [
+      "@testing-library/react",
+      "../SuggestedPrompts"
+    ],
+    "services/web/src/components/board/BoardTopBar.tsx": [
+      "@/hooks/useBoards"
+    ],
+    "services/web/src/components/board/CalendarView.tsx": [
+      "@/hooks/useBoards",
+      "@/hooks/useItems",
+      "./ItemDetailModal"
+    ],
+    "services/web/src/components/board/ExcalidrawView.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/hooks/useBoards"
+    ],
+    "services/web/src/components/board/ItemCard.tsx": [
+      "@/hooks/useItems"
+    ],
+    "services/web/src/components/board/ItemDetailModal.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/hooks/useItems"
+    ],
+    "services/web/src/components/board/KanbanView.tsx": [
+      "@hello-pangea/dnd",
+      "@/hooks/useBoards",
+      "@/hooks/useItems",
+      "@/hooks/useItems",
+      "./ItemCard"
+    ],
+    "services/web/src/components/board/TableView.tsx": [
+      "@/hooks/useBoards",
+      "@/hooks/useItems",
+      "@/hooks/useItems",
+      "./ItemDetailModal"
+    ],
+    "services/web/src/components/crm/DealDetailModal.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/components/ui",
+      "@/lib/crm"
+    ],
+    "services/web/src/components/dashboard/ActivityFeed.tsx": [
+      "@/lib/motion"
+    ],
+    "services/web/src/components/dashboard/KpiCard.tsx": [
+      "@/components/ui/Sparkline",
+      "@/lib/motion"
+    ],
+    "services/web/src/components/dashboard/MyTasksWidget.tsx": [
+      "@tanstack/react-query",
+      "@/stores/authStore",
+      "@/lib/api",
+      "@/hooks/useBoards",
+      "@/hooks/useItems"
+    ],
+    "services/web/src/components/email/ComposeModal.tsx": [
+      "@tanstack/react-query",
+      "@/lib/email",
+      "@/components/ui"
+    ],
+    "services/web/src/components/email/ThreadView.tsx": [
+      "@tanstack/react-query",
+      "@/lib/email",
+      "@/components/ui"
+    ],
+    "services/web/src/components/erp/InvoiceDrawer.tsx": [
+      "@/lib/erp",
+      "@/hooks/useInvoices",
+      "@/lib/api",
+      "@/components/erp/StatusBadge",
+      "@/components/erp/LineItemsEditor"
+    ],
+    "services/web/src/components/erp/LineItemsEditor.tsx": [
+      "@/lib/erp"
+    ],
+    "services/web/src/components/erp/SalesOrderDrawer.tsx": [
+      "@/lib/erp",
+      "@/hooks/useSalesOrders",
+      "@/components/erp/StatusBadge",
+      "@/components/erp/LineItemsEditor"
+    ],
+    "services/web/src/components/layout/CommandPalette.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/lib/motion"
+    ],
+    "services/web/src/components/layout/ContextPanel.tsx": [
+      "@/stores/authStore",
+      "@/lib/motion"
+    ],
+    "services/web/src/components/layout/NavRail.tsx": [
+      "@/stores/authStore",
+      "@/stores/themeStore",
+      "@/stores/notificationStore",
+      "@/hooks/usePermission",
+      "@/components/shared/PermissionGate",
+      "@/components/shared/InitialsAvatar"
+    ],
+    "services/web/src/components/layout/NotificationCenter.tsx": [
+      "@/stores/notificationStore",
+      "@/hooks/useNotifications"
+    ],
+    "services/web/src/components/layout/Sidebar.tsx": [
+      "@/stores/authStore"
+    ],
+    "services/web/src/components/layout/TopBar.tsx": [
+      "@/stores/authStore",
+      "@/stores/notificationStore",
+      "@/stores/themeStore",
+      "@/lib/api",
+      "@/components/shared/InitialsAvatar",
+      "@/lib/motion"
+    ],
+    "services/web/src/components/meetings/JitsiMeeting.tsx": [
+      "@tanstack/react-query",
+      "@jitsi/react-sdk",
+      "@/stores/authStore",
+      "@/lib/api"
+    ],
+    "services/web/src/components/meetings/MeetingRoom.tsx": [
+      "./JitsiMeeting",
+      "@/components/ui"
+    ],
+    "services/web/src/components/notifications/NotificationPanel.tsx": [
+      "@/hooks/useNotifications",
+      "@/stores/notificationStore"
+    ],
+    "services/web/src/components/sentiment/BurnoutWidget.tsx": [
+      "@tanstack/react-query",
+      "@/stores/authStore",
+      "@/lib/api"
+    ],
+    "services/web/src/components/settings/BillingTab.tsx": [
+      "@/stores/authStore",
+      "@/hooks/useSettings",
+      "@/lib/settings",
+      "@/components/subscription/UsageMeter",
+      "@/components/ui/Button",
+      "@/components/ui/Badge"
+    ],
+    "services/web/src/components/settings/GeneralTab.tsx": [
+      "@/stores/authStore",
+      "@/hooks/useSettings",
+      "@/lib/settings",
+      "@/components/ui/Button",
+      "@/components/ui/Input",
+      "@/components/ui/Avatar"
+    ],
+    "services/web/src/components/settings/MembersTab.tsx": [
+      "@/stores/authStore",
+      "@/lib/settings",
+      "@/components/ui/Button",
+      "@/components/ui/Input",
+      "@/components/ui/Select",
+      "@/components/ui/Badge",
+      "@/components/ui/Avatar",
+      "@/components/ui/Modal"
+    ],
+    "services/web/src/components/settings/NotificationsTab.tsx": [
+      "@/hooks/useSettings",
+      "@/lib/settings",
+      "@/components/ui/Toggle",
+      "@/components/ui/Card",
+      "@/components/ui/Select",
+      "@/components/ui/Input",
+      "@/components/ui/Button"
+    ],
+    "services/web/src/components/settings/ProfileTab.tsx": [
+      "@/stores/authStore",
+      "@/hooks/useSettings",
+      "@/lib/settings",
+      "@/components/ui/Button",
+      "@/components/ui/Input",
+      "@/components/ui/Badge",
+      "@/components/ui/Avatar",
+      "@/lib/api"
+    ],
+    "services/web/src/components/settings/SecurityTab.tsx": [
+      "@/stores/authStore",
+      "@/hooks/useSettings",
+      "@/lib/settings",
+      "@/components/ui/Button",
+      "@/components/ui/Input",
+      "@/components/ui/Badge",
+      "@/components/ui/Modal",
+      "@/components/ui/Tabs"
+    ],
+    "services/web/src/components/settings/StorageTab.tsx": [
+      "@/hooks/useSettings",
+      "@/components/ui/Card",
+      "@/components/ui/Skeleton",
+      "@/lib/settings"
+    ],
+    "services/web/src/components/shared/PermissionGate.tsx": [
+      "@/hooks/usePermission"
+    ],
+    "services/web/src/components/ui/DataTable.tsx": [
+      "./Button",
+      "./Skeleton"
+    ],
+    "services/web/src/components/ui/ExportButton.tsx": [
+      "./Button",
+      "./Button",
+      "@/stores/authStore",
+      "@/lib/api"
+    ],
+    "services/web/src/components/ui/MentionInput.tsx": [
+      "@tanstack/react-query",
+      "@/stores/authStore",
+      "@/lib/api"
+    ],
+    "services/web/src/components/ui/Modal.tsx": [
+      "@/lib/motion"
+    ],
+    "services/web/src/components/ui/PrintButton.tsx": [
+      "./Button",
+      "./Button"
+    ],
+    "services/web/src/components/ui/__tests__/Badge.test.tsx": [
+      "@testing-library/react",
+      "../Badge"
+    ],
+    "services/web/src/components/ui/__tests__/Button.test.tsx": [
+      "@testing-library/react",
+      "../Button"
+    ],
+    "services/web/src/components/ui/__tests__/Card.test.tsx": [
+      "@testing-library/react",
+      "../Card"
+    ],
+    "services/web/src/components/ui/__tests__/DataTable.test.tsx": [
+      "@testing-library/react",
+      "../DataTable"
+    ],
+    "services/web/src/components/ui/__tests__/Input.test.tsx": [
+      "@testing-library/react",
+      "../Input"
+    ],
+    "services/web/src/components/ui/__tests__/Modal.test.tsx": [
+      "@testing-library/react",
+      "../Modal"
+    ],
+    "services/web/src/components/ui/__tests__/Toggle.test.tsx": [
+      "@testing-library/react",
+      "../Toggle"
+    ],
+    "services/web/src/hooks/useBoards.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/hooks/useCalendarItems.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/hooks/useDelegations.ts": [
+      "@tanstack/react-query",
+      "@/lib/erp"
+    ],
+    "services/web/src/hooks/useDocuments.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/hooks/useItems.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/lib/socket"
+    ],
+    "services/web/src/hooks/useJobCards.ts": [
+      "@tanstack/react-query",
+      "@/lib/erp"
+    ],
+    "services/web/src/hooks/useMyDayTasks.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/hooks/useNotifications.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/notificationStore",
+      "@/stores/authStore"
+    ],
+    "services/web/src/hooks/usePermission.ts": [
+      "@/stores/authStore",
+      "@/hooks/usePermissions"
+    ],
+    "services/web/src/hooks/usePermissions.ts": [
+      "@tanstack/react-query",
+      "@/lib/api"
+    ],
+    "services/web/src/hooks/usePresence.ts": [
+      "@/lib/socket"
+    ],
+    "services/web/src/hooks/useSettings.ts": [
+      "@tanstack/react-query",
+      "@/lib/settings",
+      "@/stores/authStore"
+    ],
+    "services/web/src/hooks/useSocket.ts": [
+      "@/stores/authStore",
+      "@/lib/socket"
+    ],
+    "services/web/src/layouts/AppLayout.tsx": [
+      "@/components/layout/Sidebar",
+      "@/components/layout/TopBar",
+      "@/components/layout/CommandPalette",
+      "@/components/notifications/NotificationPanel"
+    ],
+    "services/web/src/layouts/AuthLayout.tsx": [
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/api.ts": [
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/chat.ts": [
+      "@/lib/api",
+      "@tanstack/react-query",
+      "@/lib/socket"
+    ],
+    "services/web/src/lib/compliance.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/contract-milestones.ts": [
+      "@/lib/api",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/lib/crm.ts": [
+      "@/lib/api",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/lib/email.ts": [
+      "@/lib/api"
+    ],
+    "services/web/src/lib/equipment.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/erp.ts": [
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/gate.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/hsse.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/marketing.ts": [
+      "@/lib/api",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/lib/meetings.ts": [
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/paperless.ts": [
+      "@/lib/api"
+    ],
+    "services/web/src/lib/ptw.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/roi.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/route-refs.ts": [
+      "./api"
+    ],
+    "services/web/src/lib/settings.ts": [
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/shift-readiness.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/socket.ts": [
+      "@/stores/authStore",
+      "@/stores/notificationStore",
+      "@/stores/notificationStore"
+    ],
+    "services/web/src/lib/support.ts": [
+      "@/lib/api",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/lib/visitors.ts": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/webhooks.ts": [
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/lib/work-orders.ts": [
+      "@/lib/api",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/main.tsx": [
+      "@tanstack/react-query",
+      "@tanstack/react-query-devtools",
+      "./App"
+    ],
+    "services/web/src/pages/accounting/AccountingPage.tsx": [
+      "@/lib/erp",
+      "@/components/ui",
+      "@tanstack/react-query",
+      "@/stores/authStore"
+    ],
+    "services/web/src/pages/ai/AIChatPage.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/lib/aiCosts",
+      "@/components/ai",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/auth/ForgotPasswordPage.tsx": [
+      "@/lib/api",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/auth/LoginPage.tsx": [
+      "@hookform/resolvers/zod",
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/auth/RegisterPage.tsx": [
+      "@hookform/resolvers/zod",
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/auth/ResetPasswordPage.tsx": [
+      "@hookform/resolvers/zod",
+      "@/lib/api",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/auth/TwoFactorChallenge.tsx": [
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/auth/TwoFactorSetup.tsx": [
+      "@/lib/api",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/automation/AutomationPage.tsx": [
+      "@tanstack/react-query",
+      "@/stores/authStore",
+      "@/lib/api",
+      "@/lib/automation",
+      "@/components/automation/RuleBuilderModal",
+      "@/components/automation/TemplatesPicker",
+      "@/components/automation/RunHistory",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/boards/BoardPage.tsx": [
+      "@/hooks/useBoards",
+      "@/hooks/useItems",
+      "@/components/board/BoardTopBar",
+      "@/components/board/KanbanView",
+      "@/components/board/TableView",
+      "@/components/board/CalendarView"
+    ],
+    "services/web/src/pages/boards/BoardsPage.tsx": [
+      "@/hooks/useBoards"
+    ],
+    "services/web/src/pages/calendar/CalendarPage.tsx": [
+      "@tanstack/react-query",
+      "@/hooks/useCalendarItems",
+      "@/hooks/useBoards",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/chat/ChatPage.tsx": [
+      "@tanstack/react-query",
+      "@/stores/authStore",
+      "@/lib/api",
+      "@/lib/socket",
+      "@/hooks/useSettings",
+      "@/hooks/useBoards",
+      "@/hooks/useDocuments",
+      "@/components/ui",
+      "@/components/chat"
+    ],
+    "services/web/src/pages/compliance/ComplianceDashboard.tsx": [
+      "@/lib/equipment",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/crm/ApprovalRulesPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/crm",
+      "@/components/ui",
+      "@/lib/erp"
+    ],
+    "services/web/src/pages/crm/AutomationRulesPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/crm",
+      "@/components/ui",
+      "@/lib/erp"
+    ],
+    "services/web/src/pages/crm/CalendarSyncPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/crm",
+      "@/components/ui",
+      "@/lib/erp"
+    ],
+    "services/web/src/pages/crm/ContactsPage.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/components/crm/ContactDrawer",
+      "@/lib/crm",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/crm/ContractMilestonesPage.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/lib/contract-milestones",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/crm/CRMPage.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/pages/crm/DealApprovalsPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/crm",
+      "@/components/ui",
+      "@/lib/erp"
+    ],
+    "services/web/src/pages/crm/ForecastPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/crm",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/crm/LeadsPage.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/crm/ProductsPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/crm",
+      "@/components/ui",
+      "@/lib/erp"
+    ],
+    "services/web/src/pages/crm/QuotasPage.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/lib/crm",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/crm/QuotesPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/crm",
+      "@/components/ui",
+      "@/lib/erp"
+    ],
+    "services/web/src/pages/crm/SequencesPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/crm",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/crm/WorkOrdersPage.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/lib/work-orders",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/DashboardPage.tsx": [
+      "@tanstack/react-query",
+      "@/stores/authStore",
+      "@/stores/notificationStore",
+      "@/lib/api",
+      "@/components/ErrorBoundary",
+      "@/components/dashboard/KpiCard",
+      "@/components/dashboard/MyTasksWidget",
+      "@/components/dashboard/ActivityFeed",
+      "@/components/dashboard/QuickActions",
+      "@/components/sentiment/BurnoutWidget",
+      "@/lib/motion"
+    ],
+    "services/web/src/pages/delegations/DelegationsPage.tsx": [
+      "@/stores/authStore",
+      "@/hooks/useDelegations",
+      "@/components/ui",
+      "@/lib/erp"
+    ],
+    "services/web/src/pages/documents/DocumentPage.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/lib/socket",
+      "@blocknote/core",
+      "@blocknote/react"
+    ],
+    "services/web/src/pages/documents/DocumentsPage.tsx": [
+      "@tanstack/react-query",
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/pages/email/EmailPage.tsx": [
+      "@tanstack/react-query",
+      "@/stores/authStore",
+      "@/components/email/AccountSetupModal",
+      "@/components/email/ComposeModal",
+      "@/components/email/ThreadView",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/employees/EmployeePage.tsx": [
+      "@tanstack/react-query",
+      "@/components/ui",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/pages/equipment/EquipmentDetailPage.tsx": [
+      "@/components/ui"
+    ],
+    "services/web/src/pages/equipment/EquipmentListPage.tsx": [
+      "@/components/ui"
+    ],
+    "services/web/src/pages/erp/AuditLogsPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/erp",
+      "@/components/ui",
+      "@/lib/erp",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/pages/erp/EmailAddressesPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/erp",
+      "@/components/ui",
+      "@/lib/erp",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/pages/erp/EmployeeGroupsPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/erp",
+      "@/components/ui",
+      "@/lib/erp",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/pages/erp/FieldPermissionsPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/erp",
+      "@/components/ui",
+      "@/lib/erp",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/pages/erp/FinancialApprovalsPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/erp",
+      "@/components/ui",
+      "@/lib/erp",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/pages/erp/GoalsPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/erp",
+      "@/components/ui",
+      "@/lib/erp",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/pages/erp/MeetingOutcomesPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/erp",
+      "@/components/ui",
+      "@/lib/erp",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/pages/erp/ReportSchedulesPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/erp",
+      "@/components/ui",
+      "@/lib/erp",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/pages/erp/WebhookEventsPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/erp",
+      "@/components/ui",
+      "@/lib/erp",
+      "@tanstack/react-query"
+    ],
+    "services/web/src/pages/gate/GateKiosk.tsx": [
+      "@/lib/gate",
+      "@/lib/equipment",
+      "@/components/ui",
+      "./VisitorFlow"
+    ],
+    "services/web/src/pages/gate/VisitorActiveCard.tsx": [
+      "@/components/ui",
+      "@/lib/visitors",
+      "@/lib/visitors"
+    ],
+    "services/web/src/pages/gate/VisitorFlow.tsx": [
+      "@/components/ui",
+      "./VisitorTypeSelector",
+      "./VisitorForm",
+      "./VisitorReview",
+      "./VisitorSuccess",
+      "./VisitorActiveCard"
+    ],
+    "services/web/src/pages/gate/VisitorForm.tsx": [
+      "@/components/ui",
+      "@/lib/visitors",
+      "@/lib/visitors"
+    ],
+    "services/web/src/pages/gate/VisitorReview.tsx": [
+      "@/components/ui",
+      "@/lib/visitors",
+      "@/lib/visitors",
+      "./VisitorForm"
+    ],
+    "services/web/src/pages/gate/VisitorSuccess.tsx": [
+      "@/components/ui",
+      "@/lib/visitors",
+      "@/lib/visitors"
+    ],
+    "services/web/src/pages/gate/VisitorTypeSelector.tsx": [
+      "@/components/ui",
+      "@/lib/visitors"
+    ],
+    "services/web/src/pages/hsse/CorrectiveActionsPage.tsx": [
+      "@/components/ui"
+    ],
+    "services/web/src/pages/hsse/HazardsPage.tsx": [
+      "@/components/ui"
+    ],
+    "services/web/src/pages/hsse/HSSEPage.tsx": [
+      "@/lib/hsse",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/hsse/IncidentsPage.tsx": [
+      "@/components/ui"
+    ],
+    "services/web/src/pages/inbox/InboxPage.tsx": [
+      "@/hooks/useNotifications",
+      "@/stores/notificationStore",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/inventory/InventoryPage.tsx": [
+      "@/lib/erp",
+      "@/components/erp/StatusBadge",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/invoicing/InvoicingPage.tsx": [
+      "@/hooks/useInvoices",
+      "@/lib/erp",
+      "@/components/erp/StatusBadge",
+      "@/components/erp/InvoiceDrawer",
+      "@/components/erp/LineItemsEditor",
+      "@/components/ui",
+      "@/lib/api"
+    ],
+    "services/web/src/pages/jobcards/JobCardsPage.tsx": [
+      "@/hooks/useJobCards",
+      "@/lib/erp",
+      "@/components/ui",
+      "@/components/erp/StatusBadge"
+    ],
+    "services/web/src/pages/marketing/CampaignsPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/marketing",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/marketing/EmailTemplatesPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/marketing",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/marketing/SegmentsPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/marketing",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/meetings/MeetingsPage.tsx": [
+      "@/hooks/useMeetings",
+      "@/lib/meetings",
+      "@/stores/authStore",
+      "@/lib/api",
+      "@/components/ui",
+      "@/components/meetings/JitsiMeeting"
+    ],
+    "services/web/src/pages/my-day/MyDayPage.tsx": [
+      "@tanstack/react-query",
+      "@/hooks/useMyDayTasks",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/pages/onboarding/OnboardingPage.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@hookform/resolvers/zod",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/playground/MentionTestPage.tsx": [
+      "@/components/ui"
+    ],
+    "services/web/src/pages/plugins/MarketplacePage.tsx": [
+      "@tanstack/react-query",
+      "@/stores/authStore",
+      "@/lib/api",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/portal/PortalPage.tsx": [
+      "@tanstack/react-query",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/ptw/NewPermitPage.tsx": [
+      "@/components/ui"
+    ],
+    "services/web/src/pages/ptw/PermitApprovalQueue.tsx": [
+      "@/lib/ptw",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/ptw/PermitDetailPage.tsx": [
+      "@/components/ui"
+    ],
+    "services/web/src/pages/ptw/PermitRegister.tsx": [
+      "@/components/ui",
+      "@/components/ui/DataTable"
+    ],
+    "services/web/src/pages/ptw/PermitsPage.tsx": [
+      "@/components/ui",
+      "@/lib/ptw"
+    ],
+    "services/web/src/pages/purchasing/PurchasingPage.tsx": [
+      "@/hooks/usePurchaseOrders",
+      "@/lib/erp",
+      "@/components/erp/StatusBadge",
+      "@/components/erp/PurchaseOrderDrawer",
+      "@/components/erp/LineItemsEditor",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/reports/ReportsPage.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore",
+      "@/lib/erp",
+      "@/components/dashboard/DashboardWidget",
+      "@/components/charts/Sparkline",
+      "@/components/charts/BarChart",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/roi/ROIDashboardPage.tsx": [
+      "@/lib/roi",
+      "@/lib/currency",
+      "@/components/ui",
+      "@/components/charts/BarChart"
+    ],
+    "services/web/src/pages/sales/SalesPage.tsx": [
+      "@/hooks/useSalesOrders",
+      "@/lib/erp",
+      "@/components/erp/StatusBadge",
+      "@/components/erp/SalesOrderDrawer",
+      "@/components/erp/LineItemsEditor",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/scenarios/ScenariosPage.tsx": [
+      "@tanstack/react-query",
+      "@/stores/authStore",
+      "@/lib/api",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/settings/BillingTab.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/pages/settings/BrandingTab.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/pages/settings/SecurityTab.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/pages/settings/SettingsPage.tsx": [
+      "./TeamTab",
+      "./BillingTab",
+      "./SecurityTab",
+      "./NotificationsTab"
+    ],
+    "services/web/src/pages/settings/TeamTab.tsx": [
+      "@tanstack/react-query",
+      "@/lib/api",
+      "@/stores/authStore"
+    ],
+    "services/web/src/pages/shift/ShiftReadinessPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/shift-readiness",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/support/KnowledgeBasePage.tsx": [
+      "@/stores/authStore",
+      "@/lib/support",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/support/SlaPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/support",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/support/TicketDetailPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/support",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/support/TicketsPage.tsx": [
+      "@/stores/authStore",
+      "@/lib/support",
+      "@/components/ui"
+    ],
+    "services/web/src/pages/templates/TemplatesPage.tsx": [
+      "@/stores/authStore",
+      "@/components/ui",
+      "@tanstack/react-query",
+      "@/lib/api"
+    ]
+  },
+  "files": {
+    "services/api/app/Console/Commands/CleanupTestData.php": {
+      "type": "php"
+    },
+    "services/api/app/Console/Commands/E2ESetup.php": {
+      "type": "php"
+    },
+    "services/api/app/Console/Commands/EnsureTestUser.php": {
+      "type": "php"
+    },
+    "services/api/app/Console/Commands/ProvisionPilot.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Auth/GateKioskGuard.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Console/Commands/CheckCertExpiry.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Console/Commands/PurgeExpiredTrials.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Console/Commands/RecalculateUsage.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Console/Commands/ResetAiCredits.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Console/Commands/RunDunning.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Console/Commands/SyncStripePlans.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Enums/SubscriptionPlan.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Exports/EntityExport.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Http/Middleware/AuthenticateScimToken.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Http/Middleware/CheckFeatureAccess.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Http/Middleware/GateKioskAuth.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Http/Middleware/InternalJwt.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Http/Middleware/RequireAccountType.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Http/Middleware/RequireOwner.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Http/Middleware/SecureHeaders.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Jobs/SendNotification.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/AdminAuditLog.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/AttendanceLog.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/AuditLog.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/Automation.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/AutomationRun.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/Board.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/BoardGroup.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/BurnoutScore.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/EmployeeGroup.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/FeatureFlag.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/FieldPermission.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/Goal.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/Item.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/KeyResult.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/LeaveRequest.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/MeetingOutcome.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/OAuthAccount.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/Plugin.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/PluginHookLog.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/PluginInstallation.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/PortalToken.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/PushSubscription.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/SavedView.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/Scenario.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/ScenarioAdjustment.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/ScimIdentity.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/ScimToken.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/Shift.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/ShiftAssignment.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/ShiftHandover.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/ShiftPlan.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/ShiftPlanAssignment.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/SyncConflict.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/TeamActivityMetric.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/User.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/UserSession.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/VisitorLog.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/WebhookDelivery.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/WebhookEndpoint.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/Workspace.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/WorkspaceInvitation.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/WorkspaceMember.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Models/WorkspaceUsage.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Observers/ComplianceObserver.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Rules/SaIdNumber.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Services/AuditService.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Services/FeatureService.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Services/IntegrationWebhookReplayService.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Services/PluginEngine.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Services/PushNotificationService.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Services/ReferenceSequenceService.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Services/UsageService.php": {
+      "type": "php"
+    },
+    "services/api/app/Core/Services/VatService.php": {
+      "type": "php"
+    },
+    "services/api/app/Events/ItemUpdated.php": {
+      "type": "php"
+    },
+    "services/api/app/Exceptions/Handler.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/AdminPanelProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/FeatureFlagResource/Pages/CreateFeatureFlag.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/FeatureFlagResource/Pages/EditFeatureFlag.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/FeatureFlagResource/Pages/ListFeatureFlags.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/FeatureFlagResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/UserResource/Pages/CreateUser.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/UserResource/Pages/EditUser.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/UserResource/Pages/ListUsers.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/UserResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/WorkspaceResource/Pages/CreateWorkspace.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/WorkspaceResource/Pages/EditWorkspace.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/WorkspaceResource/Pages/ListWorkspaces.php": {
+      "type": "php"
+    },
+    "services/api/app/Filament/Resources/WorkspaceResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/AIController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/AuditLogController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/AutomationController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/BillingController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/CalendarItemController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/ClientPortalController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/CommentController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/ComplianceController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/CRM/CompanyController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/CRM/ContactController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/CRM/DealController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/CRM/StageController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/DmrExportController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/DocumentController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/EmployeeGroupController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/EquipmentCertRecordController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/EquipmentCertTypeController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/EquipmentComplianceController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/EquipmentController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/ExportController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/FieldPermissionController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/FileController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/FinancialApprovalController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/GateController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/GoalController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/IntegrationReliabilityController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/MeetingOutcomeController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/NotificationController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/OfflineSyncController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/PluginController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/ProductController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/ReportScheduleController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/ROIController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/ScenarioController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/ScimController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/SentimentController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/ShiftController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/ShiftReadinessController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/StockController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/TeamCapacityController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/UserSettingsController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/VisitorController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/WebhookController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/WorkspaceController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Api/WorkspaceInvitationController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Auth/AuthController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Auth/OAuthController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/BoardColumnController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/BoardController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/BoardGroupController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Controller.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Internal/DocumentYdocController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/Internal/RealtimeEventController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/ItemController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/PermissionController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/PersonalAccessTokenController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/PushSubscriptionController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/SavedViewController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/StorageController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/UserController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Controllers/WebhookEndpointController.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Middleware/Authenticate.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Middleware/EnforceIdempotency.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Middleware/InternalSecret.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Middleware/SetWorkspaceTenant.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Middleware/ThrottleRequests.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Requests/StoreProductRequest.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Requests/UpdateProductRequest.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/BoardResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/CommentResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/CrmContactResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/CrmDealResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/DocumentResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/ItemResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/JsonResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/NotificationResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/ProductResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/ResourceCollection.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/UserResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Http/Resources/WorkspaceResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Jobs/BurnoutDetector.php": {
+      "type": "php"
+    },
+    "services/api/app/Jobs/EvaluateAutomationTriggers.php": {
+      "type": "php"
+    },
+    "services/api/app/Jobs/ProcessAutomations.php": {
+      "type": "php"
+    },
+    "services/api/app/Jobs/PurgeUserData.php": {
+      "type": "php"
+    },
+    "services/api/app/Jobs/ReplayIntegrationWebhookEvent.php": {
+      "type": "php"
+    },
+    "services/api/app/Jobs/SendBillingConfirmationEmail.php": {
+      "type": "php"
+    },
+    "services/api/app/Jobs/SendNotification.php": {
+      "type": "php"
+    },
+    "services/api/app/Jobs/SyncStripeSubscriptionQuantity.php": {
+      "type": "php"
+    },
+    "services/api/app/Jobs/UpdateAIEmbedding.php": {
+      "type": "php"
+    },
+    "services/api/app/Jobs/UpdateClickHouseAnalytics.php": {
+      "type": "php"
+    },
+    "services/api/app/Jobs/UpdateMeilisearchIndex.php": {
+      "type": "php"
+    },
+    "services/api/app/Mail/BillingConfirmation.php": {
+      "type": "php"
+    },
+    "services/api/app/Mail/WorkspaceInvite.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/ActivityLog.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/Automation.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/AutomationRun.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/Board.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/BoardColumn.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/BoardGroup.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/Category.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/Comment.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/CrmCompany.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/CrmContact.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/CrmDeal.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/Document.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/DocumentFolder.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/FeatureFlag.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/File.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/GateKiosk.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/IdempotencyKey.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/Item.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/Notification.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/OAuthAccount.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/Product.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/RealtimeEvent.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/SiteAccessLog.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/StockMovement.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/User.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/Workspace.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/WorkspaceInvitation.php": {
+      "type": "php"
+    },
+    "services/api/app/Models/WorkspaceMember.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Accounting/Http/Controllers/JournalEntryController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Accounting/Models/Account.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Accounting/Models/JournalEntry.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Filament/Pages/Dashboard.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Filament/Pages/EmailAnalytics.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Filament/Pages/StorageAnalytics.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Filament/Resources/BillingResource/Pages/ListBillingEvents.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Filament/Resources/BillingResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Filament/Resources/TicketResource/Pages/ListTickets.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Filament/Resources/TicketResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Filament/Resources/WorkspaceResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Filament/Widgets/PlanDistributionWidget.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Filament/Widgets/StatsOverviewWidget.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Models/SuperAdmin.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Admin/Providers/Filament/AdminPanelProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/AI/Http/Controllers/AIController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/AI/Providers/AIServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Automation/Http/Controllers/AutomationController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Automation/Http/Controllers/RecommendationController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Automation/Jobs/SendAutomationEmail.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Automation/Models/AutomationRecommendation.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Automation/Services/PatternDetector.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Chat/Http/Controllers/ChatController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Chat/Models/ChatChannel.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Chat/Models/ChatMessage.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Chat/Models/ChatParticipant.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Chat/Providers/ChatServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Competency/Http/Controllers/CompetencyController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Competency/Models/CofRecord.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Competency/Models/CompetencyRecord.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Competency/Models/CompetencyRequirement.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Competency/Models/CompetencyType.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Competency/Models/TrainingRecord.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Competency/Providers/CompetencyServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Console/Commands/CheckDealAging.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Console/Commands/CheckDealEscalations.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/CalendarSyncController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/CompanyController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/ContactController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/ContactImportController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/ContractMilestoneController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/CrmAnalyticsController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/CrmAutomationRuleController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/CrmReportController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/DealApprovalController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/DealController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/ForecastController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/LeadController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/PipelineController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/ProductController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/QuotaController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/QuoteController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Controllers/WorkOrderController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Http/Resources/CrmContactResource.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Jobs/ImportCrmContactsJob.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/ContractMilestone.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmApprovalRule.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmAutomationRule.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmCalendarSync.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmCompany.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmContact.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmContactStageHistory.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmDeal.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmDealApproval.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmLead.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmPipeline.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmPipelineStage.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmProduct.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/CrmQuote.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Models/WorkOrder.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Policies/CrmDealPolicy.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Services/CalendarSyncService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Services/ContactLifecycleService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Services/CrmAutomationService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Services/CurrencyService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Services/DealApprovalService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Services/DuplicateDetectionService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/CRM/Services/TelephonyService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Delegation/Http/Controllers/DelegationController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Delegation/Models/Delegation.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Delegation/Providers/DelegationServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Documents/Http/Controllers/DocumentFolderController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Documents/Http/Controllers/ScannedDocumentController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Documents/Models/Document.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Documents/Providers/DocumentsServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Email/Http/Controllers/EmailController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Email/Http/Controllers/InboundEmailController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Email/Http/Controllers/ProjectEmailAddressController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Email/Jobs/SyncEmailAccount.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Email/Models/Email.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Email/Models/EmailAccount.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Email/Models/EmailAiSuggestion.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Email/Models/EmailThread.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Email/Models/InboundEmail.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Email/Models/ProjectEmailAddress.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Equipment/Http/Controllers/EquipmentController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Equipment/Models/Equipment.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Equipment/Models/EquipmentBreakdown.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Equipment/Models/EquipmentCategory.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Equipment/Models/EquipmentCertRecord.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Equipment/Models/EquipmentCertType.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Equipment/Models/EquipmentInspection.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Equipment/Models/EquipmentInspectionItem.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Equipment/Models/MaintenanceSchedule.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Equipment/Providers/EquipmentServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/HSSE/Http/Controllers/CorrectiveActionController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/HSSE/Http/Controllers/HazardController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/HSSE/Http/Controllers/HSSEController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/HSSE/Http/Controllers/IncidentController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/HSSE/Models/CorrectiveAction.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/HSSE/Models/Hazard.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/HSSE/Models/Incident.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/HSSE/Providers/HSSEProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/HSSE/Services/CoidaReportService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/HSSE/Services/MhsaReportService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Inventory/Http/Controllers/ProductController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Invoicing/Http/Controllers/InvoiceController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Invoicing/Models/Invoice.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/JobCards/Http/Controllers/JobCardController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/JobCards/Models/JobCard.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/JobCards/Models/JobCardAttachment.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/JobCards/Models/JobCardMaterial.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/JobCards/Models/JobCardTask.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/JobCards/Models/JobCardTemplate.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/JobCards/Models/JobCardTimeEntry.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/JobCards/Providers/JobCardsServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Marketing/Http/Controllers/CampaignController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Marketing/Http/Controllers/EmailTemplateController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Marketing/Http/Controllers/SegmentController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Marketing/Models/Campaign.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Marketing/Models/CampaignAudience.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Marketing/Models/EmailTemplate.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Marketing/Models/Segment.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Marketing/Providers/MarketingServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Marketing/Services/CampaignService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/PTW/Http/Controllers/PermitController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/PTW/Models/Permit.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/PTW/Models/PermitHazard.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/PTW/Models/PermitIsolation.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/PTW/Providers/PTWProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/PTW/Services/DmrPermitRegisterService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/PTW/Services/PermitWorkflowService.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Purchasing/Http/Controllers/PurchaseOrderController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Sales/Http/Controllers/SalesOrderController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Events/TicketResolved.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Http/Controllers/KnowledgeBaseController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Http/Controllers/SlaController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Http/Controllers/TicketController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Http/Controllers/TicketMessageController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Jobs/EnforceSlaJob.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Listeners/GenerateKbFromTicket.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Models/KnowledgeBaseArticle.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Models/SlaBreach.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Models/Ticket.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Models/TicketMessage.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Models/TicketSla.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Support/Providers/SupportServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Templates/Http/Controllers/TemplateController.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Templates/Models/Template.php": {
+      "type": "php"
+    },
+    "services/api/app/Modules/Templates/Providers/TemplateServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Notifications/CertExpiryNotification.php": {
+      "type": "php"
+    },
+    "services/api/app/Notifications/VisitorArrivedNotification.php": {
+      "type": "php"
+    },
+    "services/api/app/Observers/BoardObserver.php": {
+      "type": "php"
+    },
+    "services/api/app/Observers/CommentObserver.php": {
+      "type": "php"
+    },
+    "services/api/app/Observers/DocumentObserver.php": {
+      "type": "php"
+    },
+    "services/api/app/Observers/ItemObserver.php": {
+      "type": "php"
+    },
+    "services/api/app/Policies/AutomationPolicy.php": {
+      "type": "php"
+    },
+    "services/api/app/Policies/BoardPolicy.php": {
+      "type": "php"
+    },
+    "services/api/app/Policies/CommentPolicy.php": {
+      "type": "php"
+    },
+    "services/api/app/Policies/DocumentPolicy.php": {
+      "type": "php"
+    },
+    "services/api/app/Policies/FilePolicy.php": {
+      "type": "php"
+    },
+    "services/api/app/Policies/ItemPolicy.php": {
+      "type": "php"
+    },
+    "services/api/app/Policies/WorkspacePolicy.php": {
+      "type": "php"
+    },
+    "services/api/app/Providers/AppServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Providers/AuthServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Providers/HorizonServiceProvider.php": {
+      "type": "php"
+    },
+    "services/api/app/Rules/PasswordStrength.php": {
+      "type": "php"
+    },
+    "services/api/app/Services/AuthService.php": {
+      "type": "php"
+    },
+    "services/api/app/Services/BoardService.php": {
+      "type": "php"
+    },
+    "services/api/app/Services/ComplianceService.php": {
+      "type": "php"
+    },
+    "services/api/app/Services/InternalAuthService.php": {
+      "type": "php"
+    },
+    "services/api/app/Services/ItemService.php": {
+      "type": "php"
+    },
+    "services/api/app/Services/ROIDashboardService.php": {
+      "type": "php"
+    },
+    "services/api/app/Services/ShiftReadinessService.php": {
+      "type": "php"
+    },
+    "services/web/src/App.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ai/ChatInput.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ai/ChatThread.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ai/index.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ai/SuggestedPrompts.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ai/__tests__/ChatInput.test.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ai/__tests__/ChatThread.test.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ai/__tests__/SuggestedPrompts.test.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/automation/RuleBuilderModal.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/board/BoardTopBar.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/board/CalendarView.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/board/ExcalidrawView.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/board/ItemCard.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/board/ItemDetailModal.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/board/KanbanView.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/board/TableView.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/chat/index.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/components/chat/MentionText.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/crm/DealDetailModal.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/dashboard/ActivityFeed.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/dashboard/KpiCard.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/dashboard/MyTasksWidget.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/dashboard/QuickActions.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/email/ComposeModal.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/email/ThreadView.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/erp/InvoiceDrawer.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/erp/LineItemsEditor.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/erp/SalesOrderDrawer.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/layout/CommandPalette.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/layout/ContextPanel.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/layout/NavRail.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/layout/NotificationCenter.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/layout/Sidebar.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/layout/TopBar.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/meetings/JitsiMeeting.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/meetings/MeetingRoom.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/notifications/NotificationPanel.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/sentiment/BurnoutWidget.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/settings/BillingTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/settings/GeneralTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/settings/MembersTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/settings/NotificationsTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/settings/ProfileTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/settings/SecurityTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/settings/StorageTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/shared/PermissionGate.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/subscription/UsageMeter.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/sync/ConflictResolver.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/sync/SyncStatus.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Avatar.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Badge.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Button.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Card.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Checkbox.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/DataTable.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/DropdownMenu.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/EmptyState.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/ExportButton.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/index.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Input.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/MentionInput.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Modal.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/PrintButton.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Select.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Sparkline.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Tabs.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Textarea.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/Toggle.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/__tests__/Badge.test.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/__tests__/Button.test.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/__tests__/Card.test.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/__tests__/DataTable.test.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/__tests__/Input.test.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/__tests__/Modal.test.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/components/ui/__tests__/Toggle.test.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/useBoards.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/useCalendarItems.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/useDelegations.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/useDocuments.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/useItems.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/useJobCards.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/useMyDayTasks.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/useNotifications.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/usePermission.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/usePermissions.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/usePresence.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/useSettings.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/hooks/useSocket.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/layouts/AppLayout.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/layouts/AuthLayout.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/layouts/ERPLayout.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/api.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/chat.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/compliance.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/contract-milestones.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/crm.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/currency.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/email.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/equipment.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/erp.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/gate.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/hsse.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/marketing.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/meetings.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/motion.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/paperless.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/portal.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/ptw.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/roi.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/route-refs.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/settings.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/shift-readiness.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/socket.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/support.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/visitors.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/webhooks.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/lib/work-orders.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/main.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/offline/OfflineManager.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/accounting/AccountingPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/ai/AIChatPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/auth/ForgotPasswordPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/auth/LoginPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/auth/RegisterPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/auth/ResetPasswordPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/auth/TwoFactorChallenge.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/auth/TwoFactorSetup.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/automation/AutomationPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/boards/BoardPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/boards/BoardsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/calendar/CalendarPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/chat/ChatPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/compliance/ComplianceDashboard.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/ApprovalRulesPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/AutomationRulesPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/CalendarSyncPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/ContactsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/ContractMilestonesPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/CRMPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/DealApprovalsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/ForecastPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/LeadsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/ProductsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/QuotasPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/QuotesPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/SequencesPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/crm/WorkOrdersPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/DashboardPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/delegations/DelegationsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/documents/DocumentPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/documents/DocumentsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/email/EmailPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/employees/EmployeePage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/equipment/EquipmentDetailPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/equipment/EquipmentListPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/erp/AuditLogsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/erp/EmailAddressesPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/erp/EmployeeGroupsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/erp/FieldPermissionsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/erp/FinancialApprovalsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/erp/GoalsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/erp/MeetingOutcomesPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/erp/ReportSchedulesPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/erp/WebhookEventsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/gate/GateKiosk.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/gate/VisitorActiveCard.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/gate/VisitorFlow.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/gate/VisitorForm.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/gate/VisitorReview.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/gate/VisitorSuccess.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/gate/VisitorTypeSelector.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/hsse/CorrectiveActionsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/hsse/HazardsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/hsse/HSSEPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/hsse/IncidentsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/inbox/InboxPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/inventory/InventoryPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/invoicing/InvoicingPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/jobcards/JobCardsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/marketing/CampaignsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/marketing/EmailTemplatesPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/marketing/SegmentsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/meetings/MeetingsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/my-day/MyDayPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/NotFoundPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/onboarding/OnboardingPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/playground/MentionTestPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/plugins/MarketplacePage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/portal/PortalLayout.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/portal/PortalPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/ptw/NewPermitPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/ptw/PermitApprovalQueue.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/ptw/PermitDetailPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/ptw/PermitRegister.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/ptw/PermitsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/purchasing/PurchasingPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/reports/ReportsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/roi/ROIDashboardPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/sales/SalesPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/scenarios/ScenariosPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/settings/BillingTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/settings/BrandingTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/settings/NotificationsTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/settings/SecurityTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/settings/SettingsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/settings/TeamTab.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/shift/ShiftReadinessPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/support/KnowledgeBasePage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/support/SlaPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/support/TicketDetailPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/support/TicketsPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/pages/templates/TemplatesPage.tsx": {
+      "type": "typescript"
+    },
+    "services/web/src/stores/authStore.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/stores/boardStore.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/stores/documentStore.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/stores/itemStore.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/stores/notificationStore.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/stores/themeStore.ts": {
+      "type": "typescript"
+    },
+    "services/web/src/vite-env.d.ts": {
+      "type": "typescript"
+    }
+  }
+}

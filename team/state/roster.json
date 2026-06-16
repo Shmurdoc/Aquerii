@@ -1,0 +1,193 @@
+{
+  "version": "5.0",
+  "last_updated": "2026-06-11T10:30:20.020Z",
+  "members": [
+    {
+      "id": "ceo",
+      "type": "ceo",
+      "role": "Strategic direction and decomposition",
+      "instance": 1,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "docs/strategy/",
+      "tech": "strategy"
+    },
+    {
+      "id": "eng-manager",
+      "type": "eng-manager",
+      "role": "Planning and execution framing (Leader)",
+      "instance": 1,
+      "state": "idle",
+      "lock": false,
+      "current_task": null,
+      "area": "team/",
+      "tech": "orchestration"
+    },
+    {
+      "id": "designer",
+      "type": "designer",
+      "role": "UX and product-design decisions",
+      "instance": 1,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "docs/design/, services/web/src/components/",
+      "tech": "Tailwind / CSS / Figma"
+    },
+    {
+      "id": "builder-1",
+      "type": "builder",
+      "role": "Implementation — Core API / Integration",
+      "instance": 1,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "services/api/",
+      "tech": "PHP 8.3 / Laravel 11"
+    },
+    {
+      "id": "builder-2",
+      "type": "builder",
+      "role": "Implementation — Feature Modules (CRM/ERP)",
+      "instance": 2,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "services/api/app/Modules/CRM/, services/api/app/Modules/ERP/",
+      "tech": "PHP 8.3 / Laravel 11"
+    },
+    {
+      "id": "builder-3",
+      "type": "builder",
+      "role": "Implementation — Feature Modules (Billing/Inventory)",
+      "instance": 3,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "services/api/app/Modules/Billing/, services/api/app/Modules/Inventory/",
+      "tech": "PHP 8.3 / Laravel 11"
+    },
+    {
+      "id": "reviewer",
+      "type": "reviewer",
+      "role": "Code quality and review (Senior Lead)",
+      "instance": 1,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "team/reviews/",
+      "tech": "code-review"
+    },
+    {
+      "id": "debugger-1",
+      "type": "debugger",
+      "role": "Root-cause analysis #1 (on-call)",
+      "instance": 1,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "src/",
+      "tech": "any"
+    },
+    {
+      "id": "debugger-2",
+      "type": "debugger",
+      "role": "Root-cause analysis #2",
+      "instance": 2,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "src/",
+      "tech": "any"
+    },
+    {
+      "id": "debugger-3",
+      "type": "debugger",
+      "role": "Root-cause analysis #3",
+      "instance": 3,
+      "state": "idle",
+      "lock": false,
+      "current_task": null,
+      "area": "src/",
+      "tech": "any"
+    },
+    {
+      "id": "debugger-4",
+      "type": "debugger",
+      "role": "Root-cause analysis #4 (overflow)",
+      "instance": 4,
+      "state": "idle",
+      "lock": false,
+      "current_task": null,
+      "area": "src/",
+      "tech": "any"
+    },
+    {
+      "id": "qa-lead-backend",
+      "type": "qa-lead",
+      "role": "QA — Backend (PHP/Pest, API integration)",
+      "instance": 1,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "services/api/tests/",
+      "tech": "Pest PHP / PHPUnit"
+    },
+    {
+      "id": "qa-lead-frontend",
+      "type": "qa-lead",
+      "role": "QA — Frontend (Playwright, Vitest, React)",
+      "instance": 2,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "services/web/tests/",
+      "tech": "Playwright / Vitest / React Testing Library"
+    },
+    {
+      "id": "qa-lead-integration",
+      "type": "qa-lead",
+      "role": "QA — Integration (k6 load, E2E, CI)",
+      "instance": 3,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "tests/, .github/workflows/",
+      "tech": "k6 / Docker / GitHub Actions"
+    },
+    {
+      "id": "release-engineer",
+      "type": "release-engineer",
+      "role": "Release readiness and publishing flow",
+      "instance": 1,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "infra/, deploy/",
+      "tech": "Docker / Helm / Terraform / GitHub Actions"
+    },
+    {
+      "id": "doc-engineer",
+      "type": "doc-engineer",
+      "role": "Documentation and handoff quality",
+      "instance": 1,
+      "state": "done",
+      "lock": false,
+      "current_task": null,
+      "area": "docs/",
+      "tech": "Markdown / PDF"
+    },
+    {
+      "id": "dev-ops",
+      "type": "dev-ops",
+      "role": "Infrastructure, CI/CD, Docker, deploy pipelines, monitoring, security",
+      "instance": 1,
+      "state": "idle",
+      "lock": false,
+      "current_task": "none",
+      "area": "infra/, .github/, docker-compose.yml, Dockerfile*, team/scripts/",
+      "tech": "Docker / GitHub Actions / Cloud Run / Terraform / Helm / k8s"
+    }
+  ]
+}

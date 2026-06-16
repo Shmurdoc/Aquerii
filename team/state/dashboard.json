@@ -1,0 +1,26 @@
+{
+  "version": "5.0",
+  "last_updated": "2026-06-11T12:00:00Z",
+  "summary": {
+    "total_members": 17,
+    "idle": 4,
+    "running": 0,
+    "blocked": 0,
+    "done": 13
+  },
+  "by_type": {
+    "ceo": {"total": 1, "idle": 0, "running": 0, "blocked": 0, "done": 1},
+    "eng-manager": {"total": 1, "idle": 1, "running": 0, "blocked": 0, "done": 0},
+    "designer": {"total": 1, "idle": 0, "running": 0, "blocked": 0, "done": 1},
+    "builder": {"total": 3, "idle": 0, "running": 0, "blocked": 0, "done": 3},
+    "reviewer": {"total": 1, "idle": 0, "running": 0, "blocked": 0, "done": 1},
+    "debugger": {"total": 4, "idle": 2, "running": 0, "blocked": 0, "done": 2},
+    "qa-lead": {"total": 3, "idle": 0, "running": 0, "blocked": 0, "done": 3},
+    "release-engineer": {"total": 1, "idle": 0, "running": 0, "blocked": 0, "done": 1},
+    "doc-engineer": {"total": 1, "idle": 0, "running": 0, "blocked": 0, "done": 1},
+    "dev-ops": {"total": 1, "idle": 1, "running": 0, "blocked": 0, "done": 0}
+  },
+  "current_tasks": [],
+  "open_gaps": 2,
+  "active_sprint": "sprint-2"
+}
